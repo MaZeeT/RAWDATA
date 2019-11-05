@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using WebService.Models;
+//using WebService.Models;
 
 namespace WebService.Controllers
 {
@@ -23,17 +23,17 @@ namespace WebService.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet(Name = nameof(GetCategories))]
-        public ActionResult GetCategories([FromQuery] PagingAttributes pagingAttributes)
-        {
-            var categories = _dataService.Getquestions(pagingAttributes);
+        //[HttpGet(Name = nameof(GetCategories))]
+        //public ActionResult GetCategories([FromQuery] PagingAttributes pagingAttributes)
+        //{
+        //    var categories = _dataService.BrowseQuestions(pagingAttributes);
 
-            var result = CreateResult(categories, pagingAttributes);
+        //    var result = CreateResult(categories, pagingAttributes);
 
-            return Ok(result);
-        }
+        //    return Ok(result);
+        //}
 
-        [HttpGet("{categoryId}", Name = nameof(GetCategory))]
+       /* [HttpGet("{categoryId}", Name = nameof(GetCategory))]
         public ActionResult GetCategory(int categoryId)
         {
             var category = _dataService.GetCategory(categoryId);
@@ -116,11 +116,11 @@ namespace WebService.Controllers
                 items = categories.Select(CreateCategoryDto)
             };
         }
-
-        private string CreatePagingLink(int page, int pageSize)
+*/
+/*        private string CreatePagingLink(int page, int pageSize)
         {
             return Url.Link(nameof(GetCategories), new { page, pageSize });
         }
-
+*/
     }
 }

@@ -40,6 +40,7 @@ namespace DatabaseService
             = LoggerFactory.Create(builder => { builder.AddConsole(); });
         public DbSet<Questions> Questions { get; set; }
         public DbSet<Search> Search { get; set; }
+        public DbSet<WordRank> WordRank { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -51,7 +52,8 @@ namespace DatabaseService
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.CreateMap("Id", "Name");
-            modelBuilder.Entity<Search>().HasNoKey(); //can maybe be hadnled with hasnokey()
+            modelBuilder.Entity<Search>().HasNoKey();
+            modelBuilder.Entity<WordRank>().HasNoKey();
 
             //modelBuilder.Entity<Category>().ToTable("categories");
             //modelBuilder.Entity<Category>().Property(x => x.Id).HasColumnName("categoryid");

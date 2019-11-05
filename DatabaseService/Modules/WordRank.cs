@@ -1,8 +1,8 @@
 ﻿namespace DatabaseService
 {
-    public class Search
+    public class WordRank
     {
-        public int postid { get; set; }
+        public string term { get; set; }
         public decimal rank { get; set; }
     }
 }
