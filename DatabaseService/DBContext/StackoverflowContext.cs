@@ -51,7 +51,7 @@ namespace DatabaseService
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.CreateMap("Id", "Name");
-            modelBuilder.Entity<Search>().HasKey(    t => new { t.postid, t.rank }); //can maybe be hadnled with hasnokey()
+            modelBuilder.Entity<Search>().HasNoKey(); //can maybe be hadnled with hasnokey()
 
             //modelBuilder.Entity<Category>().ToTable("categories");
             //modelBuilder.Entity<Category>().Property(x => x.Id).HasColumnName("categoryid");
