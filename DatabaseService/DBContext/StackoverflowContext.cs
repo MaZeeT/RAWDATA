@@ -1,32 +1,39 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DatabaseService.Modules;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
+using System.Linq;
 
 namespace DatabaseService
 {
     static class ModelBuilderExtensions
     {
-        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
-        public static void CreateMap(
-            this ModelBuilder modelBuilder, 
-            params string[] names)
+       /* private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();*/ // - not used so perhaps we can discard it
+
+
+        /// <summary>
+        /// Method from class example that converts the names of the tables into lovercases 
+        /// Needed for automapper and making life easier
+        /// </summary>
+        /// <param name="modelBuilder"></param>
+        /// <param name="names"></param>
+        public static void CreateMap(this ModelBuilder modelBuilder, params string[] names)
         {
-            foreach(var entityType in modelBuilder.Model.GetEntityTypes())
+            //getting access to the entity types dbSet below
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
-                var dict = new List<string>(names);
+                // getting the name of Categories and Products to lower cases.
                 entityType.SetTableName(entityType.GetTableName().ToLower());
-                foreach(var property in entityType.GetProperties())
+                foreach (var property in entityType.GetProperties())
                 {
                     var propertyName = property.Name.ToLower();
+                  /*  //.when names are = to property then i want to extract and put that in lowercase
                     var entityName = "";
+                    if (names.ToList().Contains(property.Name)) // names is converted here into a list of strings not array anymore
+                    {
+                        entityName = entityType.ClrType.Name.ToLower(); // this also gets rid of all stuff including id and name (here we add the name of the class in front of the attribute: categoryname)
+                    }*/
 
-                   // if(dict.Contains(property.Name))
-                    //{
-                    //    entityName = entityType.ClrType.Name.ToLower();
-                   // }
-
-                      property.SetColumnName(entityName + propertyName);
+                    property.SetColumnName(propertyName);
                 }
 
             }
@@ -37,21 +44,24 @@ namespace DatabaseService
     public class StackoverflowContext : DbContext
     {
         public static readonly ILoggerFactory MyLoggerFactory
-            = LoggerFactory.Create(builder => { builder.AddConsole(); });
+            = LoggerFactory.Create(builder => { builder.AddConsole(); });  //This is taken from online documentation when we want to log errors
         public DbSet<Questions> Questions { get; set; }
         public DbSet<Search> Search { get; set; }
+        public DbSet<Annotations> Annotations { get; set; }
+        //public DbQuery<AnnotationFunction> AnnotationFunction { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder
                 .UseLoggerFactory(MyLoggerFactory)
-                        .UseNpgsql("host=localhost;db=stackoverflow;uid=postgres;pwd=cock");
+                        .UseNpgsql("host=localhost;db=stackoverflow;uid=postgres;pwd=Pisi2828");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.CreateMap("Id", "Name");
             modelBuilder.Entity<Search>().HasNoKey(); //can maybe be hadnled with hasnokey()
+            //modelBuilder.Entity<Annotations>(); //can maybe be hadnled with hasnokey()
 
             //modelBuilder.Entity<Category>().ToTable("categories");
             //modelBuilder.Entity<Category>().Property(x => x.Id).HasColumnName("categoryid");

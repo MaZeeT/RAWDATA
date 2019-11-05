@@ -1,5 +1,6 @@
 using AutoMapper;
 using DatabaseService;
+using DatabaseService.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,6 +20,7 @@ namespace WebService
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddSingleton<IDataService, DataService>();
+            services.AddSingleton<IAppUsersDataService, AppUsersDataService>();
 
 
         }

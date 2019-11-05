@@ -1,10 +1,6 @@
-﻿using AutoMapper;
+﻿/*using AutoMapper;
 using DatabaseService;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using WebService.Models;
 
 namespace WebService.Controllers
 {
@@ -45,3 +41,4 @@ namespace WebService.Controllers
 
     }
 }
+*/
