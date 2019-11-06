@@ -23,15 +23,15 @@ namespace WebService.Controllers
             _mapper = mapper;
         }
 
-        //[HttpGet(Name = nameof(GetCategories))]
-        //public ActionResult GetCategories([FromQuery] PagingAttributes pagingAttributes)
-        //{
-        //    var categories = _dataService.BrowseQuestions(pagingAttributes);
+        [HttpGet(Name = nameof(BrowseQuestions))]
+        public ActionResult BrowseQuestions([FromQuery] PagingAttributes pagingAttributes)
+        {
+            var categories = _dataService.GetQuestions(pagingAttributes);
 
-        //    var result = CreateResult(categories, pagingAttributes);
+            var result = CreateResult(categories, pagingAttributes);
 
-        //    return Ok(result);
-        //}
+            return Ok(result);
+        }
 
        /* [HttpGet("{categoryId}", Name = nameof(GetCategory))]
         public ActionResult GetCategory(int categoryId)
@@ -85,19 +85,19 @@ namespace WebService.Controllers
         // Helpers
         //
         //////////////////////
-
+*/
         private CategoryDto CreateCategoryDto(Questions category)
         {
             var dto = _mapper.Map<CategoryDto>(category);
             dto.Link = Url.Link(
-                    nameof(GetCategory),
+                    nameof(BrowseQuestions),
                     new { categoryId = category.Id });
             return dto;
         }
-
+        
         private object CreateResult(IEnumerable<Questions> categories, PagingAttributes attr)
         {
-            var totalItems = _dataService.NumberOfCategories();
+            var totalItems = _dataService.NumberOfQuestions();
             var numberOfPages = Math.Ceiling((double)totalItems / attr.PageSize);
 
             var prev = attr.Page > 0
@@ -112,15 +112,23 @@ namespace WebService.Controllers
                 totalItems,
                 numberOfPages,
                 prev,
-                next,
-                items = categories.Select(CreateCategoryDto)
+                next//,
+                //items = questions.Select(CreateCategoryDto)
             };
         }
-*/
-/*        private string CreatePagingLink(int page, int pageSize)
+
+        private string CreatePagingLink(int page, int pageSize)
         {
-            return Url.Link(nameof(GetCategories), new { page, pageSize });
+            return Url.Link(nameof(BrowseQuestions), new { page, pageSize });
         }
-*/
+
+        private class CategoryDto
+        {
+            public string Link { get; set; }
+            public string Name { get; set; }
+            public string Description { get; set; }
+        }
+
+
     }
 }
