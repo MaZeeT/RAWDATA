@@ -26,9 +26,10 @@ namespace DatabaseService
             search.Value = searchstring;
             var searchtype = new NpgsqlParameter("searchtype", NpgsqlTypes.NpgsqlDbType.Text);
             searchtype.Value = "bestmatch";
-            return db.Search
+            var result = db.Search
                 .FromSqlRaw("SELECT * from appsearch(2, @searchtype, @search) limit 10", searchtype, search)
                 .ToList();
+            return result;
         }
 
     }

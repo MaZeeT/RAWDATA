@@ -12,6 +12,6 @@ namespace DatabaseService.Services
 
         public Annotations GetAnnotation(int annotationId);
 
-        public string CreateAnnotation_withFunction(Annotations annotationObject);
+        public bool CreateAnnotation_withFunction(Annotations annotationObject);
     }
 }

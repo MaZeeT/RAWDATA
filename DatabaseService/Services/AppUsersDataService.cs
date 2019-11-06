@@ -1,6 +1,5 @@
 ﻿using DatabaseService.Modules;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using Npgsql;
 using System;
 using System.Linq;
@@ -13,7 +12,7 @@ namespace DatabaseService.Services
         {
             using var DB = new StackoverflowContext();
             var nextId = DB.Annotations.Max(x => x.Id) + 1;
-            var newAnnotation = new Annotations
+            var annotation = new Annotations
             {
                 Id = nextId,
                 UserId = obj.UserId,
@@ -21,9 +20,9 @@ namespace DatabaseService.Services
                 Body = obj.Body,
                 Date = obj.Date
             };
-            DB.Annotations.Add(newAnnotation);
+            DB.Annotations.Add(annotation);
             DB.SaveChanges();
-            return GetAnnotation(newAnnotation.Id);
+            return GetAnnotation(annotation.Id);
         }
         public Annotations GetAnnotation(int value)
         {
@@ -48,21 +47,39 @@ namespace DatabaseService.Services
             }
         }
 
-        public string CreateAnnotation_withFunction(Annotations obj)
+        public bool CreateAnnotation_withFunction(Annotations obj)
         {
-            var newAnnotation = new Annotations
-            {
-                UserId = obj.UserId,
-                HistoryId = obj.HistoryId,
-                Body = obj.Body,
-                Date = obj.Date
-            };
             using var DB = new StackoverflowContext();
             var appUserId = obj.UserId;
             var postId = obj.HistoryId;
-            var annotationBody = obj.Body;
-            var result = DB.Annotations.FromSqlInterpolated($"select * from annotate(2, 71, 'my note for post 71: this post is very relevant')"); // need to make this one return something or learn to use the logger bleah! 
-            return string.Empty;
+            if (string.IsNullOrEmpty(obj.Body)) // need to validate the rest as well somehow :) 
+            {
+                return false;
+            }
+            /*var annotationBody = new NpgsqlParameter("body", NpgsqlTypes.NpgsqlDbType.Text); // these 2 guys trigger error from db:column body does not exist but this is false!!
+            annotationBody.Value = obj.Body;*/
+            var annotationBody = obj.Body; // this is not validated for now because of the above comment! 
+            DB.Database.ExecuteSqlCommand($"select * from annotate({appUserId}, {postId}, {annotationBody})"); // need to make this one return something or learn to use the logger bleah! 
+            return true;
+        }
+
+        public bool UpdateAnnotationBody(Annotations annotationObj)
+        {
+            Console.WriteLine("LOOK HERE!!!!!!!!!!!: !!!!!!!");
+            Console.WriteLine(annotationObj);
+            using var DB = new StackoverflowContext();
+            try
+            {
+                var annotationToUpdate = DB.Annotations.Find(annotationObj.Id);
+                annotationToUpdate.Body = annotationObj.Body;
+                DB.SaveChanges();
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+
         }
 
         /* private DateTime UnixTimestamp()

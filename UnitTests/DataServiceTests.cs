@@ -1,4 +1,5 @@
-﻿using DatabaseService.Modules;
+﻿using DatabaseService;
+using DatabaseService.Modules;
 using DatabaseService.Services;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using System;
@@ -16,24 +17,27 @@ namespace UnitTests
             // example of request aspect when coming from API
             var newAnnotation = new Annotations
             {
-                UserId = 1,
-                HistoryId = 19,
-                Body = "monimoniMoNitestmoinitest"
+                UserId = 2,
+                HistoryId = 71,
+                Body = "Moni is a moni test of moni"
             };
 
-            service.CreateAnnotation_withFunction(newAnnotation);
-
-            /*var annotation = service.CreateAnnotations(newAnnotation);
-            Assert.True(annotation.Id > 0);
-            Assert.Equal(2, annotation.UserId);
-            Assert.Equal(2, annotation.HistoryId);
-            Assert.Equal("monimoniMoNitestmoinitest", annotation.Body);
+            var result = service.CreateAnnotation_withFunction(newAnnotation);
+            Assert.True(result);
 
             // cleanup
-            service.DeleteAnnotation(annotation.Id);*/
+            //service.DeleteAnnotation(annotation.Id);
         }
 
-        /*[Fact]
+        [Fact]
+        public void SearchTest()
+        {
+            var service = new DataService();
+            var list = service.Search("chocolate");
+            Assert.True(list.Count > 0);
+        }
+
+        [Fact]
         public void GetAnnotationById()
         {
             var service = new AppUsersDataService();
@@ -41,6 +45,20 @@ namespace UnitTests
             Assert.Equal(2, result.UserId);
             Assert.Equal(3, result.HistoryId);
             Assert.Equal("my note for post 71: this post is very relevant", result.Body);
-        }*/
+        }
+
+        [Fact]
+        public void UpdateExistingAnnotation()
+        {
+            var service = new AppUsersDataService();
+            var newAnnotation = new Annotations
+            {
+                Id = 2,
+                Body = "This is updated annotation body becase we can :) ! <3"
+            };
+            var result = service.UpdateAnnotationBody(newAnnotation);
+            Assert.True(result);
+        }
+
     }
 }
