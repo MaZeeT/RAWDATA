@@ -33,69 +33,74 @@ namespace WebService.Controllers
             return Ok(result);
         }
 
-       /* [HttpGet("{categoryId}", Name = nameof(GetCategory))]
-        public ActionResult GetCategory(int categoryId)
+       [HttpGet("{questionId}", Name = nameof(GetQuestion))]
+        public ActionResult GetQuestion(int questionId)
         {
-            var category = _dataService.GetCategory(categoryId);
-            if (category == null)
+            var question = _dataService.GetQuestion(questionId);
+            if (question == null)
             {
                 return NotFound();
             }
-            return Ok(CreateCategoryDto(category));
+            return Ok(CreateQuestionDto(question));
         }
 
-               
 
-        [HttpPost]
-        public ActionResult CreateCategory(CategoryForCreation categoryDto)
-        {
-            var category = _mapper.Map<Questions>(categoryDto);
-            _dataService.CreateCategory(category);
-            return CreatedAtRoute(
-                nameof(GetCategory),
-                new { categoryId = category.Id},
-                CreateCategoryDto(category));
-        }
+        /*
+               [HttpPost]
+               public ActionResult CreateCategory(CategoryForCreation categoryDto)
+               {
+                   var category = _mapper.Map<Questions>(categoryDto);
+                   _dataService.CreateCategory(category);
+                   return CreatedAtRoute(
+                       nameof(GetCategory),
+                       new { categoryId = category.Id},
+                       CreateCategoryDto(category));
+               }
 
-        [HttpPut("{categoryId}")]
-        public ActionResult UpdateCategory(
-            int categoryId, Questions category)
-        {
-            if (!_dataService.CategoryExcist(categoryId))
-            {
-                return NotFound();
-            }
-            category.Id = categoryId;
-            _dataService.UpdateCategory(category);
-            return NoContent();
-        }
+               [HttpPut("{categoryId}")]
+               public ActionResult UpdateCategory(
+                   int categoryId, Questions category)
+               {
+                   if (!_dataService.CategoryExcist(categoryId))
+                   {
+                       return NotFound();
+                   }
+                   category.Id = categoryId;
+                   _dataService.UpdateCategory(category);
+                   return NoContent();
+               }
 
-        [HttpDelete("{categoryId}")]
-        public ActionResult DeleteCategory(int categoryId)
-        {
-            if (_dataService.DeleteCategory(categoryId))
-            {
-                return NoContent();
-            }
-            return NotFound();
-        }
+               [HttpDelete("{categoryId}")]
+               public ActionResult DeleteCategory(int categoryId)
+               {
+                   if (_dataService.DeleteCategory(categoryId))
+                   {
+                       return NoContent();
+                   }
+                   return NotFound();
+               }
 
-        ///////////////////
-        //
-        // Helpers
-        //
-        //////////////////////
-*/
-        private CategoryDto CreateCategoryDto(Questions category)
+               ///////////////////
+               //
+               // Helpers
+               //
+               //////////////////////
+       */
+        private QuestionDto CreateQuestionDto(Questions question)
         {
-            var dto = _mapper.Map<CategoryDto>(category);
+
+            //var dto = _mapper.Map<QuestionDto>(question);
+            var dto = new QuestionDto();
             dto.Link = Url.Link(
-                    nameof(BrowseQuestions),
-                    new { categoryId = category.Id });
+                    nameof(GetQuestion),
+                    new { questionId = question.Id });
+            dto.Id = question.Id;
+            dto.Title = question.Title;
+            dto.Body = question.Body;
             return dto;
         }
         
-        private object CreateResult(IEnumerable<Questions> categories, PagingAttributes attr)
+        private object CreateResult(IEnumerable<Questions> questions, PagingAttributes attr)
         {
             var totalItems = _dataService.NumberOfQuestions();
             var numberOfPages = Math.Ceiling((double)totalItems / attr.PageSize);
@@ -112,8 +117,9 @@ namespace WebService.Controllers
                 totalItems,
                 numberOfPages,
                 prev,
-                next//,
-                //items = questions.Select(CreateCategoryDto)
+                next,
+                items = questions.Select(CreateQuestionDto)
+                //items = questions
             };
         }
 
@@ -122,12 +128,6 @@ namespace WebService.Controllers
             return Url.Link(nameof(BrowseQuestions), new { page, pageSize });
         }
 
-        private class CategoryDto
-        {
-            public string Link { get; set; }
-            public string Name { get; set; }
-            public string Description { get; set; }
-        }
 
 
     }
