@@ -7,20 +7,20 @@ using System.Linq;
 //using System.Web.Http;
 //using WebService.Models;
 
-namespace webservice.controllers
+namespace WebService.Controllers
 {
-    [apicontroller]
-    [route("api/search")]
-    public class searchcontroller : controllerbase
+    [ApiController]
+    [Route("api/search")]
+    public class SearchController : ControllerBase
     {
-        private idataservice _dataservice;
-        private imapper _mapper;
+        private IDataService _dataService;
+        private IMapper _mapper;
 
-        public searchcontroller(
-            idataservice dataservice,
-            imapper mapper)
+        public SearchController(
+            IDataService dataService,
+            IMapper mapper)
         {
-            _dataservice = dataservice;
+            _dataService = dataService;
             _mapper = mapper;
         }
 
@@ -35,13 +35,13 @@ namespace webservice.controllers
                 //rudimentary checking of params
                 if (searchparams.stype >= 0 && searchparams.stype <= 3 || searchparams.stype == null)
                 {
-                    return Ok(search);
                     var search = _dataService.Search(searchparams.s, searchparams.stype, pagingAttributes);
+                    return Ok(search);
                 }
                 else if (searchparams.stype >= 4 && searchparams.stype <= 5)
-                    return Ok(search);
-                    var search = _dataService.WordRank(searchparams.s, searchparams.stype, pagingAttributes);
                 {
+                    var search = _dataService.WordRank(searchparams.s, searchparams.stype, pagingAttributes);
+                    return Ok(search);
                 }
             }
             return BadRequest();
@@ -52,44 +52,41 @@ namespace webservice.controllers
 
         ///////////////////
         //
-        // helpers
+        // Helpers
         //
         //////////////////////
-/*
-        private QuestionDto CreateCategoryDto(Questions category)
-        {
-            var dto = _mapper.Map<QuestionDto>(category);
-            dto.Link = Url.Link(
-                    nameof(GetQuestion),
-                    new { categoryId = category.Id });
-            return dto;
-        }
-
-        private object CreateResult(IEnumerable<Questions> categories, PagingAttributes attr)
-        {
-            var totalItems = _dataService.NumberOfQuestions();
-            var numberOfPages = Math.Ceiling((double)totalItems / attr.PageSize);
-
-            var prev = attr.Page > 0
-                ? CreatePagingLink(attr.Page - 1, attr.PageSize)
-                : null;
-            var next = attr.Page < numberOfPages - 1
-                ? CreatePagingLink(attr.Page + 1, attr.PageSize)
-                : null;
-
-            return new
-            {
-                totalItems,
-                numberOfPages,
-                prev,
-                next,
-                items = categories.Select(CreateCategoryDto)
-            };
-        }
-        private string CreatePagingLink(int page, int pageSize)
-        {
-            return Url.Link(nameof(GetCategories), new { page, pageSize });
-        } 
-        */
+        /*
+                private QuestionDto CreateCategoryDto(Questions category)
+                {
+                    var dto = _mapper.Map<QuestionDto>(category);
+                    dto.Link = Url.Link(
+                            nameof(GetQuestion),
+                            new { categoryId = category.Id });
+                    return dto;
+                }
+                private object CreateResult(IEnumerable<Questions> categories, PagingAttributes attr)
+                {
+                    var totalItems = _dataService.NumberOfQuestions();
+                    var numberOfPages = Math.Ceiling((double)totalItems / attr.PageSize);
+                    var prev = attr.Page > 0
+                        ? CreatePagingLink(attr.Page - 1, attr.PageSize)
+                        : null;
+                    var next = attr.Page < numberOfPages - 1
+                        ? CreatePagingLink(attr.Page + 1, attr.PageSize)
+                        : null;
+                    return new
+                    {
+                        totalItems,
+                        numberOfPages,
+                        prev,
+                        next,
+                        items = categories.Select(CreateCategoryDto)
+                    };
+                }
+                private string CreatePagingLink(int page, int pageSize)
+                {
+                    return Url.Link(nameof(GetCategories), new { page, pageSize });
+                } 
+                */
     }
 }
