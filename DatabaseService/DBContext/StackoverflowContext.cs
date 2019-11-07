@@ -23,16 +23,15 @@ namespace DatabaseService
                 foreach (var property in entityType.GetProperties())
                 {
                     var propertyName = property.Name.ToLower();
-                  /*  //.when names are = to property then i want to extract and put that in lowercase
-                    var entityName = "";
-                    if (names.ToList().Contains(property.Name)) // names is converted here into a list of strings not array anymore
-                    {
-                        entityName = entityType.ClrType.Name.ToLower(); // this also gets rid of all stuff including id and name (here we add the name of the class in front of the attribute: categoryname)
-                    }*/
+                    /*  //.when names are = to property then i want to extract and put that in lowercase
+                      var entityName = "";
+                      if (names.ToList().Contains(property.Name)) // names is converted here into a list of strings not array anymore
+                      {
+                          entityName = entityType.ClrType.Name.ToLower(); // this also gets rid of all stuff including id and name (here we add the name of the class in front of the attribute: categoryname)
+                      }*/
 
                     property.SetColumnName(propertyName);
                 }
-
             }
         }
     }
@@ -41,18 +40,28 @@ namespace DatabaseService
     public class StackoverflowContext : DbContext
     {
         public static readonly ILoggerFactory MyLoggerFactory
-            = LoggerFactory.Create(builder => { builder.AddConsole(); });  //This is taken from online documentation when we want to log errors
+            = LoggerFactory.Create(builder =>
+            {
+                builder.AddConsole();
+            }); //This is taken from online documentation when we want to log errors
+
         public DbSet<Questions> Questions { get; set; }
         public DbSet<Search> Search { get; set; }
         public DbSet<WordRank> WordRank { get; set; }
+
         public DbSet<Annotations> Annotations { get; set; }
         //public DbQuery<AnnotationFunction> AnnotationFunction { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            string database;
+            //database = "host=localhost;db=stackoverflow;uid=postgres;pwd=cock";
+            database = "host=mazeet.ddns.net;port=32999;db=stackoverflow;uid=raw6;pwd=J8cxYN";
+
+
             optionsBuilder
                 .UseLoggerFactory(MyLoggerFactory)
-                        .UseNpgsql("host=localhost;db=stackoverflow;uid=postgres;pwd=cock");
+                .UseNpgsql(database);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -60,7 +69,7 @@ namespace DatabaseService
             modelBuilder.CreateMap("Id", "Name");
             modelBuilder.Entity<Search>().HasNoKey(); //can maybe be hadnled with hasnokey()
             modelBuilder.Entity<WordRank>().HasNoKey();
-            
+
 
             //modelBuilder.Entity<Category>().ToTable("categories");
             //modelBuilder.Entity<Category>().Property(x => x.Id).HasColumnName("categoryid");
@@ -74,9 +83,6 @@ namespace DatabaseService
             //modelBuilder.Entity<Product>().Property(x => x.UnitPrice).HasColumnName("unitprice");
             //modelBuilder.Entity<Product>().Property(x => x.UnitsInStock).HasColumnName("unitsinstock");
             //modelBuilder.Entity<Product>().Property(x => x.CategoryId).HasColumnName("categoryid");
-
         }
-
-        
     }
 }
