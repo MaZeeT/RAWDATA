@@ -14,7 +14,7 @@ namespace DatabaseService
             }); //This is taken from online documentation when we want to log errors
 
         //todo replace objects with proper types
-        public DbSet<AppUser> AppUser { get; set; }
+        public DbSet<AppUser> AppUsers { get; set; }
       //  public DbSet<object> History { get; set; }
         public DbSet<Annotations> Annotations { get; set; }
         //todo replace objects with proper types

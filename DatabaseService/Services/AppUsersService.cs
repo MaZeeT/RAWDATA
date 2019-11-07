@@ -8,7 +8,7 @@ namespace DatabaseService.Services
         {
             using var database = new AppContext();
             //return new AppUser(id, "test");
-            return database.AppUser.Find(id);
+            return database.AppUsers.Find(id);
 
         }
 
