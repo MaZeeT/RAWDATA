@@ -7,20 +7,20 @@ using System.Linq;
 //using System.Web.Http;
 //using WebService.Models;
 
-namespace WebService.Controllers
+namespace webservice.controllers
 {
-    [ApiController]
-    [Route("api/search")]
-    public class SearchController : ControllerBase
+    [apicontroller]
+    [route("api/search")]
+    public class searchcontroller : controllerbase
     {
-        private IDataService _dataService;
-        private IMapper _mapper;
+        private idataservice _dataservice;
+        private imapper _mapper;
 
-        public SearchController(
-            IDataService dataService,
-            IMapper mapper)
+        public searchcontroller(
+            idataservice dataservice,
+            imapper mapper)
         {
-            _dataService = dataService;
+            _dataservice = dataservice;
             _mapper = mapper;
         }
 
@@ -35,13 +35,13 @@ namespace WebService.Controllers
                 //rudimentary checking of params
                 if (searchparams.stype >= 0 && searchparams.stype <= 3 || searchparams.stype == null)
                 {
-                    var search = _dataService.Search(searchparams.s, searchparams.stype, pagingAttributes);
                     return Ok(search);
+                    var search = _dataService.Search(searchparams.s, searchparams.stype, pagingAttributes);
                 }
                 else if (searchparams.stype >= 4 && searchparams.stype <= 5)
-                {
-                    var search = _dataService.WordRank(searchparams.s, searchparams.stype, pagingAttributes);
                     return Ok(search);
+                    var search = _dataService.WordRank(searchparams.s, searchparams.stype, pagingAttributes);
+                {
                 }
             }
             return BadRequest();
@@ -52,7 +52,7 @@ namespace WebService.Controllers
 
         ///////////////////
         //
-        // Helpers
+        // helpers
         //
         //////////////////////
 /*
