@@ -18,7 +18,7 @@ namespace WebService.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("{appUserId}", Name = nameof(GetAppUser))]
+        [HttpGet("{appUsersId}", Name = nameof(GetAppUser))]
         public ActionResult GetAppUser(int appUserId)
         {
             var appUser = _appUsersService.GetAppUser(appUserId);
@@ -32,7 +32,7 @@ namespace WebService.Controllers
             }
             
         }
-        
+        /*
         [HttpGet("{appUserName}", Name = nameof(GetAppUser))]
         public ActionResult GetAppUser(string appUserName)
         {
@@ -47,7 +47,7 @@ namespace WebService.Controllers
             }
             
         }
-
+*/
 
     }
 }

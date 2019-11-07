@@ -10,6 +10,6 @@ namespace DatabaseService.Services
         // bool DeleteAppUser(int id);
         // bool DeleteAppUser(string name);
         AppUser GetAppUser(int id);
-        AppUser GetAppUser(string name);
+        // AppUser GetAppUser(string name);
     }
 }

@@ -37,6 +37,7 @@ namespace DatabaseService
             modelBuilder.CreateMap("Id", "Name");
             modelBuilder.Entity<Search>().HasNoKey(); //can maybe be hadnled with hasnokey()
             modelBuilder.Entity<WordRank>().HasNoKey();
+        //    modelBuilder.Entity<AppUser>().HasNoKey();
 
 
             //modelBuilder.Entity<Category>().ToTable("categories");

@@ -32,7 +32,7 @@ namespace DatabaseService
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.CreateMap("Id", "Name");
-            modelBuilder.Entity<AppUser>().HasNoKey(); //can maybe be hadnled with hasnokey()
+            modelBuilder.Entity<AppUser>(); //can maybe be hadnled with hasnokey()
         //    modelBuilder.Entity<object /*todo replace type*/>().HasNoKey(); 
             modelBuilder.Entity<Annotations>().HasNoKey();
 
