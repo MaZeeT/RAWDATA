@@ -14,13 +14,14 @@ namespace DatabaseService
             }); //This is taken from online documentation when we want to log errors
 
         //todo replace objects with proper types
-        public DbSet<object> AppUser { get; set; }
+        public DbSet<AppUser> AppUser { get; set; }
         public DbSet<object> History { get; set; }
         public DbSet<Annotations> Annotations { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             string database = "";
             //database = "host=localhost;db=stackoverflow;uid=postgres;pwd=cock";
+            //database = "host=localhost;db=stackoverflow;uid=postgres;pwd=Pisi2828";
             database = "host=mazeet.ddns.net;port=32999;db=stackoverflow;uid=raw6;pwd=J8cxYN";
 
             optionsBuilder
