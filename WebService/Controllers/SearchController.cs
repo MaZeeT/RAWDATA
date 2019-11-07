@@ -1,39 +1,39 @@
-﻿/*using AutoMapper;
-using DatabaseService;
-using Microsoft.AspNetCore.Mvc;
+﻿/*using automapper;
+using databaseservice;
+using microsoft.aspnetcore.mvc;
 
-namespace WebService.Controllers
+namespace webservice.controllers
 {
-    [ApiController]
-    [Route("api/search")]
-    public class SearchController : ControllerBase
+    [apicontroller]
+    [route("api/search")]
+    public class searchcontroller : controllerbase
     {
-        private IDataService _dataService;
-        private IMapper _mapper;
+        private idataservice _dataservice;
+        private imapper _mapper;
 
-        public SearchController(
-            IDataService dataService,
-            IMapper mapper)
+        public searchcontroller(
+            idataservice dataservice,
+            imapper mapper)
         {
-            _dataService = dataService;
+            _dataservice = dataservice;
             _mapper = mapper;
         }
 
 
-        [HttpGet("{searchstring}")]
-        public ActionResult Search(string searchstring)
+        [httpget("{searchstring}")]
+        public actionresult search(string searchstring)
         {
-            var search = _dataService.Search(searchstring);
+            var search = _dataservice.search(searchstring);
 
-            //var result = CreateResult(categories);
+            //var result = createresult(categories);
 
-            return Ok(search);
+            return ok(search);
         }
 
 
         ///////////////////
         //
-        // Helpers
+        // helpers
         //
         //////////////////////
 

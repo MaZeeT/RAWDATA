@@ -51,9 +51,9 @@ namespace UnitTests
         public void UpdateExistingAnnotation()
         {
             var service = new AppUsersDataService();
-            var newAnnotation = new Annotations
+            var newAnnotation = new AnnotationsDto
             {
-                Id = 2,
+                AnnotationId = 2,
                 Body = "This is updated annotation body becase we can :) ! <3"
             };
             var result = service.UpdateAnnotationBody(newAnnotation);

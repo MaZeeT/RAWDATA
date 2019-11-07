@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using DatabaseService.Modules;
-using WebService.DTOs;
 
 namespace WebService.Profiles
 {
@@ -9,8 +8,7 @@ namespace WebService.Profiles
         
             public AnnotationsProfile()
             {
-                CreateMap<Annotations, AnnotationsDto>();
-               
+                CreateMap<Annotations, AnnotationsDto >();
             }
         
     }
