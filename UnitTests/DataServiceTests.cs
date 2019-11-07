@@ -28,7 +28,7 @@ namespace UnitTests
             // cleanup
             //service.DeleteAnnotation(annotation.Id);
         }
-
+/*
         [Fact]
         public void SearchTest()
         {
@@ -36,7 +36,7 @@ namespace UnitTests
             var list = service.Search("chocolate");
             Assert.True(list.Count > 0);
         }
-
+*/
         [Fact]
         public void GetAnnotationById()
         {
