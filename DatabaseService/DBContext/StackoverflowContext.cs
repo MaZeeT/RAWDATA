@@ -16,14 +16,11 @@ namespace DatabaseService
         public DbSet<Questions> Questions { get; set; }
         public DbSet<Search> Search { get; set; }
         public DbSet<WordRank> WordRank { get; set; }
-
-        public DbSet<Annotations> Annotations { get; set; }
-        //public DbQuery<AnnotationFunction> AnnotationFunction { get; set; }
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             string database = "";
             //database = "host=localhost;db=stackoverflow;uid=postgres;pwd=cock";
+            //database = "host=localhost;db=stackoverflow;uid=postgres;pwd=Pisi2828";
             database = "host=mazeet.ddns.net;port=32999;db=stackoverflow;uid=raw6;pwd=J8cxYN";
 
             optionsBuilder
@@ -36,6 +33,7 @@ namespace DatabaseService
             modelBuilder.CreateMap("Id", "Name");
             modelBuilder.Entity<Search>().HasNoKey(); //can maybe be hadnled with hasnokey()
             modelBuilder.Entity<WordRank>().HasNoKey();
+        //    modelBuilder.Entity<AppUser>().HasNoKey();
 
 
             //modelBuilder.Entity<Category>().ToTable("categories");
