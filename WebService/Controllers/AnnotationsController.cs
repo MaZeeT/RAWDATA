@@ -2,6 +2,7 @@
 using DatabaseService.Modules;
 using DatabaseService.Services;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace WebService.Controllers
 {
@@ -54,15 +55,27 @@ namespace WebService.Controllers
         }
 
 
-        [HttpPut]
-        public ActionResult UpdateAnnotation([FromBody] AnnotationsDto annotation)
+        [HttpPut("{annotationId}")]
+        public ActionResult UpdateAnnotation(int annotationId,[FromBody] AnnotationsDto annotation)
         {
-            if (_appUsersDataService.UpdateAnnotation(annotation))
+            //need to encode body before sending to db - this can also be done inside the UpdateAnnotation function.
+            if (_appUsersDataService.UpdateAnnotation(annotationId, annotation.Body))
             {
                 return NoContent();
             }
             return BadRequest();
         }
+
+        [HttpDelete("{annotationId}")]
+        public ActionResult DeleteData(int annotationId)
+        {
+            if (_appUsersDataService.DeleteAnnotation(annotationId))
+            {
+                return Ok();
+            }
+            return NotFound();
+        }
+
 
 
         /// <summary>

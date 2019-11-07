@@ -13,6 +13,7 @@ namespace DatabaseService.Services
         Annotations GetAnnotation(int annotationId);
 
         bool CreateAnnotation_withFunction(Annotations annotationObject);
-        bool UpdateAnnotation(AnnotationsDto annotationObj);
+        bool UpdateAnnotation(int annotationId, string annotationBody);
+        bool DeleteAnnotation(int id);
     }
 }

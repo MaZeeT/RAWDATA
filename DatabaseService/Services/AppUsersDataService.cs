@@ -10,7 +10,7 @@ namespace DatabaseService.Services
     {
         public Annotations CreateAnnotations(AnnotationsDto obj)
         {
-            using var DB = new StackoverflowContext();
+            using var DB = new AppContext();
             var nextId = DB.Annotations.Max(x => x.Id) + 1;
             var annotation = new Annotations
             {
@@ -26,7 +26,7 @@ namespace DatabaseService.Services
         }
         public Annotations GetAnnotation(int value)
         {
-            using var DB = new StackoverflowContext();
+            using var DB = new AppContext();
             var result = DB.Annotations.Find(value);
             
             return result;
@@ -34,7 +34,7 @@ namespace DatabaseService.Services
 
         public bool DeleteAnnotation(int id)
         {
-            using var DB = new StackoverflowContext();
+            using var DB = new AppContext();
             try
             {
                 var itemToDelete = GetAnnotation(id);
@@ -50,27 +50,34 @@ namespace DatabaseService.Services
 
         public bool CreateAnnotation_withFunction(Annotations obj)
         {
-            using var DB = new StackoverflowContext();
-            var appUserId = obj.UserId;
-            var postId = obj.HistoryId;
-            if (string.IsNullOrEmpty(obj.Body)) // need to validate the rest as well somehow :) 
+            try
+            {
+                using var DB = new AppContext();
+               
+                var userId = new NpgsqlParameter("userid", NpgsqlTypes.NpgsqlDbType.Integer);
+                userId.Value = obj.UserId;
+                var postId = new NpgsqlParameter("historyid", NpgsqlTypes.NpgsqlDbType.Integer);
+                postId.Value = obj.HistoryId;
+                var annotationBody = new NpgsqlParameter("body", NpgsqlTypes.NpgsqlDbType.Text);
+                annotationBody.Value = obj.Body;
+
+                DB.Database.ExecuteSqlCommand("select * from annotate(@userid, @historyid, @body)", userId, postId, annotationBody); // need to make this one return something or learn to use the logger bleah! 
+                
+                return true;
+            }catch(Exception e)
             {
                 return false;
             }
-            /*var annotationBody = new NpgsqlParameter("body", NpgsqlTypes.NpgsqlDbType.Text); // these 2 guys trigger error from db:column body does not exist but this is false!!
-            annotationBody.Value = obj.Body;*/
-            var annotationBody = obj.Body; // this is not validated for now because of the above comment! 
-            DB.Database.ExecuteSqlCommand($"select * from annotate({appUserId}, {postId}, {annotationBody})"); // need to make this one return something or learn to use the logger bleah! 
-            return true;
+           
         }
 
-        public bool UpdateAnnotation(AnnotationsDto annotationObj)
+        public bool UpdateAnnotation(int annotationId, string annotationBody)
         {
-            using var DB = new StackoverflowContext();
+            using var DB = new AppContext();
             try
             {
-                var annotationToUpdate = DB.Annotations.Find(annotationObj.AnnotationId);
-                annotationToUpdate.Body = annotationObj.Body;
+                var annotationToUpdate = DB.Annotations.Find(annotationId);
+                annotationToUpdate.Body = annotationBody;
                 DB.SaveChanges();
                 return true;
             }
