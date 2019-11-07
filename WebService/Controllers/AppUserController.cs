@@ -18,33 +18,36 @@ namespace WebService.Controllers
             _mapper = mapper;
         }
 
-        /*
-        [HttpGet, Route("{s=}/{stype=3}/{page=0}/{pageSize=10}")]
-        //[HttpGet] put defalut values here for optional parameters. in this case only s is not optional
-        public ActionResult Search([FromQuery] SearchQuery searchparams, [FromQuery] PagingAttributes pagingAttributes)
+        [HttpGet("{appUserId}", Name = nameof(GetAppUser))]
+        public ActionResult GetAppUser(int appUserId)
         {
-            if (searchparams.s != null)
+            var appUser = _appUsersService.GetAppUser(appUserId);
+            if (appUser == null)
             {
-                Console.WriteLine("Got searchparams: " + searchparams.s);
-
-                //rudimentary checking of params
-                if (searchparams.stype >= 0 && searchparams.stype <= 3 || searchparams.stype == null)
-                {
-                    var search = _dataService.Search(searchparams.s, searchparams.stype, pagingAttributes);
-                    return Ok(search);
-                }
-                else if (searchparams.stype >= 4 && searchparams.stype <= 5)
-                {
-                    var search = _dataService.WordRank(searchparams.s, searchparams.stype, pagingAttributes);
-                    return Ok(search);
-                }
+                return NotFound();
             }
-
-            return BadRequest();
+            else
+            {
+                return Ok(appUser);    
+            }
+            
         }
         
-        
-        */
-        
+        [HttpGet("{appUserName}", Name = nameof(GetAppUser))]
+        public ActionResult GetAppUser(string appUserName)
+        {
+            var appUser = _appUsersService.GetAppUser(appUserName);
+            if (appUser == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(appUser);    
+            }
+            
+        }
+
+
     }
 }

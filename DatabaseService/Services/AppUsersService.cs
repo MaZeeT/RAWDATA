@@ -1,5 +1,3 @@
-using System;
-using System.Runtime.InteropServices.WindowsRuntime;
 using DatabaseService.Modules;
 
 namespace DatabaseService.Services
@@ -8,18 +6,15 @@ namespace DatabaseService.Services
     {
         public AppUser GetAppUser(int id)
         {
-            using var Database = new AppContext();
-            
-            
-            
-            
-            
-           return new AppUser();
+            using var database = new AppContext();
+            return database.AppUser.Find(id);
+
         }
 
         public AppUser GetAppUser(string name)
         {
-            throw new System.NotImplementedException();
+            using var database = new AppContext();
+            return database.AppUser.Find(name);
         }
     }
 }

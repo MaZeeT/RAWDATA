@@ -15,7 +15,7 @@ namespace DatabaseService
 
         //todo replace objects with proper types
         public DbSet<AppUser> AppUser { get; set; }
-        public DbSet<object> History { get; set; }
+      //  public DbSet<object> History { get; set; }
         public DbSet<Annotations> Annotations { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -32,8 +32,8 @@ namespace DatabaseService
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.CreateMap("Id", "Name");
-            modelBuilder.Entity<object /*todo replace type*/>().HasNoKey(); //can maybe be hadnled with hasnokey()
-            modelBuilder.Entity<object /*todo replace type*/>().HasNoKey(); 
+            modelBuilder.Entity<AppUser>().HasNoKey(); //can maybe be hadnled with hasnokey()
+        //    modelBuilder.Entity<object /*todo replace type*/>().HasNoKey(); 
             modelBuilder.Entity<Annotations>().HasNoKey();
 
             //modelBuilder.Entity<Category>().ToTable("categories");
