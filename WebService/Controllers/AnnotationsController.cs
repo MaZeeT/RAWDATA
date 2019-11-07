@@ -18,8 +18,8 @@ namespace WebService.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("{annotationId}", Name = nameof(ReturnAnnotation))] // fancy way to have strings checked by the compiler
-        public ActionResult ReturnAnnotation(int annotationId)
+        [HttpGet("{annotationId}", Name = nameof(GetAnnotation))] // fancy way to have strings checked by the compiler
+        public ActionResult GetAnnotation(int annotationId)
         {
             var returnedAnnotation = _appUsersDataService.GetAnnotation(annotationId);
             if (returnedAnnotation == null)
@@ -30,22 +30,9 @@ namespace WebService.Controllers
             //to AnnotationDto class type
             //so the magic is not much as it still requires some manual work for mapping. 
             return Ok(CreateLink(returnedAnnotation));
-
-            //this is a new class actually;
-            // also if we do it for this object we can do it for all the other categorie. 
-            /*var anotation = new AnnotationsDto
-            {
-                //// parsing the id as part of the url so one can actually navigate to the annotation if needed??? idk ... maybe it is redundant here.. but still good example :) 
-                URL = Url.Link(nameof(ReturnAnnotation), new { AnnotationId = returnedAnnotation.Id }),
-                AnnotationId = returnedAnnotation.Id,
-                UserId = returnedAnnotation.UserId,
-                HistoryId = returnedAnnotation.HistoryId,
-                Body = returnedAnnotation.Body,
-                Date = returnedAnnotation.Date
-
-            };*/
-
         }
+
+
         /// <summary>
         /// This function calls the create anew annotation from db function
         /// PROBLEM: that create new annotation function will not return anything but void.
@@ -54,10 +41,8 @@ namespace WebService.Controllers
         /// <param name="annotationObj"></param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult CreateCategory(AnnotationsDto annotationObj)
+        public ActionResult AddAnnotation(AnnotationsDto annotationObj)
         {
-            //OTHER QUESTION THAT FITS FOR THE REST OF THE APIs as well. Mapping the DTO to the Module so that they are separate on the dataservice layer and webservice layer. 
-            // maybe this can be done through a helper class in a helper util folder thinghy? 
             var newAnnotation = new Annotations
             {
                 UserId = annotationObj.UserId,
@@ -68,13 +53,18 @@ namespace WebService.Controllers
             return Ok(newAnnotation);
         }
 
-         
+
+        /// <summary>
+        /// DTO Annotations Mapper
+        /// </summary>
+        /// <param name="annotation"></param>
+        /// <returns>AnnotationsDto</returns>
         private AnnotationsDto CreateLink(Annotations annotation)
         {
             var annotationDto = _mapper.Map<AnnotationsDto>(annotation);
             annotationDto.AnnotationId = annotation.Id;
             annotationDto.URL = Url.Link(
-                    nameof(ReturnAnnotation),
+                    nameof(GetAnnotation),
                     new { AnnotationId = annotation.Id });
             return annotationDto;
         }
