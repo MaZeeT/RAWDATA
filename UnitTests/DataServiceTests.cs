@@ -28,7 +28,7 @@ namespace UnitTests
             // cleanup
             //service.DeleteAnnotation(annotation.Id);
         }
-
+/*
         [Fact]
         public void SearchTest()
         {
@@ -36,7 +36,7 @@ namespace UnitTests
             var list = service.Search("chocolate");
             Assert.True(list.Count > 0);
         }
-
+*/
         [Fact]
         public void GetAnnotationById()
         {
@@ -51,9 +51,9 @@ namespace UnitTests
         public void UpdateExistingAnnotation()
         {
             var service = new AppUsersDataService();
-            var newAnnotation = new Annotations
+            var newAnnotation = new AnnotationsDto
             {
-                Id = 2,
+                AnnotationId = 2,
                 Body = "This is updated annotation body becase we can :) ! <3"
             };
             var result = service.UpdateAnnotationBody(newAnnotation);

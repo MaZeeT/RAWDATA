@@ -8,7 +8,7 @@ namespace DatabaseService.Services
 {
     public class AppUsersDataService : IAppUsersDataService
     {
-        public Annotations CreateAnnotations(Annotations obj)
+        public Annotations CreateAnnotations(AnnotationsDto obj)
         {
             using var DB = new StackoverflowContext();
             var nextId = DB.Annotations.Max(x => x.Id) + 1;
@@ -28,6 +28,7 @@ namespace DatabaseService.Services
         {
             using var DB = new StackoverflowContext();
             var result = DB.Annotations.Find(value);
+            
             return result;
         }
 
@@ -63,14 +64,12 @@ namespace DatabaseService.Services
             return true;
         }
 
-        public bool UpdateAnnotationBody(Annotations annotationObj)
+        public bool UpdateAnnotationBody(AnnotationsDto annotationObj)
         {
-            Console.WriteLine("LOOK HERE!!!!!!!!!!!: !!!!!!!");
-            Console.WriteLine(annotationObj);
             using var DB = new StackoverflowContext();
             try
             {
-                var annotationToUpdate = DB.Annotations.Find(annotationObj.Id);
+                var annotationToUpdate = DB.Annotations.Find(annotationObj.AnnotationId);
                 annotationToUpdate.Body = annotationObj.Body;
                 DB.SaveChanges();
                 return true;
@@ -81,14 +80,6 @@ namespace DatabaseService.Services
             }
 
         }
-
-        /* private DateTime UnixTimestamp()
-         {
-
-             var Timestamp = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds();
-             return Timestamp;
-         }
- */
 
     }
 
