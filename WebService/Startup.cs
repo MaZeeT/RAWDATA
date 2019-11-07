@@ -21,6 +21,7 @@ namespace WebService
 
             services.AddSingleton<IDataService, DataService>();
             services.AddSingleton<IAppUsersDataService, AppUsersDataService>();
+            services.AddSingleton<IAppUsersService, AppUsersService>();
 
 
         }
