@@ -64,7 +64,7 @@ namespace DatabaseService.Services
             return true;
         }
 
-        public bool UpdateAnnotationBody(AnnotationsDto annotationObj)
+        public bool UpdateAnnotation(AnnotationsDto annotationObj)
         {
             using var DB = new StackoverflowContext();
             try
