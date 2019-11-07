@@ -8,7 +8,7 @@ namespace DatabaseService.Services
 {
     public interface IAppUsersDataService
     {
-        Annotations CreateAnnotations(Annotations annotationObject);
+        public Annotations CreateAnnotations(AnnotationsDto annotationObject);
 
         Annotations GetAnnotation(int annotationId);
 

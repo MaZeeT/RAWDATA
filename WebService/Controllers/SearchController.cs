@@ -55,41 +55,38 @@ namespace WebService.Controllers
         // Helpers
         //
         //////////////////////
-/*
-        private QuestionDto CreateCategoryDto(Questions category)
-        {
-            var dto = _mapper.Map<QuestionDto>(category);
-            dto.Link = Url.Link(
-                    nameof(GetQuestion),
-                    new { categoryId = category.Id });
-            return dto;
-        }
-
-        private object CreateResult(IEnumerable<Questions> categories, PagingAttributes attr)
-        {
-            var totalItems = _dataService.NumberOfQuestions();
-            var numberOfPages = Math.Ceiling((double)totalItems / attr.PageSize);
-
-            var prev = attr.Page > 0
-                ? CreatePagingLink(attr.Page - 1, attr.PageSize)
-                : null;
-            var next = attr.Page < numberOfPages - 1
-                ? CreatePagingLink(attr.Page + 1, attr.PageSize)
-                : null;
-
-            return new
-            {
-                totalItems,
-                numberOfPages,
-                prev,
-                next,
-                items = categories.Select(CreateCategoryDto)
-            };
-        }
-        private string CreatePagingLink(int page, int pageSize)
-        {
-            return Url.Link(nameof(GetCategories), new { page, pageSize });
-        } 
-        */
+        /*
+                private QuestionDto CreateCategoryDto(Questions category)
+                {
+                    var dto = _mapper.Map<QuestionDto>(category);
+                    dto.Link = Url.Link(
+                            nameof(GetQuestion),
+                            new { categoryId = category.Id });
+                    return dto;
+                }
+                private object CreateResult(IEnumerable<Questions> categories, PagingAttributes attr)
+                {
+                    var totalItems = _dataService.NumberOfQuestions();
+                    var numberOfPages = Math.Ceiling((double)totalItems / attr.PageSize);
+                    var prev = attr.Page > 0
+                        ? CreatePagingLink(attr.Page - 1, attr.PageSize)
+                        : null;
+                    var next = attr.Page < numberOfPages - 1
+                        ? CreatePagingLink(attr.Page + 1, attr.PageSize)
+                        : null;
+                    return new
+                    {
+                        totalItems,
+                        numberOfPages,
+                        prev,
+                        next,
+                        items = categories.Select(CreateCategoryDto)
+                    };
+                }
+                private string CreatePagingLink(int page, int pageSize)
+                {
+                    return Url.Link(nameof(GetCategories), new { page, pageSize });
+                } 
+                */
     }
 }
