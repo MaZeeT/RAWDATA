@@ -7,9 +7,6 @@ namespace DatabaseService
 {
     static class ModelBuilderExtensions
     {
-       /* private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();*/ // - not used so perhaps we can discard it
-
-
         /// <summary>
         /// Method from class example that converts the names of the tables into lovercases 
         /// Needed for automapper and making life easier
@@ -47,6 +44,7 @@ namespace DatabaseService
             = LoggerFactory.Create(builder => { builder.AddConsole(); });  //This is taken from online documentation when we want to log errors
         public DbSet<Questions> Questions { get; set; }
         public DbSet<Search> Search { get; set; }
+        public DbSet<WordRank> WordRank { get; set; }
         public DbSet<Annotations> Annotations { get; set; }
         //public DbQuery<AnnotationFunction> AnnotationFunction { get; set; }
 
@@ -54,13 +52,14 @@ namespace DatabaseService
         {
             optionsBuilder
                 .UseLoggerFactory(MyLoggerFactory)
-                        .UseNpgsql("host=localhost;db=stackoverflow;uid=postgres;pwd=");
+                        .UseNpgsql("host=localhost;db=stackoverflow;uid=postgres;pwd=cock");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.CreateMap("Id", "Name");
             modelBuilder.Entity<Search>().HasNoKey(); //can maybe be hadnled with hasnokey()
+            modelBuilder.Entity<WordRank>().HasNoKey();
             
 
             //modelBuilder.Entity<Category>().ToTable("categories");

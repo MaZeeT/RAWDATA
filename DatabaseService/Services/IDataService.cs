@@ -5,7 +5,10 @@ namespace DatabaseService
 {
     public interface IDataService
     {
-        IList<Questions> Getquestions(PagingAttributes pagingAttributes);
-        IList<Search> Search(string searchstring);
+        IList<Questions> GetQuestions(PagingAttributes pagingAttributes);
+        int NumberOfQuestions();
+        public Questions GetQuestion(int questionId);
+        IList<Search> Search(string searchstring, int? searchtypecode, PagingAttributes pagingAttributes);
+        IList<WordRank> WordRank(string searchstring, int? searchtypecode, PagingAttributes pagingAttributes);
     }
 }
