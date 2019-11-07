@@ -54,6 +54,17 @@ namespace WebService.Controllers
         }
 
 
+        [HttpPut]
+        public ActionResult UpdateAnnotation([FromBody] AnnotationsDto annotation)
+        {
+            if (_appUsersDataService.UpdateAnnotation(annotation))
+            {
+                return NoContent();
+            }
+            return BadRequest();
+        }
+
+
         /// <summary>
         /// DTO Annotations Mapper
         /// </summary>
