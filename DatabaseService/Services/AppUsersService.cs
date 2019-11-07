@@ -1,12 +1,20 @@
+using System;
+using System.Runtime.InteropServices.WindowsRuntime;
 using DatabaseService.Modules;
 
 namespace DatabaseService.Services
 {
-    public class AppUsersHandler : IAppUsersService
+    public class AppUsersService : IAppUsersService
     {
         public AppUser GetAppUser(int id)
         {
-            throw new System.NotImplementedException();
+            using var Database = new AppContext();
+            
+            
+            
+            
+            
+           return new AppUser();
         }
 
         public AppUser GetAppUser(string name)
