@@ -2,7 +2,6 @@
 using DatabaseService.Modules;
 using DatabaseService.Services;
 using Microsoft.AspNetCore.Mvc;
-using AnnotationsDto = WebService.DTOs.AnnotationsDto;
 
 namespace WebService.Controllers
 {
@@ -27,10 +26,14 @@ namespace WebService.Controllers
             {
                 return NotFound();
             }
+            //with the helper class and the mapper we are setting the annotation type result (in returnAnnotation)
+            //to AnnotationDto class type
+            //so the magic is not much as it still requires some manual work for mapping. 
+            return Ok(CreateLink(returnedAnnotation));
 
             //this is a new class actually;
             // also if we do it for this object we can do it for all the other categorie. 
-            var anotation = new AnnotationsDto
+            /*var anotation = new AnnotationsDto
             {
                 //// parsing the id as part of the url so one can actually navigate to the annotation if needed??? idk ... maybe it is redundant here.. but still good example :) 
                 URL = Url.Link(nameof(ReturnAnnotation), new { AnnotationId = returnedAnnotation.Id }),
@@ -40,8 +43,8 @@ namespace WebService.Controllers
                 Body = returnedAnnotation.Body,
                 Date = returnedAnnotation.Date
 
-            };
-            return Ok(anotation);
+            };*/
+
         }
         /// <summary>
         /// This function calls the create anew annotation from db function
@@ -65,8 +68,16 @@ namespace WebService.Controllers
             return Ok(newAnnotation);
         }
 
-
-
+         
+        private AnnotationsDto CreateLink(Annotations annotation)
+        {
+            var annotationDto = _mapper.Map<AnnotationsDto>(annotation);
+            annotationDto.AnnotationId = annotation.Id;
+            annotationDto.URL = Url.Link(
+                    nameof(ReturnAnnotation),
+                    new { AnnotationId = annotation.Id });
+            return annotationDto;
+        }
 
 
     }

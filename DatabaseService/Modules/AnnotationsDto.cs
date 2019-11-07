@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
 
-namespace WebService.DTOs
+namespace DatabaseService.Modules
 {
     public class AnnotationsDto
     {
@@ -13,6 +12,5 @@ namespace WebService.DTOs
         public int HistoryId { get; set; }
         public string Body { get; set; }
         public DateTime Date { get; set; }
-
     }
 }

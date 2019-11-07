@@ -54,7 +54,7 @@ namespace DatabaseService
         {
             optionsBuilder
                 .UseLoggerFactory(MyLoggerFactory)
-                        .UseNpgsql("host=localhost;db=stackoverflow;uid=postgres;pwd=");
+                        .UseNpgsql("host=localhost;db=stackoverflow;uid=postgres;pwd=Pisi2828");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
