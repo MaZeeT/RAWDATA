@@ -61,7 +61,7 @@ namespace DatabaseService.Services
                 var annotationBody = new NpgsqlParameter("body", NpgsqlTypes.NpgsqlDbType.Text);
                 annotationBody.Value = obj.Body;
 
-                DB.Database.ExecuteSqlCommand("select * from annotate(@userid, @historyid, @body)", userId, postId, annotationBody); // need to make this one return something or learn to use the logger bleah! 
+                DB.Database.ExecuteSqlRaw("select * from annotate(@userid, @historyid, @body)", userId, postId, annotationBody); // need to make this one return something or learn to use the logger bleah! 
                 
                 return true;
             }catch(Exception e)
