@@ -24,6 +24,8 @@ namespace WebService.Controllers
         }
 
         [HttpGet(Name = nameof(BrowseQuestions))]
+        //examples http://localhost:5001/api/questions
+        // http://localhost:5001/api/questions?page=10&pageSize=5
         public ActionResult BrowseQuestions([FromQuery] PagingAttributes pagingAttributes)
         {
             var categories = _dataService.GetQuestions(pagingAttributes);
