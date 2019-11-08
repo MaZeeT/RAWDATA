@@ -130,7 +130,36 @@ namespace DatabaseService
         public Questions GetQuestion(int questionId)
         {
             using var db = new StackoverflowContext();
+
             return db.Questions.Find(questionId);
+        }
+
+        //public (Questions, IList<Answers>) GetThread(int questionId)
+        public IList<Post> GetThread(int questionId)
+        {
+            using var db = new StackoverflowContext();
+
+            var q = GetQuestion(questionId);
+            if (q != null)
+            {
+                var ans = db.Answers
+                    .Where(e => e.Parentid == questionId)
+                    .ToList();
+                //manual mapping
+                List<Post> posts = new List<Post>();
+                posts.Add(
+                    new Post { Id = q.Id, Title = q.Title, Body = q.Body });
+                foreach (Answers a in ans)
+                {
+                    posts.Add(
+        new Post { Id = a.Id, Parentid = a.Parentid, Body = q.Body });
+                };
+
+
+                return posts;
+            }
+            else return null;
+            //return (q, ans); //not sure how this works, multiple return values
         }
     }
 }
