@@ -46,7 +46,7 @@ namespace UnitTests
             Assert.Equal(3, result.HistoryId);
             Assert.Equal("my note for post 71: this post is very relevant", result.Body);
         }
-
+/*
         [Fact]
         public void UpdateExistingAnnotation()
         {
@@ -59,6 +59,6 @@ namespace UnitTests
             var result = service.UpdateAnnotationBody(newAnnotation);
             Assert.True(result);
         }
-
+*/
     }
 }
