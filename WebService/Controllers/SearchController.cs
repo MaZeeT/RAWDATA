@@ -26,6 +26,9 @@ namespace WebService.Controllers
 
         [HttpGet, Route("{s=}/{stype=3}/{page=0}/{pageSize=10}")]
         //[HttpGet] put defalut values here for optional parameters. in this case only s is not optional
+        //examples
+        // http://localhost:5001/api/search?s=code&stype=0&page=10&pageSize=5
+        // http://localhost:5001/api/search?s=code,app,program
         public ActionResult Search([FromQuery] SearchQuery searchparams, [FromQuery] PagingAttributes pagingAttributes)
         {
             if (searchparams.s != null)
@@ -55,6 +58,7 @@ namespace WebService.Controllers
         // Helpers
         //
         //////////////////////
+
         /*
                 private QuestionDto CreateCategoryDto(Questions category)
                 {
@@ -88,5 +92,6 @@ namespace WebService.Controllers
                     return Url.Link(nameof(GetCategories), new { page, pageSize });
                 } 
                 */
+
     }
 }

@@ -14,14 +14,16 @@ namespace DatabaseService
             }); //This is taken from online documentation when we want to log errors
 
         public DbSet<Questions> Questions { get; set; }
+        public DbSet<Answers> Answers { get; set; }
         public DbSet<Search> Search { get; set; }
         public DbSet<WordRank> WordRank { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             string database = "";
-            //database = "host=localhost;db=stackoverflow;uid=postgres;pwd=cock";
+            database = "host=localhost;db=stackoverflow;uid=postgres;pwd=cock";
             //database = "host=localhost;db=stackoverflow;uid=postgres;pwd=Pisi2828";
-            database = "host=mazeet.ddns.net;port=32999;db=stackoverflow;uid=raw6;pwd=J8cxYN";
+            //database = "host=mazeet.ddns.net;port=32999;db=stackoverflow;uid=raw6;pwd=J8cxYN";
 
             optionsBuilder
                 .UseLoggerFactory(MyLoggerFactory)
@@ -31,10 +33,12 @@ namespace DatabaseService
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.CreateMap("Id", "Name");
-            modelBuilder.Entity<Search>().HasNoKey(); //can maybe be hadnled with hasnokey()
-            modelBuilder.Entity<WordRank>().HasNoKey();
-        //    modelBuilder.Entity<AppUser>().HasNoKey();
 
+            modelBuilder.Entity<Search>().HasNoKey();
+            modelBuilder.Entity<WordRank>().HasNoKey();
+
+           // modelBuilder.Entity<Answers>().ToTable("answers");
+           // modelBuilder.Entity<Answers>().Property(x => x.Parentid).HasColumnName("parentid");
 
             //modelBuilder.Entity<Category>().ToTable("categories");
             //modelBuilder.Entity<Category>().Property(x => x.Id).HasColumnName("categoryid");

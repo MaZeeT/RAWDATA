@@ -24,6 +24,8 @@ namespace WebService.Controllers
         }
 
         [HttpGet(Name = nameof(BrowseQuestions))]
+        //examples http://localhost:5001/api/questions
+        // http://localhost:5001/api/questions?page=10&pageSize=5
         public ActionResult BrowseQuestions([FromQuery] PagingAttributes pagingAttributes)
         {
             var categories = _dataService.GetQuestions(pagingAttributes);
@@ -34,6 +36,7 @@ namespace WebService.Controllers
         }
 
        [HttpGet("{questionId}", Name = nameof(GetQuestion))]
+        //example http://localhost:5001/api/questions/19
         public ActionResult GetQuestion(int questionId)
         {
             var question = _dataService.GetQuestion(questionId);
@@ -44,7 +47,26 @@ namespace WebService.Controllers
             return Ok(CreateQuestionDto(question));
         }
 
+        [HttpGet("thread/{questionId}", Name = nameof(GetThread))]
+        //example http://localhost:5001/api/questions/19
+        //get the whole thread of question+asnswers
+        public ActionResult GetThread(int questionId)
+        {
 
+            if (questionId > 0) //dont know proper way to do this
+            {
+                var t = _dataService.GetThread(questionId);
+                if (t != null)
+                {
+                    return Ok(t);
+                } else return NotFound();
+            }
+            else
+            {
+                return NotFound();
+            }
+
+        }
         /*
                [HttpPost]
                public ActionResult CreateCategory(CategoryForCreation categoryDto)
@@ -92,7 +114,7 @@ namespace WebService.Controllers
             //var dto = _mapper.Map<QuestionDto>(question);
             var dto = new QuestionDto();
             dto.Link = Url.Link(
-                    nameof(GetQuestion),
+                    nameof(GetThread),
                     new { questionId = question.Id });
             dto.Id = question.Id;
             dto.Title = question.Title;
