@@ -114,7 +114,7 @@ namespace WebService.Controllers
             //var dto = _mapper.Map<QuestionDto>(question);
             var dto = new QuestionDto();
             dto.Link = Url.Link(
-                    nameof(GetQuestion),
+                    nameof(GetThread),
                     new { questionId = question.Id });
             dto.Id = question.Id;
             dto.Title = question.Title;
