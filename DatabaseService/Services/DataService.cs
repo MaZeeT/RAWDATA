@@ -21,7 +21,7 @@ namespace DatabaseService
                 .ToList();
         }
 
-        public IList<Search> Search(string searchstring, int? searchtypecode, PagingAttributes pagingAttributes)
+        public IList<Posts> Search(string searchstring, int? searchtypecode, PagingAttributes pagingAttributes)
         {
             ////// for performing searches with appsearch on the db
             ///
@@ -64,9 +64,47 @@ namespace DatabaseService
                 .Take(pagingAttributes.PageSize)
                 .ToList();
 
-            foreach (Search s in resultlist) { GetPost(s.postid); }
+            var resultposts = new List<Posts>();
 
-            return resultlist;
+            foreach (Search s in resultlist) 
+            {
+               
+                string tablename = GetPostType(s.postid);
+                if (tablename == "answers")
+                {
+                    Posts p = new Posts();
+                    p.Parentid = GetParentId(s.postid);
+                    p.Id = s.postid;
+
+                    var endpos = 100;
+                    if (GetAnswer(s.postid).Body.Length < 100)
+                    { endpos = GetAnswer(s.postid).Body.Length; }
+                    p.Body = GetAnswer(s.postid).Body.Substring(0, endpos);
+
+                    p.Title = GetQuestion(p.Parentid).Title;
+                    resultposts.Add(p);
+                }
+                else 
+                {
+                    Posts p = new Posts();
+                    //p.Parentid = GetParentId(s.postid);
+                    p.Id = s.postid;
+
+                    var endpos = 100;
+                    if (GetQuestion(s.postid).Body.Length < 100)
+                    { endpos = GetQuestion(s.postid).Body.Length; }
+                    p.Body = GetQuestion(s.postid).Body.Substring(0, endpos);
+
+                    p.Title = GetQuestion(s.postid).Title;
+                    resultposts.Add(p);
+                }
+            }
+
+
+
+
+
+            return resultposts;
         }
 
         private static string BuildSearchString(string searchstring)
@@ -138,7 +176,14 @@ namespace DatabaseService
             return db.Questions.Find(questionId);
         }
 
-        public void GetPost(int postId)
+        public Answers GetAnswer(int answerId)
+        {
+            using var db = new StackoverflowContext();
+
+            return db.Answers.Find(answerId);
+        }
+
+        public string GetPostType(int postId)
         // try to get the tablename of post -- answers or questions
         //using varchar resolveid(postid int) in db
         {
@@ -146,14 +191,28 @@ namespace DatabaseService
             var postid = new NpgsqlParameter("postid", NpgsqlTypes.NpgsqlDbType.Integer);
             postid.Value = postId;
             using var db = new StackoverflowContext();
-           var tablename = db.PostsTable
-                .FromSqlRaw("SELECT * from resolveid(@postid)", postid).ToList();
+            string tablename = db.PostsTable
+                .FromSqlRaw("SELECT * from resolveid(@postid)", postid).First().resolveid;
 
-            foreach (PostsTable t in tablename)
-            {
-                System.Console.WriteLine($"Post is part of -- {t.resolveid}");
-            }
+                System.Console.WriteLine($"Post is part of -- {tablename}");
 
+            return tablename;
+        }
+
+
+        public int GetParentId(int answerID) 
+        {
+
+            System.Console.WriteLine($"Answerid -- {answerID}");
+            //var answerid = new NpgsqlParameter("aswerid", NpgsqlTypes.NpgsqlDbType.Integer);
+           // answerid.Value = answerID;
+            using var db = new StackoverflowContext();
+            int parentid = db.Answers
+                .Where(e => e.Id == answerID).FirstOrDefault().Parentid;
+
+            System.Console.WriteLine($"Parentid -- {parentid}");
+
+            return parentid;
 
         }
 
