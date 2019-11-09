@@ -16,6 +16,7 @@ namespace DatabaseService
         public DbSet<Questions> Questions { get; set; }
         public DbSet<Answers> Answers { get; set; }
         public DbSet<Search> Search { get; set; }
+        public DbSet<PostsTable> PostsTable { get; set; }
         public DbSet<WordRank> WordRank { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -36,9 +37,10 @@ namespace DatabaseService
 
             modelBuilder.Entity<Search>().HasNoKey();
             modelBuilder.Entity<WordRank>().HasNoKey();
+            modelBuilder.Entity<PostsTable>().HasNoKey();
 
-           // modelBuilder.Entity<Answers>().ToTable("answers");
-           // modelBuilder.Entity<Answers>().Property(x => x.Parentid).HasColumnName("parentid");
+            // modelBuilder.Entity<Answers>().ToTable("answers");
+            // modelBuilder.Entity<Answers>().Property(x => x.Parentid).HasColumnName("parentid");
 
             //modelBuilder.Entity<Category>().ToTable("categories");
             //modelBuilder.Entity<Category>().Property(x => x.Id).HasColumnName("categoryid");

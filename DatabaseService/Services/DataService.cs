@@ -51,18 +51,22 @@ namespace DatabaseService
             var appuserid = new NpgsqlParameter("appuserid", NpgsqlTypes.NpgsqlDbType.Integer);
             appuserid.Value = 2;
 
-            //count matches
+            //count all matches
             var matchcount = db.Search
                 .FromSqlRaw("select appsearch(@appuserid, @searchtype, @search)", appuserid, searchtype, search)
                 .Count();
             System.Console.WriteLine($"{matchcount} results.");
 
-            //call db.func appsearch
-            return db.Search
+            //get subset of results according to pagesize etc
+            var resultlist = db.Search
                 .FromSqlRaw("SELECT * from appsearch(@appuserid, @searchtype, @search)", appuserid, searchtype, search)
                 .Skip(pagingAttributes.Page * pagingAttributes.PageSize)
                 .Take(pagingAttributes.PageSize)
                 .ToList();
+
+            foreach (Search s in resultlist) { GetPost(s.postid); }
+
+            return resultlist;
         }
 
         private static string BuildSearchString(string searchstring)
@@ -134,8 +138,27 @@ namespace DatabaseService
             return db.Questions.Find(questionId);
         }
 
+        public void GetPost(int postId)
+        // try to get the tablename of post -- answers or questions
+        //using varchar resolveid(postid int) in db
+        {
+            System.Console.WriteLine($"Postid -- {postId}");
+            var postid = new NpgsqlParameter("postid", NpgsqlTypes.NpgsqlDbType.Integer);
+            postid.Value = postId;
+            using var db = new StackoverflowContext();
+           var tablename = db.PostsTable
+                .FromSqlRaw("SELECT * from resolveid(@postid)", postid).ToList();
+
+            foreach (PostsTable t in tablename)
+            {
+                System.Console.WriteLine($"Post is part of -- {t.resolveid}");
+            }
+
+
+        }
+
         //public (Questions, IList<Answers>) GetThread(int questionId)
-        public IList<Post> GetThread(int questionId)
+        public IList<Posts> GetThread(int questionId)
         {
             using var db = new StackoverflowContext();
 
@@ -146,13 +169,16 @@ namespace DatabaseService
                     .Where(e => e.Parentid == questionId)
                     .ToList();
                 //manual mapping
-                List<Post> posts = new List<Post>();
+                List<Posts> posts = new List<Posts>();
                 posts.Add(
-                    new Post { Id = q.Id, Title = q.Title, Body = q.Body });
+                    new Posts { Id = q.Id, Title = q.Title, Body = q.Body });
                 foreach (Answers a in ans)
                 {
+                    var endpos = 100;
+                    if (a.Body.Length<100)
+                    { endpos = a.Body.Length; }
                     posts.Add(
-        new Post { Id = a.Id, Parentid = a.Parentid, Body = q.Body });
+        new Posts { Id = a.Id, Parentid = a.Parentid, Body = a.Body.Substring(0, endpos) });
                 };
 
 

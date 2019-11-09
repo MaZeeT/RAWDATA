@@ -1,0 +1,12 @@
+﻿namespace DatabaseService
+{
+    public class Posts
+    {
+        public int Id { get; internal set; }
+        public string Title { get; internal set; }
+        public string Body { get; internal set; }
+        public int Parentid { get; internal set; }
+
+    }
+
+}
