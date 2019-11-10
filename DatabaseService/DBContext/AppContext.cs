@@ -15,17 +15,19 @@ namespace DatabaseService
 
         //todo replace objects with proper types
         public DbSet<AppUser> AppUser { get; set; }
-      //  public DbSet<object> History { get; set; }
+        // public DbSet<object> History { get; set; }
         public DbSet<Annotations> Annotations { get; set; }
+        public DbSet<AnnotateFunctionDto> AnnotateFunction { get; set; }
+
         //todo replace objects with proper types
-       /* public DbSet<object> AppUser { get; set; }
-        public DbSet<object> History { get; set; }*/
+        /* public DbSet<object> AppUser { get; set; }
+         public DbSet<object> History { get; set; }*/
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             string database = "";
            // database = "host=localhost;db=stackoverflow;uid=postgres;pwd=cock";
-            //database = "host=localhost;db=stackoverflow;uid=postgres;pwd=Pisi2828";
+           // database = "host=localhost;db=stackoverflow;uid=postgres;pwd=Pisi2828";
            // database = "host=mazeet.ddns.net;port=32999;db=stackoverflow;uid=raw6;pwd=J8cxYN";
 
             optionsBuilder
@@ -41,6 +43,7 @@ namespace DatabaseService
 
             modelBuilder.Entity<AppUser>().ToTable("appusers");
             modelBuilder.Entity<AppUser>().Property(x => x.id).HasColumnName("id");
+            modelBuilder.Entity<AnnotateFunctionDto>().HasNoKey();
             //modelBuilder.Entity<Category>().Property(x => x.Name).HasColumnName("categoryname");
             //modelBuilder.Entity<Category>().Property(x => x.Description).HasColumnName("description");
 

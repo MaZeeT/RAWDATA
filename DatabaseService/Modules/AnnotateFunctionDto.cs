@@ -4,7 +4,8 @@ using System.Text;
 
 namespace DatabaseService.Modules
 {
-    class AnnotationFunction
+    public class AnnotateFunctionDto
     {
+        public int Id { get; set; }
     }
 }
