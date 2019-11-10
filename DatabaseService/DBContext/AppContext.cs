@@ -24,7 +24,7 @@ namespace DatabaseService
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             string database = "";
-            database = "host=localhost;db=stackoverflow;uid=postgres;pwd=cock";
+           // database = "host=localhost;db=stackoverflow;uid=postgres;pwd=cock";
             //database = "host=localhost;db=stackoverflow;uid=postgres;pwd=Pisi2828";
            // database = "host=mazeet.ddns.net;port=32999;db=stackoverflow;uid=raw6;pwd=J8cxYN";
 
@@ -37,8 +37,7 @@ namespace DatabaseService
         {
             modelBuilder.CreateMap("Id", "Name");
             //modelBuilder.Entity<AppUser>(); //can maybe be hadnled with hasnokey()
-        //    modelBuilder.Entity<object /*todo replace type*/>().HasNoKey();
-            modelBuilder.Entity<Annotations>().HasNoKey();
+            //modelBuilder.Entity<object /*todo replace type*/>().HasNoKey();
 
             modelBuilder.Entity<AppUser>().ToTable("appusers");
             modelBuilder.Entity<AppUser>().Property(x => x.id).HasColumnName("id");
