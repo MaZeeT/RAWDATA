@@ -14,7 +14,7 @@ namespace DatabaseService.Services
             return true; //todo return bool depending on DB not hardcode
         }
 
-        public string GetAppUser(int id)
+        public string GetAppUserName(int id)
         {
             if (AppUserExist(id))
             {
