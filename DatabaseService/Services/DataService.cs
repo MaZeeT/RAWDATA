@@ -16,8 +16,18 @@ namespace DatabaseService
             // AuthUser()
             // if ok do browse q-list
             using var db = new StackoverflowContext();
+
+            //try to make pages 1-based
+            int page;
+            if (pagingAttributes.Page <= 0)
+            {
+                page = 0;
+            }
+            else page = pagingAttributes.Page - 1;
+
             return db.Questions
-                .Skip(pagingAttributes.Page * pagingAttributes.PageSize)
+                .OrderBy(u => u.Id)
+                .Skip(page * pagingAttributes.PageSize)
                 .Take(pagingAttributes.PageSize)
                 .ToList();
         }

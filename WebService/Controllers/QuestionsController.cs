@@ -47,7 +47,7 @@ namespace WebService.Controllers
         }
 
         [HttpGet("thread/{questionId}", Name = nameof(GetThread))]
-        //example http://localhost:5001/api/questions/19
+        //example http://localhost:5001/api/questions/thread/19
         //get the whole thread of question+asnswers
         public ActionResult GetThread(int questionId)
         {
@@ -93,7 +93,7 @@ namespace WebService.Controllers
             var totalItems = _dataService.NumberOfQuestions();
             var numberOfPages = Math.Ceiling((double)totalItems / attr.PageSize);
 
-            var prev = attr.Page > 0
+            var prev = attr.Page > 1
                 ? CreatePagingLink(attr.Page - 1, attr.PageSize)
                 : null;
             var next = attr.Page < numberOfPages - 1
