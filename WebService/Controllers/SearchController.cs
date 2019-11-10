@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-//using System.Web.Http;
-//using WebService.Models;
 
 namespace WebService.Controllers
 {
@@ -24,7 +22,8 @@ namespace WebService.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet(Name = nameof(Search)), Route("{s=}/{stype=3}/{page=0}/{pageSize=10}")]
+        //[HttpGet(Name = nameof(Search)), Route("{s=}/{stype=3}/{page=1}/{pageSize=10}")] //still dont understand the Route options
+        [HttpGet(Name = nameof(Search))]
         //[HttpGet] put defalut values here for optional parameters. in this case only s is not optional
         //examples
         // http://localhost:5001/api/search?s=code&stype=0&page=10&pageSize=5
@@ -41,7 +40,11 @@ namespace WebService.Controllers
                     var search = _dataService.Search(searchparams.s, searchparams.stype, pagingAttributes);
 
                     var result = CreateResult(search, searchparams, pagingAttributes);
-                    return Ok(result);
+                    if (result != null)
+                    {
+                        return Ok(result);
+                    }
+                    else return NoContent();
                 }
                 else if (searchparams.stype >= 4 && searchparams.stype <= 5)
                 {
@@ -53,8 +56,6 @@ namespace WebService.Controllers
         }
 
 
-
-
         ///////////////////
         //
         // Helpers
@@ -63,20 +64,25 @@ namespace WebService.Controllers
 
         private PostsSearchListDto CreateSearchResultDto(Posts posts)
         {
-
             //var dto = _mapper.Map<QuestionDto>(question);
             var dto = new PostsSearchListDto();
             if (posts.Parentid != 0)
             {
                 dto.ThreadLink = Url.Link(
-                         nameof(QuestionsController.GetThread),
-                        new { questionId = posts.Parentid });
+                    nameof(QuestionsController.GetThread),
+                    new 
+                    { 
+                        questionId = posts.Parentid 
+                    });
             }
             else
             {
                 dto.ThreadLink = Url.Link(
-         nameof(QuestionsController.GetThread),
-        new { questionId = posts.Id });
+                    nameof(QuestionsController.GetThread),
+                    new 
+                    { 
+                        questionId = posts.Id 
+                    });
             }
 
             dto.Rank = posts.Rank;
@@ -89,25 +95,31 @@ namespace WebService.Controllers
 
         private object CreateResult(IEnumerable<Posts> posts, SearchQuery searchparams, PagingAttributes attr)
         {
-            var totalResults = posts.First().Totalresults;
-            var numberOfPages = Math.Ceiling((double)totalResults / attr.PageSize);
-
-            var prev = attr.Page > 0
-                ? CreatePagingLink(searchparams.s, searchparams.stype, attr.Page - 1, attr.PageSize)
-                : null;
-            var next = attr.Page < numberOfPages - 1
-                ? CreatePagingLink(searchparams.s, searchparams.stype, attr.Page + 1, attr.PageSize)
-                : null;
-
-            return new
+            if (posts.FirstOrDefault() != null)
             {
-                totalResults,
-                numberOfPages,
-                prev,
-                next,
-                items = posts.Select(CreateSearchResultDto)
-                //items = posts
-            };
+                var totalResults = posts.First().Totalresults;
+                var numberOfPages = Math.Ceiling((double)totalResults / attr.PageSize);
+
+                var prev = attr.Page > 1
+                    ? CreatePagingLink(searchparams.s, searchparams.stype, attr.Page-1, attr.PageSize)
+                    : null;
+                var next = attr.Page < numberOfPages
+                    ? CreatePagingLink(searchparams.s, searchparams.stype, attr.Page+1, attr.PageSize)
+                    : null;
+
+                return new
+                {
+                    totalResults,
+                    numberOfPages,
+                    prev,
+                    next,
+                    items = posts.Select(CreateSearchResultDto)
+                    //items = posts
+                };
+            }
+            else {
+                return null;
+            }
         }
 
         private string CreatePagingLink(string s, int stype, int page, int pageSize)

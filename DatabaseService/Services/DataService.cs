@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Npgsql;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -57,23 +58,39 @@ namespace DatabaseService
                 .Count();
             System.Console.WriteLine($"{matchcount} results.");
 
+            //calc max pages and set requested page to last page if out of bounds
+            var calculatedNumberOfPages = (int)Math.Ceiling((double)matchcount / pagingAttributes.PageSize)-1;
+            System.Console.WriteLine($"{calculatedNumberOfPages} calculated pages.");
+            int page;
+            if (pagingAttributes.Page > calculatedNumberOfPages) 
+            {
+                page = calculatedNumberOfPages;
+            }
+
+            if (pagingAttributes.Page <= 0)
+            {
+                page = 0;
+            }
+            else page=pagingAttributes.Page-1;
+
             //get subset of results according to pagesize etc
             var resultlist = db.Search
                 .FromSqlRaw("SELECT * from appsearch(@appuserid, @searchtype, @search)", appuserid, searchtype, search)
-                .Skip(pagingAttributes.Page * pagingAttributes.PageSize)
+                .Skip(page * pagingAttributes.PageSize)
                 .Take(pagingAttributes.PageSize)
                 .ToList();
 
+            //build and map results to posts
             var resultposts = new List<Posts>();
 
             foreach (Search s in resultlist) 
             {
-               
+               //different mapping for results that are questions and answers
                 string tablename = GetPostType(s.postid);
                 if (tablename == "answers")
                 {
                     Posts p = new Posts();
-                    p.Parentid = GetParentId(s.postid);
+                    p.Parentid = GetAnswer(s.postid).Parentid;
                     p.Id = s.postid;
 
                     var endpos = 100;
@@ -89,7 +106,6 @@ namespace DatabaseService
                 else 
                 {
                     Posts p = new Posts();
-                    //p.Parentid = GetParentId(s.postid);
                     p.Id = s.postid;
 
                     var endpos = 100;
@@ -103,25 +119,9 @@ namespace DatabaseService
                     resultposts.Add(p);
                 }
             }
-
-
-
-
-
             return resultposts;
         }
 
-        private static string BuildSearchString(string searchstring)
-        {
-            string[] separators = { ",", ".", "..." };
-
-            string[] words = searchstring.Split(separators, System.StringSplitOptions.RemoveEmptyEntries);
-            System.Console.WriteLine($"{words.Length} tokens in search");
-
-            string finalstring = string.Join(" ", words);
-            System.Console.WriteLine("Built search string: " + finalstring);
-            return finalstring;
-        }
 
         public IList<WordRank> WordRank(string searchstring, int? searchtypecode, PagingAttributes pagingAttributes)
         {
@@ -166,6 +166,19 @@ namespace DatabaseService
                 .ToList();
         }
 
+        private static string BuildSearchString(string searchstring)
+        {
+            //convert query search string to appsearch db func search string
+            string[] separators = { ",", ".", "..." };
+
+            string[] words = searchstring.Split(separators, System.StringSplitOptions.RemoveEmptyEntries);
+            System.Console.WriteLine($"{words.Length} tokens in search");
+
+            string finalstring = string.Join(" ", words);
+            System.Console.WriteLine("Built search string: " + finalstring);
+            return finalstring;
+        }
+
         public int NumberOfQuestions()
         {
             using var db = new StackoverflowContext();
@@ -203,16 +216,15 @@ namespace DatabaseService
             return tablename;
         }
 
-
-        public int GetParentId(int answerID) 
+/*
+        public int GetParentId(int answerID) //not needed possibly?
         {
-
             System.Console.WriteLine($"Answerid -- {answerID}");
-            //var answerid = new NpgsqlParameter("aswerid", NpgsqlTypes.NpgsqlDbType.Integer);
-           // answerid.Value = answerID;
             using var db = new StackoverflowContext();
             int parentid = db.Answers
-                .Where(e => e.Id == answerID).FirstOrDefault().Parentid;
+                .Where(e => e.Id == answerID)
+                .FirstOrDefault()
+                .Parentid;
 
             System.Console.WriteLine($"Parentid -- {parentid}");
 
@@ -220,31 +232,45 @@ namespace DatabaseService
 
         }
 
+    */
+
         //public (Questions, IList<Answers>) GetThread(int questionId)
         public IList<Posts> GetThread(int questionId)
+            //returns question and all child answers
         {
             using var db = new StackoverflowContext();
-
+            //get the questionid
             var q = GetQuestion(questionId);
             if (q != null)
             {
+                //find answers to the specified questions
                 var ans = db.Answers
-                    .Where(e => e.Parentid == questionId)
-                    .ToList();
+                            .Where(e => e.Parentid == questionId)
+                            .ToList();
                 //manual mapping
                 List<Posts> posts = new List<Posts>();
                 posts.Add(
-                    new Posts { Id = q.Id, Title = q.Title, Body = q.Body });
+                    new Posts 
+                    { 
+                        Id = q.Id, 
+                        Title = q.Title, 
+                        Body = q.Body 
+                    });
                 foreach (Answers a in ans)
                 {
                     var endpos = 100;
                     if (a.Body.Length<100)
-                    { endpos = a.Body.Length; }
+                    { 
+                        endpos = a.Body.Length; //limit body size for now
+                    }
                     posts.Add(
-        new Posts { Id = a.Id, Parentid = a.Parentid, Body = a.Body.Substring(0, endpos) });
+                    new Posts 
+                    {
+                        Id = a.Id,
+                        Parentid = a.Parentid, 
+                        Body = a.Body.Substring(0, endpos) 
+                    });
                 };
-
-
                 return posts;
             }
             else return null;
