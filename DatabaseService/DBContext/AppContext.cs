@@ -36,14 +36,9 @@ namespace DatabaseService
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.CreateMap("Id", "Name");
-            //modelBuilder.Entity<AppUser>(); //can maybe be hadnled with hasnokey()
-        //    modelBuilder.Entity<object /*todo replace type*/>().HasNoKey();
             modelBuilder.Entity<Annotations>().HasNoKey();
-
             modelBuilder.Entity<AppUser>().ToTable("appusers");
             modelBuilder.Entity<AppUser>().Property(x => x.id).HasColumnName("id");
-            //modelBuilder.Entity<Category>().Property(x => x.Name).HasColumnName("categoryname");
-            //modelBuilder.Entity<Category>().Property(x => x.Description).HasColumnName("description");
 
         }
     }
