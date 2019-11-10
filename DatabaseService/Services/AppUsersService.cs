@@ -1,12 +1,12 @@
 using System;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using DatabaseService.Modules;
 
 namespace DatabaseService.Services
 {
     public class AppUsersService : IAppUsersService
     {
-
         private bool DatabaseModify(string query)
         {
             using var database = new AppContext();
@@ -19,8 +19,8 @@ namespace DatabaseService.Services
             if (AppUserExist(id))
             {
                 using var database = new AppContext();
-                //return new AppUser(id, "test");
-                return database.AppUser.Find(id).name;
+                var result = database.AppUser.Find(id);
+                return result.name;
             }
             else
             {
@@ -32,11 +32,9 @@ namespace DatabaseService.Services
         {
             if (AppUserExist(username))
             {
-                string query = "SELECT id FROM appusers WHERE appusers.name = 'in';";
-                
                 using var database = new AppContext();
-                var result = database.AppUser.FromSqlRaw(query);
-                return Convert.ToInt32(result.FirstOrDefault());
+                var appUser = database.AppUser.First(user => user.name == username);
+                return appUser.id;
             }
             else
             {
@@ -44,16 +42,20 @@ namespace DatabaseService.Services
             }
         }
 
-        public bool CreateAppUser(string name)
+        public bool CreateAppUser(string username)
         {
-            if (AppUserExist(name))
+            if (AppUserExist(username))
             {
                 return false;
             }
             else
             {
-                var query = "INSERT INTO appusers (name) VALUES ('{name}');";
-                return DatabaseModify(query);
+                using var database = new AppContext();
+                database.AppUser.Add(new AppUser() {name = username});
+
+                var result = database.SaveChanges();
+                Console.WriteLine(result); //todo remove
+                return result > 0;
             }
         }
 
@@ -61,8 +63,13 @@ namespace DatabaseService.Services
         {
             if (AppUserExist(oldName))
             {
-                var query = "UPDATE appusers SET name = '{newName}' WHERE appusers.name ='{oldName}}';";
-                return DatabaseModify(query);
+                using var database = new AppContext();
+                int appUserId = GetAppUserId(oldName);
+                var appUser = database.AppUser.Find(appUserId);
+                database.AppUser.Update(appUser);
+                appUser.name = newName;
+                var result = database.SaveChanges();
+                return result > 0;
             }
             else
             {
@@ -74,9 +81,14 @@ namespace DatabaseService.Services
         {
             if (AppUserExist(id))
             {
-                var query = "DELETE FROM appusers WHERE appusers.id = {id};";
-                return DatabaseModify(query);
+                using var database = new AppContext();
+                var appUser = database.AppUser.Find(id);
+                database.AppUser.Remove(appUser);
+
+                var result = database.SaveChanges();
+                return result > 0;
             }
+
             return false;
         }
 
@@ -87,25 +99,14 @@ namespace DatabaseService.Services
 
         public bool AppUserExist(int id)
         {
-            string query = "SELECT COUNT(id) FROM appusers WHERE appusers.id = '{id}}';";
-                
             using var database = new AppContext();
-            var result = database.AppUser.FromSqlRaw(query);
-            var cResult = Convert.ToInt32(result.FirstOrDefault());
-            if (cResult == 1)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            var result = database.AppUser.Find(id);
+            return result != null;
         }
 
         public bool AppUserExist(string username)
         {
             return AppUserExist(GetAppUserId(username));
         }
-        
     }
 }
