@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-//using WebService.Models;
 
 namespace WebService.Controllers
 {
@@ -67,47 +66,14 @@ namespace WebService.Controllers
             }
 
         }
-        /*
-               [HttpPost]
-               public ActionResult CreateCategory(CategoryForCreation categoryDto)
-               {
-                   var category = _mapper.Map<Questions>(categoryDto);
-                   _dataService.CreateCategory(category);
-                   return CreatedAtRoute(
-                       nameof(GetCategory),
-                       new { categoryId = category.Id},
-                       CreateCategoryDto(category));
-               }
 
-               [HttpPut("{categoryId}")]
-               public ActionResult UpdateCategory(
-                   int categoryId, Questions category)
-               {
-                   if (!_dataService.CategoryExcist(categoryId))
-                   {
-                       return NotFound();
-                   }
-                   category.Id = categoryId;
-                   _dataService.UpdateCategory(category);
-                   return NoContent();
-               }
-
-               [HttpDelete("{categoryId}")]
-               public ActionResult DeleteCategory(int categoryId)
-               {
-                   if (_dataService.DeleteCategory(categoryId))
-                   {
-                       return NoContent();
-                   }
-                   return NotFound();
-               }
 
                ///////////////////
                //
                // Helpers
                //
                //////////////////////
-       */
+
         private QuestionDto CreateQuestionDto(Questions question)
         {
 
@@ -149,8 +115,5 @@ namespace WebService.Controllers
         {
             return Url.Link(nameof(BrowseQuestions), new { page, pageSize });
         }
-
-
-
     }
 }

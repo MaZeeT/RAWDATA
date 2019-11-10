@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-//using System.Web.Http;
-//using WebService.Models;
 
 namespace WebService.Controllers
 {
@@ -24,7 +22,8 @@ namespace WebService.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet, Route("{s=}/{stype=3}/{page=0}/{pageSize=10}")]
+        //[HttpGet(Name = nameof(Search)), Route("{s=}/{stype=3}/{page=1}/{pageSize=10}")] //still dont understand the Route options
+        [HttpGet(Name = nameof(Search))]
         //[HttpGet] put defalut values here for optional parameters. in this case only s is not optional
         //examples
         // http://localhost:5001/api/search?s=code&stype=0&page=10&pageSize=5
@@ -36,10 +35,16 @@ namespace WebService.Controllers
                 Console.WriteLine("Got searchparams: " + searchparams.s);
 
                 //rudimentary checking of params
-                if (searchparams.stype >= 0 && searchparams.stype <= 3 || searchparams.stype == null)
+                if (searchparams.stype >= 0 && searchparams.stype <= 3)
                 {
                     var search = _dataService.Search(searchparams.s, searchparams.stype, pagingAttributes);
-                    return Ok(search);
+
+                    var result = CreateResult(search, searchparams, pagingAttributes);
+                    if (result != null)
+                    {
+                        return Ok(result);
+                    }
+                    else return NoContent();
                 }
                 else if (searchparams.stype >= 4 && searchparams.stype <= 5)
                 {
@@ -51,47 +56,76 @@ namespace WebService.Controllers
         }
 
 
-
-
         ///////////////////
         //
         // Helpers
         //
         //////////////////////
 
-        /*
-                private QuestionDto CreateCategoryDto(Questions category)
+        private PostsSearchListDto CreateSearchResultDto(Posts posts)
+        {
+            //var dto = _mapper.Map<QuestionDto>(question);
+            var dto = new PostsSearchListDto();
+            if (posts.Parentid != 0)
+            {
+                dto.ThreadLink = Url.Link(
+                    nameof(QuestionsController.GetThread),
+                    new 
+                    { 
+                        questionId = posts.Parentid 
+                    });
+            }
+            else
+            {
+                dto.ThreadLink = Url.Link(
+                    nameof(QuestionsController.GetThread),
+                    new 
+                    { 
+                        questionId = posts.Id 
+                    });
+            }
+
+            dto.Rank = posts.Rank;
+            dto.QuestionTitle = posts.Title;
+            dto.PostBody = posts.Body;
+            dto.PostId = posts.Id;
+
+            return dto;
+        }
+
+        private object CreateResult(IEnumerable<Posts> posts, SearchQuery searchparams, PagingAttributes attr)
+        {
+            if (posts.FirstOrDefault() != null)
+            {
+                var totalResults = posts.First().Totalresults;
+                var numberOfPages = Math.Ceiling((double)totalResults / attr.PageSize);
+
+                var prev = attr.Page > 1
+                    ? CreatePagingLink(searchparams.s, searchparams.stype, attr.Page-1, attr.PageSize)
+                    : null;
+                var next = attr.Page < numberOfPages
+                    ? CreatePagingLink(searchparams.s, searchparams.stype, attr.Page+1, attr.PageSize)
+                    : null;
+
+                return new
                 {
-                    var dto = _mapper.Map<QuestionDto>(category);
-                    dto.Link = Url.Link(
-                            nameof(GetQuestion),
-                            new { categoryId = category.Id });
-                    return dto;
-                }
-                private object CreateResult(IEnumerable<Questions> categories, PagingAttributes attr)
-                {
-                    var totalItems = _dataService.NumberOfQuestions();
-                    var numberOfPages = Math.Ceiling((double)totalItems / attr.PageSize);
-                    var prev = attr.Page > 0
-                        ? CreatePagingLink(attr.Page - 1, attr.PageSize)
-                        : null;
-                    var next = attr.Page < numberOfPages - 1
-                        ? CreatePagingLink(attr.Page + 1, attr.PageSize)
-                        : null;
-                    return new
-                    {
-                        totalItems,
-                        numberOfPages,
-                        prev,
-                        next,
-                        items = categories.Select(CreateCategoryDto)
-                    };
-                }
-                private string CreatePagingLink(int page, int pageSize)
-                {
-                    return Url.Link(nameof(GetCategories), new { page, pageSize });
-                } 
-                */
+                    totalResults,
+                    numberOfPages,
+                    prev,
+                    next,
+                    items = posts.Select(CreateSearchResultDto)
+                    //items = posts
+                };
+            }
+            else {
+                return null;
+            }
+        }
+
+        private string CreatePagingLink(string s, int stype, int page, int pageSize)
+        {
+            return Url.Link(nameof(Search), new { s, stype, page, pageSize });
+        }
 
     }
 }
