@@ -82,6 +82,8 @@ namespace DatabaseService
                     p.Body = GetAnswer(s.postid).Body.Substring(0, endpos);
 
                     p.Title = GetQuestion(p.Parentid).Title;
+                    p.Totalresults = matchcount;
+                    p.Rank = s.rank;
                     resultposts.Add(p);
                 }
                 else 
@@ -96,6 +98,8 @@ namespace DatabaseService
                     p.Body = GetQuestion(s.postid).Body.Substring(0, endpos);
 
                     p.Title = GetQuestion(s.postid).Title;
+                    p.Totalresults = matchcount;
+                    p.Rank = s.rank;
                     resultposts.Add(p);
                 }
             }
