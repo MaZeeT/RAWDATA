@@ -28,7 +28,7 @@ namespace WebService.Controllers
             Console.WriteLine("input: " + id);
             try
             {
-                var appUser = _appUsersService.GetAppUser(id);
+                var appUser = _appUsersService.GetAppUserName(id);
                 Console.WriteLine("ds: " + appUser);
                 return Ok(appUser);
             }
