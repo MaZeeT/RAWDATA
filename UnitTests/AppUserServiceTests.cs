@@ -151,7 +151,6 @@ namespace UnitTests
         {
             var service = new AppUsersService();
             var userName = "docker";
-            var falseName = "not docker";
             var falseId = -2;
 
             var creationBool = service.CreateAppUser(userName);
