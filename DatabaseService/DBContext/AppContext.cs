@@ -18,6 +18,7 @@ namespace DatabaseService
         // public DbSet<object> History { get; set; }
         public DbSet<Annotations> Annotations { get; set; }
         public DbSet<AnnotateFunctionDto> AnnotateFunction { get; set; }
+
         public DbSet<AuthUsers> AuthUser { get; set; }
 
         //todo replace objects with proper types
