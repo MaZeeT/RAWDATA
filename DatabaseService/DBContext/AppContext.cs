@@ -58,6 +58,8 @@ namespace DatabaseService
             modelBuilder.Entity<AnnotateFunctionDto>().HasNoKey();
             modelBuilder.Entity<AppUser>().ToTable("appusers");
             modelBuilder.Entity<AppUser>().Property(x => x.Id).HasColumnName("id");
+            //modelBuilder.Entity<History>().ToTable("history");
+            //modelBuilder.Entity<History>().Property(x => x.Id).HasColumnName("id");
 
         }
     }
