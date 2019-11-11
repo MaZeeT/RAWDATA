@@ -15,16 +15,16 @@ namespace DatabaseService.Services
         
         public string GetAppUserName(int id)
         {
-            var result = database.AppUser.Find(id);
-            return result.name;
+            var result = database.AppUsers.Find(id);
+            return result.Username;
         }
 
         public int GetAppUserId(string username)
         {
-            var appUsers = database.AppUser.Where(user => user.name == username).ToList();
+            var appUsers = database.AppUsers.Where(user => user.Username == username).ToList();
             if (appUsers.Count > 0)
             {
-                return appUsers.First().id;
+                return appUsers.First().Id;
             }
 
             return -1;
@@ -34,7 +34,7 @@ namespace DatabaseService.Services
         {
             if (!AppUserExist(username))
             {
-                database.AppUser.Add(new AppUser() {name = username});
+                database.AppUsers.Add(new AppUsers() {Username = username});
 
                 var result = database.SaveChanges();
                 return result > 0;
@@ -48,9 +48,9 @@ namespace DatabaseService.Services
             if (AppUserExist(oldName))
             {
                 int appUserId = GetAppUserId(oldName);
-                var appUser = database.AppUser.Find(appUserId);
-                database.AppUser.Update(appUser);
-                appUser.name = newName;
+                var appUser = database.AppUsers.Find(appUserId);
+                database.AppUsers.Update(appUser);
+                appUser.Username = newName;
                 var result = database.SaveChanges();
                 return result > 0;
             }
@@ -62,8 +62,8 @@ namespace DatabaseService.Services
         {
             if (AppUserExist(id))
             {
-                var appUser = database.AppUser.Find(id);
-                database.AppUser.Remove(appUser);
+                var appUser = database.AppUsers.Find(id);
+                database.AppUsers.Remove(appUser);
 
                 var result = database.SaveChanges();
                 return result > 0;
@@ -79,7 +79,7 @@ namespace DatabaseService.Services
 
         public bool AppUserExist(int id)
         {
-            var result = database.AppUser.Find(id);
+            var result = database.AppUsers.Find(id);
             return result != null;
         }
 

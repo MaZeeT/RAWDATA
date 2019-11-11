@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Net.Sockets;
 
 namespace DatabaseService.Modules
 {
-    public class AuthUsers
+    public class AppUsers
     {
         public int Id { get; set; }
         public string Username { get; set; }

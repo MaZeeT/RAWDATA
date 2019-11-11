@@ -28,7 +28,8 @@ namespace WebService.Controllers.Authentication
         }
 
         [HttpPost("users")]
-        public ActionResult CreateUser([FromBody] SignupUserDto dto)
+        public ActionResult CreateUser([FromForm] SignupUserDto dto)
+            //changed to FromForm just because i cant be bothered to look up what to send in postman
         {
             if (_authUsersService.GetUserByUserName(dto.Username) != null)
             {
@@ -55,7 +56,8 @@ namespace WebService.Controllers.Authentication
 
 
         [HttpPost("tokens")]
-        public ActionResult Login([FromBody] SignupUserDto dto)
+        public ActionResult Login([FromForm] SignupUserDto dto)
+        //changed to FromForm just because i cant be bothered to look up what to send in postman
         {
             var user = _authUsersService.GetUserByUserName(dto.Username);
 
@@ -74,7 +76,7 @@ namespace WebService.Controllers.Authentication
 
         }
 
-        private bool IsInvalidPassword(SignupUserDto dto, AuthUsers user)
+        private bool IsInvalidPassword(SignupUserDto dto, AppUsers user)
         {
             int.TryParse(
                _configuration.GetSection("Auth:PwdSize").Value,
@@ -87,7 +89,7 @@ namespace WebService.Controllers.Authentication
             }
             return false;
         }
-        private string GenerateToken(AuthUsers user)
+        private string GenerateToken(AppUsers user)
         {
 
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -98,8 +100,10 @@ namespace WebService.Controllers.Authentication
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(ClaimTypes.Name, user.Id.ToString()), //need to see what are claims and how they work
+                    //as i understand it, we can use the claim to get the user/name/id from the other controllers
                 }),
-                Expires = DateTime.Now.AddMinutes(3),
+                //Expires = DateTime.Now.AddMinutes(3),
+                Expires = DateTime.Now.AddDays(1), //when testing functions
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(key),
                     SecurityAlgorithms.HmacSha256Signature)
