@@ -13,9 +13,10 @@ namespace DatabaseService.Services
             database = new AppContext();
         }
 
+
         public bool Add(History history)
         {
-            return true;
+            throw new System.NotImplementedException();
         }
 
         public History Get(int historyId)
