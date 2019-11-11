@@ -1,13 +1,14 @@
 ﻿using AutoMapper;
 using DatabaseService.Modules;
 using DatabaseService.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
 
 namespace WebService.Controllers
 {
     [ApiController]
     [Route("api/annotations")]
+    [Authorize]
     public class AnnotationsController : ControllerBase
     {
         private IAppUsersDataService _appUsersDataService;

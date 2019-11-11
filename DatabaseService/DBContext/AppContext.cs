@@ -17,7 +17,12 @@ namespace DatabaseService
         // public DbSet<object> History { get; set; }
         public DbSet<Annotations> Annotations { get; set; }
         public DbSet<AnnotateFunctionDto> AnnotateFunction { get; set; }
-        
+
+
+        public DbSet<AuthUsers> AuthUser { get; set; }
+
+        //todo replace objects with proper types
+
         /* public DbSet<object> AppUser { get; set; }
          public DbSet<object> History { get; set; }*/
 
@@ -36,7 +41,13 @@ namespace DatabaseService
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.CreateMap("Id", "Name");
-            modelBuilder.Entity<Annotations>().HasNoKey();
+
+            modelBuilder.Entity<AuthUsers>().ToTable("authusers"); 
+            //modelBuilder.Entity<AppUser>(); //can maybe be hadnled with hasnokey()
+            //modelBuilder.Entity<object /*todo replace type*/>().HasNoKey();
+
+            //modelBuilder.Entity<Annotations>().HasNoKey();
+            modelBuilder.Entity<AnnotateFunctionDto>().HasNoKey();
             modelBuilder.Entity<AppUser>().ToTable("appusers");
             modelBuilder.Entity<AppUser>().Property(x => x.id).HasColumnName("id");
 
