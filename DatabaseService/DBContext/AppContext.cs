@@ -18,8 +18,7 @@ namespace DatabaseService
         public DbSet<Annotations> Annotations { get; set; }
         public DbSet<AnnotateFunctionDto> AnnotateFunction { get; set; }
 
-
-        public DbSet<AuthUsers> AuthUser { get; set; }
+        
 
         //todo replace objects with proper types
 
@@ -41,8 +40,7 @@ namespace DatabaseService
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.CreateMap("Id", "Name");
-
-            modelBuilder.Entity<AuthUsers>().ToTable("authusers"); 
+            
             //modelBuilder.Entity<AppUser>(); //can maybe be hadnled with hasnokey()
             //modelBuilder.Entity<object /*todo replace type*/>().HasNoKey();
 

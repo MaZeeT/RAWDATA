@@ -10,7 +10,6 @@ using System;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using DatabaseService.Services.Authentication;
 
 namespace WebService
 {
@@ -35,7 +34,6 @@ namespace WebService
             services.AddSingleton<IDataService, DataService>();
             services.AddSingleton<IAppUsersDataService, AppUsersDataService>();
             services.AddSingleton<IAppUsersService, AppUsersService>();
-            services.AddSingleton<IAuthUsersService, AuthUsersService>();
 
 
             var key = Encoding.UTF8.GetBytes(Configuration.GetSection("Auth:Key").Value);
