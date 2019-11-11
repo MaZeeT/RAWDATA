@@ -1,3 +1,4 @@
+using System;
 using System.Net.Sockets;
 
 namespace DatabaseService.Modules
@@ -11,6 +12,6 @@ namespace DatabaseService.Modules
         public string Password { get; set; }
         
         public string Salt { get; set; }
-
+        
     }
 }

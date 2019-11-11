@@ -18,19 +18,19 @@ namespace WebService.Controllers.Authentication
     public class AuthenticationController : ControllerBase
     {
 
-        private readonly IAuthUsersService _authUsersService;
+        private readonly IAppUsersService _service;
         private readonly IConfiguration _configuration;
 
-        public AuthenticationController(IAuthUsersService authUsersService, IConfiguration configuration)
+        public AuthenticationController(IAppUsersService service, IConfiguration configuration)
         {
-            _authUsersService = authUsersService;
+            _service = service;
             _configuration = configuration;
         }
 
         [HttpPost("users")]
         public ActionResult CreateUser([FromBody] SignupUserDto dto)
         {
-            if (_authUsersService.GetUserByUserName(dto.Username) != null)
+            if (_service.GetAppUser(dto.Username) != null)
             {
                 return BadRequest();
             }
@@ -48,7 +48,7 @@ namespace WebService.Controllers.Authentication
 
             var pwd = PasswordService.HashPassword(dto.Password, salt, size);
 
-            _authUsersService.CreateUser(dto.Username, pwd, salt);
+            _service.CreateUser(dto.Username, pwd, salt);
 
             return CreatedAtRoute(null, dto.Username);
         }
@@ -57,7 +57,7 @@ namespace WebService.Controllers.Authentication
         [HttpPost("tokens")]
         public ActionResult Login([FromBody] SignupUserDto dto)
         {
-            var user = _authUsersService.GetUserByUserName(dto.Username);
+            var user = _service.GetAppUser(dto.Username);
 
             if (user == null)
             {
@@ -74,7 +74,7 @@ namespace WebService.Controllers.Authentication
 
         }
 
-        private bool IsInvalidPassword(SignupUserDto dto, AuthUsers user)
+        private bool IsInvalidPassword(SignupUserDto dto, AppUser user)
         {
             int.TryParse(
                _configuration.GetSection("Auth:PwdSize").Value,
@@ -87,7 +87,7 @@ namespace WebService.Controllers.Authentication
             }
             return false;
         }
-        private string GenerateToken(AuthUsers user)
+        private string GenerateToken(AppUser user)
         {
 
             var tokenHandler = new JwtSecurityTokenHandler();

@@ -1,18 +1,18 @@
 using System.Linq;
 using DatabaseService.Modules;
+using NLog.LayoutRenderers;
 
 namespace DatabaseService.Services
 {
-
     public class AppUsersService : IAppUsersService
     {
-         AppContext database;
+        AppContext database;
 
-         public AppUsersService()
-         {
-             database = new AppContext();
-         }
-        
+        public AppUsersService()
+        {
+            database = new AppContext();
+        }
+
         public string GetAppUserName(int id)
         {
             var result = database.AppUser.Find(id);
@@ -21,13 +21,26 @@ namespace DatabaseService.Services
 
         public int GetAppUserId(string username)
         {
+            var user = GetAppUser(username);
+            if (user == null)
+            {
+                return -1;
+            }
+            else
+            {
+                return user.Id;
+            }
+        }
+
+        public AppUser GetAppUser(string username)
+        {
             var appUsers = database.AppUser.Where(user => user.Username == username).ToList();
             if (appUsers.Count > 0)
             {
-                return appUsers.First().Id;
+                return appUsers.First();
             }
 
-            return -1;
+            return null;
         }
 
         public bool CreateAppUser(string username, string password, string salt)
@@ -35,17 +48,28 @@ namespace DatabaseService.Services
             if (!AppUserExist(username))
             {
                 database.AppUser.Add(
-                    new AppUser() {
-                    Username = username, 
-                    Password = password, 
-                    Salt = salt
+                    new AppUser()
+                    {
+                        Username = username,
+                        Password = password,
+                        Salt = salt
                     });
 
                 var result = database.SaveChanges();
                 return result > 0;
             }
-            
+
             return false;
+        }
+
+        public AppUser CreateUser(string name, string password, string salt)
+        {
+            if (CreateAppUser(name, password, salt))
+            {
+                return GetAppUser(name);
+            }
+
+            return null;
         }
 
         public bool UpdateAppUserName(string oldName, string newName)
@@ -92,6 +116,5 @@ namespace DatabaseService.Services
         {
             return AppUserExist(GetAppUserId(username));
         }
-        
     }
 }
