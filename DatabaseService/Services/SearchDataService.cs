@@ -2,20 +2,19 @@
 using Npgsql;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
 
 
 namespace DatabaseService
 {
-    public class DataService : IDataService
+    public class SearchDataService : IDataService
     {
 
         public IList<Questions> GetQuestions(PagingAttributes pagingAttributes)
         {
             // AuthUser()
             // if ok do browse q-list
-            using var db = new StackoverflowContext();
+            using var db = new AppContext();
 
             //try to make pages 1-based
             int page;
@@ -32,7 +31,7 @@ namespace DatabaseService
                 .ToList();
         }
 
-        public IList<Posts> Search(string searchstring, int? searchtypecode, PagingAttributes pagingAttributes)
+        public IList<Posts> Search(int userid, string searchstring, int? searchtypecode, PagingAttributes pagingAttributes)
         {
             ////// for performing searches with appsearch on the db
             ///
@@ -41,7 +40,7 @@ namespace DatabaseService
             // do actual search using appsearch in db and build results
 
             //need db context and searchtype lookuptable
-            using var db = new StackoverflowContext();
+            using var db = new AppContext();
             Modules.SearchTypeLookupTable st = new Modules.SearchTypeLookupTable();
 
             ////get params for db.func
@@ -60,7 +59,7 @@ namespace DatabaseService
 
             //userid is hardcoded for now; should be returned from auth or sth
             var appuserid = new NpgsqlParameter("appuserid", NpgsqlTypes.NpgsqlDbType.Integer);
-            appuserid.Value = 2;
+            appuserid.Value = userid;
 
             //count all matches
             var matchcount = db.Search
@@ -133,7 +132,7 @@ namespace DatabaseService
         }
 
 
-        public IList<WordRank> WordRank(string searchstring, int? searchtypecode, PagingAttributes pagingAttributes)
+        public IList<WordRank> WordRank(int userid, string searchstring, int? searchtypecode, PagingAttributes pagingAttributes)
         {
             ////// for performing searches with wordrank on the db
             ///
@@ -141,7 +140,7 @@ namespace DatabaseService
             // do actual search using appsearch in db and build results
 
             //need db context and searchtype lookuptable
-            using var db = new StackoverflowContext();
+            using var db = new AppContext();
             Modules.SearchTypeLookupTable st = new Modules.SearchTypeLookupTable();
 
             ////get params for db.func
@@ -160,7 +159,7 @@ namespace DatabaseService
 
             //userid is hardcoded for now; should be returned from auth or sth
             var appuserid = new NpgsqlParameter("appuserid", NpgsqlTypes.NpgsqlDbType.Integer);
-            appuserid.Value = 2;
+            appuserid.Value = userid;
 
             //count matches
             var matchcount = db.Search
@@ -191,21 +190,21 @@ namespace DatabaseService
 
         public int NumberOfQuestions()
         {
-            using var db = new StackoverflowContext();
+            using var db = new AppContext();
             return db.Questions
                 .Count();
         }
 
         public Questions GetQuestion(int questionId)
         {
-            using var db = new StackoverflowContext();
+            using var db = new AppContext();
 
             return db.Questions.Find(questionId);
         }
 
         public Answers GetAnswer(int answerId)
         {
-            using var db = new StackoverflowContext();
+            using var db = new AppContext();
 
             return db.Answers.Find(answerId);
         }
@@ -217,7 +216,7 @@ namespace DatabaseService
             System.Console.WriteLine($"Postid -- {postId}");
             var postid = new NpgsqlParameter("postid", NpgsqlTypes.NpgsqlDbType.Integer);
             postid.Value = postId;
-            using var db = new StackoverflowContext();
+            using var db = new AppContext();
             string tablename = db.PostsTable
                 .FromSqlRaw("SELECT * from resolveid(@postid)", postid).First().resolveid;
 
@@ -248,7 +247,7 @@ namespace DatabaseService
         public IList<Posts> GetThread(int questionId)
             //returns question and all child answers
         {
-            using var db = new StackoverflowContext();
+            using var db = new AppContext();
             //get the questionid
             var q = GetQuestion(questionId);
             if (q != null)
