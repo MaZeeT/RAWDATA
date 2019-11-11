@@ -3,6 +3,7 @@ using DatabaseService.Modules;
 using DatabaseService.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace WebService.Controllers
 {
@@ -22,10 +23,45 @@ namespace WebService.Controllers
 
 
         /// <summary>
+        /// Get all annotations that belong to the logged in user : http://localhost:5001/api/annotations plus Authorization Bearer <valid_tokenvalue> in Headers
+        /// </summary>
+        /// <returns>Array of Json Annotation Objects plus relevant status code</returns>
+        [HttpGet]
+        public ActionResult GetAllAnnotationsOfUser()
+        {
+            int userIdFromToken = GetAuthUserId();
+            var listOfAnnotations = _annotationService.GetAllAnnotationsByUserId(userIdFromToken);
+            if (listOfAnnotations.Count == 0)
+            {
+                return NotFound();
+            }
+            return Ok(listOfAnnotations);
+        }
+        /// <summary>
+        /// Get all annoations of a post from a user
+        /// based on postId from url and userId from token
+        /// http://localhost:5001/api/annotations/user/{postid}
+        /// header: valid user token;
+        /// </summary>
+        /// <param name="postId"></param>
+        /// <returns>List of annotationsDto</returns>
+        [HttpGet("user/{postId}")]
+        public ActionResult GetAnnotationsByPostId(int postId)
+        {
+            int userIdFromToken = GetAuthUserId();
+            var listOfAnnotations = _annotationService.GetAnnotationsByPostId(userIdFromToken, postId);
+            if (listOfAnnotations.Count == 0)
+            {
+                return NotFound();
+            }
+            return Ok(listOfAnnotations);
+        }
+
+        /// <summary>
         /// Testing this api in postman: http://localhost:5001/api/annotations/2
         /// </summary>
         /// <param name="annotationId"></param>
-        /// <returns></returns>
+        /// <returns>AnnotationDto</returns>
         [HttpGet("{annotationId}", Name = nameof(GetAnnotation))] // fancy way to have strings checked by the compiler
         public ActionResult GetAnnotation(int annotationId)
         {
@@ -40,14 +76,12 @@ namespace WebService.Controllers
             return Ok(CreateLink(returnedAnnotation));
         }
 
-
         /// <summary>
         /// This function calls the create anew annotation from db function
         /// Testing with postman:
-        ///  in request: POST http://localhost:5001/api/annotations 
+        ///  in request: POST http://localhost:5001/api/annotations  plus valid token of the user
         ///  in body: 
         ///         {
-        ///             "UserId": 1,
         ///             "HistoryId": 19,
         ///             "Body": "This call takes in userId, HistoryId and the body; but returns all the things from AnnotationsDto"
         ///         }
@@ -59,7 +93,7 @@ namespace WebService.Controllers
         {
             var newAnnotation = new Annotations
             {
-                UserId = annotationObj.UserId,
+                UserId = GetAuthUserId(),
                 HistoryId = annotationObj.HistoryId,
                 Body = annotationObj.Body
             };
@@ -128,6 +162,16 @@ namespace WebService.Controllers
                     nameof(GetAnnotation),
                     new { AnnotationId = annotation.Id });
             return annotationDto;
+        }
+
+        /// <summary>
+        /// Get the authenticated user's id from token claim
+        /// </summary>
+        /// <returns>integer authenticated user's id from token</returns>
+        private int GetAuthUserId()
+        {
+            var userIdFromToken = int.Parse(this.User.Identity.Name);
+            return userIdFromToken;
         }
 
 

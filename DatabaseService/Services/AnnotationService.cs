@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace DatabaseService.Services
@@ -11,10 +12,8 @@ namespace DatabaseService.Services
         public Annotations CreateAnnotations(AnnotationsDto obj)
         {
             using var DB = new AppContext();
-            var nextId = DB.Annotations.Max(x => x.Id) + 1;
             var annotation = new Annotations
             {
-                Id = nextId,
                 UserId = obj.UserId,
                 HistoryId = obj.HistoryId,
                 Body = obj.Body,
@@ -29,6 +28,25 @@ namespace DatabaseService.Services
             using var DB = new AppContext();
             var result = DB.Annotations.Find(value);
             
+            return result;
+        }
+        public List<Annotations> GetAllAnnotationsByUserId(int userId)
+        {
+            using var DB = new AppContext();
+            var result = DB.Annotations
+                           .Where(x => x.UserId == userId)
+                           .ToList();
+
+            return result;
+        }
+
+        public List<Annotations> GetAnnotationsByPostId(int userId, int postId)
+        {
+            using var DB = new AppContext();
+            var result = DB.Annotations
+                           .Where(val => val.UserId == userId)
+                           .Where(val => val.HistoryId == postId)
+                           .ToList();
             return result;
         }
 
