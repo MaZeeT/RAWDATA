@@ -1,69 +1,52 @@
-using System;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using DatabaseService.Modules;
 
 namespace DatabaseService.Services
 {
+
     public class AppUsersService : IAppUsersService
     {
-        private bool DatabaseModify(string query)
-        {
-            using var database = new AppContext();
-            database.AppUser.FromSqlRaw(query);
-            return true; //todo return bool depending on DB not hardcode
-        }
+         AppContext database;
 
+         public AppUsersService()
+         {
+             database = new AppContext();
+         }
+        
         public string GetAppUserName(int id)
         {
-            if (AppUserExist(id))
-            {
-                using var database = new AppContext();
-                var result = database.AppUser.Find(id);
-                return result.name;
-            }
-            else
-            {
-                return null;
-            }
+            var result = database.AppUser.Find(id);
+            return result.name;
         }
 
         public int GetAppUserId(string username)
         {
-            if (AppUserExist(username))
+            var appUsers = database.AppUser.Where(user => user.name == username).ToList();
+            if (appUsers.Count > 0)
             {
-                using var database = new AppContext();
-                var appUser = database.AppUser.First(user => user.name == username);
-                return appUser.id;
+                return appUsers.First().id;
             }
-            else
-            {
-                return -1;
-            }
+
+            return -1;
         }
 
         public bool CreateAppUser(string username)
         {
-            if (AppUserExist(username))
+            if (!AppUserExist(username))
             {
-                return false;
-            }
-            else
-            {
-                using var database = new AppContext();
                 database.AppUser.Add(new AppUser() {name = username});
 
                 var result = database.SaveChanges();
-                Console.WriteLine(result); //todo remove
                 return result > 0;
             }
+
+            return false;
         }
 
         public bool UpdateAppUserName(string oldName, string newName)
         {
             if (AppUserExist(oldName))
             {
-                using var database = new AppContext();
                 int appUserId = GetAppUserId(oldName);
                 var appUser = database.AppUser.Find(appUserId);
                 database.AppUser.Update(appUser);
@@ -71,17 +54,14 @@ namespace DatabaseService.Services
                 var result = database.SaveChanges();
                 return result > 0;
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
         }
 
         public bool DeleteAppUser(int id)
         {
             if (AppUserExist(id))
             {
-                using var database = new AppContext();
                 var appUser = database.AppUser.Find(id);
                 database.AppUser.Remove(appUser);
 
@@ -99,7 +79,6 @@ namespace DatabaseService.Services
 
         public bool AppUserExist(int id)
         {
-            using var database = new AppContext();
             var result = database.AppUser.Find(id);
             return result != null;
         }
@@ -108,5 +87,6 @@ namespace DatabaseService.Services
         {
             return AppUserExist(GetAppUserId(username));
         }
+        
     }
 }
