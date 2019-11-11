@@ -8,36 +8,13 @@ namespace UnitTests.DatabaseService
     public class HistoryServiceTest
     {
         [Fact]
-        public void HistoryAddValid()
-        {
-            var service = new HistoryService();
-            var history = new History
-            {
-                Id = 1,
-                Userid = 1,
-                Postid = 1,
-                PostTableName = "test",
-                Date = new DateTime(2008, 2, 1),
-                isBookmark = true
-            };
-
-            Assert.True(service.Add(history));
-            
-            //clean up todo delete when mock is working
-            service.Delete(history.Id);
-        }
-
-        [Fact]
         public void HistoryAddInvalid()
         {
             var service = new HistoryService();
             var history = new History
             {
-                Id = -5,
                 Userid = 15,
                 Postid = 110,
-                PostTableName = "tester",
-                Date = new DateTime(2108, 7, 5),
                 isBookmark = false
             };
 
@@ -45,51 +22,50 @@ namespace UnitTests.DatabaseService
         }
 
         [Fact]
-        public void HistoryDeleteValid()
+        public void HistoryAddValid()
         {
             var service = new HistoryService();
             var history = new History
             {
-                Id = 5,
-                Userid = 15,
-                Postid = 110,
-                PostTableName = "testing",
-                Date = new DateTime(1988, 6, 5),
+                Userid = 0,
+                Postid = 1760,
                 isBookmark = false
             };
 
-            Assert.True(service.Add(history));
-            Assert.True(service.Delete(history.Id));
+            var result = service.Add(history);
+            
+            Assert.True(result);
+
+            //clean up todo delete when mock is working
+            service.Delete(service.Get(0, 1760).Id);
         }
 
         [Fact]
         public void HistoryDeleteInvalid()
         {
             var service = new HistoryService();
-            var history = new History
-            {
-                Id = 5,
-                Userid = 15,
-                Postid = 110,
-                PostTableName = "testing",
-                Date = new DateTime(1988, 6, 5),
-                isBookmark = false
-            };
 
-            Assert.True(service.Add(history));
-            Assert.True(service.Delete(-5));
-            
-            //clean up todo delete when mock is working
-            service.Delete(history.Id);
+            var Userid = -5;
+
+            Assert.False(service.Delete(Userid));
         }
 
         [Fact]
-        public void HistoryExistTrue()
+        public void HistoryDeleteValid()
         {
             var service = new HistoryService();
-            var historyId = 0; //Hardcoded user in DB //todo replace with a mock
+            var Userid = 0;
+            var Postid = 709;
+            var isBookmark = true;
+            var historyToAdd = new History {Userid = Userid, Postid = Postid, isBookmark = isBookmark};
 
-            Assert.True(service.HistoryExist(historyId));
+            var resultAdd = service.Add(historyToAdd);
+            var history = service.Get(Userid, Postid);
+
+            Assert.True(resultAdd);
+            Assert.True(service.HistoryExist(history.Id));
+            Assert.True(service.Delete(history.Id));
+            Assert.False(service.HistoryExist(history.Id));
         }
 
         [Fact]
@@ -102,32 +78,13 @@ namespace UnitTests.DatabaseService
         }
 
         [Fact]
-        public void HistoryGetValid()
+        public void HistoryExistTrue()
         {
             var service = new HistoryService();
-            var id = 3;
-            var history = new History
-            {
-                Id = id,
-                Userid = 25,
-                Postid = 89,
-                PostTableName = "this is a nice tester",
-                Date = new DateTime(1998, 2, 15),
-                isBookmark = true
-            };
 
-            var historyGet = service.Get(id);
+            var historyId = 4; //Hardcoded user in DB //todo replace with a mock
 
-            Assert.True(service.Add(history));
-            Assert.Equal(history.Id, historyGet.Id);
-            Assert.Equal(history.Userid, historyGet.Userid);
-            Assert.Equal(history.Postid, historyGet.Postid);
-            Assert.Equal(history.PostTableName, historyGet.PostTableName);
-            Assert.Equal(history.Date, historyGet.Date);
-            Assert.Equal(history.isBookmark, historyGet.isBookmark);
-
-            //clean up todo delete when mock is working
-            service.Delete(history.Id);
+            Assert.True(service.HistoryExist(historyId));
         }
 
         [Fact]
@@ -141,5 +98,39 @@ namespace UnitTests.DatabaseService
             Assert.Null(history);
         }
         
+        [Fact]
+        public void HistoryGetInvalid2()
+        {
+            var service = new HistoryService();
+            var Userid = -31;
+            var Postid = -123;
+
+            var history = service.Get(Userid, Postid);
+
+            Assert.Null(history);
+        }
+
+        [Fact]
+        public void HistoryGetValid()
+        {
+            var service = new HistoryService();
+
+            var Userid = 0;
+            var Postid = 709;
+            var isBookmark = true;
+            var history = new History {Userid = Userid, Postid = Postid, isBookmark = isBookmark};
+
+            var histroyAdd = service.Add(history);
+            var historyGet = service.Get(Userid, Postid);
+
+            //todo fix this
+            Assert.True(histroyAdd);
+            Assert.Equal(Userid, historyGet.Userid);
+            Assert.Equal(Postid, historyGet.Postid);
+            Assert.Equal(isBookmark, historyGet.isBookmark);
+
+            //clean up todo delete when mock is working
+            service.Delete(history.Id);
+        }
     }
 }
