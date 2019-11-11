@@ -1,11 +1,8 @@
-﻿using DatabaseService;
-using DatabaseService.Modules;
+﻿using DatabaseService.Modules;
 using DatabaseService.Services;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using System;
 using Xunit;
 
-namespace UnitTests
+namespace UnitTests.DatabaseService
 {
     public class DataServiceTests
     {
