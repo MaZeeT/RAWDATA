@@ -9,11 +9,9 @@ namespace DatabaseService.Services
     public interface IAppUsersDataService
     {
         Annotations CreateAnnotations(AnnotationsDto annotationObject);
-
         Annotations GetAnnotation(int annotationId);
-
-        bool CreateAnnotation_withFunction(Annotations annotationObject);
         bool UpdateAnnotation(int annotationId, string annotationBody);
         bool DeleteAnnotation(int id);
+        bool CreateAnnotation_withFunction(Annotations newAnnotation, out Annotations annotationFromDb);
     }
 }

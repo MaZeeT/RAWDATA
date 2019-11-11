@@ -19,6 +19,12 @@ namespace WebService.Controllers
             _mapper = mapper;
         }
 
+
+        /// <summary>
+        /// Testing this api in postman: http://localhost:5001/api/annotations/2
+        /// </summary>
+        /// <param name="annotationId"></param>
+        /// <returns></returns>
         [HttpGet("{annotationId}", Name = nameof(GetAnnotation))] // fancy way to have strings checked by the compiler
         public ActionResult GetAnnotation(int annotationId)
         {
@@ -36,11 +42,17 @@ namespace WebService.Controllers
 
         /// <summary>
         /// This function calls the create anew annotation from db function
-        /// PROBLEM: that create new annotation function will not return anything but void.
-        /// QUESTION: should we modify it so it returns the actual object created with it's own id since we might use it... maybe... on the frontend? 
+        /// Testing with postman:
+        ///  in request: POST http://localhost:5001/api/annotations 
+        ///  in body: 
+        ///         {
+        ///             "UserId": 1,
+        ///             "HistoryId": 19,
+        ///             "Body": "This call takes in userId, HistoryId and the body; but returns all the things from AnnotationsDto"
+        ///         }
         /// </summary>
         /// <param name="annotationObj"></param>
-        /// <returns></returns>
+        /// <returns>Returns the </returns>
         [HttpPost]
         public ActionResult AddAnnotation(AnnotationsDto annotationObj)
         {
@@ -50,11 +62,29 @@ namespace WebService.Controllers
                 HistoryId = annotationObj.HistoryId,
                 Body = annotationObj.Body
             };
-            _appUsersDataService.CreateAnnotation_withFunction(newAnnotation);
-            return Ok(newAnnotation);
+            if (_appUsersDataService.CreateAnnotation_withFunction(newAnnotation, out newAnnotation))
+            {
+                return Ok(CreateLink(newAnnotation));
+            }
+            return BadRequest();
+
         }
 
-
+        /// <summary>
+        /// API that needs id of annotation in the request path and body text in body of request 
+        /// Testing with postman:
+        ///                     request path: http://localhost:5001/api/annotations/52
+        ///                     request body:
+        ///                     {
+        ///                     "Body": "he body of the PUT request can have all annotationsDto values, but it will only update the .Body value"
+        ///                     }
+        /// </summary>
+        /// <param name="annotationId"></param>
+        /// <param name="annotation"></param>
+        /// <returns>
+        ///         Success: 204 NoContent
+        ///         Fail: 404 BadRequest
+        /// </returns>
         [HttpPut("{annotationId}")]
         public ActionResult UpdateAnnotation(int annotationId,[FromBody] AnnotationsDto annotation)
         {
@@ -66,6 +96,12 @@ namespace WebService.Controllers
             return BadRequest();
         }
 
+        /// <summary>
+        /// Delete annotation by providing the id;
+        /// Testing with postman: DELETE http://localhost:5001/api/annotations/52
+        /// </summary>
+        /// <param name="annotationId"></param>
+        /// <returns> Success: 200 Ok ; Fail 404 Not Found</returns>
         [HttpDelete("{annotationId}")]
         public ActionResult DeleteData(int annotationId)
         {
@@ -79,7 +115,7 @@ namespace WebService.Controllers
 
 
         /// <summary>
-        /// DTO Annotations Mapper
+        /// DTO Annotations Mapper used with GET annotation
         /// </summary>
         /// <param name="annotation"></param>
         /// <returns>AnnotationsDto</returns>

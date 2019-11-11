@@ -48,7 +48,7 @@ namespace DatabaseService.Services
             }
         }
 
-        public bool CreateAnnotation_withFunction(Annotations obj)
+        public bool CreateAnnotation_withFunction(Annotations obj, out Annotations annotationFromDb)
         {
             try
             {
@@ -61,11 +61,20 @@ namespace DatabaseService.Services
                 var annotationBody = new NpgsqlParameter("body", NpgsqlTypes.NpgsqlDbType.Text);
                 annotationBody.Value = obj.Body;
 
-                DB.Database.ExecuteSqlRaw("select * from annotate(@userid, @historyid, @body)", userId, postId, annotationBody); // need to make this one return something or learn to use the logger bleah! 
+                // since this select annotate function runs with select as Id and is attached to the AnnotateFunction Dto and returns only 1 result
+                // it is ok to .FirstOrDefult() and then .Id to get the value directly. 
+                var annotationId = DB.AnnotateFunction
+                                        .FromSqlRaw("select annotate(@userid, @historyid, @body) as Id", userId, postId, annotationBody)
+                                        .FirstOrDefault()
+                                        .Id;
                 
+                //if the returned id is somehow weird and the annotation is not found, then annotationFromDb gets null here
+                annotationFromDb = GetAnnotation(annotationId);
                 return true;
+
             }catch(Exception e)
             {
+                annotationFromDb = null;
                 return false;
             }
            
