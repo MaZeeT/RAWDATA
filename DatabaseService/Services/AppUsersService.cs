@@ -16,30 +16,35 @@ namespace DatabaseService.Services
         public string GetAppUserName(int id)
         {
             var result = database.AppUser.Find(id);
-            return result.name;
+            return result.Username;
         }
 
         public int GetAppUserId(string username)
         {
-            var appUsers = database.AppUser.Where(user => user.name == username).ToList();
+            var appUsers = database.AppUser.Where(user => user.Username == username).ToList();
             if (appUsers.Count > 0)
             {
-                return appUsers.First().id;
+                return appUsers.First().Id;
             }
 
             return -1;
         }
 
-        public bool CreateAppUser(string username)
+        public bool CreateAppUser(string username, string password, string salt)
         {
             if (!AppUserExist(username))
             {
-                database.AppUser.Add(new AppUser() {name = username});
+                database.AppUser.Add(
+                    new AppUser() {
+                    Username = username, 
+                    Password = password, 
+                    Salt = salt
+                    });
 
                 var result = database.SaveChanges();
                 return result > 0;
             }
-
+            
             return false;
         }
 
@@ -50,7 +55,7 @@ namespace DatabaseService.Services
                 int appUserId = GetAppUserId(oldName);
                 var appUser = database.AppUser.Find(appUserId);
                 database.AppUser.Update(appUser);
-                appUser.name = newName;
+                appUser.Username = newName;
                 var result = database.SaveChanges();
                 return result > 0;
             }

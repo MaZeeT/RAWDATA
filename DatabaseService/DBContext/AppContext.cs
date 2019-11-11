@@ -31,7 +31,7 @@ namespace DatabaseService
             string database = "";
            // database = "host=localhost;db=stackoverflow;uid=postgres;pwd=cock";
            // database = "host=localhost;db=stackoverflow;uid=postgres;pwd=Pisi2828";
-           // database = "host=mazeet.ddns.net;port=32999;db=stackoverflow;uid=raw6;pwd=J8cxYN";
+            database = "host=mazeet.ddns.net;port=32999;db=stackoverflow;uid=raw6;pwd=J8cxYN";
 
             optionsBuilder
                 .UseLoggerFactory(MyLoggerFactory)
@@ -49,7 +49,7 @@ namespace DatabaseService
             //modelBuilder.Entity<Annotations>().HasNoKey();
             modelBuilder.Entity<AnnotateFunctionDto>().HasNoKey();
             modelBuilder.Entity<AppUser>().ToTable("appusers");
-            modelBuilder.Entity<AppUser>().Property(x => x.id).HasColumnName("id");
+            modelBuilder.Entity<AppUser>().Property(x => x.Id).HasColumnName("id");
 
         }
     }

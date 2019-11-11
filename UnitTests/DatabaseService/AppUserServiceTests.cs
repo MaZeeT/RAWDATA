@@ -5,6 +5,9 @@ namespace UnitTests.DatabaseService
 {
     public class AppUserServiceTests
     {
+        private string Password = "55";
+        private string Salt = "salty";
+        
         [Fact]
         public void AppUserExistByIdFalse()
         {
@@ -67,7 +70,7 @@ namespace UnitTests.DatabaseService
             IAppUsersService service = new AppUsersService();
             var userName = "Mr. Tester von testons";
 
-            var creationBool = service.CreateAppUser(userName);
+            var creationBool = service.CreateAppUser(userName,Password,Salt);
             var userId = service.GetAppUserId(userName);
 
             Assert.True(creationBool);
@@ -83,8 +86,8 @@ namespace UnitTests.DatabaseService
             IAppUsersService service = new AppUsersService();
             var userName = "Mr. Tester von testons";
 
-            var creationBoolOne = service.CreateAppUser(userName);
-            var creationBoolTwo = service.CreateAppUser(userName);
+            var creationBoolOne = service.CreateAppUser(userName,Password,Salt);
+            var creationBoolTwo = service.CreateAppUser(userName,Password,Salt);
             var userId = service.GetAppUserId(userName);
 
             Assert.True(creationBoolOne);
@@ -102,7 +105,7 @@ namespace UnitTests.DatabaseService
             var userNameOne = "Ms. donald docker";
             var userNameTwo = "Ms. donald ducker";
 
-            var creationBool = service.CreateAppUser(userNameOne);
+            var creationBool = service.CreateAppUser(userNameOne,Password,Salt);
             var userIdOne = service.GetAppUserId(userNameOne);
             var updateBool = service.UpdateAppUserName(userNameOne, userNameTwo);
             var userIdTwo = service.GetAppUserId(userNameTwo);
@@ -138,7 +141,7 @@ namespace UnitTests.DatabaseService
             IAppUsersService service = new AppUsersService();
             var userName = "dock";
 
-            var creationBool = service.CreateAppUser(userName);
+            var creationBool = service.CreateAppUser(userName,Password,Salt);
             var existBeforeDeletion = service.AppUserExist(userName);
             var deletionBool = service.DeleteAppUser(userName);
 
@@ -155,7 +158,7 @@ namespace UnitTests.DatabaseService
             var userName = "docker";
             var falseName = "not docker";
 
-            var creationBool = service.CreateAppUser(userName);
+            var creationBool = service.CreateAppUser(userName,Password,Salt);
             var existBeforeDeletion = service.AppUserExist(userName);
             var deletionBool = service.DeleteAppUser(falseName);
 
@@ -174,7 +177,7 @@ namespace UnitTests.DatabaseService
             IAppUsersService service = new AppUsersService();
             var userName = "donald";
 
-            var creationBool = service.CreateAppUser(userName);
+            var creationBool = service.CreateAppUser(userName,Password,Salt);
             var userId = service.GetAppUserId(userName);
             var existBeforeDeletion = service.AppUserExist(userId);
             var deletionBool = service.DeleteAppUser(userId);
@@ -193,7 +196,7 @@ namespace UnitTests.DatabaseService
             var userName = "niels";
             var falseId = -2;
 
-            var creationBool = service.CreateAppUser(userName);
+            var creationBool = service.CreateAppUser(userName,Password,Salt);
             var userId = service.GetAppUserId(userName);
             var existBeforeDeletion = service.AppUserExist(userId);
             var deletionBool = service.DeleteAppUser(falseId);

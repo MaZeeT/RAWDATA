@@ -4,7 +4,7 @@ namespace DatabaseService.Services
 {
     public interface IAppUsersService
     {
-        bool CreateAppUser(string name);
+        bool CreateAppUser(string username, string password, string salt);
          bool UpdateAppUserName(string oldName, string newName);
          bool DeleteAppUser(int id);
          bool DeleteAppUser(string username);
