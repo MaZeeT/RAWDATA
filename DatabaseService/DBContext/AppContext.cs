@@ -12,14 +12,12 @@ namespace DatabaseService
             {
                 builder.AddConsole();
             }); //This is taken from online documentation when we want to log errors
-
-        //todo replace objects with proper types
+        
         public DbSet<AppUser> AppUser { get; set; }
         // public DbSet<object> History { get; set; }
         public DbSet<Annotations> Annotations { get; set; }
         public DbSet<AnnotateFunctionDto> AnnotateFunction { get; set; }
-
-        //todo replace objects with proper types
+        
         /* public DbSet<object> AppUser { get; set; }
          public DbSet<object> History { get; set; }*/
 
