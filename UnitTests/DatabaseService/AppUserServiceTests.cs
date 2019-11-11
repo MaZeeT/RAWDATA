@@ -1,7 +1,7 @@
 using DatabaseService.Services;
 using Xunit;
 
-namespace UnitTests
+namespace UnitTests.DatabaseService
 {
     public class AppUserServiceTests
     {
