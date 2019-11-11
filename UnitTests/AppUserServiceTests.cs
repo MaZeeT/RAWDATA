@@ -96,7 +96,7 @@ namespace UnitTests
         }
 
         [Fact]
-        public void UpdateAppUserName()
+        public void UpdateAppUserNameValidUser()
         {
             var service = new AppUsersService();
             var userNameOne = "Ms. donald docker";
@@ -107,7 +107,7 @@ namespace UnitTests
             var updateBool = service.UpdateAppUserName(userNameOne, userNameTwo);
             var userIdTwo = service.GetAppUserId(userNameTwo);
 
-            //Assert.True(creationBool);
+            Assert.True(creationBool);
             Assert.True(updateBool);
 
             Assert.Equal(userIdOne, userIdTwo);
@@ -118,6 +118,18 @@ namespace UnitTests
             //clean up todo delete when mock is working
             service.DeleteAppUser(userIdOne);
             service.DeleteAppUser(userIdTwo);
+        }
+        
+        [Fact]
+        public void UpdateAppUserNameInvalidUser()
+        {
+            var service = new AppUsersService();
+            var userNameOne = "Ms. ronaldo docker";
+            var userNameTwo = "Ms. ronaldo ducker";
+            
+            var updateBool = service.UpdateAppUserName(userNameOne, userNameTwo);
+
+            Assert.False(updateBool);
         }
 
         [Fact]

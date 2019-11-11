@@ -4,7 +4,7 @@ namespace DatabaseService.Modules
 {
     public class AppUser
     {
-        public int id { set; get; }
+        public int id { get; }
         public string name { set; get; }
 
     }
