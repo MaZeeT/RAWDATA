@@ -14,7 +14,7 @@ namespace DatabaseService
             }); //This is taken from online documentation when we want to log errors
         
         public DbSet<AppUser> AppUser { get; set; }
-        // public DbSet<object> History { get; set; }
+        public DbSet<History> History { get; set; }
         public DbSet<Annotations> Annotations { get; set; }
         public DbSet<AnnotateFunctionDto> AnnotateFunction { get; set; }
 
