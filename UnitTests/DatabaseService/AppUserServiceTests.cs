@@ -17,7 +17,7 @@ namespace UnitTests.DatabaseService
         [Fact]
         public void AppUserExistByIdTrue()
         {
-            var service = new AppUsersService();
+            IAppUsersService service = new AppUsersService();
             var userId = 0; //Hardcoded user in DB //todo replace with a mock
 
             Assert.True(service.AppUserExist(userId));
@@ -26,7 +26,7 @@ namespace UnitTests.DatabaseService
         [Fact]
         public void AppUserExistByNameFalse()
         {
-            var service = new AppUsersService();
+            IAppUsersService service = new AppUsersService();
             var userName = "£@£@£@€$£$£{£$£@$€$£€€£$€"; //Hardcoded user in DB //todo replace with a mock
 
             Assert.False(service.AppUserExist(userName));
@@ -35,7 +35,7 @@ namespace UnitTests.DatabaseService
         [Fact]
         public void AppUserExistByNameTrue()
         {
-            var service = new AppUsersService();
+            IAppUsersService service = new AppUsersService();
             var userName = "in"; //Hardcoded user in DB //todo replace with a mock
 
             Assert.True(service.AppUserExist(userName));
@@ -44,7 +44,7 @@ namespace UnitTests.DatabaseService
         [Fact]
         public void GetAppUserById()
         {
-            var service = new AppUsersService();
+            IAppUsersService service = new AppUsersService();
             var userId = 0;
             var userName = "in"; //Hardcoded user in DB //todo replace with a mock
 
@@ -54,7 +54,7 @@ namespace UnitTests.DatabaseService
         [Fact]
         public void GetAppUserByName()
         {
-            var service = new AppUsersService();
+            IAppUsersService service = new AppUsersService();
             var userId = 0;
             var userName = "in"; //Hardcoded user in DB //todo replace with a mock
 
@@ -64,7 +64,7 @@ namespace UnitTests.DatabaseService
         [Fact]
         public void CreateAppUser()
         {
-            var service = new AppUsersService();
+            IAppUsersService service = new AppUsersService();
             var userName = "Mr. Tester von testons";
 
             var creationBool = service.CreateAppUser(userName);
@@ -80,7 +80,7 @@ namespace UnitTests.DatabaseService
         [Fact]
         public void CreateAppUserTwice()
         {
-            var service = new AppUsersService();
+            IAppUsersService service = new AppUsersService();
             var userName = "Mr. Tester von testons";
 
             var creationBoolOne = service.CreateAppUser(userName);
@@ -98,7 +98,7 @@ namespace UnitTests.DatabaseService
         [Fact]
         public void UpdateAppUserNameValidUser()
         {
-            var service = new AppUsersService();
+            IAppUsersService service = new AppUsersService();
             var userNameOne = "Ms. donald docker";
             var userNameTwo = "Ms. donald ducker";
 
@@ -123,7 +123,7 @@ namespace UnitTests.DatabaseService
         [Fact]
         public void UpdateAppUserNameInvalidUser()
         {
-            var service = new AppUsersService();
+            IAppUsersService service = new AppUsersService();
             var userNameOne = "Ms. ronaldo docker";
             var userNameTwo = "Ms. ronaldo ducker";
             
@@ -135,7 +135,7 @@ namespace UnitTests.DatabaseService
         [Fact]
         public void DeleteAppUserByNameTrue()
         {
-            var service = new AppUsersService();
+            IAppUsersService service = new AppUsersService();
             var userName = "dock";
 
             var creationBool = service.CreateAppUser(userName);
@@ -151,7 +151,7 @@ namespace UnitTests.DatabaseService
         [Fact]
         public void DeleteAppUserByNameFalse()
         {
-            var service = new AppUsersService();
+            IAppUsersService service = new AppUsersService();
             var userName = "docker";
             var falseName = "not docker";
 
@@ -171,7 +171,7 @@ namespace UnitTests.DatabaseService
         [Fact]
         public void DeleteAppUserByIdTrue()
         {
-            var service = new AppUsersService();
+            IAppUsersService service = new AppUsersService();
             var userName = "donald";
 
             var creationBool = service.CreateAppUser(userName);
@@ -180,7 +180,7 @@ namespace UnitTests.DatabaseService
             var deletionBool = service.DeleteAppUser(userId);
 
             Assert.True(creationBool);
-            //Assert.True(existBeforeDeletion);
+            Assert.True(existBeforeDeletion);
             Assert.True(deletionBool);
             Assert.False(service.AppUserExist(userName));
             Assert.False(service.AppUserExist(userId));
@@ -189,7 +189,7 @@ namespace UnitTests.DatabaseService
         [Fact]
         public void DeleteAppUserByIdFalse()
         {
-            var service = new AppUsersService();
+            IAppUsersService service = new AppUsersService();
             var userName = "niels";
             var falseId = -2;
 
@@ -198,7 +198,7 @@ namespace UnitTests.DatabaseService
             var existBeforeDeletion = service.AppUserExist(userId);
             var deletionBool = service.DeleteAppUser(falseId);
 
-            //Assert.True(creationBool);
+            Assert.True(creationBool);
             Assert.True(existBeforeDeletion);
             Assert.False(deletionBool);
             Assert.True(service.AppUserExist(userName));
