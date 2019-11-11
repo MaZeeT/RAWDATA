@@ -14,21 +14,15 @@ namespace DatabaseService
             }); //This is taken from online documentation when we want to log errors
         
         public DbSet<AppUser> AppUser { get; set; }
-        // public DbSet<object> History { get; set; }
         public DbSet<Annotations> Annotations { get; set; }
         public DbSet<AnnotateFunctionDto> AnnotateFunction { get; set; }
-
         public DbSet<Questions> Questions { get; set; }
         public DbSet<Answers> Answers { get; set; }
         public DbSet<Search> Search { get; set; }
         public DbSet<PostsTable> PostsTable { get; set; }
         public DbSet<WordRank> WordRank { get; set; }
+        public DbSet<AnnotationsQuestions> History { get; set; }
 
-
-        //todo replace objects with proper types
-
-        /* public DbSet<object> AppUser { get; set; }
-         public DbSet<object> History { get; set; }*/
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -54,10 +48,17 @@ namespace DatabaseService
             //modelBuilder.Entity<AppUser>(); //can maybe be hadnled with hasnokey()
             //modelBuilder.Entity<object /*todo replace type*/>().HasNoKey();
 
-            //modelBuilder.Entity<Annotations>().HasNoKey();
             modelBuilder.Entity<AnnotateFunctionDto>().HasNoKey();
             modelBuilder.Entity<AppUser>().ToTable("appusers");
             modelBuilder.Entity<AppUser>().Property(x => x.Id).HasColumnName("id");
+
+            /*modelBuilder.Entity<History>()
+                        .HasMany(a => a.Annotations)
+                        .WithOne(h => h.History);*/
+            /*modelBuilder.Entity<Questions>()
+                        .HasMany()*/
+
+            //modelBuilder.Entity<History>().HasKey(h => new { h.PostId, h.Id });
 
         }
     }

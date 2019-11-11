@@ -39,8 +39,8 @@ namespace WebService.Controllers
         }
         /// <summary>
         /// Get all annoations of a post from a user
-        /// based on postId from url and userId from token
-        /// http://localhost:5001/api/annotations/user/{postid}
+        /// based on postId/ questionId and not historyId from url and userId from token
+        /// http://localhost:5001/api/annotations/user/{questionId}
         /// header: valid user token;
         /// </summary>
         /// <param name="postId"></param>
@@ -49,7 +49,7 @@ namespace WebService.Controllers
         public ActionResult GetAnnotationsByPostId(int postId)
         {
             int userIdFromToken = GetAuthUserId();
-            var listOfAnnotations = _annotationService.GetAnnotationsByPostId(userIdFromToken, postId);
+            var listOfAnnotations = _annotationService.GetAnnotationsAndQuestionsByPostId(userIdFromToken, postId);
             if (listOfAnnotations.Count == 0)
             {
                 return NotFound();

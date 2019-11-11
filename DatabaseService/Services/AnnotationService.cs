@@ -40,6 +40,7 @@ namespace DatabaseService.Services
             return result;
         }
 
+        /*//This gets the normal simple annotation from the db and not the actual post with body and title
         public List<Annotations> GetAnnotationsByPostId(int userId, int postId)
         {
             using var DB = new AppContext();
@@ -48,6 +49,28 @@ namespace DatabaseService.Services
                            .Where(val => val.HistoryId == postId)
                            .ToList();
             return result;
+        }*/
+
+        public List<AnnotationsQuestions> GetAnnotationsAndQuestionsByPostId(int userId, int postId)
+        {
+            using var DB = new AppContext();
+            var result = from annot in DB.Annotations
+                         join hist in DB.History on annot.HistoryId equals hist.Id
+                         join quest in DB.Questions on hist.PostId equals quest.Id
+                         where hist.PostId == postId && annot.UserId == userId
+                         select new AnnotationsQuestions
+                         {
+                             Id = annot.Id,
+                             UserId = annot.UserId,
+                             HistPostId = annot.HistoryId,
+                             AnnotationCreationDate = annot.Date,
+                             QuestionId = quest.Id,
+                             QuestionTitle = quest.Title,
+                             QuestionBody = quest.Body,
+                             IsBookmark = hist.IsBookmark
+                         };
+
+            return result.ToList();
         }
 
         public bool DeleteAnnotation(int id)
