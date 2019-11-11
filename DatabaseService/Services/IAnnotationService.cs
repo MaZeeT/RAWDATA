@@ -6,7 +6,7 @@ using System.Text;
 
 namespace DatabaseService.Services
 {
-    public interface IAppUsersDataService
+    public interface IAnnotationService
     {
         Annotations CreateAnnotations(AnnotationsDto annotationObject);
         Annotations GetAnnotation(int annotationId);

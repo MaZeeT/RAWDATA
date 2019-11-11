@@ -10,7 +10,7 @@ namespace UnitTests.DatabaseService
         public void Create_New_Annotation()
         {
 
-            var service = new AppUsersDataService();
+            var service = new AnnotationService();
             // example of request aspect when coming from API
             var newAnnotation = new Annotations
             {
@@ -38,7 +38,7 @@ namespace UnitTests.DatabaseService
         [Fact]
         public void GetAnnotationById()
         {
-            var service = new AppUsersDataService();
+            var service = new AnnotationService();
             var result = service.GetAnnotation(1);
             Assert.Equal(2, result.UserId);
             Assert.Equal(3, result.HistoryId);

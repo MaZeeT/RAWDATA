@@ -11,12 +11,12 @@ namespace WebService.Controllers
     [Authorize]
     public class AnnotationsController : ControllerBase
     {
-        private IAppUsersDataService _appUsersDataService;
+        private IAnnotationService _annotationService;
         private IMapper _mapper;
 
-        public AnnotationsController(IAppUsersDataService appUsersDataService, IMapper mapper)
+        public AnnotationsController(IAnnotationService annotationService, IMapper mapper)
         {
-            _appUsersDataService = appUsersDataService;
+            _annotationService = annotationService;
             _mapper = mapper;
         }
 
@@ -29,7 +29,7 @@ namespace WebService.Controllers
         [HttpGet("{annotationId}", Name = nameof(GetAnnotation))] // fancy way to have strings checked by the compiler
         public ActionResult GetAnnotation(int annotationId)
         {
-            var returnedAnnotation = _appUsersDataService.GetAnnotation(annotationId);
+            var returnedAnnotation = _annotationService.GetAnnotation(annotationId);
             if (returnedAnnotation == null)
             {
                 return NotFound();
@@ -63,7 +63,7 @@ namespace WebService.Controllers
                 HistoryId = annotationObj.HistoryId,
                 Body = annotationObj.Body
             };
-            if (_appUsersDataService.CreateAnnotation_withFunction(newAnnotation, out newAnnotation))
+            if (_annotationService.CreateAnnotation_withFunction(newAnnotation, out newAnnotation))
             {
                 return Ok(CreateLink(newAnnotation));
             }
@@ -90,7 +90,7 @@ namespace WebService.Controllers
         public ActionResult UpdateAnnotation(int annotationId,[FromBody] AnnotationsDto annotation)
         {
             //need to encode body before sending to db - this can also be done inside the UpdateAnnotation function.
-            if (_appUsersDataService.UpdateAnnotation(annotationId, annotation.Body))
+            if (_annotationService.UpdateAnnotation(annotationId, annotation.Body))
             {
                 return NoContent();
             }
@@ -106,7 +106,7 @@ namespace WebService.Controllers
         [HttpDelete("{annotationId}")]
         public ActionResult DeleteData(int annotationId)
         {
-            if (_appUsersDataService.DeleteAnnotation(annotationId))
+            if (_annotationService.DeleteAnnotation(annotationId))
             {
                 return Ok();
             }

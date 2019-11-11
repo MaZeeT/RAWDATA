@@ -32,7 +32,7 @@ namespace WebService
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddSingleton<IDataService, DataService>();
-            services.AddSingleton<IAppUsersDataService, AppUsersDataService>();
+            services.AddSingleton<IAnnotationService, AnnotationService>();
             services.AddSingleton<IAppUsersService, AppUsersService>();
 
 
