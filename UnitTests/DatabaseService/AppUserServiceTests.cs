@@ -97,6 +97,31 @@ namespace UnitTests.DatabaseService
             //clean up todo delete when mock is working
             service.DeleteAppUser(userId);
         }
+        
+        [Fact]
+        public void CreateUserGetObject()
+        {
+            IAppUserService service = new AppUserService();
+            var userName = "Mr. Tester von testonsen";
+
+            var user = service.CreateUser(userName,Password,Salt);
+            
+            Assert.Equal(userName, user.Username);
+            
+            //clean up todo delete when mock is working
+            service.DeleteAppUser(user.Id);
+        }
+        
+        [Fact]
+        public void CreateUserGetObjectNull()
+        {
+            IAppUserService service = new AppUserService();
+            var userName = "in";
+
+            var user = service.CreateUser(userName,Password,Salt);
+            
+            Assert.Null(user);
+        }
 
         [Fact]
         public void UpdateAppUserNameValidUser()
