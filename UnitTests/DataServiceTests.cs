@@ -19,14 +19,15 @@ namespace UnitTests
             {
                 UserId = 2,
                 HistoryId = 71,
-                Body = "Moni is a moni test of moni"
+                Body = "This is a test :) "
             };
 
-            var result = service.CreateAnnotation_withFunction(newAnnotation);
+            var result = service.CreateAnnotation_withFunction(newAnnotation, out newAnnotation);
             Assert.True(result);
+            Assert.True(newAnnotation.Id > 0);
 
             // cleanup
-            //service.DeleteAnnotation(annotation.Id);
+            service.DeleteAnnotation(newAnnotation.Id);
         }
 /*
         [Fact]
@@ -46,8 +47,8 @@ namespace UnitTests
             Assert.Equal(3, result.HistoryId);
             Assert.Equal("my note for post 71: this post is very relevant", result.Body);
         }
-/*
-        [Fact]
+
+        /*[Fact]
         public void UpdateExistingAnnotation()
         {
             var service = new AppUsersDataService();
@@ -58,7 +59,7 @@ namespace UnitTests
             };
             var result = service.UpdateAnnotationBody(newAnnotation);
             Assert.True(result);
-        }
-*/
+        }*/
+
     }
 }
