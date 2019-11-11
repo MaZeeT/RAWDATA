@@ -2,7 +2,7 @@ using DatabaseService.Modules;
 
 namespace DatabaseService.Services
 {
-    public interface IAppUsersService
+    public interface IAppUserService
     {
         bool CreateAppUser(string username, string password, string salt);
         AppUser CreateUser(string name, string password, string salt);

@@ -10,12 +10,12 @@ namespace WebService.Controllers
     [Route("api/appuser")]
     public class AppUserController : ControllerBase
     {
-        private IAppUsersService _appUsersService;
+        private IAppUserService _appUserService;
         private IMapper _mapper;
 
-        public AppUserController(IAppUsersService appUsersService, IMapper mapper)
+        public AppUserController(IAppUserService appUserService, IMapper mapper)
         {
-            _appUsersService = appUsersService;
+            _appUserService = appUserService;
             _mapper = mapper;
         }
 
@@ -28,7 +28,7 @@ namespace WebService.Controllers
             Console.WriteLine("input: " + id);
             try
             {
-                var appUser = _appUsersService.GetAppUserName(id);
+                var appUser = _appUserService.GetAppUserName(id);
                 Console.WriteLine("ds: " + appUser);
                 return Ok(appUser);
             }

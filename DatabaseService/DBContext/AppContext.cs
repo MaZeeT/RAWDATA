@@ -12,9 +12,8 @@ namespace DatabaseService
             {
                 builder.AddConsole();
             }); //This is taken from online documentation when we want to log errors
-
-        public DbSet<AppUsers> AuthUser { get; set; }
-        public DbSet<AppUsers> AppUsers { get; set; }
+        
+        public DbSet<AppUser> AppUser { get; set; }
         // public DbSet<object> History { get; set; }
         public DbSet<Annotations> Annotations { get; set; }
         public DbSet<AnnotateFunctionDto> AnnotateFunction { get; set; }
@@ -57,8 +56,8 @@ namespace DatabaseService
 
             //modelBuilder.Entity<Annotations>().HasNoKey();
             modelBuilder.Entity<AnnotateFunctionDto>().HasNoKey();
-            //modelBuilder.Entity<AppUser>().ToTable("appusers");
-            //modelBuilder.Entity<AppUser>().Property(x => x.id).HasColumnName("id");
+            modelBuilder.Entity<AppUser>().ToTable("appusers");
+            modelBuilder.Entity<AppUser>().Property(x => x.Id).HasColumnName("id");
 
         }
     }

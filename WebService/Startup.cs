@@ -31,9 +31,9 @@ namespace WebService
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-            services.AddSingleton<IDataService, DataService>();
+            services.AddSingleton<IDataService, SearchDataService>();
             services.AddSingleton<IAnnotationService, AnnotationService>();
-            services.AddSingleton<IAppUsersService, AppUsersService>();
+            services.AddSingleton<IAppUserService, AppUserService>();
 
 
             var key = Encoding.UTF8.GetBytes(Configuration.GetSection("Auth:Key").Value);

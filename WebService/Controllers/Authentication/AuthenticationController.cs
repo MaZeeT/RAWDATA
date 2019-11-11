@@ -18,10 +18,10 @@ namespace WebService.Controllers.Authentication
     public class AuthenticationController : ControllerBase
     {
 
-        private readonly IAppUsersService _service;
+        private readonly IAppUserService _service;
         private readonly IConfiguration _configuration;
 
-        public AuthenticationController(IAppUsersService service, IConfiguration configuration)
+        public AuthenticationController(IAppUserService service, IConfiguration configuration)
         {
             _service = service;
             _configuration = configuration;

@@ -4,11 +4,11 @@ using NLog.LayoutRenderers;
 
 namespace DatabaseService.Services
 {
-    public class AppUsersService : IAppUsersService
+    public class AppUserService : IAppUserService
     {
         AppContext database;
 
-        public AppUsersService()
+        public AppUserService()
         {
             database = new AppContext();
         }
@@ -91,8 +91,8 @@ namespace DatabaseService.Services
         {
             if (AppUserExist(id))
             {
-                var appUser = database.AppUsers.Find(id);
-                database.AppUsers.Remove(appUser);
+                var appUser = database.AppUser.Find(id);
+                database.AppUser.Remove(appUser);
 
                 var result = database.SaveChanges();
                 return result > 0;
@@ -108,7 +108,7 @@ namespace DatabaseService.Services
 
         public bool AppUserExist(int id)
         {
-            var result = database.AppUsers.Find(id);
+            var result = database.AppUser.Find(id);
             return result != null;
         }
 
