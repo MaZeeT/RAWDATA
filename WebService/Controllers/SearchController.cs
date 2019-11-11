@@ -1,14 +1,22 @@
 ﻿using AutoMapper;
 using DatabaseService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 
 namespace WebService.Controllers
 {
     [ApiController]
     [Route("api/search")]
+    [Authorize]
+
+    ///
+    /// when accessing with tokens, the header needs a key Authorization with a value of Bearer [space] and then the token (no quotes)
+    ///
+
     public class SearchController : ControllerBase
     {
         private IDataService _dataService;
@@ -30,14 +38,26 @@ namespace WebService.Controllers
         // http://localhost:5001/api/search?s=code,app,program
         public ActionResult Search([FromQuery] SearchQuery searchparams, [FromQuery] PagingAttributes pagingAttributes)
         {
-            if (searchparams.s != null)
+            bool useridok = false;
+            var claimsIdentity = this.User.Identity as ClaimsIdentity;
+            int userId; 
+            if (Int32.TryParse(claimsIdentity.FindFirst(ClaimTypes.Name)?.Value, out userId))
+            {
+                useridok = true; //becomes true when we get an int in userId
+            }
+            //var user = this.User.Identity.Name; //this gets the id also??
+            // .FindFirst(ClaimTypes.Name)?.Value;
+            //var user = User.FindFirst("sub")?.Value;
+            Console.WriteLine("Got user: " + userId);
+
+            if (searchparams.s != null && useridok)
             {
                 Console.WriteLine("Got searchparams: " + searchparams.s);
 
                 //rudimentary checking of params
                 if (searchparams.stype >= 0 && searchparams.stype <= 3)
                 {
-                    var search = _dataService.Search(searchparams.s, searchparams.stype, pagingAttributes);
+                    var search = _dataService.Search(userId, searchparams.s, searchparams.stype, pagingAttributes);
 
                     var result = CreateResult(search, searchparams, pagingAttributes);
                     if (result != null)
@@ -48,7 +68,7 @@ namespace WebService.Controllers
                 }
                 else if (searchparams.stype >= 4 && searchparams.stype <= 5)
                 {
-                    var search = _dataService.WordRank(searchparams.s, searchparams.stype, pagingAttributes);
+                    var search = _dataService.WordRank(userId, searchparams.s, searchparams.stype, pagingAttributes);
                     return Ok(search);
                 }
             }
