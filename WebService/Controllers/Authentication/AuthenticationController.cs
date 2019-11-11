@@ -18,12 +18,12 @@ namespace WebService.Controllers.Authentication
     public class AuthenticationController : ControllerBase
     {
 
-        private readonly IAuthUsersService _authUsersService;
+        private readonly IAppUserService _service;
         private readonly IConfiguration _configuration;
 
-        public AuthenticationController(IAuthUsersService authUsersService, IConfiguration configuration)
+        public AuthenticationController(IAppUserService service, IConfiguration configuration)
         {
-            _authUsersService = authUsersService;
+            _service = service;
             _configuration = configuration;
         }
 
@@ -31,7 +31,7 @@ namespace WebService.Controllers.Authentication
         public ActionResult CreateUser([FromForm] SignupUserDto dto)
             //changed to FromForm just because i cant be bothered to look up what to send in postman
         {
-            if (_authUsersService.GetUserByUserName(dto.Username) != null)
+            if (_service.GetAppUser(dto.Username) != null)
             {
                 return BadRequest();
             }
@@ -49,7 +49,7 @@ namespace WebService.Controllers.Authentication
 
             var pwd = PasswordService.HashPassword(dto.Password, salt, size);
 
-            _authUsersService.CreateUser(dto.Username, pwd, salt);
+            _service.CreateUser(dto.Username, pwd, salt);
 
             return CreatedAtRoute(null, dto.Username);
         }
@@ -59,7 +59,7 @@ namespace WebService.Controllers.Authentication
         public ActionResult Login([FromForm] SignupUserDto dto)
         //changed to FromForm just because i cant be bothered to look up what to send in postman
         {
-            var user = _authUsersService.GetUserByUserName(dto.Username);
+            var user = _service.GetAppUser(dto.Username);
 
             if (user == null)
             {
@@ -76,7 +76,7 @@ namespace WebService.Controllers.Authentication
 
         }
 
-        private bool IsInvalidPassword(SignupUserDto dto, AppUsers user)
+        private bool IsInvalidPassword(SignupUserDto dto, AppUser user)
         {
             int.TryParse(
                _configuration.GetSection("Auth:PwdSize").Value,
@@ -89,7 +89,7 @@ namespace WebService.Controllers.Authentication
             }
             return false;
         }
-        private string GenerateToken(AppUsers user)
+        private string GenerateToken(AppUser user)
         {
 
             var tokenHandler = new JwtSecurityTokenHandler();

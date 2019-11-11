@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace DatabaseService.Services
 {
-    public class AppUsersDataService : IAppUsersDataService
+    public class AnnotationService : IAnnotationService
     {
         public Annotations CreateAnnotations(AnnotationsDto obj)
         {

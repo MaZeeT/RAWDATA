@@ -1,12 +1,17 @@
+using System;
 using System.Net.Sockets;
 
 namespace DatabaseService.Modules
 {
-    public class AppUsers
+    public class AppUser
     {
-        public int Id { get; set; }
-        public string Username { get; set; }
+        public int Id { get; }
+        
+        public string Username { set; get; }
+        
         public string Password { get; set; }
+        
         public string Salt { get; set; }
+        
     }
 }

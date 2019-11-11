@@ -10,7 +10,6 @@ using System;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using DatabaseService.Services.Authentication;
 
 namespace WebService
 {
@@ -33,9 +32,8 @@ namespace WebService
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddSingleton<IDataService, SearchDataService>();
-            services.AddSingleton<IAppUsersDataService, AppUsersDataService>();
-            services.AddSingleton<IAppUsersService, AppUsersService>();
-            services.AddSingleton<IAuthUsersService, AuthUsersService>();
+            services.AddSingleton<IAnnotationService, AnnotationService>();
+            services.AddSingleton<IAppUserService, AppUserService>();
 
 
             var key = Encoding.UTF8.GetBytes(Configuration.GetSection("Auth:Key").Value);
