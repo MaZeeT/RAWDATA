@@ -61,9 +61,13 @@ namespace DatabaseService
             var appuserid = new NpgsqlParameter("appuserid", NpgsqlTypes.NpgsqlDbType.Integer);
             appuserid.Value = userid;
 
+            //if internal call is specified, stored function appsearch won't add to searches/searchhistory
+            var internalcall = new NpgsqlParameter("internalcall", NpgsqlTypes.NpgsqlDbType.Boolean);
+            internalcall.Value = true;
+
             //count all matches
             var matchcount = db.Search
-                .FromSqlRaw("select appsearch(@appuserid, @searchtype, @search)", appuserid, searchtype, search)
+                .FromSqlRaw("select appsearch(@appuserid, @searchtype, @search, @internalcall)", appuserid, searchtype, search, internalcall)
                 .Count();
             System.Console.WriteLine($"{matchcount} results.");
 

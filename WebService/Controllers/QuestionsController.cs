@@ -62,7 +62,7 @@ namespace WebService.Controllers
         public ActionResult GetThread(int questionId, int? postId)
         {
             bool useridok = false;
-            //var postId =pidh.postId;
+            //var postId =pidh.postId; //for history
             var claimsIdentity = this.User.Identity as ClaimsIdentity;
             int userId;
             if (Int32.TryParse(claimsIdentity.FindFirst(ClaimTypes.Name)?.Value, out userId))
@@ -77,6 +77,7 @@ namespace WebService.Controllers
                 {
                     if (useridok)
                     {
+                        ///call to add browse history here
                        /* History browsehist = new History();
                         browsehist.Userid = userId;
                         if (postId != null)
