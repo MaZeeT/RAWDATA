@@ -42,7 +42,7 @@ namespace WebService.Controllers
 
             return Ok(result);
         }
-
+/*
        [HttpGet("{questionId}", Name = nameof(GetQuestion))]
         //example http://localhost:5001/api/questions/19
         public ActionResult GetQuestion(int questionId)
@@ -54,12 +54,12 @@ namespace WebService.Controllers
             }
             return Ok(CreateQuestionDto(question));
         }
-
+*/
         //[Route("thread/{questionId}/{postId?}")]
-        [HttpGet(Name = nameof(GetThread))]
+        [HttpGet("thread/{questionId}/{postId?}", Name = nameof(GetThread))]
         //example http://localhost:5001/api/questions/thread/19
         //get the whole thread of question+asnswers
-        public ActionResult GetThread([FromRoute] int questionId)
+        public ActionResult GetThread(int questionId, int? postId)
         {
             bool useridok = false;
             //var postId =pidh.postId;

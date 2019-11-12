@@ -97,8 +97,8 @@ namespace WebService.Controllers
                     nameof(QuestionsController.GetThread),
                     new 
                     { 
-                        questionId = posts.Parentid//,
-                       // postId = posts.Id
+                        questionId = posts.Parentid,
+                        postId = posts.Id
 
                     });
             }

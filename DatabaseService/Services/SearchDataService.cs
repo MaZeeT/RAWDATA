@@ -225,11 +225,41 @@ namespace DatabaseService
             return tablename;
         }
 
+        public SinglePost GetPost(int postId)
+        //try to get a particular post, q or a
+        //returns null if post not found
+        //use SinglePost.Id for annotations
+        //use SinglePost.QuestionId to get the thread the post belongs to
+        {
+            SinglePost returnPost = new SinglePost();
+
+            var type = GetPostType(postId);
+            if (type=="questions") //then its a question
+            {
+                var q = GetQuestion(postId);
+                returnPost.Body = q.Body;
+                returnPost.Id = postId;
+                returnPost.QuestionId = q.Id;
+                returnPost.Title = q.Title;
+                return returnPost;
+            }
+            else if (type=="answers") //then its an answer
+            {
+                var a = GetAnswer(postId);
+                returnPost.Body = a.Body;
+                returnPost.Id = postId;
+                returnPost.QuestionId = GetAnswer(postId).Parentid; //get parent q of answer
+                returnPost.Title = GetQuestion(returnPost.QuestionId).Title; //get title of parent q
+                return returnPost;
+            }
+            else return null; //else its unknown!
+        }
+
 /*
-        public int GetParentId(int answerID) //not needed possibly?
+        public int GetParentId(int answerID) //maybe not needed?
         {
             System.Console.WriteLine($"Answerid -- {answerID}");
-            using var db = new StackoverflowContext();
+            using var db = new AppContext();
             int parentid = db.Answers
                 .Where(e => e.Id == answerID)
                 .FirstOrDefault()
@@ -240,8 +270,8 @@ namespace DatabaseService
             return parentid;
 
         }
-
-    */
+*/
+    
 
         //public (Questions, IList<Answers>) GetThread(int questionId)
         public IList<Posts> GetThread(int questionId)
@@ -267,17 +297,18 @@ namespace DatabaseService
                     });
                 foreach (Answers a in ans)
                 {
-                    var endpos = 100;
-                    if (a.Body.Length<100)
-                    { 
-                        endpos = a.Body.Length; //limit body size for now
-                    }
+                   // var endpos = 100;
+                   // if (a.Body.Length<100)
+                  //  { 
+                  //      endpos = a.Body.Length; //limit body size for now
+                  //  }
                     posts.Add(
                     new Posts 
                     {
                         Id = a.Id,
-                        Parentid = a.Parentid, 
-                        Body = a.Body.Substring(0, endpos) 
+                        Parentid = a.Parentid,
+                        Body = a.Body
+                       // Body = a.Body.Substring(0, endpos) 
                     });
                 };
                 return posts;
