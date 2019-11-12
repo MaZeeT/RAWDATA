@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using DatabaseService.Modules;
 using DatabaseService.Services;
 using Xunit;
@@ -33,7 +34,7 @@ namespace UnitTests.DatabaseService
             };
 
             var result = service.Add(history);
-            
+
             Assert.True(result);
 
             //clean up todo delete when mock is working
@@ -97,7 +98,7 @@ namespace UnitTests.DatabaseService
 
             Assert.Null(history);
         }
-        
+
         [Fact]
         public void HistoryGetInvalid2()
         {
@@ -108,6 +109,73 @@ namespace UnitTests.DatabaseService
             var history = service.Get(Userid, Postid);
 
             Assert.Null(history);
+        }
+
+        [Fact]
+        public void GetHistoryList()
+        {
+            var service = new HistoryService();
+            var Userid = 290;
+
+            var Postid1 = 19;
+            var Postid2 = 709;
+            var Postid3 = 1760;
+
+            var addresult1 = service.Add(Userid, Postid1, false);
+            var addresult2 = service.Add(Userid, Postid2, true);
+            var addresult3 = service.Add(Userid, Postid3, false);
+            var history = service.GetHistoryList(Userid);
+
+
+            //clean up todo delete when mock is working
+            service.Delete(service.Get(Userid, Postid1).Id);
+            service.Delete(service.Get(Userid, Postid2).Id);
+            service.Delete(service.Get(Userid, Postid3).Id);
+            //end of clean up            
+
+            Assert.True(addresult1);
+            Assert.True(addresult2);
+            Assert.True(addresult3);
+
+            Assert.Equal(3, history.Count);
+            Assert.Equal(Postid3, history[2].Postid);
+            Assert.Equal(Postid2, history[1].Postid);
+            Assert.Equal(Postid1, history[0].Postid);
+        }
+
+        [Fact]
+        public void GetBookmarks()
+        {
+            var service = new HistoryService();
+            var Userid = 290;
+
+            var Postid1 = 19;
+            var Postid2 = 709;
+            var Postid3 = 1760;
+            var Postid4 = 1711;
+
+            var addresult1 = service.Add(Userid, Postid1, false);
+            var addresult2 = service.Add(Userid, Postid2, true);
+            var addresult3 = service.Add(Userid, Postid3, true);
+            var addresult4 = service.Add(Userid, Postid4, false);
+            var history = service.GetBookmarks(Userid);
+
+
+            //clean up todo delete when mock is working
+            service.Delete(service.Get(Userid, Postid1).Id);
+            service.Delete(service.Get(Userid, Postid2).Id);
+            service.Delete(service.Get(Userid, Postid3).Id);
+            service.Delete(service.Get(Userid, Postid4).Id);
+            //end of clean up            
+
+            Assert.True(addresult1);
+            Assert.True(addresult2);
+            Assert.True(addresult3);
+            Assert.True(addresult4);
+
+            Assert.Equal(2, history.Count);
+            Assert.Equal(Postid3, history[1].Postid);
+            Assert.Equal(Postid2, history[0].Postid);
         }
 
         [Fact]
