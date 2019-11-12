@@ -9,8 +9,11 @@ namespace DatabaseService.Services
     public interface IHistoryService
     {
         bool Add(History history);
+        bool Add(int UserId, int PostId, bool isBookmark);
         History Get(int historyId);
+        History Get(int userId, int postId);
         bool Delete(int historyId);
-        bool HistoryExist(int id);
+        bool HistoryExist(int historyId);
+        bool HistoryExist(int userId, int postId);
     }
 }
