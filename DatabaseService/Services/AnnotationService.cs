@@ -52,21 +52,44 @@ namespace DatabaseService.Services
         }*/
 
 
-            ///alter this one!!! 
-        public List<AnnotationsQuestions> GetAnnotationsAndQuestionsByPostId(int userId, int postId)
+        /// <summary>
+        /// Returns a list of annotations and their postId recorded in history table
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="postId"></param>
+        /// <returns></returns>
+        public List<AnnotationsDto> GetAnnotationsWithPostId(int userId, int postId, PagingAttributes pagingAttributes)
         {
             using var DB = new AppContext();
             var result = from annot in DB.Annotations
                          join hist in DB.History on annot.HistoryId equals hist.Id
-                         join quest in DB.Questions on hist.PostId equals quest.Id
-                         where hist.PostId == postId && annot.UserId == userId
-                         select new AnnotationsQuestions
+                         join quest in DB.Questions on hist.Postid equals quest.Id
+                         where hist.Postid == postId && annot.UserId == userId
+                         select new AnnotationsDto
                          {
                             AnnotationId = annot.Id,
+                            HistoryId = annot.HistoryId,
                             PostId = postId,
                             Body = annot.Body,
                             Date = annot.Date
                          };
+            /*var listCount = result.Count();
+            //calc max pages and set requested page to last page if out of bounds
+            var calculatedNumberOfPages = (int)Math.Ceiling((double)listCount / pagingAttributes.PageSize) - 1;
+            int page;
+            if (pagingAttributes.Page > calculatedNumberOfPages)
+            {
+                page = calculatedNumberOfPages;
+            }
+
+            if (pagingAttributes.Page <= 0)
+            {
+                page = 0;
+            }
+            else page = pagingAttributes.Page - 1;
+            var listResult = result.Skip(pagingAttributes.Page * pagingAttributes.PageSize)
+                                   .Take(pagingAttributes.PageSize)
+                                   .ToList();*/
 
             return result.ToList();
         }

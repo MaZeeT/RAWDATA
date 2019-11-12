@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DatabaseService;
 using DatabaseService.Modules;
 using DatabaseService.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -27,7 +28,7 @@ namespace WebService.Controllers
         /// </summary>
         /// <returns>Array of Json Annotation Objects plus relevant status code</returns>
         [HttpGet]
-        public ActionResult GetAllAnnotationsOfUser()
+        public ActionResult GetAllAnnotationsOfUser() //needs-pagination
         {
             int userIdFromToken = GetAuthUserId();
             var listOfAnnotations = _annotationService.GetAllAnnotationsByUserId(userIdFromToken);
@@ -46,13 +47,21 @@ namespace WebService.Controllers
         /// <param name="postId"></param>
         /// <returns>List of annotationsDto</returns>
         [HttpGet("user/{postId}")]
-        public ActionResult GetAnnotationsByPostId(int postId)
+        public ActionResult GetAnnotationsByPostId(int postId, [FromQuery] PagingAttributes pagingAttributes) //needs-pagination
         {
+            var pageSize = pagingAttributes.PageSize;
+            var pageNumber = pagingAttributes.Page;
             int userIdFromToken = GetAuthUserId();
-            var listOfAnnotations = _annotationService.GetAnnotationsAndQuestionsByPostId(userIdFromToken, postId);
+            var listOfAnnotations = _annotationService.GetAnnotationsWithPostId(userIdFromToken, postId, pagingAttributes);
             if (listOfAnnotations.Count == 0)
             {
                 return NotFound();
+            }
+            foreach(AnnotationsDto res in listOfAnnotations)
+            {
+                var annotationUrl = AddUrlsToAnnotations(res);
+                res.AddAnnotationUrl = annotationUrl.AddAnnotationUrl;
+                res.URL = annotationUrl.URL;
             }
             return Ok(listOfAnnotations);
         }
@@ -163,6 +172,21 @@ namespace WebService.Controllers
                     new { AnnotationId = annotation.Id });
             annotationDto.AddAnnotationUrl = Url.ActionLink(nameof(AddAnnotation));
             return annotationDto;
+        }
+
+        /// <summary>
+        /// Simple parsing function in order to add the needed urls ---> this is not a mapping function like the one above
+        /// For object of type AnnotationsDto that misses the Url and AddAnnotationUrl string values
+        /// </summary>
+        /// <param name="annotation"></param>
+        /// <returns></returns>
+        private AnnotationsDto AddUrlsToAnnotations(AnnotationsDto annotation)
+        {
+            annotation.URL = Url.Link(
+                    nameof(GetAnnotation),
+                    new { annotation.AnnotationId });
+            annotation.AddAnnotationUrl = Url.ActionLink(nameof(AddAnnotation));
+            return annotation;
         }
 
         /// <summary>

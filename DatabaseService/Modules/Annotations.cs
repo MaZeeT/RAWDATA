@@ -10,6 +10,5 @@ namespace DatabaseService.Modules
         public int HistoryId { get; set; }
         public string Body { get; set; }
         public DateTime Date { get; set; }
-        public AnnotationsQuestions History { get; set; }
     }
 }

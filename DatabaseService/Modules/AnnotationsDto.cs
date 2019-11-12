@@ -10,6 +10,7 @@ namespace DatabaseService.Modules
         public int AnnotationId { get; set; } // hide from user
         public int UserId { get; set; }  // hide from user
         public int HistoryId { get; set; }  // hide from user
+        public int PostId { get; set; }
         public string Body { get; set; }
         public DateTime Date { get; set; } 
         public string AddAnnotationUrl { get; set; }
