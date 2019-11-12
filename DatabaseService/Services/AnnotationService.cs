@@ -30,14 +30,20 @@ namespace DatabaseService.Services
             
             return result;
         }
-        public List<Annotations> GetAllAnnotationsByUserId(int userId)
+        public List<Annotations> GetAllAnnotationsByUserId(int userId, PagingAttributes pagingAttributes)
         {
             using var DB = new AppContext();
-            var result = DB.Annotations
+            var listCount = DB.Annotations
                            .Where(x => x.UserId == userId)
+                           .Count();
+            var page = GetPagination(listCount, pagingAttributes);
+            //actually handeling the pagination on db query not like lower. 
+            var finalList = DB.Annotations
+                           .Where(x => x.UserId == userId)
+                           .Skip(page * pagingAttributes.PageSize)
+                           .Take(pagingAttributes.PageSize)
                            .ToList();
-
-            return result;
+            return finalList;
         }
 
         /*//This gets the normal simple annotation from the db and not the actual post with body and title
@@ -61,37 +67,30 @@ namespace DatabaseService.Services
         public List<AnnotationsDto> GetAnnotationsWithPostId(int userId, int postId, PagingAttributes pagingAttributes)
         {
             using var DB = new AppContext();
-            var result = from annot in DB.Annotations
-                         join hist in DB.History on annot.HistoryId equals hist.Id
-                         join quest in DB.Questions on hist.Postid equals quest.Id
-                         where hist.Postid == postId && annot.UserId == userId
-                         select new AnnotationsDto
-                         {
-                            AnnotationId = annot.Id,
-                            HistoryId = annot.HistoryId,
-                            PostId = postId,
-                            Body = annot.Body,
-                            Date = annot.Date
-                         };
-            /*var listCount = result.Count();
-            //calc max pages and set requested page to last page if out of bounds
-            var calculatedNumberOfPages = (int)Math.Ceiling((double)listCount / pagingAttributes.PageSize) - 1;
-            int page;
-            if (pagingAttributes.Page > calculatedNumberOfPages)
-            {
-                page = calculatedNumberOfPages;
-            }
+            var listCount = from annot in DB.Annotations
+                            join hist in DB.History on annot.HistoryId equals hist.Id
+                            join quest in DB.Questions on hist.Postid equals quest.Id
+                            where hist.Postid == postId && annot.UserId == userId
+                            group annot by annot.Id into tot
+                            select tot.Count();
+            var page = GetPagination(listCount.FirstOrDefault(), pagingAttributes);
 
-            if (pagingAttributes.Page <= 0)
-            {
-                page = 0;
-            }
-            else page = pagingAttributes.Page - 1;
-            var listResult = result.Skip(pagingAttributes.Page * pagingAttributes.PageSize)
-                                   .Take(pagingAttributes.PageSize)
-                                   .ToList();*/
+            var result = (from annot in DB.Annotations
+                          join hist in DB.History on annot.HistoryId equals hist.Id
+                          join quest in DB.Questions on hist.Postid equals quest.Id
+                          where hist.Postid == postId && annot.UserId == userId
+                          select new AnnotationsDto
+                          {
+                              AnnotationId = annot.Id,
+                              HistoryId = annot.HistoryId,
+                              PostId = postId,
+                              Body = annot.Body,
+                              Date = annot.Date
+                          }).Skip(page * pagingAttributes.PageSize)
+                            .Take(pagingAttributes.PageSize)
+                            .ToList();
 
-            return result.ToList();
+            return result;
         }
 
         public bool DeleteAnnotation(int id)
@@ -157,6 +156,25 @@ namespace DatabaseService.Services
                 return false;
             }
 
+        }
+
+        private int GetPagination(int matchcount, PagingAttributes pagingAttributes)
+        {
+            //calc max pages and set requested page to last page if out of bounds
+            var calculatedNumberOfPages = (int)Math.Ceiling((double)matchcount / pagingAttributes.PageSize) - 1;
+            System.Console.WriteLine($"{calculatedNumberOfPages} calculated pages.");
+            int page;
+            if (pagingAttributes.Page > calculatedNumberOfPages)
+            {
+                page = calculatedNumberOfPages;
+            }
+
+            if (pagingAttributes.Page <= 0)
+            {
+                page = 0;
+            }
+            else page = pagingAttributes.Page - 1;
+            return page;
         }
 
     }

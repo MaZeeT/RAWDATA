@@ -28,10 +28,10 @@ namespace WebService.Controllers
         /// </summary>
         /// <returns>Array of Json Annotation Objects plus relevant status code</returns>
         [HttpGet]
-        public ActionResult GetAllAnnotationsOfUser() //needs-pagination
+        public ActionResult GetAllAnnotationsOfUser([FromQuery] PagingAttributes pagingAttributes) //needs-pagination
         {
             int userIdFromToken = GetAuthUserId();
-            var listOfAnnotations = _annotationService.GetAllAnnotationsByUserId(userIdFromToken);
+            var listOfAnnotations = _annotationService.GetAllAnnotationsByUserId(userIdFromToken, pagingAttributes);
             if (listOfAnnotations.Count == 0)
             {
                 return NotFound();
@@ -47,10 +47,8 @@ namespace WebService.Controllers
         /// <param name="postId"></param>
         /// <returns>List of annotationsDto</returns>
         [HttpGet("user/{postId}")]
-        public ActionResult GetAnnotationsByPostId(int postId, [FromQuery] PagingAttributes pagingAttributes) //needs-pagination
+        public ActionResult GetAnnotationsByPostId(int postId, [FromQuery] PagingAttributes pagingAttributes) 
         {
-            var pageSize = pagingAttributes.PageSize;
-            var pageNumber = pagingAttributes.Page;
             int userIdFromToken = GetAuthUserId();
             var listOfAnnotations = _annotationService.GetAnnotationsWithPostId(userIdFromToken, postId, pagingAttributes);
             if (listOfAnnotations.Count == 0)
