@@ -21,65 +21,57 @@ namespace WebService.Controllers
             _historyService = historyService;
             _mapper = mapper;
         }
-        
+
         [HttpGet("{userId}", Name = nameof(GetHistory))]
         //example http://localhost:5001/api/ //todo make an example
         public ActionResult GetHistory(int userId)
         {
-            /*
-            var history = _historyService.Get(userId);
+            var history = _historyService.GetHistoryList(userId);
             if (history == null)
             {
                 return NotFound();
             }
-            */
-            return Ok();
-        }
-        
 
-        
-        [HttpGet("{userId}", Name = nameof(AddBookmark))]
+            return Ok(history);
+        }
+
+        [HttpGet("{userId}{PostId}", Name = nameof(AddBookmark))]
         //example http://localhost:5001/api/ //todo make an example
-        public ActionResult AddBookmark(int userId)
+        public ActionResult AddBookmark(int userId, int PostId)
         {
-            /*
-            var history = _historyService.Get(userId);
-            if (history == null)
+            var history = _historyService.Add(userId, PostId, true);
+            if (!history)
             {
                 return NotFound();
             }
-            */
+
             return Ok();
         }
-        
+
         [HttpGet("{userId}", Name = nameof(GetBookmarks))]
         //example http://localhost:5001/api/ //todo make an example
         public ActionResult GetBookmarks(int userId)
         {
-            /*
-            var history = _historyService.Get(userId);
-            if (history == null)
+            var bookmarks = _historyService.GetBookmarks(userId);
+            if (bookmarks == null)
             {
                 return NotFound();
             }
-            */
-            return Ok();
-            
+
+            return Ok(bookmarks);
         }
-        
-        [HttpGet("{userId}", Name = nameof(DeleteBookmark))]
+
+        [HttpGet("{historyId}", Name = nameof(DeleteBookmark))]
         //example http://localhost:5001/api/ //todo make an example
-        public ActionResult DeleteBookmark(int userId)
+        public ActionResult DeleteBookmark(int historyId)
         {
-            /*
-            var history = _historyService.Get(userId);
-            if (history == null)
+            var history = _historyService.Delete(historyId);
+            if (!history)
             {
                 return NotFound();
             }
-            */
+
             return Ok();
-            
         }
     }
 }
