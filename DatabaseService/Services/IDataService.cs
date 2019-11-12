@@ -16,5 +16,6 @@ namespace DatabaseService
         string GetPostType(int postId);
         //int GetParentId(int answerID);
         IList<Posts> Search(int userid, string searchstring, int? searchtypecode, PagingAttributes pagingAttributes);
+        SinglePost GetPost(int postId);
     }
 }
