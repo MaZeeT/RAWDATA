@@ -161,6 +161,7 @@ namespace WebService.Controllers
             annotationDto.URL = Url.Link(
                     nameof(GetAnnotation),
                     new { AnnotationId = annotation.Id });
+            annotationDto.AddAnnotationUrl = Url.ActionLink(nameof(AddAnnotation));
             return annotationDto;
         }
 

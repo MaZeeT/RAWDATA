@@ -62,14 +62,10 @@ namespace DatabaseService.Services
                          where hist.PostId == postId && annot.UserId == userId
                          select new AnnotationsQuestions
                          {
-                             Id = annot.Id,
-                             UserId = annot.UserId,
-                             HistPostId = annot.HistoryId,
-                             AnnotationCreationDate = annot.Date,
-                             QuestionId = quest.Id,
-                             QuestionTitle = quest.Title,
-                             QuestionBody = quest.Body,
-                             IsBookmark = hist.IsBookmark
+                            AnnotationId = annot.Id,
+                            PostId = postId,
+                            Body = annot.Body,
+                            Date = annot.Date
                          };
 
             return result.ToList();

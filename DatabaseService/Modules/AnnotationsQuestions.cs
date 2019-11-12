@@ -6,20 +6,13 @@ namespace DatabaseService.Modules
 {
     public class AnnotationsQuestions
     {
-        public int Id { get; set; }
-        public int UserId { get; set; }
+        public string URL { get; set; }
+        public int AnnotationId { get; set; } // hide from user
+       // public int UserId { get; set; }  // hide from user
+        //public int HistoryId { get; set; }  // hide from user
         public int PostId { get; set; }
-        public string PostTableName { get; set; }
-        public DateTime AnnotationCreationDate { get; set; }
-        public bool IsBookmark { get; set; }
-        public int HistPostId { get; set; }
-        public int QuestionId { get; set; }
-        public int OwnerId { get; set; }
-        public string QuestionTitle { get; set; }
-        public string QuestionBody { get; set; }
-        public int AcceptedAnswerId { get; set; }
-        public DateTime QuestionCreationDate { get; set; }
-        public DateTime QuestionClosedDate { get; set; }
-        public int Score { get; set; }
+        public string Body { get; set; }
+        public DateTime Date { get; set; }
+        public string AddAnnotationUrl { get; set; }
     }
 }
