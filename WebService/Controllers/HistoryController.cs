@@ -22,7 +22,7 @@ namespace WebService.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("{userId}", Name = nameof(GetHistory))]
+        [HttpGet("/{userId}", Name = nameof(GetHistory))]
         //example http://localhost:5001/api/ //todo make an example
         public ActionResult GetHistory(int userId)
         {
@@ -35,7 +35,7 @@ namespace WebService.Controllers
             return Ok(history);
         }
 
-        [HttpGet("{userId}{PostId}", Name = nameof(AddBookmark))]
+        [HttpGet("/addbookmark/{userId}/{PostId}", Name = nameof(AddBookmark))]
         //example http://localhost:5001/api/ //todo make an example
         public ActionResult AddBookmark(int userId, int PostId)
         {
@@ -47,7 +47,7 @@ namespace WebService.Controllers
 
             return Ok();
         }
-
+/*
         [HttpGet("{userId}", Name = nameof(GetBookmarks))]
         //example http://localhost:5001/api/ //todo make an example
         public ActionResult GetBookmarks(int userId)
@@ -60,8 +60,8 @@ namespace WebService.Controllers
 
             return Ok(bookmarks);
         }
-
-        [HttpGet("{historyId}", Name = nameof(DeleteBookmark))]
+*/
+        [HttpGet("/deletebookmark/{historyId}", Name = nameof(DeleteBookmark))]
         //example http://localhost:5001/api/ //todo make an example
         public ActionResult DeleteBookmark(int historyId)
         {
