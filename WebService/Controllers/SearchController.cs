@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using DatabaseService;
+using DatabaseService.Modules;
+using DatabaseService.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -20,14 +22,18 @@ namespace WebService.Controllers
     public class SearchController : ControllerBase
     {
         private IDataService _dataService;
+        //private IHistoryService _historyService;
         private IMapper _mapper;
 
         public SearchController(
             IDataService dataService,
+            //IHistoryService historyService,
             IMapper mapper)
         {
             _dataService = dataService;
             _mapper = mapper;
+            //_historyService = historyService;
+
         }
 
         //[HttpGet(Name = nameof(Search)), Route("{s=}/{stype=3}/{page=1}/{pageSize=10}")] //still dont understand the Route options
@@ -46,7 +52,6 @@ namespace WebService.Controllers
                 useridok = true; //becomes true when we get an int in userId
             }
             //var user = this.User.Identity.Name; //this gets the id also??
-            // .FindFirst(ClaimTypes.Name)?.Value;
             //var user = User.FindFirst("sub")?.Value;
             Console.WriteLine("Got user: " + userId);
 
@@ -86,16 +91,18 @@ namespace WebService.Controllers
         {
             //var dto = _mapper.Map<QuestionDto>(question);
             var dto = new PostsSearchListDto();
-            if (posts.Parentid != 0)
+            if (posts.Parentid != 0) //then we have an answer
             {
                 dto.ThreadLink = Url.Link(
                     nameof(QuestionsController.GetThread),
                     new 
                     { 
-                        questionId = posts.Parentid 
+                        questionId = posts.Parentid//,
+                       // postId = posts.Id
+
                     });
             }
-            else
+            else //we have a question
             {
                 dto.ThreadLink = Url.Link(
                     nameof(QuestionsController.GetThread),

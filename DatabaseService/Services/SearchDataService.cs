@@ -57,7 +57,7 @@ namespace DatabaseService
             }
             else searchtype.Value = st.searchType[3];
 
-            //userid is hardcoded for now; should be returned from auth or sth
+            //userid 
             var appuserid = new NpgsqlParameter("appuserid", NpgsqlTypes.NpgsqlDbType.Integer);
             appuserid.Value = userid;
 
@@ -157,7 +157,7 @@ namespace DatabaseService
             }
             else searchtype.Value = st.searchType[5];
 
-            //userid is hardcoded for now; should be returned from auth or sth
+            //userid 
             var appuserid = new NpgsqlParameter("appuserid", NpgsqlTypes.NpgsqlDbType.Integer);
             appuserid.Value = userid;
 

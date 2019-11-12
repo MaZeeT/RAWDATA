@@ -2,12 +2,12 @@ namespace DatabaseService.Modules
 {
     public class History
     {
-        private int Id;
-        private int Userid;
-        private int Postid;
-        private string PostsTableName;
-        private string Date;
-        private bool isBookmark;
-        
+        public int Id { get; set; }
+        public int Userid { get; set; }
+        public int Postid { get; set; }
+        public string PostsTableName { get; set; }
+        public string Date { get; set; }
+        public bool isBookmark { get; set; }
+
     }
 }
