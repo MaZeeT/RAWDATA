@@ -72,15 +72,13 @@ namespace DatabaseService
             System.Console.WriteLine($"{matchcount} results.");
 
             //calc max pages and set requested page to last page if out of bounds
-            var calculatedNumberOfPages = (int)Math.Ceiling((double)matchcount / pagingAttributes.PageSize)-1;
+            var calculatedNumberOfPages = (int)Math.Ceiling((double)matchcount / pagingAttributes.PageSize);
             System.Console.WriteLine($"{calculatedNumberOfPages} calculated pages.");
             int page;
             if (pagingAttributes.Page > calculatedNumberOfPages) 
             {
                 page = calculatedNumberOfPages;
-            }
-
-            if (pagingAttributes.Page <= 0)
+            } else if (pagingAttributes.Page <= 0)
             {
                 page = 0;
             }
