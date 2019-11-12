@@ -82,13 +82,13 @@ namespace WebService.Controllers
         ///  in request: POST http://localhost:5001/api/annotations  plus valid token of the user
         ///  in body: 
         ///         {
-        ///             "HistoryId": 19,
+        ///             "HistoryId": 19, //fix namig because it is postid
         ///             "Body": "This call takes in userId, HistoryId and the body; but returns all the things from AnnotationsDto"
         ///         }
         /// </summary>
         /// <param name="annotationObj"></param>
         /// <returns>Returns the </returns>
-        [HttpPost]
+        [HttpPost (Name = nameof(AddAnnotation))]
         public ActionResult AddAnnotation(AnnotationsDto annotationObj)
         {
             var newAnnotation = new Annotations
