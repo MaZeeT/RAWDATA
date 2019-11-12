@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
 using DatabaseService;
+using DatabaseService.Modules;
+using DatabaseService.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 
 namespace WebService.Controllers
 {
@@ -14,14 +17,18 @@ namespace WebService.Controllers
     public class QuestionsController : ControllerBase
     {
         private IDataService _dataService;
+       // private IHistoryService _historyService;
         private IMapper _mapper;
 
         public QuestionsController(
             IDataService dataService,
+            //IHistoryService historyService,
             IMapper mapper)
         {
             _dataService = dataService;
             _mapper = mapper;
+           // _historyService = historyService;
+
         }
 
         [HttpGet(Name = nameof(BrowseQuestions))]
@@ -35,7 +42,7 @@ namespace WebService.Controllers
 
             return Ok(result);
         }
-
+/*
        [HttpGet("{questionId}", Name = nameof(GetQuestion))]
         //example http://localhost:5001/api/questions/19
         public ActionResult GetQuestion(int questionId)
@@ -47,18 +54,39 @@ namespace WebService.Controllers
             }
             return Ok(CreateQuestionDto(question));
         }
-
-        [HttpGet("thread/{questionId}", Name = nameof(GetThread))]
+*/
+        //[Route("thread/{questionId}/{postId?}")]
+        [HttpGet("thread/{questionId}/{postId?}", Name = nameof(GetThread))]
         //example http://localhost:5001/api/questions/thread/19
         //get the whole thread of question+asnswers
-        public ActionResult GetThread(int questionId)
+        public ActionResult GetThread(int questionId, int? postId)
         {
+            bool useridok = false;
+            //var postId =pidh.postId; //for history
+            var claimsIdentity = this.User.Identity as ClaimsIdentity;
+            int userId;
+            if (Int32.TryParse(claimsIdentity.FindFirst(ClaimTypes.Name)?.Value, out userId))
+            {
+                useridok = true; //becomes true when we get an int in userId
+            }
 
             if (questionId > 0) //dont know proper way to do this
             {
                 var t = _dataService.GetThread(questionId);
                 if (t != null)
                 {
+                    if (useridok)
+                    {
+                        ///call to add browse history here
+                       /* History browsehist = new History();
+                        browsehist.Userid = userId;
+                        if (postId != null)
+                        {
+                            browsehist.Postid = (int)postId;
+                        }
+                        else browsehist.Postid = questionId;
+                        _historyService.Add(browsehist);*/
+                    }
                     return Ok(t);
                 } else return NotFound();
             }
