@@ -12,7 +12,7 @@ namespace DatabaseService
             {
                 builder.AddConsole();
             }); //This is taken from online documentation when we want to log errors
-        
+
         public DbSet<AppUser> AppUser { get; set; }
         public DbSet<History> History { get; set; }
         public DbSet<Annotations> Annotations { get; set; }
@@ -33,8 +33,8 @@ namespace DatabaseService
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             string database = "";
-           // database = "host=localhost;db=stackoverflow;uid=postgres;pwd=cock";
-           // database = "host=localhost;db=stackoverflow;uid=postgres;pwd=Pisi2828";
+            // database = "host=localhost;db=stackoverflow;uid=postgres;pwd=cock";
+            // database = "host=localhost;db=stackoverflow;uid=postgres;pwd=Pisi2828";
             database = "host=mazeet.ddns.net;port=32999;db=stackoverflow;uid=raw6;pwd=J8cxYN";
 
             optionsBuilder
@@ -58,7 +58,9 @@ namespace DatabaseService
             modelBuilder.Entity<AnnotateFunctionDto>().HasNoKey();
             modelBuilder.Entity<AppUser>().ToTable("appusers");
             modelBuilder.Entity<AppUser>().Property(x => x.Id).HasColumnName("id");
-
+            modelBuilder.Entity<History>().ToTable("history");
+            modelBuilder.Entity<History>().Property(x => x.Id).HasColumnName("id");
         }
+        
     }
 }

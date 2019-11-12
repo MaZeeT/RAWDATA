@@ -1,13 +1,15 @@
+using System;
+
 namespace DatabaseService.Modules
 {
     public class History
     {
-        private int Id;
-        private int Userid;
-        private int Postid;
-        private string PostsTableName;
-        private string Date;
-        private bool isBookmark;
+        public int Id { set; get; }
+        public int Userid { set; get; }
+        public int Postid { set; get; }
+        public string PostTableName { set; get; }
+        public DateTime Date { set; get; }
+        public bool isBookmark { set; get; }
         
     }
 }

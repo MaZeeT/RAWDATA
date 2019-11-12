@@ -34,6 +34,7 @@ namespace WebService
             services.AddSingleton<IDataService, SearchDataService>();
             services.AddSingleton<IAnnotationService, AnnotationService>();
             services.AddSingleton<IAppUserService, AppUserService>();
+            services.AddSingleton<IHistoryService, HistoryService>();
 
 
             var key = Encoding.UTF8.GetBytes(Configuration.GetSection("Auth:Key").Value);
