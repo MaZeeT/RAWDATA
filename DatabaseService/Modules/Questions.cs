@@ -1,4 +1,7 @@
-﻿namespace DatabaseService
+﻿using DatabaseService.Modules;
+using System.Collections.Generic;
+
+namespace DatabaseService
 {
     public class Questions
     {
