@@ -17,18 +17,12 @@ namespace DatabaseService
         public DbSet<History> History { get; set; }
         public DbSet<Annotations> Annotations { get; set; }
         public DbSet<AnnotateFunctionDto> AnnotateFunction { get; set; }
-
         public DbSet<Questions> Questions { get; set; }
         public DbSet<Answers> Answers { get; set; }
         public DbSet<Search> Search { get; set; }
         public DbSet<PostsTable> PostsTable { get; set; }
         public DbSet<WordRank> WordRank { get; set; }
 
-
-        //todo replace objects with proper types
-
-        /* public DbSet<object> AppUser { get; set; }
-         public DbSet<object> History { get; set; }*/
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -50,17 +44,17 @@ namespace DatabaseService
             modelBuilder.Entity<Search>().HasNoKey();
             modelBuilder.Entity<WordRank>().HasNoKey();
             modelBuilder.Entity<PostsTable>().HasNoKey();
+            modelBuilder.Entity<AnnotateFunctionDto>().HasNoKey();
+            //modelBuilder.Entity<AnnotationsQuestions>().HasNoKey();
 
             //modelBuilder.Entity<AuthUsers>().ToTable("authusers");
             //modelBuilder.Entity<AppUser>(); //can maybe be hadnled with hasnokey()
             //modelBuilder.Entity<object /*todo replace type*/>().HasNoKey();
 
-            //modelBuilder.Entity<Annotations>().HasNoKey();
-            modelBuilder.Entity<AnnotateFunctionDto>().HasNoKey();
+
             modelBuilder.Entity<AppUser>().ToTable("appusers");
             modelBuilder.Entity<AppUser>().Property(x => x.Id).HasColumnName("id");
-            modelBuilder.Entity<History>().ToTable("history");
-            modelBuilder.Entity<History>().Property(x => x.Id).HasColumnName("id");
+
         }
         
     }

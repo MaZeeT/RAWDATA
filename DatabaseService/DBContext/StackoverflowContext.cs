@@ -1,4 +1,4 @@
-﻿/*using DatabaseService.Modules;
+﻿using DatabaseService.Modules;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Linq;
@@ -57,4 +57,3 @@ namespace DatabaseService
         }
     }
 }
-*/
