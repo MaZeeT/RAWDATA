@@ -17,17 +17,20 @@ namespace WebService.Controllers
     public class QuestionsController : ControllerBase
     {
         private IDataService _dataService;
-       // private IHistoryService _historyService;
+        private IAnnotationService _annotationService;
+        private IHistoryService _historyService;
         private IMapper _mapper;
 
         public QuestionsController(
             IDataService dataService,
-            //IHistoryService historyService,
+            IAnnotationService annotationService,
+            IHistoryService historyService,
             IMapper mapper)
         {
             _dataService = dataService;
             _mapper = mapper;
-           // _historyService = historyService;
+            _historyService = historyService;
+            _annotationService = annotationService;
 
         }
 
@@ -62,7 +65,6 @@ namespace WebService.Controllers
         public ActionResult GetThread(int questionId, int? postId)
         {
             bool useridok = false;
-            //var postId =pidh.postId; //for history
             var claimsIdentity = this.User.Identity as ClaimsIdentity;
             int userId;
             if (Int32.TryParse(claimsIdentity.FindFirst(ClaimTypes.Name)?.Value, out userId))
@@ -70,30 +72,62 @@ namespace WebService.Controllers
                 useridok = true; //becomes true when we get an int in userId
             }
 
-            if (questionId > 0) //dont know proper way to do this
-            {
+           // if (questionId > 0) //dont know proper way to do this
+          //  {
                 var t = _dataService.GetThread(questionId);
                 if (t != null)
                 {
-                    if (useridok)
+                    if (useridok) //then valid user made the request
                     {
                         ///call to add browse history here
-                       /* History browsehist = new History();
+                        History browsehist = new History();
                         browsehist.Userid = userId;
                         if (postId != null)
                         {
                             browsehist.Postid = (int)postId;
                         }
                         else browsehist.Postid = questionId;
-                        _historyService.Add(browsehist);*/
+                        _historyService.Add(browsehist);
                     }
-                    return Ok(t);
+
+                    List<PostsThreadDto> thread = new List<PostsThreadDto>();
+                    //createthreaddto
+                    foreach (Posts p in t)
+                    {
+                        PostsThreadDto pt = new PostsThreadDto();
+                        pt.Id = p.Id;
+                        pt.Parentid = p.Parentid;
+                        pt.Title = p.Title;
+                        pt.Body = p.Body;
+
+                    PagingAttributes pagingAttributes = new PagingAttributes();
+                    List<AnnotationsMinimalDto> finalanno = new List<AnnotationsMinimalDto>();
+                    List<AnnotationsDto> tempanno = new List<AnnotationsDto>();
+                        tempanno = _annotationService.GetAnnotationsWithPostId(userId, p.Id, pagingAttributes);
+                    foreach (AnnotationsDto ta in tempanno)
+                    {
+                        AnnotationsMinimalDto fa = new AnnotationsMinimalDto();
+                        fa.Body = ta.Body;
+                        fa.Date = ta.Date;
+                        finalanno.Add(fa);
+                    }
+                    pt.Annotations = finalanno;
+                    // pt.createBookamrkLink = Url.Link(  nameof(),  new { questionId = question.Id });
+                    AnnotationsDto anno = new AnnotationsDto();
+                        anno.Body = "Create new monitation!";
+                        anno.PostId = p.Id;
+                        pt.createAnnotationLink = Url.Link(nameof(AnnotationsController.AddAnnotation), anno); 
+                    // i know its supposed to be a form/post. just thought it'd be neat to have a link mockup. oh well maybe its more confusing this way :(
+                        thread.Add(pt);
+                    }
+
+                    return Ok(thread);
                 } else return NotFound();
-            }
-            else
-            {
-                return NotFound();
-            }
+           // }
+           // else
+           // {
+           //     return NotFound();
+           // }
 
         }
 

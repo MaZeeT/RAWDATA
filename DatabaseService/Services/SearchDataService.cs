@@ -134,7 +134,7 @@ namespace DatabaseService
         }
 
 
-        public IList<WordRank> WordRank(int userid, string searchstring, int? searchtypecode, PagingAttributes pagingAttributes)
+        public IList<WordRank> WordRank(int userid, string searchstring, int searchtypecode, int? maxresults)
         {
             ////// for performing searches with wordrank on the db
             ///
@@ -155,7 +155,7 @@ namespace DatabaseService
             var searchtype = new NpgsqlParameter("searchtype", NpgsqlTypes.NpgsqlDbType.Text);
             if (searchtypecode >= 4 && searchtypecode <= 5)
             {
-                searchtype.Value = st.searchType[searchtypecode.Value];
+                searchtype.Value = st.searchType[searchtypecode];
             }
             else searchtype.Value = st.searchType[5];
 
@@ -163,17 +163,26 @@ namespace DatabaseService
             var appuserid = new NpgsqlParameter("appuserid", NpgsqlTypes.NpgsqlDbType.Integer);
             appuserid.Value = userid;
 
-            //count matches
+            //if internal call is specified, stored function appsearch won't add to searches/searchhistory
+            var internalcall = new NpgsqlParameter("internalcall", NpgsqlTypes.NpgsqlDbType.Boolean);
+            internalcall.Value = true;
+
+            //count all matches
             var matchcount = db.Search
-                .FromSqlRaw("select wordrank(@appuserid, @searchtype, @search)", appuserid, searchtype, search)
+                .FromSqlRaw("select appsearch(@appuserid, @searchtype, @search, @internalcall)", appuserid, searchtype, search, internalcall)
                 .Count();
             System.Console.WriteLine($"{matchcount} results.");
 
+            var limit = new NpgsqlParameter("limit", NpgsqlTypes.NpgsqlDbType.Integer);
+            limit.Value = 10;
+            if (maxresults!=null)
+            {
+                limit.Value = maxresults;
+            }
+
             //call db.func wordrank
             return db.WordRank
-                .FromSqlRaw("SELECT * from wordrank(@appuserid, @searchtype, @search) limit 10", appuserid, searchtype, search)
-                .Skip(pagingAttributes.Page * pagingAttributes.PageSize)
-                .Take(pagingAttributes.PageSize)
+                .FromSqlRaw("SELECT * from wordrank(@appuserid, @searchtype, @search) limit @limit", appuserid, searchtype, search, limit)
                 .ToList();
         }
 
@@ -280,23 +289,26 @@ namespace DatabaseService
             //returns question and all child answers
         {
             using var db = new AppContext();
-            //get the questionid
+            //get the question
             var q = GetQuestion(questionId);
             if (q != null)
             {
-                //find answers to the specified questions
+                //find answers to the specified question
                 var ans = db.Answers
                             .Where(e => e.Parentid == questionId)
                             .ToList();
                 //manual mapping
                 List<Posts> posts = new List<Posts>();
+ 
+
                 posts.Add(
-                    new Posts 
-                    { 
-                        Id = q.Id, 
-                        Title = q.Title, 
-                        Body = q.Body 
-                    });
+                    new Posts
+                    {
+                        Id = q.Id,
+                        Title = q.Title,
+                        Body = q.Body
+
+                    }) ;
                 foreach (Answers a in ans)
                 {
                    // var endpos = 100;
@@ -310,7 +322,8 @@ namespace DatabaseService
                         Id = a.Id,
                         Parentid = a.Parentid,
                         Body = a.Body
-                       // Body = a.Body.Substring(0, endpos) 
+                        
+                        // Body = a.Body.Substring(0, endpos) 
                     });
                 };
                 return posts;

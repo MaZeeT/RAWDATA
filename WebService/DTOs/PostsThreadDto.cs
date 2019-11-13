@@ -1,17 +1,20 @@
 ﻿using DatabaseService.Modules;
 using System.Collections.Generic;
 
-namespace DatabaseService
+namespace WebService
 {
-    public class Posts
+    public class PostsThreadDto
     {
         public int Id { get; internal set; }
-        public decimal Rank { get; set; }
         public string Title { get; internal set; }
         public string Body { get; internal set; }
         public int Parentid { get; internal set; }
-        public int Totalresults { get; internal set; }
-        
-}
+
+
+        public List<AnnotationsMinimalDto> Annotations { get; set; }
+        public string createAnnotationLink { get; set; }
+        public string createBookmarkLink { get; set; }
+
+    }
 
 }
