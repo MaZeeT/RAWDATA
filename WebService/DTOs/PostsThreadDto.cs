@@ -1,4 +1,7 @@
-﻿namespace WebService
+﻿using DatabaseService.Modules;
+using System.Collections.Generic;
+
+namespace WebService
 {
     public class PostsThreadDto
     {
@@ -6,6 +9,9 @@
         public string Title { get; internal set; }
         public string Body { get; internal set; }
         public int Parentid { get; internal set; }
+
+
+        public List<AnnotationsMinimalDto> Annotations { get; set; }
         public string createAnnotationLink { get; set; }
         public string createBookmarkLink { get; set; }
 

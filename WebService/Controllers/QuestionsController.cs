@@ -17,17 +17,20 @@ namespace WebService.Controllers
     public class QuestionsController : ControllerBase
     {
         private IDataService _dataService;
+        private IAnnotationService _annotationService;
         private IHistoryService _historyService;
         private IMapper _mapper;
 
         public QuestionsController(
             IDataService dataService,
+            IAnnotationService annotationService,
             IHistoryService historyService,
             IMapper mapper)
         {
             _dataService = dataService;
             _mapper = mapper;
             _historyService = historyService;
+            _annotationService = annotationService;
 
         }
 
@@ -69,8 +72,8 @@ namespace WebService.Controllers
                 useridok = true; //becomes true when we get an int in userId
             }
 
-            if (questionId > 0) //dont know proper way to do this
-            {
+           // if (questionId > 0) //dont know proper way to do this
+          //  {
                 var t = _dataService.GetThread(questionId);
                 if (t != null)
                 {
@@ -96,21 +99,35 @@ namespace WebService.Controllers
                         pt.Parentid = p.Parentid;
                         pt.Title = p.Title;
                         pt.Body = p.Body;
-                        // pt.createBookamrkLink = Url.Link(  nameof(),  new { questionId = question.Id });
-                        AnnotationsDto anno = new AnnotationsDto();
+
+                    PagingAttributes pagingAttributes = new PagingAttributes();
+                    List<AnnotationsMinimalDto> finalanno = new List<AnnotationsMinimalDto>();
+                    List<AnnotationsDto> tempanno = new List<AnnotationsDto>();
+                        tempanno = _annotationService.GetAnnotationsWithPostId(userId, p.Id, pagingAttributes);
+                    foreach (AnnotationsDto ta in tempanno)
+                    {
+                        AnnotationsMinimalDto fa = new AnnotationsMinimalDto();
+                        fa.Body = ta.Body;
+                        fa.Date = ta.Date;
+                        finalanno.Add(fa);
+                    }
+                    pt.Annotations = finalanno;
+                    // pt.createBookamrkLink = Url.Link(  nameof(),  new { questionId = question.Id });
+                    AnnotationsDto anno = new AnnotationsDto();
                         anno.Body = "Create new monitation!";
                         anno.PostId = p.Id;
-                        pt.createAnnotationLink = Url.Link(nameof(AnnotationsController.AddAnnotation), anno);
+                        pt.createAnnotationLink = Url.Link(nameof(AnnotationsController.AddAnnotation), anno); 
+                    // i know its supposed to be a form/post. just thought it'd be neat to have a link mockup. oh well maybe its more confusing this way :(
                         thread.Add(pt);
                     }
 
                     return Ok(thread);
                 } else return NotFound();
-            }
-            else
-            {
-                return NotFound();
-            }
+           // }
+           // else
+           // {
+           //     return NotFound();
+           // }
 
         }
 
