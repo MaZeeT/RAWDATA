@@ -119,11 +119,11 @@ namespace WebService.Controllers
                     }
                     else return NoContent();
                 }
-               /* else if (searchparams.stype >= 4 && searchparams.stype <= 5)
+                else if (searchparams.stype >= 4 && searchparams.stype <= 5)
                 {
                     var search = _dataService.WordRank(userId, searchparams.s, searchparams.stype, 10);
                     return Ok(search);
-                }*/
+                }
             }
             return BadRequest();
         }
