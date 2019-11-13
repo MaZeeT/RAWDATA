@@ -1,4 +1,7 @@
-﻿namespace DatabaseService
+﻿using DatabaseService.Modules;
+using System.Collections.Generic;
+
+namespace DatabaseService
 {
     public class Posts
     {
@@ -8,7 +11,7 @@
         public string Body { get; internal set; }
         public int Parentid { get; internal set; }
         public int Totalresults { get; internal set; }
-
-    }
+        
+}
 
 }

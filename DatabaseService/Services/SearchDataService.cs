@@ -299,13 +299,16 @@ namespace DatabaseService
                             .ToList();
                 //manual mapping
                 List<Posts> posts = new List<Posts>();
+ 
+
                 posts.Add(
-                    new Posts 
-                    { 
-                        Id = q.Id, 
-                        Title = q.Title, 
-                        Body = q.Body 
-                    });
+                    new Posts
+                    {
+                        Id = q.Id,
+                        Title = q.Title,
+                        Body = q.Body
+
+                    }) ;
                 foreach (Answers a in ans)
                 {
                    // var endpos = 100;
@@ -319,7 +322,8 @@ namespace DatabaseService
                         Id = a.Id,
                         Parentid = a.Parentid,
                         Body = a.Body
-                       // Body = a.Body.Substring(0, endpos) 
+                        
+                        // Body = a.Body.Substring(0, endpos) 
                     });
                 };
                 return posts;
