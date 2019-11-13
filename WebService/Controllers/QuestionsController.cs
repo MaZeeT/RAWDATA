@@ -100,7 +100,8 @@ namespace WebService.Controllers
                         AnnotationsDto anno = new AnnotationsDto();
                         anno.Body = "Create new monitation!";
                         anno.PostId = p.Id;
-                        pt.createAnnotationLink = Url.Link(nameof(AnnotationsController.AddAnnotation), anno);
+                        pt.createAnnotationLink = Url.Link(nameof(AnnotationsController.AddAnnotation), anno); 
+                    // i know its supposed to be a form/post. just thought it'd be neat to have a link mockup. oh well maybe its more confusing this way :(
                         thread.Add(pt);
                     }
 
