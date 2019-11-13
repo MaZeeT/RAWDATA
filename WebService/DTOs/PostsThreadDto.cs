@@ -7,7 +7,7 @@
         public string Body { get; internal set; }
         public int Parentid { get; internal set; }
         public string createAnnotationLink { get; set; }
-        public string createBookamrkLink { get; set; }
+        public string createBookmarkLink { get; set; }
 
     }
 
