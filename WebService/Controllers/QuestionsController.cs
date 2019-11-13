@@ -69,8 +69,8 @@ namespace WebService.Controllers
                 useridok = true; //becomes true when we get an int in userId
             }
 
-            if (questionId > 0) //dont know proper way to do this
-            {
+           // if (questionId > 0) //dont know proper way to do this
+          //  {
                 var t = _dataService.GetThread(questionId);
                 if (t != null)
                 {
@@ -106,11 +106,11 @@ namespace WebService.Controllers
 
                     return Ok(thread);
                 } else return NotFound();
-            }
-            else
-            {
-                return NotFound();
-            }
+           // }
+           // else
+           // {
+           //     return NotFound();
+           // }
 
         }
 

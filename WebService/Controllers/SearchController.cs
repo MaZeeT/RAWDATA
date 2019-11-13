@@ -36,6 +36,54 @@ namespace WebService.Controllers
 
         }
 
+        [HttpGet("wordrank", Name = nameof(WordRank))]
+        public ActionResult WordRank([FromQuery] SearchQuery searchparams, [FromQuery] int? maxresults) //
+ // http://localhost:5001/api/search/wordrank?s=code&stype=5&maxresults=5
+ // http://localhost:5001/api/search/wordrank?s=code,app,program
+        {
+            bool useridok = false;
+            var claimsIdentity = this.User.Identity as ClaimsIdentity;
+            int userId;
+            if (Int32.TryParse(claimsIdentity.FindFirst(ClaimTypes.Name)?.Value, out userId))
+            {
+                useridok = true; //becomes true when we get an int in userId
+            }
+            //var user = this.User.Identity.Name; //this gets the id also??
+            //var user = User.FindFirst("sub")?.Value;
+            Console.WriteLine("Got user: " + userId);
+
+            PagingAttributes pagingAttributes = new PagingAttributes();
+
+            if (searchparams.s != null && useridok)
+            {
+                Console.WriteLine("Got searchparams: " + searchparams.s);
+                Console.WriteLine("Got maxresults: " + maxresults);
+
+                //rudimentary checking of params
+              /*  if (searchparams.stype >= 0 && searchparams.stype <= 3)
+                {
+                    var search = _dataService.Search(userId, searchparams.s, searchparams.stype, pagingAttributes);
+
+                    var result = CreateResult(search, searchparams, pagingAttributes);
+                    if (result != null)
+                    {
+                        return Ok(result);
+                    }
+                    else return NoContent();
+                }
+                else*/ if (searchparams.stype >= 4 && searchparams.stype <= 5)
+                {
+                    var search = _dataService.WordRank(userId, searchparams.s, searchparams.stype, maxresults);
+                    return Ok(search);
+                } else
+                {
+                    var search = _dataService.WordRank(userId, searchparams.s, 5, maxresults);
+                    return Ok(search);
+                }
+            }
+            return BadRequest();
+        }
+
         //[HttpGet(Name = nameof(Search)), Route("{s=}/{stype=3}/{page=1}/{pageSize=10}")] //still dont understand the Route options
         [HttpGet(Name = nameof(Search))]
         //[HttpGet] put defalut values here for optional parameters. in this case only s is not optional
@@ -71,11 +119,11 @@ namespace WebService.Controllers
                     }
                     else return NoContent();
                 }
-                else if (searchparams.stype >= 4 && searchparams.stype <= 5)
+               /* else if (searchparams.stype >= 4 && searchparams.stype <= 5)
                 {
-                    var search = _dataService.WordRank(userId, searchparams.s, searchparams.stype, pagingAttributes);
+                    var search = _dataService.WordRank(userId, searchparams.s, searchparams.stype, 10);
                     return Ok(search);
-                }
+                }*/
             }
             return BadRequest();
         }
