@@ -21,10 +21,7 @@ namespace DatabaseService
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            // string database = "";
-            string database = "host=localhost;db=stackoverflow;uid=postgres;pwd=cock";
-            //string database = "host=localhost;db=stackoverflow;uid=postgres;pwd=Pisi2828";
-            //string database = "host=mazeet.ddns.net;port=32999;db=stackoverflow;uid=raw6;pwd=J8cxYN";
+            string database = HostDatabase.address;
 
             optionsBuilder
                 .UseLoggerFactory(MyLoggerFactory)
