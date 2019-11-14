@@ -18,11 +18,10 @@ namespace DatabaseService
 
         public IList<Questions> GetQuestions(PagingAttributes pagingAttributes)
         {
-            // AuthUser()
-            // if ok do browse q-list
+            //// for browsing the full list of questions
             using var db = new AppContext();
 
-            //try to make pages 1-based
+            //try to convert back from 1-based pages
             int page;
             if (pagingAttributes.Page <= 0)
             {
@@ -89,8 +88,25 @@ namespace DatabaseService
 
             foreach (Search s in resultlist) 
             {
-               //different mapping for results that are questions and answers
-                string tablename = _sharedService.GetPostType(s.postid);
+                //different mapping for results that are questions and answers
+
+                Posts p = new Posts();
+                SinglePost sp = new SinglePost();
+                sp = _sharedService.GetPost(s.postid);
+
+                p.Parentid = sp.QuestionId;
+                p.Id = sp.Id;
+                var endpos = 100;
+                if (sp.Body.Length < 100)
+                { endpos =sp.Body.Length; }
+                p.Body = sp.Body.Substring(0, endpos);
+
+                p.Title = _sharedService.GetQuestion(p.Parentid).Title;
+                p.Totalresults = matchcount;
+                p.Rank = s.rank;
+                resultposts.Add(p);
+
+                /*string tablename = _sharedService.GetPostType(s.postid);
                 if (tablename == "answers")
                 {
                     Posts p = new Posts();
@@ -121,7 +137,7 @@ namespace DatabaseService
                     p.Totalresults = matchcount;
                     p.Rank = s.rank;
                     resultposts.Add(p);
-                }
+                }*/
             }
             return resultposts;
         }
