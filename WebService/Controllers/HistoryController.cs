@@ -11,6 +11,7 @@ namespace WebService.Controllers
 {
     [ApiController]
     [Route("api/history")]
+    [Authorize]
     public class HistoryController : ControllerBase
     {
         private IHistoryService _historyService;
@@ -22,10 +23,11 @@ namespace WebService.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("{userId}", Name = nameof(GetHistory))]
-        //example http://localhost:5001/api/history/0 
-        public ActionResult GetHistory(int userId)
+        [HttpGet(Name = nameof(GetHistory))]
+        //example http://localhost:5001/api/history 
+        public ActionResult GetHistory()
         {
+            var userId = GetAuthUserId();
             var history = _historyService.GetHistoryList(userId);
             if (history == null)
             {
@@ -36,10 +38,11 @@ namespace WebService.Controllers
         }
 
 
-        [HttpPost("addbookmark/{userId}/{postId}", Name = nameof(AddBookmark))]
-        //example http://localhost:5001/api/history/addbookmark/0/1760
-        public ActionResult AddBookmark(int userId, int postId)
+        [HttpPost("addbookmark/{postId}", Name = nameof(AddBookmark))]
+        //example http://localhost:5001/api/history/addbookmark/1760
+        public ActionResult AddBookmark(int postId)
         {
+            var userId = GetAuthUserId();
             var history = _historyService.Add(userId, postId, true);
             if (!history)
             {
@@ -49,11 +52,11 @@ namespace WebService.Controllers
             return Ok(history);
         }
 
-        [HttpGet("getbookmarklist/{userId}", Name = nameof(GetBookmarkList))]
-        //example http://localhost:5001/api/history/getbookmarklist/323
-        public ActionResult GetBookmarkList(int userId)
+        [HttpGet("getbookmarklist", Name = nameof(GetBookmarkList))]
+        //example http://localhost:5001/api/history/getbookmarklist
+        public ActionResult GetBookmarkList()
         {
-            //var userId2 = GetAuthUserId();
+            var userId = GetAuthUserId();
             var bookmarks = _historyService.GetBookmarkList(userId);
             if (bookmarks == null)
             {
