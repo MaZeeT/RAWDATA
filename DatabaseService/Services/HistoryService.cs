@@ -64,20 +64,20 @@ namespace DatabaseService.Services
                 .Where(x => x.Userid == userId)
                 .OrderBy(x => x.Date)
                 .ToList();
-                
+
             return list;
         }
-        
+
         public List<History> GetBookmarkList(int userId)
         {
             var list = database.History
                 .Where(x => x.Userid == userId && x.isBookmark)
                 .OrderBy(x => x.Date)
                 .ToList();
-                
+
             return list;
         }
-        
+
 
         public bool Delete(int historyId)
         {
@@ -93,6 +93,23 @@ namespace DatabaseService.Services
             return false;
         }
 
+        public bool DeleteBookmark(int userId, int postId)
+        {
+            var history = database.History.Where(x =>
+                x.Userid == userId &&
+                x.Postid == postId &&
+                x.isBookmark == true);
+
+            foreach (var h in history)
+            {
+                database.History.Update(h);
+                h.isBookmark = false;
+            }
+            
+            int result = database.SaveChanges();
+            return result > 0;
+        }
+
         public bool HistoryExist(int historyId)
         {
             var result = database.History.Find(historyId);
@@ -105,6 +122,5 @@ namespace DatabaseService.Services
                 .ToList();
             return result.Count > 0;
         }
-        
     }
 }

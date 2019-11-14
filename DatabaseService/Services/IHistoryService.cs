@@ -15,6 +15,7 @@ namespace DatabaseService.Services
         List<History> GetHistoryList(int userId);
         List<History> GetBookmarkList(int userId);
         bool Delete(int historyId);
+        bool DeleteBookmark(int userId, int postId);
         bool HistoryExist(int historyId);
         bool HistoryExist(int userId, int postId);
     }
