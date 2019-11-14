@@ -55,12 +55,12 @@ namespace WebService.Controllers
             {
                 return NotFound();
             }
-            foreach(AnnotationsDto res in listOfAnnotations)
-            {
-                var annotationUrl = AddUrlsToAnnotations(res);
-                res.AddAnnotationUrl = annotationUrl.AddAnnotationUrl;
-                res.URL = annotationUrl.URL;
-            }
+            //foreach(Annotations res in listOfAnnotations)
+            //{
+            //    var annotationUrl = AddUrlsToAnnotations(res);
+            //    res.AddAnnotationUrl = annotationUrl.AddAnnotationUrl;
+            //    res.URL = annotationUrl.URL;
+            //}
             return Ok(listOfAnnotations);
         }
 
