@@ -4,6 +4,7 @@ using DatabaseService.Modules;
 using DatabaseService.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace WebService.Controllers
@@ -15,10 +16,12 @@ namespace WebService.Controllers
     {
         private IAnnotationService _annotationService;
         private IMapper _mapper;
+        private IDataService _dataService;
 
-        public AnnotationsController(IAnnotationService annotationService, IMapper mapper)
+        public AnnotationsController(IAnnotationService annotationService, IDataService dataService, IMapper mapper)
         {
             _annotationService = annotationService;
+            _dataService = dataService;
             _mapper = mapper;
         }
 
@@ -27,7 +30,7 @@ namespace WebService.Controllers
         /// Get all annotations that belong to the logged in user : http://localhost:5001/api/annotations plus Authorization Bearer <valid_tokenvalue> in Headers
         /// </summary>
         /// <returns>Array of Json Annotation Objects plus relevant status code</returns>
-        [HttpGet("user/{postId}")]
+        [HttpGet("post/{postId}")]
         public ActionResult GetAllUserAnnotationsMadeOnPostId(int postId, [FromQuery] PagingAttributes pagingAttributes) //needs-pagination
         {
             int userIdFromToken = GetAuthUserId();
@@ -36,6 +39,7 @@ namespace WebService.Controllers
             {
                 return NotFound();
             }
+            
             return Ok(listOfAnnotations);
         }
         /// <summary>
@@ -55,13 +59,17 @@ namespace WebService.Controllers
             {
                 return NotFound();
             }
-            //foreach(Annotations res in listOfAnnotations)
-            //{
-            //    var annotationUrl = AddUrlsToAnnotations(res);
-            //    res.AddAnnotationUrl = annotationUrl.AddAnnotationUrl;
-            //    res.URL = annotationUrl.URL;
-            //}
+            foreach (PostAnnotationsDto item in listOfAnnotations)
+            {
+                var postDataForAnnot = _dataService.GetPost(item.PostId);
+                item.PostId = postDataForAnnot.Id;
+                item.QuestionId = postDataForAnnot.QuestionId;
+                item.Title = postDataForAnnot.Title;
+                item.PostBody = postDataForAnnot.Body;
+            }
+
             return Ok(listOfAnnotations);
+
         }
 
         /// <summary>
@@ -171,21 +179,7 @@ namespace WebService.Controllers
             annotationDto.AddAnnotationUrl = Url.ActionLink(nameof(AddAnnotation));
             return annotationDto;
         }
-
-        /// <summary>
-        /// Simple parsing function in order to add the needed urls ---> this is not a mapping function like the one above
-        /// For object of type AnnotationsDto that misses the Url and AddAnnotationUrl string values
-        /// </summary>
-        /// <param name="annotation"></param>
-        /// <returns></returns>
-        private AnnotationsDto AddUrlsToAnnotations(AnnotationsDto annotation)
-        {
-            annotation.URL = Url.Link(
-                    nameof(GetAnnotationById),
-                    new { annotation.AnnotationId });
-            annotation.AddAnnotationUrl = Url.ActionLink(nameof(AddAnnotation));
-            return annotation;
-        }
+   
 
         /// <summary>
         /// Get the authenticated user's id from token claim

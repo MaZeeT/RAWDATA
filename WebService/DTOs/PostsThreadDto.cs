@@ -11,7 +11,7 @@ namespace WebService
         public int Parentid { get; internal set; }
 
 
-        public List<AnnotationsMinimalDto> Annotations { get; set; }
+        public List<SimpleAnnotationDto> Annotations { get; set; }
         public string createAnnotationLink { get; set; }
         public string createBookmarkLink { get; set; }
 

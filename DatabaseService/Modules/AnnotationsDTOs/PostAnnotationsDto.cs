@@ -10,7 +10,13 @@ namespace DatabaseService.Modules
     /// </summary>
     public class PostAnnotationsDto
     {
+        public int AnnotationId { get; set; } 
         public string Body { get; set; }
         public DateTime Date { get; set; }
+        public int PostId { get; set; }
+        public int QuestionId { get; set; }
+        public string Title { get; set; }
+        public string PostBody { get; set; }
+
     }
 }
