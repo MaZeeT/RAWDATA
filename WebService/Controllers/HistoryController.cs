@@ -23,7 +23,7 @@ namespace WebService.Controllers
         }
 
         [HttpGet("/{userId}", Name = nameof(GetHistory))]
-        //example http://localhost:5001/api/ //todo make an example
+        //example http://localhost:5001/api/history/0 
         public ActionResult GetHistory(int userId)
         {
             var history = _historyService.GetHistoryList(userId);
