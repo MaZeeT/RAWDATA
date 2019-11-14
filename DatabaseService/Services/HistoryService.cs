@@ -59,7 +59,9 @@ namespace DatabaseService.Services
         public List<History> GetHistoryList(int userId)
         {
             var list = database.History
-                .Where(x => x.Userid == userId)
+                .Where(x => 
+                    x.Userid == userId &&
+                    x.isBookmark == false)
                 .OrderBy(x => x.Date)
                 .ToList();
 
@@ -69,7 +71,9 @@ namespace DatabaseService.Services
         public List<History> GetBookmarkList(int userId)
         {
             var list = database.History
-                .Where(x => x.Userid == userId && x.isBookmark)
+                .Where(x => 
+                    x.Userid == userId && 
+                    x.isBookmark == true)
                 .OrderBy(x => x.Date)
                 .ToList();
 

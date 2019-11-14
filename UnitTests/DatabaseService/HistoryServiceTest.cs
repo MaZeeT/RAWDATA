@@ -130,7 +130,7 @@ namespace UnitTests.DatabaseService
 
         
         [Fact]
-        public void HistoryDeleteUserHistoryKeepingBookmarks()
+        public void HistoryDeleteUserHistory()
         {
             var service = new HistoryService();
             var Userid = 290;
@@ -158,10 +158,9 @@ namespace UnitTests.DatabaseService
             Assert.True(addresult3);
             Assert.True(addresult4);
 
-            Assert.Equal(4, historyPre.Count);
+            Assert.Equal(3, historyPre.Count);
             Assert.True(historyDeletion);
-            Assert.Equal(1, historyPost.Count);
-            Assert.Equal(Postid3, historyPost.First().Postid);
+            Assert.Equal(0, historyPost.Count);
         }
 
         [Fact]
@@ -260,9 +259,8 @@ namespace UnitTests.DatabaseService
             Assert.True(addResult2);
             Assert.True(addResult3);
 
-            Assert.Equal(3, history.Count);
-            Assert.Equal(Postid3, history[2].Postid);
-            Assert.Equal(Postid2, history[1].Postid);
+            Assert.Equal(2, history.Count);
+            Assert.Equal(Postid3, history[1].Postid);
             Assert.Equal(Postid1, history[0].Postid);
         }
 
