@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using DatabaseService.Modules;
 using DatabaseService.Services;
 using Xunit;
@@ -38,7 +39,128 @@ namespace UnitTests.DatabaseService
             Assert.True(result);
 
             //clean up todo delete when mock is working
-            service.Delete(service.Get(0, 1760).Id);
+            service.DeleteHistory(service.Get(0, 1760).Id);
+        }
+
+        [Fact]
+        public void HistoryDeleteBookmarkInvalidPost()
+        {
+            var service = new HistoryService();
+
+            var invalidModifier = -1;
+            var userid = 290;
+            var postId = 1760;
+
+            var resultAdd = service.Add(userid, postId, true);
+
+            Assert.True(resultAdd);
+            Assert.False(service.DeleteBookmark(userid, postId * invalidModifier));
+
+            //clean up todo delete when mock is working
+            service.DeleteHistory(service.Get(userid, postId).Id);
+        }
+
+        [Fact]
+        public void HistoryDeleteBookmarkInvalidUser()
+        {
+            var service = new HistoryService();
+
+            var invalidModifier = -1;
+            var userid = 290;
+            var postId = 709;
+
+            var resultAdd = service.Add(userid, postId, true);
+
+            Assert.True(resultAdd);
+            Assert.False(service.DeleteBookmark(userid * invalidModifier, postId));
+
+            //clean up todo delete when mock is working
+            service.DeleteHistory(service.Get(userid, postId).Id);
+        }
+
+        [Fact]
+        public void HistoryDeleteBookmarkInvalidUserAndPost()
+        {
+            var service = new HistoryService();
+
+            var invalidModifier = -1;
+            var userid = 290;
+            var postId = 1711;
+
+            var resultAdd = service.Add(userid, postId, true);
+
+            Assert.True(resultAdd);
+            Assert.False(service.DeleteBookmark(userid * invalidModifier, postId * invalidModifier));
+
+            //clean up todo delete when mock is working
+            service.DeleteHistory(service.Get(userid, postId).Id);
+        }
+
+        [Fact]
+        public void HistoryDeleteBookmarkValid()
+        {
+            var service = new HistoryService();
+
+            var userid = 290;
+            var postId = 1760;
+
+            var resultAdd = service.Add(userid, postId, true);
+
+            Assert.True(resultAdd);
+            Assert.True(service.DeleteBookmark(userid, postId));
+
+            //clean up todo delete when mock is working
+            service.DeleteHistory(service.Get(userid, postId).Id);
+        }
+
+        [Fact]
+        public void HistoryDeleteUserEmptyHistory()
+        {
+            var service = new HistoryService();
+            var Userid = 290;
+
+            var historyPre = service.GetHistoryList(Userid);
+            var historyDeletion = service.DeleteUserHistory(Userid);
+            var historyPost = service.GetHistoryList(Userid);
+            
+            Assert.Equal(0, historyPre.Count);
+            Assert.False(historyDeletion);
+            Assert.Equal(0, historyPost.Count);
+        }
+
+        
+        [Fact]
+        public void HistoryDeleteUserHistory()
+        {
+            var service = new HistoryService();
+            var Userid = 290;
+
+            var Postid1 = 19;
+            var Postid2 = 709;
+            var Postid3 = 1760;
+            var Postid4 = 1711;
+
+            var addresult1 = service.Add(Userid, Postid1, false);
+            var addresult2 = service.Add(Userid, Postid2, false);
+            var addresult3 = service.Add(Userid, Postid3, true);
+            var addresult4 = service.Add(Userid, Postid4, false);
+
+            var historyPre = service.GetHistoryList(Userid);
+            var historyDeletion = service.DeleteUserHistory(Userid);
+            var historyPost = service.GetHistoryList(Userid);
+
+            //clean up todo delete when mock is working
+            service.DeleteHistory(service.Get(Userid, Postid3).Id);
+            //end of clean up
+
+            Assert.True(addresult1);
+            Assert.True(addresult2);
+            Assert.True(addresult3);
+            Assert.True(addresult4);
+
+            Assert.Equal(3, historyPre.Count);
+            Assert.True(historyDeletion);
+            Assert.Empty(historyPost);
         }
 
         [Fact]
@@ -48,7 +170,7 @@ namespace UnitTests.DatabaseService
 
             var Userid = -5;
 
-            Assert.False(service.Delete(Userid));
+            Assert.False(service.DeleteHistory(Userid));
         }
 
         [Fact]
@@ -65,7 +187,7 @@ namespace UnitTests.DatabaseService
 
             Assert.True(resultAdd);
             Assert.True(service.HistoryExist(history.Id));
-            Assert.True(service.Delete(history.Id));
+            Assert.True(service.DeleteHistory(history.Id));
             Assert.False(service.HistoryExist(history.Id));
         }
 
@@ -121,25 +243,24 @@ namespace UnitTests.DatabaseService
             var Postid2 = 709;
             var Postid3 = 1760;
 
-            var addresult1 = service.Add(Userid, Postid1, false);
-            var addresult2 = service.Add(Userid, Postid2, true);
-            var addresult3 = service.Add(Userid, Postid3, false);
+            var addResult1 = service.Add(Userid, Postid1, false);
+            var addResult2 = service.Add(Userid, Postid2, true);
+            var addResult3 = service.Add(Userid, Postid3, false);
             var history = service.GetHistoryList(Userid);
 
 
             //clean up todo delete when mock is working
-            service.Delete(service.Get(Userid, Postid1).Id);
-            service.Delete(service.Get(Userid, Postid2).Id);
-            service.Delete(service.Get(Userid, Postid3).Id);
+            service.DeleteHistory(service.Get(Userid, Postid1).Id);
+            service.DeleteHistory(service.Get(Userid, Postid2).Id);
+            service.DeleteHistory(service.Get(Userid, Postid3).Id);
             //end of clean up            
 
-            Assert.True(addresult1);
-            Assert.True(addresult2);
-            Assert.True(addresult3);
+            Assert.True(addResult1);
+            Assert.True(addResult2);
+            Assert.True(addResult3);
 
-            Assert.Equal(3, history.Count);
-            Assert.Equal(Postid3, history[2].Postid);
-            Assert.Equal(Postid2, history[1].Postid);
+            Assert.Equal(2, history.Count);
+            Assert.Equal(Postid3, history[1].Postid);
             Assert.Equal(Postid1, history[0].Postid);
         }
 
@@ -158,14 +279,14 @@ namespace UnitTests.DatabaseService
             var addresult2 = service.Add(Userid, Postid2, true);
             var addresult3 = service.Add(Userid, Postid3, true);
             var addresult4 = service.Add(Userid, Postid4, false);
-            var history = service.GetBookmarks(Userid);
+            var history = service.GetBookmarkList(Userid);
 
 
             //clean up todo delete when mock is working
-            service.Delete(service.Get(Userid, Postid1).Id);
-            service.Delete(service.Get(Userid, Postid2).Id);
-            service.Delete(service.Get(Userid, Postid3).Id);
-            service.Delete(service.Get(Userid, Postid4).Id);
+            service.DeleteHistory(service.Get(Userid, Postid1).Id);
+            service.DeleteHistory(service.Get(Userid, Postid2).Id);
+            service.DeleteHistory(service.Get(Userid, Postid3).Id);
+            service.DeleteHistory(service.Get(Userid, Postid4).Id);
             //end of clean up            
 
             Assert.True(addresult1);
@@ -198,7 +319,7 @@ namespace UnitTests.DatabaseService
             Assert.Equal(isBookmark, historyGet.isBookmark);
 
             //clean up todo delete when mock is working
-            service.Delete(history.Id);
+            service.DeleteHistory(history.Id);
         }
     }
 }
