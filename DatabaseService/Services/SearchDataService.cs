@@ -106,6 +106,7 @@ namespace DatabaseService
                 p.Rank = s.rank;
                 resultposts.Add(p);
 
+                //old version, keeping for a few ticks
                 /*string tablename = _sharedService.GetPostType(s.postid);
                 if (tablename == "answers")
                 {
