@@ -47,7 +47,7 @@ namespace WebService.Controllers
 
             return Ok();
         }
-/*
+
         [HttpGet("{userId}", Name = nameof(GetBookmarks))]
         //example http://localhost:5001/api/ //todo make an example
         public ActionResult GetBookmarks(int userId)
@@ -60,7 +60,7 @@ namespace WebService.Controllers
 
             return Ok(bookmarks);
         }
-*/
+
         [HttpGet("/deletebookmark/{historyId}", Name = nameof(DeleteBookmark))]
         //example http://localhost:5001/api/ //todo make an example
         public ActionResult DeleteBookmark(int historyId)
