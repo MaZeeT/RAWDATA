@@ -102,9 +102,9 @@ namespace WebService.Controllers
 
                     PagingAttributes pagingAttributes = new PagingAttributes();
                     List<AnnotationsMinimalDto> finalanno = new List<AnnotationsMinimalDto>();
-                    List<AnnotationsDto> tempanno = new List<AnnotationsDto>();
-                        tempanno = _annotationService.GetAnnotationsWithPostId(userId, p.Id, pagingAttributes);
-                    foreach (AnnotationsDto ta in tempanno)
+                    List<PostAnnotationsDto> tempanno = new List<PostAnnotationsDto>();
+                        tempanno = _annotationService.GetUserAnnotationsMadeOnAPost(userId, p.Id, pagingAttributes);
+                    foreach (PostAnnotationsDto ta in tempanno)
                     {
                         AnnotationsMinimalDto fa = new AnnotationsMinimalDto();
                         fa.Body = ta.Body;

@@ -27,11 +27,11 @@ namespace WebService.Controllers
         /// Get all annotations that belong to the logged in user : http://localhost:5001/api/annotations plus Authorization Bearer <valid_tokenvalue> in Headers
         /// </summary>
         /// <returns>Array of Json Annotation Objects plus relevant status code</returns>
-        [HttpGet]
-        public ActionResult GetAllAnnotationsOfUser([FromQuery] PagingAttributes pagingAttributes) //needs-pagination
+        [HttpGet("user/{postId}")]
+        public ActionResult GetAllUserAnnotationsMadeOnPostId(int postId, [FromQuery] PagingAttributes pagingAttributes) //needs-pagination
         {
             int userIdFromToken = GetAuthUserId();
-            var listOfAnnotations = _annotationService.GetAllAnnotationsByUserId(userIdFromToken, pagingAttributes);
+            var listOfAnnotations = _annotationService.GetUserAnnotationsMadeOnAPost(userIdFromToken, postId, pagingAttributes);
             if (listOfAnnotations.Count == 0)
             {
                 return NotFound();
@@ -39,7 +39,7 @@ namespace WebService.Controllers
             return Ok(listOfAnnotations);
         }
         /// <summary>
-        /// Get all annoations of a post from a user
+        /// Get all annoations made by a user on a post based on postid and userid
         /// based on postId/ questionId and not historyId from url and userId from token
         /// http://localhost:5001/api/annotations/user/{questionId}
         /// header: valid user token;
@@ -47,10 +47,10 @@ namespace WebService.Controllers
         /// <param name="postId"></param>
         /// <returns>List of annotationsDto</returns>
         [HttpGet("user/{postId}")]
-        public ActionResult GetAnnotationsByPostId(int postId, [FromQuery] PagingAttributes pagingAttributes) 
+        public ActionResult GetAllAnnotationsByPostId(int postId, [FromQuery] PagingAttributes pagingAttributes)
         {
             int userIdFromToken = GetAuthUserId();
-            var listOfAnnotations = _annotationService.GetAnnotationsWithPostId(userIdFromToken, postId, pagingAttributes);
+            var listOfAnnotations = _annotationService.GetAllAnnotationsOfUser(userIdFromToken, postId, pagingAttributes);
             if (listOfAnnotations.Count == 0)
             {
                 return NotFound();
@@ -69,8 +69,8 @@ namespace WebService.Controllers
         /// </summary>
         /// <param name="annotationId"></param>
         /// <returns>AnnotationDto</returns>
-        [HttpGet("{annotationId}", Name = nameof(GetAnnotation))] // fancy way to have strings checked by the compiler
-        public ActionResult GetAnnotation(int annotationId)
+        [HttpGet("{annotationId}", Name = nameof(GetAnnotationById))] // fancy way to have strings checked by the compiler
+        public ActionResult GetAnnotationById(int annotationId)
         {
             var returnedAnnotation = _annotationService.GetAnnotation(annotationId);
             if (returnedAnnotation == null)
@@ -166,7 +166,7 @@ namespace WebService.Controllers
             var annotationDto = _mapper.Map<AnnotationsDto>(annotation);
             annotationDto.AnnotationId = annotation.Id;
             annotationDto.URL = Url.Link(
-                    nameof(GetAnnotation),
+                    nameof(GetAnnotationById),
                     new { AnnotationId = annotation.Id });
             annotationDto.AddAnnotationUrl = Url.ActionLink(nameof(AddAnnotation));
             return annotationDto;
@@ -181,7 +181,7 @@ namespace WebService.Controllers
         private AnnotationsDto AddUrlsToAnnotations(AnnotationsDto annotation)
         {
             annotation.URL = Url.Link(
-                    nameof(GetAnnotation),
+                    nameof(GetAnnotationById),
                     new { annotation.AnnotationId });
             annotation.AddAnnotationUrl = Url.ActionLink(nameof(AddAnnotation));
             return annotation;
