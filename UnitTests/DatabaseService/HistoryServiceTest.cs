@@ -158,7 +158,7 @@ namespace UnitTests.DatabaseService
             var addresult2 = service.Add(Userid, Postid2, true);
             var addresult3 = service.Add(Userid, Postid3, true);
             var addresult4 = service.Add(Userid, Postid4, false);
-            var history = service.GetBookmarks(Userid);
+            var history = service.GetBookmarkList(Userid);
 
 
             //clean up todo delete when mock is working

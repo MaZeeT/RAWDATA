@@ -22,7 +22,7 @@ namespace WebService.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("/{userId}", Name = nameof(GetHistory))]
+        [HttpGet("{userId}", Name = nameof(GetHistory))]
         //example http://localhost:5001/api/history/0 
         public ActionResult GetHistory(int userId)
         {
@@ -35,24 +35,26 @@ namespace WebService.Controllers
             return Ok(history);
         }
 
-        [HttpGet("/addbookmark/{userId}/{PostId}", Name = nameof(AddBookmark))]
+
+        [HttpPost("addbookmark/{userId}/{postId}", Name = nameof(AddBookmark))]
         //example http://localhost:5001/api/ //todo make an example
-        public ActionResult AddBookmark(int userId, int PostId)
+        public ActionResult AddBookmark(int userId, int postId)
         {
-            var history = _historyService.Add(userId, PostId, true);
+            var history = _historyService.Add(userId, postId, true);
             if (!history)
             {
                 return NotFound();
             }
 
-            return Ok();
+            return Ok(history);
         }
 
-        [HttpGet("{userId}", Name = nameof(GetBookmarks))]
+        [HttpGet("getbookmarklist/{userId}", Name = nameof(GetBookmarkList))]
         //example http://localhost:5001/api/ //todo make an example
-        public ActionResult GetBookmarks(int userId)
+        public ActionResult GetBookmarkList(int userId)
         {
-            var bookmarks = _historyService.GetBookmarks(userId);
+            var userId2 = GetAuthUserId();
+            var bookmarks = _historyService.GetBookmarkList(userId);
             if (bookmarks == null)
             {
                 return NotFound();
@@ -61,7 +63,7 @@ namespace WebService.Controllers
             return Ok(bookmarks);
         }
 
-        [HttpGet("/deletebookmark/{historyId}", Name = nameof(DeleteBookmark))]
+        [HttpGet("deletebookmark/{historyId}", Name = nameof(DeleteBookmark))]
         //example http://localhost:5001/api/ //todo make an example
         public ActionResult DeleteBookmark(int historyId)
         {
@@ -72,6 +74,18 @@ namespace WebService.Controllers
             }
 
             return Ok();
+        }
+
+
+        //todo move the function below into an abstract class or something to remove duplicated code
+        /// <summary>
+        /// Get the authenticated user's id from token claim
+        /// </summary>
+        /// <returns>integer authenticated user's id from token</returns>
+        private int GetAuthUserId()
+        {
+            var userIdFromToken = int.Parse(this.User.Identity.Name);
+            return userIdFromToken;
         }
     }
 }

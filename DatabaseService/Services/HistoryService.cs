@@ -68,10 +68,10 @@ namespace DatabaseService.Services
             return list;
         }
         
-        public List<History> GetBookmarks(int userId)
+        public List<History> GetBookmarkList(int userId)
         {
             var list = database.History
-                .Where(x => x.Userid == userId && x.isBookmark == true)
+                .Where(x => x.Userid == userId && x.isBookmark)
                 .OrderBy(x => x.Date)
                 .ToList();
                 

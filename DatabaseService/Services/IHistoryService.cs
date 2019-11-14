@@ -13,7 +13,7 @@ namespace DatabaseService.Services
         History Get(int historyId);
         History Get(int userId, int postId);
         List<History> GetHistoryList(int userId);
-        List<History> GetBookmarks(int userId);
+        List<History> GetBookmarkList(int userId);
         bool Delete(int historyId);
         bool HistoryExist(int historyId);
         bool HistoryExist(int userId, int postId);
