@@ -16,12 +16,12 @@ namespace WebService.Controllers
     {
         private IAnnotationService _annotationService;
         private IMapper _mapper;
-        private IDataService _dataService;
+        private ISharedService _sharedService;
 
-        public AnnotationsController(IAnnotationService annotationService, IDataService dataService, IMapper mapper)
+        public AnnotationsController(IAnnotationService annotationService, ISharedService sharedService, IMapper mapper)
         {
             _annotationService = annotationService;
-            _dataService = dataService;
+            _sharedService = sharedService;
             _mapper = mapper;
         }
 
@@ -61,7 +61,7 @@ namespace WebService.Controllers
             }
             foreach (PostAnnotationsDto item in listOfAnnotations)
             {
-                var postDataForAnnot = _dataService.GetPost(item.PostId);
+                var postDataForAnnot = _sharedService.GetPost(item.PostId);
                 item.PostId = postDataForAnnot.Id;
                 item.QuestionId = postDataForAnnot.QuestionId;
                 item.Title = postDataForAnnot.Title;

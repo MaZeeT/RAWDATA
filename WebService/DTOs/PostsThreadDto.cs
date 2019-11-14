@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using DatabaseService.Modules;
+using System.Collections.Generic;
 
 namespace WebService
 {
