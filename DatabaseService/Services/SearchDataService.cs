@@ -7,16 +7,21 @@ using System.Linq;
 
 namespace DatabaseService
 {
-    public class SearchDataService : IDataService
+    public class SearchDataService : ISearchDataService
     {
+        private readonly ISharedService _sharedService; //shared stuff by injection
+        public SearchDataService(
+            ISharedService sharedService)
+        {
+            _sharedService = sharedService;
+        }
 
         public IList<Questions> GetQuestions(PagingAttributes pagingAttributes)
         {
-            // AuthUser()
-            // if ok do browse q-list
+            //// for browsing the full list of questions
             using var db = new AppContext();
 
-            //try to make pages 1-based
+            //try to convert back from 1-based pages
             int page;
             if (pagingAttributes.Page <= 0)
             {
@@ -35,8 +40,6 @@ namespace DatabaseService
         {
             ////// for performing searches with appsearch on the db
             ///
-            // AuthUser()
-            // 
             // do actual search using appsearch in db and build results
 
             //need db context and searchtype lookuptable
@@ -71,18 +74,7 @@ namespace DatabaseService
                 .Count();
             System.Console.WriteLine($"{matchcount} results.");
 
-            //calc max pages and set requested page to last page if out of bounds
-            var calculatedNumberOfPages = (int)Math.Ceiling((double)matchcount / pagingAttributes.PageSize);
-            System.Console.WriteLine($"{calculatedNumberOfPages} calculated pages.");
-            int page;
-            if (pagingAttributes.Page > calculatedNumberOfPages) 
-            {
-                page = calculatedNumberOfPages;
-            } else if (pagingAttributes.Page <= 0)
-            {
-                page = 0;
-            }
-            else page=pagingAttributes.Page-1;
+            int page = _sharedService.GetPagination(matchcount, pagingAttributes);
 
             //get subset of results according to pagesize etc
             var resultlist = db.Search
@@ -96,20 +88,38 @@ namespace DatabaseService
 
             foreach (Search s in resultlist) 
             {
-               //different mapping for results that are questions and answers
-                string tablename = GetPostType(s.postid);
+                //different mapping for results that are questions and answers
+
+                Posts p = new Posts();
+                SinglePost sp = new SinglePost();
+                sp = _sharedService.GetPost(s.postid);
+
+                p.Parentid = sp.QuestionId;
+                p.Id = sp.Id;
+                var endpos = 100;
+                if (sp.Body.Length < 100)
+                { endpos =sp.Body.Length; }
+                p.Body = sp.Body.Substring(0, endpos);
+
+                p.Title = _sharedService.GetQuestion(p.Parentid).Title;
+                p.Totalresults = matchcount;
+                p.Rank = s.rank;
+                resultposts.Add(p);
+
+                //old version, keeping for a few ticks
+                /*string tablename = _sharedService.GetPostType(s.postid);
                 if (tablename == "answers")
                 {
                     Posts p = new Posts();
-                    p.Parentid = GetAnswer(s.postid).Parentid;
+                    p.Parentid = _sharedService.GetAnswer(s.postid).Parentid;
                     p.Id = s.postid;
 
                     var endpos = 100;
-                    if (GetAnswer(s.postid).Body.Length < 100)
-                    { endpos = GetAnswer(s.postid).Body.Length; }
-                    p.Body = GetAnswer(s.postid).Body.Substring(0, endpos);
+                    if (_sharedService.GetAnswer(s.postid).Body.Length < 100)
+                    { endpos = _sharedService.GetAnswer(s.postid).Body.Length; }
+                    p.Body = _sharedService.GetAnswer(s.postid).Body.Substring(0, endpos);
 
-                    p.Title = GetQuestion(p.Parentid).Title;
+                    p.Title = _sharedService.GetQuestion(p.Parentid).Title;
                     p.Totalresults = matchcount;
                     p.Rank = s.rank;
                     resultposts.Add(p);
@@ -120,15 +130,15 @@ namespace DatabaseService
                     p.Id = s.postid;
 
                     var endpos = 100;
-                    if (GetQuestion(s.postid).Body.Length < 100)
-                    { endpos = GetQuestion(s.postid).Body.Length; }
-                    p.Body = GetQuestion(s.postid).Body.Substring(0, endpos);
+                    if (_sharedService.GetQuestion(s.postid).Body.Length < 100)
+                    { endpos = _sharedService.GetQuestion(s.postid).Body.Length; }
+                    p.Body = _sharedService.GetQuestion(s.postid).Body.Substring(0, endpos);
 
-                    p.Title = GetQuestion(s.postid).Title;
+                    p.Title = _sharedService.GetQuestion(s.postid).Title;
                     p.Totalresults = matchcount;
                     p.Rank = s.rank;
                     resultposts.Add(p);
-                }
+                }*/
             }
             return resultposts;
         }
@@ -138,7 +148,6 @@ namespace DatabaseService
         {
             ////// for performing searches with wordrank on the db
             ///
-            // AuthUser()
             // do actual search using appsearch in db and build results
 
             //need db context and searchtype lookuptable
@@ -197,139 +206,6 @@ namespace DatabaseService
             string finalstring = string.Join(" ", words);
             System.Console.WriteLine("Built search string: " + finalstring);
             return finalstring;
-        }
-
-        public int NumberOfQuestions()
-        {
-            using var db = new AppContext();
-            return db.Questions
-                .Count();
-        }
-
-        public Questions GetQuestion(int questionId)
-        {
-            using var db = new AppContext();
-
-            return db.Questions.Find(questionId);
-        }
-
-        public Answers GetAnswer(int answerId)
-        {
-            using var db = new AppContext();
-
-            return db.Answers.Find(answerId);
-        }
-
-        public string GetPostType(int postId)
-        // try to get the tablename of post -- answers or questions
-        //using varchar resolveid(postid int) in db
-        {
-            System.Console.WriteLine($"Postid -- {postId}");
-            var postid = new NpgsqlParameter("postid", NpgsqlTypes.NpgsqlDbType.Integer);
-            postid.Value = postId;
-            using var db = new AppContext();
-            string tablename = db.PostsTable
-                .FromSqlRaw("SELECT * from resolveid(@postid)", postid).First().resolveid;
-
-                System.Console.WriteLine($"Post is part of -- {tablename}");
-
-            return tablename;
-        }
-
-        public SinglePost GetPost(int postId)
-        //try to get a particular post, q or a
-        //returns null if post not found
-        //use SinglePost.Id for annotations
-        //use SinglePost.QuestionId to get the thread the post belongs to
-        {
-            SinglePost returnPost = new SinglePost();
-
-            var type = GetPostType(postId);
-            if (type=="questions") //then its a question
-            {
-                var q = GetQuestion(postId);
-                returnPost.Body = q.Body;
-                returnPost.Id = postId;
-                returnPost.QuestionId = q.Id;
-                returnPost.Title = q.Title;
-                return returnPost;
-            }
-            else if (type=="answers") //then its an answer
-            {
-                var a = GetAnswer(postId);
-                returnPost.Body = a.Body;
-                returnPost.Id = postId;
-                returnPost.QuestionId = GetAnswer(postId).Parentid; //get parent q of answer
-                returnPost.Title = GetQuestion(returnPost.QuestionId).Title; //get title of parent q
-                return returnPost;
-            }
-            else return null; //else its unknown!
-        }
-
-/*
-        public int GetParentId(int answerID) //maybe not needed?
-        {
-            System.Console.WriteLine($"Answerid -- {answerID}");
-            using var db = new AppContext();
-            int parentid = db.Answers
-                .Where(e => e.Id == answerID)
-                .FirstOrDefault()
-                .Parentid;
-
-            System.Console.WriteLine($"Parentid -- {parentid}");
-
-            return parentid;
-
-        }
-*/
-    
-
-        //public (Questions, IList<Answers>) GetThread(int questionId)
-        public IList<Posts> GetThread(int questionId)
-            //returns question and all child answers
-        {
-            using var db = new AppContext();
-            //get the question
-            var q = GetQuestion(questionId);
-            if (q != null)
-            {
-                //find answers to the specified question
-                var ans = db.Answers
-                            .Where(e => e.Parentid == questionId)
-                            .ToList();
-                //manual mapping
-                List<Posts> posts = new List<Posts>();
- 
-
-                posts.Add(
-                    new Posts
-                    {
-                        Id = q.Id,
-                        Title = q.Title,
-                        Body = q.Body
-
-                    }) ;
-                foreach (Answers a in ans)
-                {
-                   // var endpos = 100;
-                   // if (a.Body.Length<100)
-                  //  { 
-                  //      endpos = a.Body.Length; //limit body size for now
-                  //  }
-                    posts.Add(
-                    new Posts 
-                    {
-                        Id = a.Id,
-                        Parentid = a.Parentid,
-                        Body = a.Body
-                        
-                        // Body = a.Body.Substring(0, endpos) 
-                    });
-                };
-                return posts;
-            }
-            else return null;
-            //return (q, ans); //not sure how this works, multiple return values
         }
     }
 }

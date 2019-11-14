@@ -1,7 +1,6 @@
 ﻿using DatabaseService.Modules;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System.Linq;
 
 namespace DatabaseService
 {
@@ -35,19 +34,15 @@ namespace DatabaseService
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.CreateMap("Id", "Name");
+            //modelBuilder.CreateMap("Id", "Name");
+            modelBuilder.CreateMap();
 
             modelBuilder.Entity<Search>().HasNoKey();
             modelBuilder.Entity<WordRank>().HasNoKey();
             modelBuilder.Entity<PostsTable>().HasNoKey();
             modelBuilder.Entity<AnnotateFunctionDto>().HasNoKey();
-            //modelBuilder.Entity<AnnotationsQuestions>().HasNoKey();
 
-            //modelBuilder.Entity<AuthUsers>().ToTable("authusers");
-            //modelBuilder.Entity<AppUser>(); //can maybe be hadnled with hasnokey()
-            //modelBuilder.Entity<object /*todo replace type*/>().HasNoKey();
-
-
+            //todo : rename appuser to appusers and remove the 2 lines below
             modelBuilder.Entity<AppUser>().ToTable("appusers");
             modelBuilder.Entity<AppUser>().Property(x => x.Id).HasColumnName("id");
 
