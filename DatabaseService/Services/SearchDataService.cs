@@ -7,8 +7,14 @@ using System.Linq;
 
 namespace DatabaseService
 {
-    public class SearchDataService : IDataService
+    public class SearchDataService : ISearchDataService
     {
+        private ISharedService _sharedService; //sharred stuff by injection
+        public SearchDataService(
+            ISharedService sharedService)
+        {
+            _sharedService = sharedService;
+        }
 
         public IList<Questions> GetQuestions(PagingAttributes pagingAttributes)
         {
@@ -35,8 +41,6 @@ namespace DatabaseService
         {
             ////// for performing searches with appsearch on the db
             ///
-            // AuthUser()
-            // 
             // do actual search using appsearch in db and build results
 
             //need db context and searchtype lookuptable
@@ -71,18 +75,20 @@ namespace DatabaseService
                 .Count();
             System.Console.WriteLine($"{matchcount} results.");
 
-            //calc max pages and set requested page to last page if out of bounds
-            var calculatedNumberOfPages = (int)Math.Ceiling((double)matchcount / pagingAttributes.PageSize);
-            System.Console.WriteLine($"{calculatedNumberOfPages} calculated pages.");
-            int page;
-            if (pagingAttributes.Page > calculatedNumberOfPages) 
-            {
-                page = calculatedNumberOfPages;
-            } else if (pagingAttributes.Page <= 0)
-            {
-                page = 0;
-            }
-            else page=pagingAttributes.Page-1;
+            /*     //calc max pages and set requested page to last page if out of bounds
+                 var calculatedNumberOfPages = (int)Math.Ceiling((double)matchcount / pagingAttributes.PageSize);
+                 System.Console.WriteLine($"{calculatedNumberOfPages} calculated pages.");
+                 int page;
+                 if (pagingAttributes.Page > calculatedNumberOfPages) 
+                 {
+                     page = calculatedNumberOfPages;
+                 } else if (pagingAttributes.Page <= 0)
+                 {
+                     page = 0;
+                 }
+                 else page=pagingAttributes.Page-1;*/
+
+            int page = _sharedService.GetPagination(matchcount, pagingAttributes);
 
             //get subset of results according to pagesize etc
             var resultlist = db.Search
@@ -97,19 +103,19 @@ namespace DatabaseService
             foreach (Search s in resultlist) 
             {
                //different mapping for results that are questions and answers
-                string tablename = GetPostType(s.postid);
+                string tablename = _sharedService.GetPostType(s.postid);
                 if (tablename == "answers")
                 {
                     Posts p = new Posts();
-                    p.Parentid = GetAnswer(s.postid).Parentid;
+                    p.Parentid = _sharedService.GetAnswer(s.postid).Parentid;
                     p.Id = s.postid;
 
                     var endpos = 100;
-                    if (GetAnswer(s.postid).Body.Length < 100)
-                    { endpos = GetAnswer(s.postid).Body.Length; }
-                    p.Body = GetAnswer(s.postid).Body.Substring(0, endpos);
+                    if (_sharedService.GetAnswer(s.postid).Body.Length < 100)
+                    { endpos = _sharedService.GetAnswer(s.postid).Body.Length; }
+                    p.Body = _sharedService.GetAnswer(s.postid).Body.Substring(0, endpos);
 
-                    p.Title = GetQuestion(p.Parentid).Title;
+                    p.Title = _sharedService.GetQuestion(p.Parentid).Title;
                     p.Totalresults = matchcount;
                     p.Rank = s.rank;
                     resultposts.Add(p);
@@ -120,11 +126,11 @@ namespace DatabaseService
                     p.Id = s.postid;
 
                     var endpos = 100;
-                    if (GetQuestion(s.postid).Body.Length < 100)
-                    { endpos = GetQuestion(s.postid).Body.Length; }
-                    p.Body = GetQuestion(s.postid).Body.Substring(0, endpos);
+                    if (_sharedService.GetQuestion(s.postid).Body.Length < 100)
+                    { endpos = _sharedService.GetQuestion(s.postid).Body.Length; }
+                    p.Body = _sharedService.GetQuestion(s.postid).Body.Substring(0, endpos);
 
-                    p.Title = GetQuestion(s.postid).Title;
+                    p.Title = _sharedService.GetQuestion(s.postid).Title;
                     p.Totalresults = matchcount;
                     p.Rank = s.rank;
                     resultposts.Add(p);
@@ -138,7 +144,6 @@ namespace DatabaseService
         {
             ////// for performing searches with wordrank on the db
             ///
-            // AuthUser()
             // do actual search using appsearch in db and build results
 
             //need db context and searchtype lookuptable
@@ -199,7 +204,7 @@ namespace DatabaseService
             return finalstring;
         }
 
-        public int NumberOfQuestions()
+     /*   public int NumberOfQuestions()
         {
             using var db = new AppContext();
             return db.Questions
@@ -218,9 +223,9 @@ namespace DatabaseService
             using var db = new AppContext();
 
             return db.Answers.Find(answerId);
-        }
+        }*/
 
-        public string GetPostType(int postId)
+  /*      public string GetPostType(int postId)
         // try to get the tablename of post -- answers or questions
         //using varchar resolveid(postid int) in db
         {
@@ -235,8 +240,8 @@ namespace DatabaseService
 
             return tablename;
         }
-
-        public SinglePost GetPost(int postId)
+        */
+   /*     public SinglePost GetPost(int postId)
         //try to get a particular post, q or a
         //returns null if post not found
         //use SinglePost.Id for annotations
@@ -264,7 +269,7 @@ namespace DatabaseService
                 return returnPost;
             }
             else return null; //else its unknown!
-        }
+        }*/
 
 /*
         public int GetParentId(int answerID) //maybe not needed?
@@ -283,8 +288,7 @@ namespace DatabaseService
         }
 */
     
-
-        //public (Questions, IList<Answers>) GetThread(int questionId)
+/*
         public IList<Posts> GetThread(int questionId)
             //returns question and all child answers
         {
@@ -299,9 +303,7 @@ namespace DatabaseService
                             .ToList();
                 //manual mapping
                 List<Posts> posts = new List<Posts>();
- 
-
-                posts.Add(
+                 posts.Add(
                     new Posts
                     {
                         Id = q.Id,
@@ -311,6 +313,7 @@ namespace DatabaseService
                     }) ;
                 foreach (Answers a in ans)
                 {
+                    //below is for limiting body size, disabled rn
                    // var endpos = 100;
                    // if (a.Body.Length<100)
                   //  { 
@@ -329,7 +332,6 @@ namespace DatabaseService
                 return posts;
             }
             else return null;
-            //return (q, ans); //not sure how this works, multiple return values
-        }
+        }*/
     }
 }

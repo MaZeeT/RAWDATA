@@ -31,7 +31,8 @@ namespace WebService
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-            services.AddSingleton<IDataService, SearchDataService>();
+            services.AddSingleton<ISharedService, SharedService>();
+            services.AddSingleton<ISearchDataService, SearchDataService>();
             services.AddSingleton<IAnnotationService, AnnotationService>();
             services.AddSingleton<IAppUserService, AppUserService>();
             services.AddSingleton<IHistoryService, HistoryService>();

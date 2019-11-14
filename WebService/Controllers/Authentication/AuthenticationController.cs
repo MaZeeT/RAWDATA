@@ -56,7 +56,7 @@ namespace WebService.Controllers.Authentication
 
 
         [HttpPost("tokens")]
-        public ActionResult Login([FromBody] SignupUserDto dto)
+        public ActionResult Login([FromForm] SignupUserDto dto)
         //changed to FromForm just because i cant be bothered to look up what to send in postman
         {
             var user = _service.GetAppUser(dto.Username);

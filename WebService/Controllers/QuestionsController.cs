@@ -16,18 +16,21 @@ namespace WebService.Controllers
     [Authorize]
     public class QuestionsController : ControllerBase
     {
-        private IDataService _dataService;
+        private ISearchDataService _dataService;
+        private ISharedService _sharedService;
         private IAnnotationService _annotationService;
         private IHistoryService _historyService;
         private IMapper _mapper;
 
         public QuestionsController(
-            IDataService dataService,
+            ISearchDataService dataService,
+            ISharedService sharedService,
             IAnnotationService annotationService,
             IHistoryService historyService,
             IMapper mapper)
         {
             _dataService = dataService;
+            _sharedService = sharedService;
             _mapper = mapper;
             _historyService = historyService;
             _annotationService = annotationService;
@@ -74,7 +77,7 @@ namespace WebService.Controllers
 
            // if (questionId > 0) //dont know proper way to do this
           //  {
-                var t = _dataService.GetThread(questionId);
+                var t = _sharedService.GetThread(questionId);
                 if (t != null)
                 {
                     if (useridok) //then valid user made the request
@@ -114,7 +117,7 @@ namespace WebService.Controllers
                     pt.Annotations = finalanno;
                     // pt.createBookamrkLink = Url.Link(  nameof(),  new { questionId = question.Id });
                     AnnotationsDto anno = new AnnotationsDto();
-                        anno.Body = "Create new monitation!";
+                        anno.Body = "form/similar would be here to POST a new annotation";
                         anno.PostId = p.Id;
                         pt.createAnnotationLink = Url.Link(nameof(AnnotationsController.AddAnnotation), anno); 
                     // i know its supposed to be a form/post. just thought it'd be neat to have a link mockup. oh well maybe its more confusing this way :(
@@ -154,7 +157,7 @@ namespace WebService.Controllers
         
         private object CreateResult(IEnumerable<Questions> questions, PagingAttributes attr)
         {
-            var totalItems = _dataService.NumberOfQuestions();
+            var totalItems = _sharedService.NumberOfQuestions();
             var numberOfPages = Math.Ceiling((double)totalItems / attr.PageSize);
 
             var prev = attr.Page > 1
@@ -178,6 +181,6 @@ namespace WebService.Controllers
         private string CreatePagingLink(int page, int pageSize)
         {
             return Url.Link(nameof(BrowseQuestions), new { page, pageSize });
-        }
+        } 
     }
 }

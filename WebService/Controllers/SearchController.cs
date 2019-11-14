@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
 using DatabaseService;
-using DatabaseService.Modules;
-using DatabaseService.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -19,37 +17,28 @@ namespace WebService.Controllers
     /// when accessing with tokens, the header needs a key Authorization with a value of Bearer [space] and then the token (no quotes)
     ///
 
-    public class SearchController : ControllerBase
+    public class SearchController : SharedController
     {
-        private IDataService _dataService;
-        //private IHistoryService _historyService;
+        private ISearchDataService _dataService;
         private IMapper _mapper;
 
         public SearchController(
-            IDataService dataService,
-            //IHistoryService historyService,
+            ISearchDataService dataService,
             IMapper mapper)
         {
             _dataService = dataService;
             _mapper = mapper;
-            //_historyService = historyService;
-
         }
+
+        //private SharedController _shared = new SharedController(); //shared funcs/meths
 
         [HttpGet("wordrank", Name = nameof(WordRank))]
         public ActionResult WordRank([FromQuery] SearchQuery searchparams, [FromQuery] int? maxresults) //
- // http://localhost:5001/api/search/wordrank?s=code&stype=5&maxresults=5
- // http://localhost:5001/api/search/wordrank?s=code,app,program
+        // http://localhost:5001/api/search/wordrank?s=code&stype=5&maxresults=5
+        // http://localhost:5001/api/search/wordrank?s=code,app,program
         {
-            bool useridok = false;
-            var claimsIdentity = this.User.Identity as ClaimsIdentity;
-            int userId;
-            if (Int32.TryParse(claimsIdentity.FindFirst(ClaimTypes.Name)?.Value, out userId))
-            {
-                useridok = true; //becomes true when we get an int in userId
-            }
-            //var user = this.User.Identity.Name; //this gets the id also??
-            //var user = User.FindFirst("sub")?.Value;
+            (int userId, bool useridok) = GetAuthUserId();
+            
             Console.WriteLine("Got user: " + userId);
 
             PagingAttributes pagingAttributes = new PagingAttributes();
@@ -60,7 +49,7 @@ namespace WebService.Controllers
                 Console.WriteLine("Got maxresults: " + maxresults);
 
                 //rudimentary checking of params
-              /*  if (searchparams.stype >= 0 && searchparams.stype <= 3)
+                if (searchparams.stype >= 0 && searchparams.stype <= 3)
                 {
                     var search = _dataService.Search(userId, searchparams.s, searchparams.stype, pagingAttributes);
 
@@ -71,7 +60,7 @@ namespace WebService.Controllers
                     }
                     else return NoContent();
                 }
-                else*/ if (searchparams.stype >= 4 && searchparams.stype <= 5)
+                else if (searchparams.stype >= 4 && searchparams.stype <= 5)
                 {
                     var search = _dataService.WordRank(userId, searchparams.s, searchparams.stype, maxresults);
                     return Ok(search);
@@ -92,15 +81,8 @@ namespace WebService.Controllers
         // http://localhost:5001/api/search?s=code,app,program
         public ActionResult Search([FromQuery] SearchQuery searchparams, [FromQuery] PagingAttributes pagingAttributes)
         {
-            bool useridok = false;
-            var claimsIdentity = this.User.Identity as ClaimsIdentity;
-            int userId; 
-            if (Int32.TryParse(claimsIdentity.FindFirst(ClaimTypes.Name)?.Value, out userId))
-            {
-                useridok = true; //becomes true when we get an int in userId
-            }
-            //var user = this.User.Identity.Name; //this gets the id also??
-            //var user = User.FindFirst("sub")?.Value;
+            (int userId, bool useridok) = GetAuthUserId();
+
             Console.WriteLine("Got user: " + userId);
 
             if (searchparams.s != null && useridok)
