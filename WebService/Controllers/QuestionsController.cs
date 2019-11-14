@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using DatabaseService;
+﻿using DatabaseService;
 using DatabaseService.Modules;
 using DatabaseService.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -133,7 +132,6 @@ namespace WebService.Controllers
                 prev,
                 next,
                 items = questions.Select(CreateQuestionDto)
-                //items = questions
             };
         }
 

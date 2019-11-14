@@ -3,7 +3,6 @@ using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace DatabaseService
 {
@@ -35,14 +34,12 @@ namespace DatabaseService
         public Questions GetQuestion(int questionId)
         {
             using var db = new AppContext();
-
             return db.Questions.Find(questionId);
         }
 
         public Answers GetAnswer(int answerId)
         {
             using var db = new AppContext();
-
             return db.Answers.Find(answerId);
         }
 
@@ -91,7 +88,6 @@ namespace DatabaseService
 
         }
 */
-
         public IList<Posts> GetThread(int questionId)
         //returns question and all child answers
         {

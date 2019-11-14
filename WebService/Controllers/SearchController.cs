@@ -1,11 +1,9 @@
-﻿using AutoMapper;
-using DatabaseService;
+﻿using DatabaseService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 
 namespace WebService.Controllers
 {
@@ -45,14 +43,7 @@ namespace WebService.Controllers
                 //rudimentary checking of params
                 if (searchparams.stype >= 0 && searchparams.stype <= 3)
                 {
-                    /* var search = _dataService.Search(userId, searchparams.s, searchparams.stype, pagingAttributes);
-
-                     var result = CreateResult(search, searchparams, pagingAttributes);
-                     if (result != null)
-                     {
-                         return Ok(result);
-                     }
-                     else return NoContent();*/
+                    //wrong search type, redirect
                     return RedirectToAction("Search", new { searchparams.s, searchparams.stype });
                 }
                 else if (searchparams.stype >= 4 && searchparams.stype <= 5)
@@ -96,8 +87,7 @@ namespace WebService.Controllers
                 }
                 else if (searchparams.stype >= 4 && searchparams.stype <= 5)
                 {
-                    /*  var search = _dataService.WordRank(userId, searchparams.s, searchparams.stype, 10);
-                      return Ok(search);*/
+                    //wrong search type, redirect
                     return RedirectToAction("WordRank", new { searchparams.s, searchparams.stype });
                 }
             }
