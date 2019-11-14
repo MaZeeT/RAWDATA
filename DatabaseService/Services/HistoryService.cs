@@ -8,11 +8,11 @@ namespace DatabaseService.Services
 {
     public class HistoryService : IHistoryService
     {
-        AppContext database;
+        DatabaseContext database;
 
         public HistoryService()
         {
-            database = new AppContext();
+            database = new DatabaseContext();
         }
 
 
