@@ -142,7 +142,7 @@ namespace DatabaseService
             int page;
             if (pagingAttributes.Page > calculatedNumberOfPages)
             {
-                page = calculatedNumberOfPages;
+                page = calculatedNumberOfPages-1;//ahh this was the bug, needed to subtract here
             }
             else if (pagingAttributes.Page <= 0)
             {

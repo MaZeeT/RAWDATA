@@ -76,6 +76,8 @@ namespace DatabaseService
 
             int page = _sharedService.GetPagination(matchcount, pagingAttributes);
 
+            System.Console.WriteLine($"{page} page trying to get.");
+
             //get subset of results according to pagesize etc
             var resultlist = db.Search
                 .FromSqlRaw("SELECT * from appsearch(@appuserid, @searchtype, @search)", appuserid, searchtype, search)
