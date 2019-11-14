@@ -160,7 +160,7 @@ namespace UnitTests.DatabaseService
 
             Assert.Equal(3, historyPre.Count);
             Assert.True(historyDeletion);
-            Assert.Equal(0, historyPost.Count);
+            Assert.Empty(historyPost);
         }
 
         [Fact]
