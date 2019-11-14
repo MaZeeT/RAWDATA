@@ -12,7 +12,7 @@ namespace WebService.Controllers
     [ApiController]
     [Route("api/annotations")]
     [Authorize]
-    public class AnnotationsController : ControllerBase
+    public class AnnotationsController : SharedController
     {
         private IAnnotationService _annotationService;
         private IMapper _mapper;
@@ -33,8 +33,12 @@ namespace WebService.Controllers
         [HttpGet("post/{postId}")]
         public ActionResult GetAllUserAnnotationsMadeOnPostId(int postId, [FromQuery] PagingAttributes pagingAttributes) //needs-pagination
         {
-            int userIdFromToken = GetAuthUserId();
-            var listOfAnnotations = _annotationService.GetUserAnnotationsMadeOnAPost(userIdFromToken, postId, pagingAttributes);
+            (int userId, bool useridok) = GetAuthUserId();
+            if (!useridok)
+            {
+                return Unauthorized();
+            }
+            var listOfAnnotations = _annotationService.GetUserAnnotationsMadeOnAPost(userId, postId, pagingAttributes);
             if (listOfAnnotations.Count == 0)
             {
                 return NotFound();
@@ -53,8 +57,12 @@ namespace WebService.Controllers
         [HttpGet("user/{postId}")]
         public ActionResult GetAllAnnotationsByPostId(int postId, [FromQuery] PagingAttributes pagingAttributes)
         {
-            int userIdFromToken = GetAuthUserId();
-            var listOfAnnotations = _annotationService.GetAllAnnotationsOfUser(userIdFromToken, postId, pagingAttributes);
+            (int userId, bool useridok) = GetAuthUserId();
+            if (!useridok)
+            {
+                return Unauthorized();
+            }
+            var listOfAnnotations = _annotationService.GetAllAnnotationsOfUser(userId, postId, pagingAttributes);
             if (listOfAnnotations.Count == 0)
             {
                 return NotFound();
@@ -91,13 +99,32 @@ namespace WebService.Controllers
             return Ok(CreateLink(returnedAnnotation));
         }
 
+        [HttpGet("{annotationId}", Name = nameof(GetAnnotationById))] // fancy way to have strings checked by the compiler
+        public ActionResult GetUserAnnotationById(int annotationId)
+        {
+            (int userId, bool useridok) = GetAuthUserId();
+            if (!useridok)
+            {
+                return Unauthorized();
+            }
+            var returnedAnnotation = _annotationService.GetAnnotationByUserId(annotationId, userId);
+            if (returnedAnnotation == null)
+            {
+                return NotFound();
+            }
+            //with the helper class and the mapper we are setting the annotation type result (in returnAnnotation)
+            //to AnnotationDto class type
+            //so the magic is not much as it still requires some manual work for mapping. 
+            return Ok(CreateLink(returnedAnnotation));
+        }
+
         /// <summary>
         /// This function calls the create anew annotation from db function
         /// Testing with postman:
         ///  in request: POST http://localhost:5001/api/annotations  plus valid token of the user
         ///  in body: 
         ///         {
-        ///             "HistoryId": 19, //fix namig because it is postid
+        ///             "PostId": 19, //fix namig because it is postid
         ///             "Body": "This call takes in userId, HistoryId and the body; but returns all the things from AnnotationsDto"
         ///         }
         /// </summary>
@@ -106,15 +133,21 @@ namespace WebService.Controllers
         [HttpPost (Name = nameof(AddAnnotation))]
         public ActionResult AddAnnotation(AnnotationsDto annotationObj)
         {
-            var newAnnotation = new Annotations
+            (int userId, bool useridok) = GetAuthUserId();
+            if (!useridok)
             {
-                UserId = GetAuthUserId(),
-                HistoryId = annotationObj.HistoryId,
+                return Unauthorized();
+            }
+            var newAnnotation = new AnnotationsDto
+            {
+                UserId = userId,
+                PostId = annotationObj.PostId,
                 Body = annotationObj.Body
             };
-            if (_annotationService.CreateAnnotation_withFunction(newAnnotation, out newAnnotation))
+            var createdAnnotation = new Annotations();
+            if (_annotationService.CreateAnnotation_withFunction(newAnnotation, out createdAnnotation))
             {
-                return Ok(CreateLink(newAnnotation));
+                return Ok(CreateLink(createdAnnotation));
             }
             return BadRequest();
 
@@ -153,16 +186,19 @@ namespace WebService.Controllers
         /// <param name="annotationId"></param>
         /// <returns> Success: 200 Ok ; Fail 404 Not Found</returns>
         [HttpDelete("{annotationId}")]
-        public ActionResult DeleteData(int annotationId)
+        public ActionResult DeleteAnnotation(int annotationId)
         {
-            if (_annotationService.DeleteAnnotation(annotationId))
+            (int userId, bool useridok) = GetAuthUserId();
+            if (!useridok)
+            {
+                return Unauthorized();
+            }
+            if (_annotationService.DeleteAnnotation(annotationId, userId))
             {
                 return Ok();
             }
             return NotFound();
         }
-
-
 
         /// <summary>
         /// DTO Annotations Mapper used with GET annotation
@@ -180,17 +216,5 @@ namespace WebService.Controllers
             return annotationDto;
         }
    
-
-        /// <summary>
-        /// Get the authenticated user's id from token claim
-        /// </summary>
-        /// <returns>integer authenticated user's id from token</returns>
-        private int GetAuthUserId()
-        {
-            var userIdFromToken = int.Parse(this.User.Identity.Name);
-            return userIdFromToken;
-        }
-
-
     }
 }

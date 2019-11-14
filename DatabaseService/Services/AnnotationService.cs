@@ -23,11 +23,31 @@ namespace DatabaseService.Services
             DB.SaveChanges();
             return GetAnnotation(annotation.Id);
         }
+
+        /// <summary>
+        /// Returns annotation found only by annotationId
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns>Annotations Type Object</returns>
         public Annotations GetAnnotation(int value)
         {
             using var DB = new AppContext();
-            var result = DB.Annotations.Find(value);
+            var result = DB.Annotations.Where(x => x.Id == value).FirstOrDefault();
             
+            return result;
+        }
+        /// <summary>
+        /// Returns annotation found by annotationId and userId
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="userId"></param>
+        /// <returns>Annotations Type Object</returns>
+        public Annotations GetAnnotationByUserId(int id, int userId)
+        {
+            using var DB = new AppContext();
+            var result = DB.Annotations
+                           .Where(a => a.UserId == userId)
+                           .Where(a => a.Id == id).FirstOrDefault();
             return result;
         }
         public List<AnnotationsDto> GetAllAnnotationsOfUser(int userId, PagingAttributes pagingAttributes)
@@ -48,7 +68,13 @@ namespace DatabaseService.Services
             return listAnnotationsOfUser;
         }
 
-        //This gets the normal simple annotation from the db and not the actual post with body and title
+        /// <summary>
+        /// Gets all the annotations of a userId and a postId
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="postId"></param>
+        /// <param name="pagingAttributes"></param>
+        /// <returns>List Type SimpleAnnotationsDto</returns>
         public List<SimpleAnnotationDto> GetUserAnnotationsMadeOnAPost(int userId, int postId, PagingAttributes pagingAttributes)
         {
             using var DB = new AppContext();
@@ -108,12 +134,18 @@ namespace DatabaseService.Services
             return result;
         }
 
-        public bool DeleteAnnotation(int id)
+        /// <summary>
+        /// Deletes selected annotation of annotationId of a userId 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="userId"></param>
+        /// <returns>boolean</returns>
+        public bool DeleteAnnotation(int id, int userId)
         {
             using var DB = new AppContext();
             try
             {
-                var itemToDelete = GetAnnotation(id);
+                var itemToDelete = GetAnnotationByUserId(id, userId);
                 DB.Annotations.Remove(itemToDelete);
                 DB.SaveChanges();
                 return true;
@@ -124,7 +156,7 @@ namespace DatabaseService.Services
             }
         }
 
-        public bool CreateAnnotation_withFunction(Annotations obj, out Annotations annotationFromDb)
+        public bool CreateAnnotation_withFunction(AnnotationsDto obj, out Annotations annotationFromDb)
         {
             try
             {
@@ -132,18 +164,18 @@ namespace DatabaseService.Services
                
                 var userId = new NpgsqlParameter("userid", NpgsqlTypes.NpgsqlDbType.Integer);
                 userId.Value = obj.UserId;
-                var postId = new NpgsqlParameter("historyid", NpgsqlTypes.NpgsqlDbType.Integer);
-                postId.Value = obj.HistoryId;
+                var postId = new NpgsqlParameter("postid", NpgsqlTypes.NpgsqlDbType.Integer);
+                postId.Value = obj.PostId;
                 var annotationBody = new NpgsqlParameter("body", NpgsqlTypes.NpgsqlDbType.Text);
                 annotationBody.Value = obj.Body;
 
                 // since this select annotate function runs with select as Id and is attached to the AnnotateFunction Dto and returns only 1 result
                 // it is ok to .FirstOrDefult() and then .Id to get the value directly. 
                 var annotationId = DB.AnnotateFunction
-                                        .FromSqlRaw("select annotate(@userid, @historyid, @body) as Id", userId, postId, annotationBody)
+                                        .FromSqlRaw("select annotate(@userid, @postid, @body) as Id", userId, postId, annotationBody)
                                         .FirstOrDefault()
                                         .Id;
-                
+                DB.SaveChanges();                
                 //if the returned id is somehow weird and the annotation is not found, then annotationFromDb gets null here
                 annotationFromDb = GetAnnotation(annotationId);
                 return true;
