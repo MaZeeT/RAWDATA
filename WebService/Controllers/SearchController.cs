@@ -20,17 +20,11 @@ namespace WebService.Controllers
     public class SearchController : SharedController
     {
         private ISearchDataService _dataService;
-        private IMapper _mapper;
-
         public SearchController(
-            ISearchDataService dataService,
-            IMapper mapper)
+            ISearchDataService dataService)
         {
             _dataService = dataService;
-            _mapper = mapper;
         }
-
-        //private SharedController _shared = new SharedController(); //shared funcs/meths
 
         [HttpGet("wordrank", Name = nameof(WordRank))]
         public ActionResult WordRank([FromQuery] SearchQuery searchparams, [FromQuery] int? maxresults) //
@@ -51,14 +45,15 @@ namespace WebService.Controllers
                 //rudimentary checking of params
                 if (searchparams.stype >= 0 && searchparams.stype <= 3)
                 {
-                    var search = _dataService.Search(userId, searchparams.s, searchparams.stype, pagingAttributes);
+                    /* var search = _dataService.Search(userId, searchparams.s, searchparams.stype, pagingAttributes);
 
-                    var result = CreateResult(search, searchparams, pagingAttributes);
-                    if (result != null)
-                    {
-                        return Ok(result);
-                    }
-                    else return NoContent();
+                     var result = CreateResult(search, searchparams, pagingAttributes);
+                     if (result != null)
+                     {
+                         return Ok(result);
+                     }
+                     else return NoContent();*/
+                    return RedirectToAction("Search", new { searchparams.s, searchparams.stype });
                 }
                 else if (searchparams.stype >= 4 && searchparams.stype <= 5)
                 {
@@ -73,9 +68,7 @@ namespace WebService.Controllers
             return BadRequest();
         }
 
-        //[HttpGet(Name = nameof(Search)), Route("{s=}/{stype=3}/{page=1}/{pageSize=10}")] //still dont understand the Route options
         [HttpGet(Name = nameof(Search))]
-        //[HttpGet] put defalut values here for optional parameters. in this case only s is not optional
         //examples
         // http://localhost:5001/api/search?s=code&stype=0&page=10&pageSize=5
         // http://localhost:5001/api/search?s=code,app,program
@@ -103,8 +96,9 @@ namespace WebService.Controllers
                 }
                 else if (searchparams.stype >= 4 && searchparams.stype <= 5)
                 {
-                    var search = _dataService.WordRank(userId, searchparams.s, searchparams.stype, 10);
-                    return Ok(search);
+                    /*  var search = _dataService.WordRank(userId, searchparams.s, searchparams.stype, 10);
+                      return Ok(search);*/
+                    return RedirectToAction("WordRank", new { searchparams.s, searchparams.stype });
                 }
             }
             return BadRequest();
@@ -119,7 +113,6 @@ namespace WebService.Controllers
 
         private PostsSearchListDto CreateSearchResultDto(Posts posts)
         {
-            //var dto = _mapper.Map<QuestionDto>(question);
             var dto = new PostsSearchListDto();
             if (posts.Parentid != 0) //then we have an answer
             {
@@ -129,7 +122,6 @@ namespace WebService.Controllers
                     { 
                         questionId = posts.Parentid,
                         postId = posts.Id
-
                     });
             }
             else //we have a question
@@ -171,7 +163,6 @@ namespace WebService.Controllers
                     prev,
                     next,
                     items = posts.Select(CreateSearchResultDto)
-                    //items = posts
                 };
             }
             else {
