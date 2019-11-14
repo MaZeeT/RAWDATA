@@ -8,7 +8,7 @@ namespace WebService
         public string Title { get; internal set; }
         public string Body { get; internal set; }
         public int Parentid { get; internal set; }
-        public List<AnnotationsMinimalDto> Annotations { get; set; }
+        public List<SimpleAnnotationDto> Annotations { get; set; }
         public string createAnnotationLink { get; set; }
         public string createBookmarkLink { get; set; }
 

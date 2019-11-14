@@ -71,18 +71,10 @@ namespace WebService.Controllers
                     pt.Title = p.Title;
                     pt.Body = p.Body;
                     PagingAttributes pagingAttributes = new PagingAttributes();
-                    List<AnnotationsMinimalDto> finalanno = new List<AnnotationsMinimalDto>();
-                    List<AnnotationsDto> tempanno = new List<AnnotationsDto>();
-                    tempanno = _annotationService.GetAnnotationsWithPostId(userId, p.Id, pagingAttributes);
-                    foreach (AnnotationsDto ta in tempanno)
-                    {
-                        AnnotationsMinimalDto fa = new AnnotationsMinimalDto();
-                        fa.Body = ta.Body;
-                        fa.Date = ta.Date;
-                        finalanno.Add(fa);
-                    }
-                    pt.Annotations = finalanno;
-                    // pt.createBookmarkLink = Url.Link(nameof(HistoryController.AddBookmark),  new { postId = browsehist.Postid });
+                    List<SimpleAnnotationDto> tempanno = new List<SimpleAnnotationDto>();
+                        tempanno = _annotationService.GetUserAnnotationsMadeOnAPost(userId, p.Id, pagingAttributes);
+                    pt.Annotations = tempanno;
+                    // pt.createBookamrkLink = Url.Link(  nameof(),  new { questionId = question.Id });
                     AnnotationsDto anno = new AnnotationsDto();
                     anno.Body = "form/similar would be here to POST a new annotation";
                     anno.PostId = p.Id;

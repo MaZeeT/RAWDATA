@@ -10,9 +10,10 @@ namespace DatabaseService.Services
     {
         Annotations CreateAnnotations(AnnotationsDto annotationObject);
         Annotations GetAnnotation(int annotationId);
-        List<Annotations> GetAllAnnotationsByUserId(int userId, PagingAttributes pagingAttributes);
-        /*List<Annotations> GetAnnotationsByPostId(int userId, int postId); // Not used for now -> returns the simple annotation without question and such */
-        List<AnnotationsDto> GetAnnotationsWithPostId(int userId, int postId, PagingAttributes pagingAttributes);
+        List<SimpleAnnotationDto> GetUserAnnotationsMadeOnAPost(int userId, int postId, PagingAttributes pagingAttributes);
+        List<PostAnnotationsDto> GetAllAnnotationsOfUser(int userId, int postId, PagingAttributes pagingAttributes); // Not used for now -> returns the simple annotation without question and such */
+
+       // List<AnnotationsDto> GetAllAnnotationsOfUser(int userId, int postId, PagingAttributes pagingAttributes);
         bool UpdateAnnotation(int annotationId, string annotationBody);
         bool DeleteAnnotation(int id);
         bool CreateAnnotation_withFunction(Annotations newAnnotation, out Annotations annotationFromDb);

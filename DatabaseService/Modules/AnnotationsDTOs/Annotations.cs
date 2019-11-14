@@ -1,5 +1,4 @@
-﻿using NpgsqlTypes;
-using System;
+﻿using System;
 
 namespace DatabaseService.Modules
 {
