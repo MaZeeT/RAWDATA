@@ -11,7 +11,7 @@ namespace DatabaseService.Services
     {
         public Annotations CreateAnnotations(AnnotationsDto obj)
         {
-            using var DB = new AppContext();
+            using var DB = new DatabaseContext();
             var annotation = new Annotations
             {
                 UserId = obj.UserId,
@@ -25,14 +25,14 @@ namespace DatabaseService.Services
         }
         public Annotations GetAnnotation(int value)
         {
-            using var DB = new AppContext();
+            using var DB = new DatabaseContext();
             var result = DB.Annotations.Find(value);
             
             return result;
         }
         public List<AnnotationsDto> GetAllAnnotationsOfUser(int userId, PagingAttributes pagingAttributes)
         {
-            using var DB = new AppContext();
+            using var DB = new DatabaseContext();
             var listAnnotationsOfUser = (from annot in DB.Annotations
                                          join hist in DB.History on annot.HistoryId equals hist.Id
                                          where annot.UserId == userId
@@ -51,7 +51,7 @@ namespace DatabaseService.Services
         //This gets the normal simple annotation from the db and not the actual post with body and title
         public List<SimpleAnnotationDto> GetUserAnnotationsMadeOnAPost(int userId, int postId, PagingAttributes pagingAttributes)
         {
-            using var DB = new AppContext();
+            using var DB = new DatabaseContext();
             
             var annotationsCount = from annot in DB.Annotations
                                join hist in DB.History on annot.HistoryId equals hist.Id
@@ -82,7 +82,7 @@ namespace DatabaseService.Services
         /// <returns></returns>
         public List<PostAnnotationsDto> GetAllAnnotationsOfUser(int userId, int postId, PagingAttributes pagingAttributes)
         {
-            using var DB = new AppContext();
+            using var DB = new DatabaseContext();
             var listCount = from annot in DB.Annotations
                             join hist in DB.History on annot.HistoryId equals hist.Id
                             join quest in DB.Questions on hist.Postid equals quest.Id
@@ -110,7 +110,7 @@ namespace DatabaseService.Services
 
         public bool DeleteAnnotation(int id)
         {
-            using var DB = new AppContext();
+            using var DB = new DatabaseContext();
             try
             {
                 var itemToDelete = GetAnnotation(id);
@@ -128,7 +128,7 @@ namespace DatabaseService.Services
         {
             try
             {
-                using var DB = new AppContext();
+                using var DB = new DatabaseContext();
                
                 var userId = new NpgsqlParameter("userid", NpgsqlTypes.NpgsqlDbType.Integer);
                 userId.Value = obj.UserId;
@@ -158,7 +158,7 @@ namespace DatabaseService.Services
 
         public bool UpdateAnnotation(int annotationId, string annotationBody)
         {
-            using var DB = new AppContext();
+            using var DB = new DatabaseContext();
             try
             {
                 var annotationToUpdate = DB.Annotations.Find(annotationId);

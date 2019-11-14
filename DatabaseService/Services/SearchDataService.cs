@@ -19,7 +19,7 @@ namespace DatabaseService
         public IList<Questions> GetQuestions(PagingAttributes pagingAttributes)
         {
             //// for browsing the full list of questions
-            using var db = new AppContext();
+            using var db = new DatabaseContext();
 
             //try to convert back from 1-based pages
             int page;
@@ -43,7 +43,7 @@ namespace DatabaseService
             // do actual search using appsearch in db and build results
 
             //need db context and searchtype lookuptable
-            using var db = new AppContext();
+            using var db = new DatabaseContext();
             Modules.SearchTypeLookupTable st = new Modules.SearchTypeLookupTable();
 
             ////get params for db.func
@@ -151,7 +151,7 @@ namespace DatabaseService
             // do actual search using appsearch in db and build results
 
             //need db context and searchtype lookuptable
-            using var db = new AppContext();
+            using var db = new DatabaseContext();
             Modules.SearchTypeLookupTable st = new Modules.SearchTypeLookupTable();
 
             ////get params for db.func

@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DatabaseService
 {
-    public class AppContext : DbContext
+    public class DatabaseContext : DbContext
     {
         public static readonly ILoggerFactory MyLoggerFactory
             = LoggerFactory.Create(builder =>
@@ -41,8 +41,6 @@ namespace DatabaseService
             modelBuilder.Entity<WordRank>().HasNoKey();
             modelBuilder.Entity<PostsTable>().HasNoKey();
             modelBuilder.Entity<AnnotateFunctionDto>().HasNoKey();
-
-            //todo : rename appuser to appusers and remove the 2 lines below
             modelBuilder.Entity<AppUser>().ToTable("appusers");
             modelBuilder.Entity<AppUser>().Property(x => x.Id).HasColumnName("id");
 

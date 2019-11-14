@@ -339,3 +339,4 @@ ASALocalRun/
 # BeatPulse healthcheck temp database
 healthchecksdb
 DatabaseService/DBContext/HostDatabase.cs
+DatabaseService/DBContext/HostDatabase.cs

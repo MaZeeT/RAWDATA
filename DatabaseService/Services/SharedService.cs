@@ -15,7 +15,7 @@ namespace DatabaseService
             System.Console.WriteLine($"Postid -- {postId}");
             var postid = new NpgsqlParameter("postid", NpgsqlTypes.NpgsqlDbType.Integer);
             postid.Value = postId;
-            using var db = new AppContext();
+            using var db = new DatabaseContext();
             string tablename = db.PostsTable
                 .FromSqlRaw("SELECT * from resolveid(@postid)", postid).First().resolveid;
 
@@ -26,20 +26,20 @@ namespace DatabaseService
 
         public int NumberOfQuestions()
         {
-            using var db = new AppContext();
+            using var db = new DatabaseContext();
             return db.Questions
                 .Count();
         }
 
         public Questions GetQuestion(int questionId)
         {
-            using var db = new AppContext();
+            using var db = new DatabaseContext();
             return db.Questions.Find(questionId);
         }
 
         public Answers GetAnswer(int answerId)
         {
-            using var db = new AppContext();
+            using var db = new DatabaseContext();
             return db.Answers.Find(answerId);
         }
 
@@ -91,7 +91,7 @@ namespace DatabaseService
         public IList<Posts> GetThread(int questionId)
         //returns question and all child answers
         {
-            using var db = new AppContext();
+            using var db = new DatabaseContext();
             //get the question
             var q = GetQuestion(questionId);
             if (q != null)
