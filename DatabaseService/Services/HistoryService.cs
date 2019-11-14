@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
 using DatabaseService.Modules;
 using Microsoft.EntityFrameworkCore;
@@ -78,16 +76,28 @@ namespace DatabaseService.Services
             return list;
         }
 
+        public bool DeleteUserHistory(int userId)
+        {
+            var history = database.History.Where(x => 
+                x.Userid == userId && 
+                x.isBookmark == false);
 
-        public bool Delete(int historyId)
+            foreach (var entry in history)
+            {
+                database.History.Remove(entry);
+            }
+
+            return database.SaveChanges() > 0;
+        }
+
+        public bool DeleteHistory(int historyId)
         {
             if (HistoryExist(historyId))
             {
                 var history = database.History.Find(historyId);
                 database.History.Remove(history);
 
-                var result = database.SaveChanges();
-                return result > 0;
+                return database.SaveChanges() > 0;
             }
 
             return false;
@@ -106,8 +116,7 @@ namespace DatabaseService.Services
                 h.isBookmark = false;
             }
             
-            int result = database.SaveChanges();
-            return result > 0;
+            return database.SaveChanges() > 0;
         }
 
         public bool HistoryExist(int historyId)
@@ -118,7 +127,9 @@ namespace DatabaseService.Services
 
         public bool HistoryExist(int userId, int postId)
         {
-            var result = database.History.Where(history => history.Userid == userId && history.Postid == postId)
+            var result = database.History.Where(history => 
+                    history.Userid == userId && 
+                    history.Postid == postId)
                 .ToList();
             return result.Count > 0;
         }

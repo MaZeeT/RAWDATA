@@ -43,13 +43,13 @@ namespace WebService.Controllers
         public ActionResult AddBookmark(int postId)
         {
             var userId = GetAuthUserId();
-            var history = _historyService.Add(userId, postId, true);
-            if (!history)
+            var result = _historyService.Add(userId, postId, true);
+            if (!result)
             {
                 return NotFound();
             }
 
-            return Ok(history);
+            return Ok(result);
         }
 
         [HttpGet("getbookmarklist", Name = nameof(GetBookmarkList))]
@@ -71,8 +71,8 @@ namespace WebService.Controllers
         public ActionResult DeleteBookmark(int postId)
         {
             var userId = GetAuthUserId();
-            var history = _historyService.DeleteBookmark(userId, postId);
-            if (!history)
+            var result = _historyService.DeleteBookmark(userId, postId);
+            if (!result)
             {
                 return NotFound();
             }
@@ -80,6 +80,22 @@ namespace WebService.Controllers
             return Ok();
         }
 
+        [HttpDelete("clearhistory", Name = nameof(ClearHistory))]
+        //example http://localhost:5001/api/history/clearhistory
+        public ActionResult ClearHistory()
+        {
+            var userId = GetAuthUserId();
+            var result = _historyService.DeleteUserHistory(userId);
+            if (!result)
+            {
+                return NotFound();
+            }
+
+            return Ok();
+        }
+        
+        
+        
 
         //todo move the function below into an abstract class or something to remove duplicated code
         /// <summary>
