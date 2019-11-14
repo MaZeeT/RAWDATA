@@ -28,7 +28,7 @@ namespace WebService.Controllers.Authentication
         }
 
         [HttpPost("users")]
-        public ActionResult CreateUser([FromForm] SignupUserDto dto)
+        public ActionResult CreateUser([FromBody] SignupUserDto dto)
             //changed to FromForm just because i cant be bothered to look up what to send in postman
         {
             if (_service.GetAppUser(dto.Username) != null)
@@ -56,7 +56,7 @@ namespace WebService.Controllers.Authentication
 
 
         [HttpPost("tokens")]
-        public ActionResult Login([FromForm] SignupUserDto dto)
+        public ActionResult Login([FromBody] SignupUserDto dto)
         //changed to FromForm just because i cant be bothered to look up what to send in postman
         {
             var user = _service.GetAppUser(dto.Username);

@@ -10,6 +10,5 @@ namespace DatabaseService.Modules
         public string PostTableName { set; get; }
         public DateTime Date { set; get; }
         public bool isBookmark { set; get; }
-        
     }
 }

@@ -32,6 +32,12 @@ namespace DatabaseService.Services
             }
         }
 
+        /// <summary>
+        /// The function handlex the potential existance of many users with the same username 
+        /// But in the db we handle this by having a constraint on the table that usernamens are unique
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns></returns>
         public AppUser GetAppUser(string username)
         {
             var appUsers = database.AppUser.Where(user => user.Username == username).ToList();

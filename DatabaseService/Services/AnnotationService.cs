@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace DatabaseService.Services
@@ -11,10 +12,8 @@ namespace DatabaseService.Services
         public Annotations CreateAnnotations(AnnotationsDto obj)
         {
             using var DB = new AppContext();
-            var nextId = DB.Annotations.Max(x => x.Id) + 1;
             var annotation = new Annotations
             {
-                Id = nextId,
                 UserId = obj.UserId,
                 HistoryId = obj.HistoryId,
                 Body = obj.Body,
@@ -29,6 +28,68 @@ namespace DatabaseService.Services
             using var DB = new AppContext();
             var result = DB.Annotations.Find(value);
             
+            return result;
+        }
+        public List<Annotations> GetAllAnnotationsByUserId(int userId, PagingAttributes pagingAttributes)
+        {
+            using var DB = new AppContext();
+            var listCount = DB.Annotations
+                           .Where(x => x.UserId == userId)
+                           .Count();
+            var page = GetPagination(listCount, pagingAttributes);
+            //actually handeling the pagination on db query not like lower. 
+            var finalList = DB.Annotations
+                           .Where(x => x.UserId == userId)
+                           .Skip(page * pagingAttributes.PageSize)
+                           .Take(pagingAttributes.PageSize)
+                           .ToList();
+            return finalList;
+        }
+
+        /*//This gets the normal simple annotation from the db and not the actual post with body and title
+        public List<Annotations> GetAnnotationsByPostId(int userId, int postId)
+        {
+            using var DB = new AppContext();
+            var result = DB.Annotations
+                           .Where(val => val.UserId == userId)
+                           .Where(val => val.HistoryId == postId)
+                           .ToList();
+            return result;
+        }*/
+
+
+        /// <summary>
+        /// Returns a list of annotations and their postId recorded in history table
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="postId"></param>
+        /// <returns></returns>
+        public List<AnnotationsDto> GetAnnotationsWithPostId(int userId, int postId, PagingAttributes pagingAttributes)
+        {
+            using var DB = new AppContext();
+            var listCount = from annot in DB.Annotations
+                            join hist in DB.History on annot.HistoryId equals hist.Id
+                            join quest in DB.Questions on hist.Postid equals quest.Id
+                            where hist.Postid == postId && annot.UserId == userId
+                            group annot by annot.Id into tot
+                            select tot.Count();
+            var page = GetPagination(listCount.FirstOrDefault(), pagingAttributes);
+
+            var result = (from annot in DB.Annotations
+                          join hist in DB.History on annot.HistoryId equals hist.Id
+                          join quest in DB.Questions on hist.Postid equals quest.Id
+                          where hist.Postid == postId && annot.UserId == userId
+                          select new AnnotationsDto
+                          {
+                              AnnotationId = annot.Id,
+                              HistoryId = annot.HistoryId,
+                              PostId = postId,
+                              Body = annot.Body,
+                              Date = annot.Date
+                          }).Skip(page * pagingAttributes.PageSize)
+                            .Take(pagingAttributes.PageSize)
+                            .ToList();
+
             return result;
         }
 
@@ -95,6 +156,25 @@ namespace DatabaseService.Services
                 return false;
             }
 
+        }
+
+        private int GetPagination(int matchcount, PagingAttributes pagingAttributes)
+        {
+            //calc max pages and set requested page to last page if out of bounds
+            var calculatedNumberOfPages = (int)Math.Ceiling((double)matchcount / pagingAttributes.PageSize) - 1;
+            System.Console.WriteLine($"{calculatedNumberOfPages} calculated pages.");
+            int page;
+            if (pagingAttributes.Page > calculatedNumberOfPages)
+            {
+                page = calculatedNumberOfPages;
+            }
+
+            if (pagingAttributes.Page <= 0)
+            {
+                page = 0;
+            }
+            else page = pagingAttributes.Page - 1;
+            return page;
         }
 
     }

@@ -8,7 +8,7 @@ namespace WebService.Profiles
         
             public AnnotationsProfile()
             {
-                CreateMap<Annotations, AnnotationsDto >();
+                CreateMap<Annotations, AnnotationsDto>();
             }
         
     }
