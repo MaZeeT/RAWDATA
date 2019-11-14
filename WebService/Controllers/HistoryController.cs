@@ -66,11 +66,12 @@ namespace WebService.Controllers
             return Ok(bookmarks);
         }
 
-        [HttpDelete("deletebookmark/{historyId}", Name = nameof(DeleteBookmark))]
+        [HttpDelete("deletebookmark/{postId}", Name = nameof(DeleteBookmark))]
         //example http://localhost:5001/api/history/deletebookmark/133
-        public ActionResult DeleteBookmark(int historyId)
+        public ActionResult DeleteBookmark(int postId)
         {
-            var history = _historyService.Delete(historyId);
+            var userId = GetAuthUserId();
+            var history = _historyService.DeleteBookmark(userId, postId);
             if (!history)
             {
                 return NotFound();
