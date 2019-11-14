@@ -37,7 +37,7 @@ namespace WebService.Controllers
 
 
         [HttpPost("addbookmark/{userId}/{postId}", Name = nameof(AddBookmark))]
-        //example http://localhost:5001/api/ //todo make an example
+        //example http://localhost:5001/api/history/addbookmark/0/1760
         public ActionResult AddBookmark(int userId, int postId)
         {
             var history = _historyService.Add(userId, postId, true);
@@ -50,10 +50,10 @@ namespace WebService.Controllers
         }
 
         [HttpGet("getbookmarklist/{userId}", Name = nameof(GetBookmarkList))]
-        //example http://localhost:5001/api/ //todo make an example
+        //example http://localhost:5001/api/history/getbookmarklist/323
         public ActionResult GetBookmarkList(int userId)
         {
-            var userId2 = GetAuthUserId();
+            //var userId2 = GetAuthUserId();
             var bookmarks = _historyService.GetBookmarkList(userId);
             if (bookmarks == null)
             {
@@ -63,8 +63,8 @@ namespace WebService.Controllers
             return Ok(bookmarks);
         }
 
-        [HttpGet("deletebookmark/{historyId}", Name = nameof(DeleteBookmark))]
-        //example http://localhost:5001/api/ //todo make an example
+        [HttpDelete("deletebookmark/{historyId}", Name = nameof(DeleteBookmark))]
+        //example http://localhost:5001/api/history/deletebookmark/133
         public ActionResult DeleteBookmark(int historyId)
         {
             var history = _historyService.Delete(historyId);
