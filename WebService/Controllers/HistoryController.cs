@@ -67,7 +67,7 @@ namespace WebService.Controllers
         }
 
         [HttpDelete("deletebookmark/{postId}", Name = nameof(DeleteBookmark))]
-        //example http://localhost:5001/api/history/deletebookmark/133
+        //example http://localhost:5001/api/history/deletebookmark/1760
         public ActionResult DeleteBookmark(int postId)
         {
             var userId = GetAuthUserId();
