@@ -78,8 +78,8 @@ namespace DatabaseService.Services
 
         public bool DeleteUserHistory(int userId)
         {
-            var history = database.History.Where(x => 
-                x.Userid == userId && 
+            var history = database.History.Where(x =>
+                x.Userid == userId &&
                 x.isBookmark == false);
 
             foreach (var entry in history)
@@ -115,7 +115,7 @@ namespace DatabaseService.Services
                 database.History.Update(h);
                 h.isBookmark = false;
             }
-            
+
             return database.SaveChanges() > 0;
         }
 
@@ -127,8 +127,8 @@ namespace DatabaseService.Services
 
         public bool HistoryExist(int userId, int postId)
         {
-            var result = database.History.Where(history => 
-                    history.Userid == userId && 
+            var result = database.History.Where(history =>
+                    history.Userid == userId &&
                     history.Postid == postId)
                 .ToList();
             return result.Count > 0;
