@@ -101,15 +101,16 @@ namespace DatabaseService
                             .Where(e => e.Parentid == questionId)
                             .ToList();
                 //manual mapping
-                List<Posts> posts = new List<Posts>();
-                posts.Add(
-                   new Posts
-                   {
-                       Id = q.Id,
-                       Title = q.Title,
-                       Body = q.Body
+                List<Posts> posts = new List<Posts>
+                {
+                    new Posts
+                    {
+                        Id = q.Id,
+                        Title = q.Title,
+                        Body = q.Body
 
-                   });
+                    }
+                };
                 foreach (Answers a in ans)
                 {
                     //below is for limiting body size, disabled rn

@@ -10,7 +10,8 @@ namespace DatabaseService
         /// </summary>
         /// <param name="modelBuilder"></param>
         /// <param name="names"></param>
-        public static void CreateMap(this ModelBuilder modelBuilder, params string[] names)
+        //public static void CreateMap(this ModelBuilder modelBuilder, params string[] names)
+        public static void CreateMap(this ModelBuilder modelBuilder)
         {
             //getting access to the entity types dbSet below
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())

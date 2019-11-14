@@ -1,4 +1,4 @@
-﻿using DatabaseService.Modules;
+﻿/*using DatabaseService.Modules;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Linq;
@@ -30,7 +30,8 @@ namespace DatabaseService
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.CreateMap("Id", "Name");
+            //modelBuilder.CreateMap("Id", "Name");
+            modelBuilder.CreateMap();
 
             modelBuilder.Entity<Search>().HasNoKey();
             modelBuilder.Entity<WordRank>().HasNoKey();
@@ -38,3 +39,4 @@ namespace DatabaseService
         }
     }
 }
+*/

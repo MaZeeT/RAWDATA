@@ -9,7 +9,7 @@ namespace DatabaseService
 {
     public class SearchDataService : ISearchDataService
     {
-        private ISharedService _sharedService; //shared stuff by injection
+        private readonly ISharedService _sharedService; //shared stuff by injection
         public SearchDataService(
             ISharedService sharedService)
         {

@@ -17,7 +17,7 @@ namespace WebService.Controllers
 
     public class SearchController : SharedController
     {
-        private ISearchDataService _dataService;
+        private readonly ISearchDataService _dataService;
         public SearchController(
             ISearchDataService dataService)
         {
@@ -32,8 +32,6 @@ namespace WebService.Controllers
             (int userId, bool useridok) = GetAuthUserId();
             
             Console.WriteLine("Got user: " + userId);
-
-            PagingAttributes pagingAttributes = new PagingAttributes();
 
             if (searchparams.s != null && useridok)
             {

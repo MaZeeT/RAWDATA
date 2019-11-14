@@ -10,8 +10,7 @@ namespace WebService.Controllers
         {
             bool useridok = false;
             var claimsIdentity = this.User.Identity as ClaimsIdentity;
-            int userId;
-            if (Int32.TryParse(claimsIdentity.FindFirst(ClaimTypes.Name)?.Value, out userId))
+            if (Int32.TryParse(claimsIdentity.FindFirst(ClaimTypes.Name)?.Value, out int userId))
             {
                 useridok = true; //becomes true when we get an int in userId
             }

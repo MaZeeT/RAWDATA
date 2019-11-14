@@ -14,10 +14,10 @@ namespace WebService.Controllers
     [Authorize]
     public class QuestionsController : SharedController
     {
-        private ISearchDataService _dataService;
-        private ISharedService _sharedService;
-        private IAnnotationService _annotationService;
-        private IHistoryService _historyService;
+        private readonly ISearchDataService _dataService;
+        private readonly ISharedService _sharedService;
+        private readonly IAnnotationService _annotationService;
+        private readonly IHistoryService _historyService;
 
         public QuestionsController(
             ISearchDataService dataService,
