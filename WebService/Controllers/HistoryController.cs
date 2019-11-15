@@ -37,50 +37,7 @@ namespace WebService.Controllers
             return Ok(history);
         }
 
-
-        [HttpPost("addbookmark/{postId}", Name = nameof(AddBookmark))]
-        //example http://localhost:5001/api/history/addbookmark/1760
-        public ActionResult AddBookmark(int postId)
-        {
-            var userId = GetAuthUserId();
-            var result = _historyService.Add(userId, postId, true);
-            if (!result)
-            {
-                return NotFound();
-            }
-
-            return Ok(result);
-        }
-
-        [HttpGet("getbookmarklist", Name = nameof(GetBookmarkList))]
-        //example http://localhost:5001/api/history/getbookmarklist
-        public ActionResult GetBookmarkList()
-        {
-            var userId = GetAuthUserId();
-            var bookmarks = _historyService.GetBookmarkList(userId);
-            if (bookmarks == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(bookmarks);
-        }
-
-        [HttpDelete("deletebookmark/{postId}", Name = nameof(DeleteBookmark))]
-        //example http://localhost:5001/api/history/deletebookmark/1760
-        public ActionResult DeleteBookmark(int postId)
-        {
-            var userId = GetAuthUserId();
-            var result = _historyService.DeleteBookmark(userId, postId);
-            if (!result)
-            {
-                return NotFound();
-            }
-
-            return Ok();
-        }
-
-        [HttpDelete("clearhistory", Name = nameof(ClearHistory))]
+        [HttpDelete("clear", Name = nameof(ClearHistory))]
         //example http://localhost:5001/api/history/clearhistory
         public ActionResult ClearHistory()
         {
