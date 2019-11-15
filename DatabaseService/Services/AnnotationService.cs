@@ -50,23 +50,23 @@ namespace DatabaseService.Services
                            .Where(a => a.Id == id).FirstOrDefault();
             return result;
         }
-        public List<AnnotationsDto> GetAllAnnotationsOfUser(int userId, PagingAttributes pagingAttributes)
-        {
-            using var DB = new AppContext();
-            var listAnnotationsOfUser = (from annot in DB.Annotations
-                                         join hist in DB.History on annot.HistoryId equals hist.Id
-                                         where annot.UserId == userId
-                                         select new AnnotationsDto
-                                         {
-                                             AnnotationId = annot.Id,
-                                             PostId = hist.Postid,
-                                             Body = annot.Body,
-                                             Date = annot.Date
-                                         }).ToList();
+        //public List<AnnotationsDto> GetAllAnnotationsOfUser(int userId, PagingAttributes pagingAttributes)
+        //{
+        //    using var DB = new AppContext();
+        //    var listAnnotationsOfUser = (from annot in DB.Annotations
+        //                                 join hist in DB.History on annot.HistoryId equals hist.Id
+        //                                 where annot.UserId == userId
+        //                                 select new AnnotationsDto
+        //                                 {
+        //                                     AnnotationId = annot.Id,
+        //                                     PostId = hist.Postid,
+        //                                     Body = annot.Body,
+        //                                     Date = annot.Date
+        //                                 }).ToList();
            
            
-            return listAnnotationsOfUser;
-        }
+        //    return listAnnotationsOfUser;
+        //}
 
         /// <summary>
         /// Gets all the annotations of a userId and a postId
@@ -78,13 +78,7 @@ namespace DatabaseService.Services
         public List<SimpleAnnotationDto> GetUserAnnotationsMadeOnAPost(int userId, int postId, PagingAttributes pagingAttributes)
         {
             using var DB = new AppContext();
-            
-            var annotationsCount = from annot in DB.Annotations
-                               join hist in DB.History on annot.HistoryId equals hist.Id
-                               where annot.UserId == userId
-                               group annot by annot.Id into tot
-                               select tot.Count();
-            var page = GetPagination(annotationsCount.FirstOrDefault(), pagingAttributes);
+            var page = GetPagination(UserAnnotOnPostListCount(userId, postId), pagingAttributes);
             var annotationsOfPostList =  (from annot in DB.Annotations
                                          join hist in DB.History on annot.HistoryId equals hist.Id
                                          where hist.Postid == postId && annot.UserId == userId
@@ -99,6 +93,17 @@ namespace DatabaseService.Services
             return annotationsOfPostList;
         }
 
+        public int UserAnnotOnPostListCount(int userId, int postId)
+        {
+            using var DB = new AppContext();
+            var annotationsCount = from annot in DB.Annotations
+                                   join hist in DB.History on annot.HistoryId equals hist.Id
+                                   where annot.UserId == userId && hist.Postid == postId
+                                   group annot by annot.Id into tot
+                                   select tot.Count();
+            return annotationsCount.FirstOrDefault();
+        }
+
 
         /// <summary>
         /// Returns a list of annotations and their postId recorded in history table
@@ -106,32 +111,36 @@ namespace DatabaseService.Services
         /// <param name="userId"></param>
         /// <param name="postId"></param>
         /// <returns></returns>
-        public List<PostAnnotationsDto> GetAllAnnotationsOfUser(int userId, int postId, PagingAttributes pagingAttributes)
+        public List<PostAnnotationsDto> GetAllAnnotationsOfUser(int userId, PagingAttributes pagingAttributes, out int count)
         {
             using var DB = new AppContext();
-            var listCount = from annot in DB.Annotations
-                            join hist in DB.History on annot.HistoryId equals hist.Id
-                            join quest in DB.Questions on hist.Postid equals quest.Id
-                            where hist.Postid == postId && annot.UserId == userId
-                            group annot by annot.Id into tot
-                            select tot.Count();
-            var page = GetPagination(listCount.FirstOrDefault(), pagingAttributes);
+            count = GetAllAnnotationsOfUserCount(userId);
+            var page = GetPagination(count, pagingAttributes);
 
             var result = (from annot in DB.Annotations
                           join hist in DB.History on annot.HistoryId equals hist.Id
-                          join quest in DB.Questions on hist.Postid equals quest.Id
-                          where hist.Postid == postId && annot.UserId == userId
+                          where annot.UserId == userId
                           select new PostAnnotationsDto
                           {
                               AnnotationId = annot.Id,
-                              PostId = postId,
+                              PostId = hist.Postid,
                               Body = annot.Body,
                               Date = annot.Date
                           }).Skip(page * pagingAttributes.PageSize)
                             .Take(pagingAttributes.PageSize)
                             .ToList();
-
             return result;
+        }
+        public int GetAllAnnotationsOfUserCount(int userId)
+        {
+            using var DB = new AppContext();
+            var listCount = (from annot in DB.Annotations
+                             join hist in DB.History on annot.HistoryId equals hist.Id
+                             where annot.UserId == userId
+                             select annot).Count();
+                            
+            var res = listCount;
+            return listCount;
         }
 
         /// <summary>
