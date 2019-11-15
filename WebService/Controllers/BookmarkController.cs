@@ -100,7 +100,10 @@ namespace WebService.Controllers
                 {
                     Title = _sharedService.GetPost(mark.Postid).Title,
                     Date = mark.Date,
-                    ThreadUrl = Url.Link(nameof(QuestionsController.GetThread), new {questionId = mark.Postid})
+                    ThreadUrl = Url.Link(
+                        nameof(QuestionsController.GetThread), 
+                        new {questionId = mark.Postid}
+                        )
                 });
             }
 
