@@ -48,6 +48,22 @@ namespace WebService.Controllers
         public ActionResult GetThread(int questionId, int? postId)
         {
             (int userId, bool useridok) = GetAuthUserId();
+
+            var checkthatpost = _sharedService.GetPostType(questionId);
+            if (checkthatpost == "answers")
+            {
+                questionId = _sharedService.GetPost(questionId).QuestionId;
+                if (postId != null)
+                {
+                    postId = questionId;
+                }
+            }
+            else if (checkthatpost == null) 
+            { 
+                return NotFound(); 
+            }
+
+
             var t = _sharedService.GetThread(questionId);
             if (t != null && useridok) // then we got a thread!
             {
@@ -74,7 +90,7 @@ namespace WebService.Controllers
                     List<SimpleAnnotationDto> tempanno = new List<SimpleAnnotationDto>();
                         tempanno = _annotationService.GetUserAnnotationsMadeOnAPost(userId, p.Id, pagingAttributes);
                     pt.Annotations = tempanno;
-                    // pt.createBookamrkLink = Url.Link(  nameof(),  new { questionId = question.Id });
+                    pt.createBookmarkLink = Url.Link(  nameof(BookmarkController.AddBookmark),  new { postId = p.Id });
                     AnnotationsDto anno = new AnnotationsDto();
                     anno.Body = "form/similar would be here to POST a new annotation";
                     anno.PostId = p.Id;
