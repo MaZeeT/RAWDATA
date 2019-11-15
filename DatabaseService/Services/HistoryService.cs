@@ -9,6 +9,8 @@ namespace DatabaseService.Services
     public class HistoryService : IHistoryService
     {
         DatabaseContext database;
+        private const int DefaultIndex = 1;
+        private const int DefaultSize = 25;
 
         public HistoryService()
         {
@@ -58,11 +60,18 @@ namespace DatabaseService.Services
 
         public List<History> GetHistoryList(int userId)
         {
+            return GetHistoryList(userId, DefaultIndex, DefaultSize);
+        }
+
+        public List<History> GetHistoryList(int userId, int pageIndex, int pageSize)
+        {
             var list = database.History
-                .Where(x => 
+                .Where(x =>
                     x.Userid == userId &&
                     x.isBookmark == false)
                 .OrderBy(x => x.Date)
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize)
                 .ToList();
 
             return list;
@@ -70,11 +79,18 @@ namespace DatabaseService.Services
 
         public List<History> GetBookmarkList(int userId)
         {
+            return GetBookmarkList(userId, DefaultIndex, DefaultSize);
+        }
+
+        public List<History> GetBookmarkList(int userId, int pageIndex, int pageSize)
+        {
             var list = database.History
-                .Where(x => 
-                    x.Userid == userId && 
+                .Where(x =>
+                    x.Userid == userId &&
                     x.isBookmark == true)
                 .OrderBy(x => x.Date)
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize)
                 .ToList();
 
             return list;

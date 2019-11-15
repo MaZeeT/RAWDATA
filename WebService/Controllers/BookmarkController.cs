@@ -29,10 +29,11 @@ namespace WebService.Controllers
 
         [HttpGet(Name = nameof(GetBookmarkList))]
         //example http://localhost:5001/api/bookmark
-        public ActionResult GetBookmarkList()
+        //example http://localhost:5001/api/bookmark?Page=1&PageSize=5
+        public ActionResult GetBookmarkList([FromQuery]int page = 1, [FromQuery]int pageSize = 10)
         {
             var userId = GetAuthUserId().Item1;
-            var bookmarks = _historyService.GetBookmarkList(userId);
+            var bookmarks = _historyService.GetBookmarkList(userId,page, pageSize);
 
             if (bookmarks == null)
             {

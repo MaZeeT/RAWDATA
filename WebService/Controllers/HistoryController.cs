@@ -28,11 +28,12 @@ namespace WebService.Controllers
         }
 
         [HttpGet(Name = nameof(GetHistory))]
-        //example http://localhost:5001/api/history 
-        public ActionResult GetHistory()
+        //example http://localhost:5001/api/history
+        //example http://localhost:5001/api/history?Page=1&PageSize=5 
+        public ActionResult GetHistory([FromQuery]int page = 1, [FromQuery]int pageSize = 10)
         {
             var userId = GetAuthUserId().Item1;
-            var history = _historyService.GetHistoryList(userId);
+            var history = _historyService.GetHistoryList(userId,page,pageSize);
             if (history == null)
             {
                 return NotFound();
