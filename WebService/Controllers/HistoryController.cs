@@ -32,6 +32,8 @@ namespace WebService.Controllers
         //example http://localhost:5001/api/history?Page=1&PageSize=5 
         public ActionResult GetHistory([FromQuery]int page = 1, [FromQuery]int pageSize = 10)
         {
+            if (page < 1 || pageSize < 1) return NotFound();
+            
             var userId = GetAuthUserId().Item1;
             var history = _historyService.GetHistoryList(userId,page,pageSize);
             if (history == null)
