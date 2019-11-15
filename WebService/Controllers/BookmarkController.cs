@@ -5,43 +5,51 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DatabaseService.Modules;
 using DatabaseService.Services;
+using WebService.DTOs;
 
 namespace WebService.Controllers
 {
     [ApiController]
     [Route("api/bookmark")]
     [Authorize]
-    public class BookmarkController : ControllerBase
+    public class BookmarkController : SharedController
     {
         private IHistoryService _historyService;
+        private ISharedService _sharedService;
         private IMapper _mapper;
 
-        public BookmarkController(IHistoryService historyService, IMapper mapper)
+        public BookmarkController(IHistoryService historyService, ISharedService sharedService, IMapper mapper)
         {
             _historyService = historyService;
+            _sharedService = sharedService;
             _mapper = mapper;
         }
 
         [HttpGet(Name = nameof(GetBookmarkList))]
         //example http://localhost:5001/api/bookmark
-        public ActionResult GetBookmarkList()
+        //example http://localhost:5001/api/bookmark?Page=1&PageSize=5
+        public ActionResult GetBookmarkList([FromQuery]int page = 1, [FromQuery]int pageSize = 10)
         {
-            var userId = GetAuthUserId();
-            var bookmarks = _historyService.GetBookmarkList(userId);
+            if (page < 1 || pageSize < 1) return NotFound();
+            
+            var userId = GetAuthUserId().Item1;
+            var bookmarks = _historyService.GetBookmarkList(userId,page, pageSize);
+
             if (bookmarks == null)
             {
                 return NotFound();
             }
 
-            return Ok(bookmarks);
+            return Ok(ConvertToDto(bookmarks));
         }
-        
+
         [HttpPost("add/{postId}", Name = nameof(AddBookmark))]
         //example http://localhost:5001/api/bookmark/add/1760
         public ActionResult AddBookmark(int postId)
         {
-            var userId = GetAuthUserId();
+            var userId = GetAuthUserId().Item1;
             var result = _historyService.Add(userId, postId, true);
             if (!result)
             {
@@ -55,7 +63,7 @@ namespace WebService.Controllers
         //example http://localhost:5001/api/bookmark/delete/1760
         public ActionResult DeleteBookmark(int postId)
         {
-            var userId = GetAuthUserId();
+            var userId = GetAuthUserId().Item1;
             var result = _historyService.DeleteBookmark(userId, postId);
             if (!result)
             {
@@ -69,7 +77,7 @@ namespace WebService.Controllers
         //example http://localhost:5001/api/bookmark/delete/all
         public ActionResult DeleteAllBookmarks()
         {
-            var userId = GetAuthUserId();
+            var userId = GetAuthUserId().Item1;
             var bookmarks = _historyService.GetBookmarkList(userId);
 
             foreach (var bookmark in bookmarks)
@@ -84,21 +92,25 @@ namespace WebService.Controllers
             }
 
             return Ok(result);
-            
         }
-        
-        
-        
 
-        //todo move the function below into an abstract class or something to remove duplicated code
-        /// <summary>
-        /// Get the authenticated user's id from token claim
-        /// </summary>
-        /// <returns>integer authenticated user's id from token</returns>
-        private int GetAuthUserId()
+        private List<BookmarkDTO> ConvertToDto(IEnumerable<History> bookmarks)
         {
-            var userIdFromToken = int.Parse(this.User.Identity.Name);
-            return userIdFromToken;
+            List<BookmarkDTO> list = new List<BookmarkDTO>();
+            foreach (var mark in bookmarks)
+            {
+                list.Add(new BookmarkDTO
+                {
+                    Title = _sharedService.GetPost(mark.Postid).Title,
+                    Date = mark.Date,
+                    ThreadUrl = Url.Link(
+                        nameof(QuestionsController.GetThread), 
+                        new {questionId = mark.Postid}
+                        )
+                });
+            }
+
+            return list;
         }
     }
 }
