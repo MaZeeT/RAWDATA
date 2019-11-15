@@ -23,7 +23,7 @@ namespace WebService.Controllers
         public BookmarkController(IHistoryService historyService, ISharedService sharedService, IMapper mapper)
         {
             _historyService = historyService;
-               _sharedService = sharedService;
+            _sharedService = sharedService;
             _mapper = mapper;
         }
 
@@ -100,12 +100,11 @@ namespace WebService.Controllers
                 {
                     Title = _sharedService.GetPost(mark.Postid).Title,
                     Date = mark.Date,
-                    ThreadUrl = Url.Link(nameof(QuestionsController.GetThread), new {questionId = mark.Postid} )
+                    ThreadUrl = Url.Link(nameof(QuestionsController.GetThread), new {questionId = mark.Postid})
                 });
             }
 
             return list;
         }
-
     }
 }
