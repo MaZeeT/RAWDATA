@@ -9,9 +9,14 @@ namespace DatabaseService.Services
 {
     public class AnnotationService : IAnnotationService
     {
+        /// <summary>
+        /// Create annotation without function, simple, raw, need to know HistoryId
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public Annotations CreateAnnotations(AnnotationsDto obj)
         {
-            using var DB = new AppContext();
+            using var DB = new DatabaseContext();
             var annotation = new Annotations
             {
                 UserId = obj.UserId,
@@ -31,8 +36,8 @@ namespace DatabaseService.Services
         /// <returns>Annotations Type Object</returns>
         public Annotations GetAnnotation(int value)
         {
-            using var DB = new AppContext();
-            var result = DB.Annotations.Where(x => x.Id == value).FirstOrDefault();
+            using var DB = new DatabaseContext();
+            var result = DB.Annotations.Find(value);
             
             return result;
         }
@@ -44,7 +49,7 @@ namespace DatabaseService.Services
         /// <returns>Annotations Type Object</returns>
         public Annotations GetAnnotationByUserId(int id, int userId)
         {
-            using var DB = new AppContext();
+            using var DB = new DatabaseContext();
             var result = DB.Annotations
                            .Where(a => a.UserId == userId)
                            .Where(a => a.Id == id).FirstOrDefault();
@@ -77,7 +82,7 @@ namespace DatabaseService.Services
         /// <returns>List Type SimpleAnnotationsDto</returns>
         public List<SimpleAnnotationDto> GetUserAnnotationsMadeOnAPost(int userId, int postId, PagingAttributes pagingAttributes)
         {
-            using var DB = new AppContext();
+            using var DB = new DatabaseContext();
             var page = GetPagination(UserAnnotOnPostListCount(userId, postId), pagingAttributes);
             var annotationsOfPostList =  (from annot in DB.Annotations
                                          join hist in DB.History on annot.HistoryId equals hist.Id
@@ -95,7 +100,7 @@ namespace DatabaseService.Services
 
         public int UserAnnotOnPostListCount(int userId, int postId)
         {
-            using var DB = new AppContext();
+            using var DB = new DatabaseContext();
             var annotationsCount = from annot in DB.Annotations
                                    join hist in DB.History on annot.HistoryId equals hist.Id
                                    where annot.UserId == userId && hist.Postid == postId
@@ -113,7 +118,7 @@ namespace DatabaseService.Services
         /// <returns></returns>
         public List<PostAnnotationsDto> GetAllAnnotationsOfUser(int userId, PagingAttributes pagingAttributes, out int count)
         {
-            using var DB = new AppContext();
+            using var DB = new DatabaseContext();
             count = GetAllAnnotationsOfUserCount(userId);
             var page = GetPagination(count, pagingAttributes);
 
@@ -133,7 +138,7 @@ namespace DatabaseService.Services
         }
         public int GetAllAnnotationsOfUserCount(int userId)
         {
-            using var DB = new AppContext();
+            using var DB = new DatabaseContext();
             var listCount = (from annot in DB.Annotations
                              join hist in DB.History on annot.HistoryId equals hist.Id
                              where annot.UserId == userId
@@ -151,7 +156,7 @@ namespace DatabaseService.Services
         /// <returns>boolean</returns>
         public bool DeleteAnnotation(int id, int userId)
         {
-            using var DB = new AppContext();
+            using var DB = new DatabaseContext();
             try
             {
                 var itemToDelete = GetAnnotationByUserId(id, userId);
@@ -165,11 +170,11 @@ namespace DatabaseService.Services
             }
         }
 
-        public bool CreateAnnotation_withFunction(AnnotationsDto obj, out Annotations annotationFromDb)
+        public bool CreateAnnotation_withFunction(AnnotationsDto obj, out int newId)
         {
             try
             {
-                using var DB = new AppContext();
+                using var DB = new DatabaseContext();
                
                 var userId = new NpgsqlParameter("userid", NpgsqlTypes.NpgsqlDbType.Integer);
                 userId.Value = obj.UserId;
@@ -180,18 +185,17 @@ namespace DatabaseService.Services
 
                 // since this select annotate function runs with select as Id and is attached to the AnnotateFunction Dto and returns only 1 result
                 // it is ok to .FirstOrDefult() and then .Id to get the value directly. 
-                var annotationId = DB.AnnotateFunction
+                newId = DB.AnnotateFunction
                                         .FromSqlRaw("select annotate(@userid, @postid, @body) as Id", userId, postId, annotationBody)
                                         .FirstOrDefault()
                                         .Id;
-                DB.SaveChanges();                
+                DB.SaveChanges();
                 //if the returned id is somehow weird and the annotation is not found, then annotationFromDb gets null here
-                annotationFromDb = GetAnnotation(annotationId);
                 return true;
 
             }catch(Exception e)
             {
-                annotationFromDb = null;
+                newId = -1;
                 return false;
             }
            
@@ -199,7 +203,7 @@ namespace DatabaseService.Services
 
         public bool UpdateAnnotation(int annotationId, string annotationBody)
         {
-            using var DB = new AppContext();
+            using var DB = new DatabaseContext();
             try
             {
                 var annotationToUpdate = DB.Annotations.Find(annotationId);

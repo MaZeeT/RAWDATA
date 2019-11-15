@@ -6,11 +6,11 @@ namespace DatabaseService.Services
 {
     public class AppUserService : IAppUserService
     {
-        AppContext database;
+        DatabaseContext database;
 
         public AppUserService()
         {
-            database = new AppContext();
+            database = new DatabaseContext();
         }
 
         public string GetAppUserName(int id)

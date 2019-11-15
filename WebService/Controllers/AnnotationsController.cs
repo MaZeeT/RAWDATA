@@ -148,9 +148,11 @@ namespace WebService.Controllers
                 PostId = annotationObj.PostId,
                 Body = annotationObj.Body
             };
-            var createdAnnotation = new Annotations();
-            if (_annotationService.CreateAnnotation_withFunction(newAnnotation, out createdAnnotation))
+            int newId;
+            if (_annotationService.CreateAnnotation_withFunction(newAnnotation, out newId))
             {
+                var createdAnnotation = _annotationService.GetAnnotation(newId);
+                var so = createdAnnotation;
                 return Ok(CreateLink(createdAnnotation));
             }
             return BadRequest();
