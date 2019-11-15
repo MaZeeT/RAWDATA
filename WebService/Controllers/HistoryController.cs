@@ -37,8 +37,8 @@ namespace WebService.Controllers
             return Ok(history);
         }
 
-        [HttpDelete("clear", Name = nameof(ClearHistory))]
-        //example http://localhost:5001/api/history/clearhistory
+        [HttpDelete("delete/all", Name = nameof(ClearHistory))]
+        //example http://localhost:5001/api/history/delete/all
         public ActionResult ClearHistory()
         {
             var userId = GetAuthUserId();
@@ -48,7 +48,7 @@ namespace WebService.Controllers
                 return NotFound();
             }
 
-            return Ok();
+            return Ok(result);
         }
         
         
