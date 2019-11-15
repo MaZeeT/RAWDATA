@@ -5,7 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DatabaseService.Modules;
 using DatabaseService.Services;
+using WebService.DTOs;
 
 namespace WebService.Controllers
 {
@@ -15,11 +17,13 @@ namespace WebService.Controllers
     public class BookmarkController : ControllerBase
     {
         private IHistoryService _historyService;
+        private ISharedService _sharedService;
         private IMapper _mapper;
 
-        public BookmarkController(IHistoryService historyService, IMapper mapper)
+        public BookmarkController(IHistoryService historyService, ISharedService sharedService, IMapper mapper)
         {
             _historyService = historyService;
+               _sharedService = sharedService;
             _mapper = mapper;
         }
 
@@ -29,14 +33,15 @@ namespace WebService.Controllers
         {
             var userId = GetAuthUserId();
             var bookmarks = _historyService.GetBookmarkList(userId);
+
             if (bookmarks == null)
             {
                 return NotFound();
             }
 
-            return Ok(bookmarks);
+            return Ok(ConvertToDto(bookmarks));
         }
-        
+
         [HttpPost("add/{postId}", Name = nameof(AddBookmark))]
         //example http://localhost:5001/api/bookmark/add/1760
         public ActionResult AddBookmark(int postId)
@@ -84,11 +89,23 @@ namespace WebService.Controllers
             }
 
             return Ok(result);
-            
         }
-        
-        
-        
+
+        private List<BookmarkDTO> ConvertToDto(IEnumerable<History> bookmarks)
+        {
+            List<BookmarkDTO> list = new List<BookmarkDTO>();
+            foreach (var mark in bookmarks)
+            {
+                list.Add(new BookmarkDTO
+                {
+                    Title = _sharedService.GetPost(mark.Postid).Title,
+                    Date = mark.Date,
+                    ThreadUrl = Url.Link(nameof(QuestionsController.GetThread), new {questionId = mark.Postid} )
+                });
+            }
+
+            return list;
+        }
 
         //todo move the function below into an abstract class or something to remove duplicated code
         /// <summary>

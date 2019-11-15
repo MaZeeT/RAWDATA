@@ -5,7 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DatabaseService.Modules;
 using DatabaseService.Services;
+using WebService.DTOs;
 
 namespace WebService.Controllers
 {
@@ -15,11 +17,13 @@ namespace WebService.Controllers
     public class HistoryController : ControllerBase
     {
         private IHistoryService _historyService;
+        private ISharedService _sharedService;
         private IMapper _mapper;
 
-        public HistoryController(IHistoryService historyService, IMapper mapper)
+        public HistoryController(IHistoryService historyService, ISharedService sharedService, IMapper mapper)
         {
             _historyService = historyService;
+            _sharedService = sharedService;
             _mapper = mapper;
         }
 
@@ -34,7 +38,7 @@ namespace WebService.Controllers
                 return NotFound();
             }
 
-            return Ok(history);
+            return Ok(ConvertToDto(history));
         }
 
         [HttpDelete("delete/all", Name = nameof(ClearHistory))]
@@ -50,9 +54,23 @@ namespace WebService.Controllers
 
             return Ok(result);
         }
-        
-        
-        
+
+        private List<HistoryDTO> ConvertToDto(IEnumerable<History> history)
+        {
+            List<HistoryDTO> list = new List<HistoryDTO>();
+            foreach (var mark in history)
+            {
+                list.Add(new HistoryDTO
+                {
+                    Title = _sharedService.GetPost(mark.Postid).Title,
+                    Date = mark.Date,
+                    ThreadUrl = Url.Link(nameof(QuestionsController.GetThread), new {questionId = mark.Postid})
+                });
+            }
+
+            return list;
+        }
+
 
         //todo move the function below into an abstract class or something to remove duplicated code
         /// <summary>
