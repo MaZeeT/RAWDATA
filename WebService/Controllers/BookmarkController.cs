@@ -14,7 +14,7 @@ namespace WebService.Controllers
     [ApiController]
     [Route("api/bookmark")]
     [Authorize]
-    public class BookmarkController : ControllerBase
+    public class BookmarkController : SharedController
     {
         private IHistoryService _historyService;
         private ISharedService _sharedService;
@@ -31,7 +31,7 @@ namespace WebService.Controllers
         //example http://localhost:5001/api/bookmark
         public ActionResult GetBookmarkList()
         {
-            var userId = GetAuthUserId();
+            var userId = GetAuthUserId().Item1;
             var bookmarks = _historyService.GetBookmarkList(userId);
 
             if (bookmarks == null)
@@ -46,7 +46,7 @@ namespace WebService.Controllers
         //example http://localhost:5001/api/bookmark/add/1760
         public ActionResult AddBookmark(int postId)
         {
-            var userId = GetAuthUserId();
+            var userId = GetAuthUserId().Item1;
             var result = _historyService.Add(userId, postId, true);
             if (!result)
             {
@@ -60,7 +60,7 @@ namespace WebService.Controllers
         //example http://localhost:5001/api/bookmark/delete/1760
         public ActionResult DeleteBookmark(int postId)
         {
-            var userId = GetAuthUserId();
+            var userId = GetAuthUserId().Item1;
             var result = _historyService.DeleteBookmark(userId, postId);
             if (!result)
             {
@@ -74,7 +74,7 @@ namespace WebService.Controllers
         //example http://localhost:5001/api/bookmark/delete/all
         public ActionResult DeleteAllBookmarks()
         {
-            var userId = GetAuthUserId();
+            var userId = GetAuthUserId().Item1;
             var bookmarks = _historyService.GetBookmarkList(userId);
 
             foreach (var bookmark in bookmarks)
@@ -107,15 +107,5 @@ namespace WebService.Controllers
             return list;
         }
 
-        //todo move the function below into an abstract class or something to remove duplicated code
-        /// <summary>
-        /// Get the authenticated user's id from token claim
-        /// </summary>
-        /// <returns>integer authenticated user's id from token</returns>
-        private int GetAuthUserId()
-        {
-            var userIdFromToken = int.Parse(this.User.Identity.Name);
-            return userIdFromToken;
-        }
     }
 }
