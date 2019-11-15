@@ -18,6 +18,7 @@ namespace DatabaseService
         public DbSet<AnnotateFunctionDto> AnnotateFunction { get; set; }
         public DbSet<Questions> Questions { get; set; }
         public DbSet<Answers> Answers { get; set; }
+        public DbSet<Searches> Searches { get; set; }
         public DbSet<Search> Search { get; set; }
         public DbSet<PostsTable> PostsTable { get; set; }
         public DbSet<WordRank> WordRank { get; set; }

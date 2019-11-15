@@ -12,6 +12,8 @@ namespace DatabaseService
       //  IList<Posts> GetThread(int questionId);
        // string GetPostType(int postId);
         IList<Posts> Search(int userid, string searchstring, int? searchtypecode, PagingAttributes pagingAttributes);
-      //  SinglePost GetPost(int postId);
+        string BuildSearchString(string searchstring, bool reverse);
+        int SearchTypeLookup(string stype);
+        //  SinglePost GetPost(int postId);
     }
 }

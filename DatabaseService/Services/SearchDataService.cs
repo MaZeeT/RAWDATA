@@ -50,7 +50,7 @@ namespace DatabaseService
             ///
             //build searchstring
             var search = new NpgsqlParameter("search", NpgsqlTypes.NpgsqlDbType.Text);
-            search.Value = BuildSearchString(searchstring);
+            search.Value = BuildSearchString(searchstring, false);
 
             //lookup searchtype string
             var searchtype = new NpgsqlParameter("searchtype", NpgsqlTypes.NpgsqlDbType.Text);
@@ -88,7 +88,7 @@ namespace DatabaseService
             //build and map results to posts
             var resultposts = new List<Posts>();
 
-            foreach (Search s in resultlist) 
+            foreach (Search s in resultlist)
             {
                 //different mapping for results that are questions and answers
 
@@ -100,7 +100,7 @@ namespace DatabaseService
                 p.Id = sp.Id;
                 var endpos = 100;
                 if (sp.Body.Length < 100)
-                { endpos =sp.Body.Length; }
+                { endpos = sp.Body.Length; }
                 p.Body = sp.Body.Substring(0, endpos);
 
                 p.Title = _sharedService.GetQuestion(p.Parentid).Title;
@@ -160,7 +160,7 @@ namespace DatabaseService
             ///
             //build searchstring
             var search = new NpgsqlParameter("search", NpgsqlTypes.NpgsqlDbType.Text);
-            search.Value = BuildSearchString(searchstring);
+            search.Value = BuildSearchString(searchstring, false);
 
             //lookup searchtype string
             var searchtype = new NpgsqlParameter("searchtype", NpgsqlTypes.NpgsqlDbType.Text);
@@ -186,7 +186,7 @@ namespace DatabaseService
 
             var limit = new NpgsqlParameter("limit", NpgsqlTypes.NpgsqlDbType.Integer);
             limit.Value = 10;
-            if (maxresults!=null)
+            if (maxresults != null)
             {
                 limit.Value = maxresults;
             }
@@ -197,17 +197,30 @@ namespace DatabaseService
                 .ToList();
         }
 
-        private static string BuildSearchString(string searchstring)
+        public string BuildSearchString(string searchstring, bool reverse)
         {
             //convert query search string to appsearch db func search string
-            string[] separators = { ",", ".", "..." };
+            string[] separators = { ",", ".", "...", " " };
 
             string[] words = searchstring.Split(separators, System.StringSplitOptions.RemoveEmptyEntries);
             System.Console.WriteLine($"{words.Length} tokens in search");
 
-            string finalstring = string.Join(" ", words);
+            string finalstring;
+            if (reverse==true)
+            {
+                finalstring = string.Join(",", words);
+            } else { 
+                finalstring = string.Join(" ", words); 
+            }
+
             System.Console.WriteLine("Built search string: " + finalstring);
             return finalstring;
+        }
+        public int SearchTypeLookup(string searchmethod)
+        {
+            Modules.SearchTypeLookupTable st = new Modules.SearchTypeLookupTable();
+            int stype = Array.FindIndex(st.searchType, s => s.Equals(searchmethod));
+            return stype;
         }
     }
 }
