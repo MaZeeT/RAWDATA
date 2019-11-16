@@ -151,7 +151,15 @@ namespace DatabaseService.Services
                     history.Userid == userId &&
                     history.Postid == postId)
                 .ToList();
+            
             return result.Count > 0;
+        }
+
+        private int GetCount(int userId, bool isBookmark)
+        {
+            return database.History.Count(x =>
+                x.Userid == userId &&
+                x.isBookmark == isBookmark);
         }
     }
 }
