@@ -14,5 +14,6 @@
   
   <ItemGroup>
     <ProjectReference Include="..\DatabaseService\DatabaseService.csproj" />
+    <ProjectReference Include="..\WebService\WebService.csproj" />
   </ItemGroup>
 </Project>

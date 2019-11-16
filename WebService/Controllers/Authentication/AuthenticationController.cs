@@ -72,7 +72,11 @@ namespace WebService.Controllers.Authentication
             }
 
             var userToken = GenerateToken(user);
-            return Ok(new { user.Username, userToken });
+
+            AuthenticatedUser result = new AuthenticatedUser();
+            result.Username = user.Username;
+            result.Token = userToken;
+            return Ok(result);
 
         }
 
