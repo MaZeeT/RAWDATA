@@ -137,22 +137,21 @@ namespace DatabaseService
         public int GetPagination(int matchcount, PagingAttributes pagingAttributes)
         {
             //calc max pages and set requested page to last page if out of bounds
-            var calculatedNumberOfPages = (int)Math.Ceiling((double)matchcount / pagingAttributes.PageSize);
-            System.Console.WriteLine($"{calculatedNumberOfPages} calculated pages.");
-            int page;
-            if (pagingAttributes.Page > calculatedNumberOfPages)
-            {
-                page = calculatedNumberOfPages-1;//ahh this was the bug, needed to subtract here
-                pagingAttributes.Page = page + 1; //put the correct page number back in the object
-            }
-            else if (pagingAttributes.Page <= 0)
-            {
-                page = 0;
-                pagingAttributes.Page = page + 1; //put the correct page number back in the object
-            }
-            else page = pagingAttributes.Page - 1;
+            var maxPages = (int)Math.Ceiling((double)matchcount / pagingAttributes.PageSize);
+            var minPages = 1;
+            
+            System.Console.WriteLine($"{maxPages} calculated pages.");
 
-            return page;
+            if (pagingAttributes.Page > maxPages)
+            {
+                pagingAttributes.Page = maxPages; 
+            }
+            else if (pagingAttributes.Page < minPages)
+            {
+                pagingAttributes.Page = minPages; 
+            }
+            return pagingAttributes.Page - 1;    // return 0 indexed
+
         }
 
     }
