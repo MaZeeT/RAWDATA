@@ -67,8 +67,10 @@ namespace WebService.Controllers
             if (t != null && useridok) // then we got a thread!
             {
                 ///call to add browse history here
-                History browsehist = new History();
-                browsehist.Userid = userId;
+                History browsehist = new History
+                {
+                    Userid = userId
+                };
                 if (postId != null)
                 {
                     browsehist.Postid = (int)postId;
@@ -80,19 +82,23 @@ namespace WebService.Controllers
                 List<PostsThreadDto> thread = new List<PostsThreadDto>();
                 foreach (Posts p in t)
                 {
-                    PostsThreadDto pt = new PostsThreadDto();
-                    pt.Id = p.Id;
-                    pt.Parentid = p.Parentid;
-                    pt.Title = p.Title;
-                    pt.Body = p.Body;
+                    PostsThreadDto pt = new PostsThreadDto
+                    {
+                        Id = p.Id,
+                        Parentid = p.Parentid,
+                        Title = p.Title,
+                        Body = p.Body
+                    };
                     PagingAttributes pagingAttributes = new PagingAttributes();
                     List<SimpleAnnotationDto> tempanno = new List<SimpleAnnotationDto>();
                         tempanno = _annotationService.GetUserAnnotationsMadeOnAPost(userId, p.Id, pagingAttributes);
                     pt.Annotations = tempanno;
                     pt.createBookmarkLink = Url.Link(  nameof(BookmarkController.AddBookmark),  new { postId = p.Id });
-                    AnnotationsDto anno = new AnnotationsDto();
-                    anno.Body = "form_or_similar_would_be_here_to_POST_a_new_annotation";
-                    anno.PostId = p.Id;
+                    AnnotationsDto anno = new AnnotationsDto
+                    {
+                        Body = "form_or_similar_would_be_here_to_POST_a_new_annotation",
+                        PostId = p.Id
+                    };
                     pt.createAnnotationLink = Url.Link(nameof(AnnotationsController.AddAnnotation), anno);
                     // i know its supposed to be a form/post. just thought it'd be neat to have a link mockup. 
                     thread.Add(pt);
@@ -110,13 +116,15 @@ namespace WebService.Controllers
 
         private QuestionDto CreateQuestionDto(Questions question)
         {
-            var dto = new QuestionDto();
-            dto.Link = Url.Link(
+            var dto = new QuestionDto
+            {
+                Link = Url.Link(
                     nameof(GetThread),
-                    new { questionId = question.Id });
-            dto.Id = question.Id;
-            dto.Title = question.Title;
-            dto.Body = question.Body;
+                    new { questionId = question.Id }),
+                Id = question.Id,
+                Title = question.Title,
+                Body = question.Body
+            };
             return dto;
         }
 

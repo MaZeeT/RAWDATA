@@ -12,7 +12,7 @@ namespace WebService.Controllers
     [Authorize]
     public class SearchHistoryController : SharedController
     {
-        private ISearchHistoryService _searchHistoryService;
+        private readonly ISearchHistoryService _searchHistoryService;
         private readonly ISearchDataService _dataService;
 
         public SearchHistoryController(
