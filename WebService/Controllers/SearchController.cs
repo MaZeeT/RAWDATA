@@ -38,7 +38,7 @@ namespace WebService.Controllers
                 Console.WriteLine("Got searchparams: " + searchparams.s);
                 Console.WriteLine("Got maxresults: " + maxresults);
 
-                //rudimentary checking of params
+                //checking of params
                 if (searchparams.stype >= 0 && searchparams.stype <= 3)
                 {
                     //wrong search type, redirect
@@ -71,7 +71,7 @@ namespace WebService.Controllers
             {
                 Console.WriteLine("Got searchparams: " + searchparams.s);
 
-                //rudimentary checking of params
+                //checking of params
                 if (searchparams.stype >= 0 && searchparams.stype <= 3)
                 {
                     var search = _dataService.Search(userId, searchparams.s, searchparams.stype, pagingAttributes);

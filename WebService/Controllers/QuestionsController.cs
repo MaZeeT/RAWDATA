@@ -129,7 +129,7 @@ namespace WebService.Controllers
             var prev = attr.Page > 1
                 ? CreatePagingLink(attr.Page - 1, attr.PageSize)
                 : null;
-            var next = attr.Page < numberOfPages - 1
+            var next = attr.Page < numberOfPages 
                 ? CreatePagingLink(attr.Page + 1, attr.PageSize)
                 : null;
 

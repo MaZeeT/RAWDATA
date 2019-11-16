@@ -22,12 +22,13 @@ namespace DatabaseService
             using var db = new DatabaseContext();
 
             //try to convert back from 1-based pages
-            int page;
-            if (pagingAttributes.Page <= 0)
-            {
-                page = 0;
-            }
-            else page = pagingAttributes.Page - 1;
+            /* int page;
+             if (pagingAttributes.Page <= 0)
+             {
+                 page = 0;
+             }
+             else page = pagingAttributes.Page - 1;*/
+            int page = _sharedService.GetPagination(_sharedService.NumberOfQuestions(), pagingAttributes);
 
             return db.Questions
                 .OrderBy(u => u.Id)
