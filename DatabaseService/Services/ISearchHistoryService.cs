@@ -7,7 +7,7 @@ namespace DatabaseService
     {
         bool DeleteSearchHistory(int searchId);
         bool DeleteUserSearchHistory(int userId);
-        public (List<Searches>, int) GetSearchesList(int userId, PagingAttributes pagingAttributes);
+        (List<Searches>, int) GetSearchesList(int userId, PagingAttributes pagingAttributes);
         bool SearchExist(int searchId);
     }
 }
