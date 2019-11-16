@@ -92,10 +92,10 @@ namespace WebService.Controllers
                     pt.Annotations = tempanno;
                     pt.createBookmarkLink = Url.Link(  nameof(BookmarkController.AddBookmark),  new { postId = p.Id });
                     AnnotationsDto anno = new AnnotationsDto();
-                    anno.Body = "form/similar would be here to POST a new annotation";
+                    anno.Body = "form/similar_would_be_here_to_POST_a_new_annotation";
                     anno.PostId = p.Id;
                     pt.createAnnotationLink = Url.Link(nameof(AnnotationsController.AddAnnotation), anno);
-                    // i know its supposed to be a form/post. just thought it'd be neat to have a link mockup. oh well maybe its more confusing this way :(
+                    // i know its supposed to be a form/post. just thought it'd be neat to have a link mockup. 
                     thread.Add(pt);
                 }
                 return Ok(thread);
