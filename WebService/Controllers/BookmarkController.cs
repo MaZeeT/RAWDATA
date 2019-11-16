@@ -30,17 +30,11 @@ namespace WebService.Controllers
         [HttpGet(Name = nameof(GetBookmarkList))]
         //example http://localhost:5001/api/bookmark
         //example http://localhost:5001/api/bookmark?Page=1&PageSize=5
-        public ActionResult GetBookmarkList([FromQuery]int page = 1, [FromQuery]int pageSize = 10)
+        public ActionResult GetBookmarkList([FromQuery] PagingAttributes pagingAttributes)
         {
-            if (page < 1 || pageSize < 1) return NotFound();
-            
+            if (pagingAttributes.Page < 1 || pagingAttributes.PageSize < 1) return NotFound();
             var userId = GetAuthUserId().Item1;
-            PagingAttributes pagingAttributes = new PagingAttributes
-            {
-                Page = page,
-                PageSize = pageSize
-            };
-            var bookmarks = _historyService.GetBookmarkList(userId,pagingAttributes);
+            var bookmarks = _historyService.GetBookmarkList(userId, pagingAttributes);
 
             if (bookmarks == null)
             {
@@ -109,9 +103,9 @@ namespace WebService.Controllers
                     Title = _sharedService.GetPost(mark.Postid).Title,
                     Date = mark.Date,
                     ThreadUrl = Url.Link(
-                        nameof(QuestionsController.GetThread), 
+                        nameof(QuestionsController.GetThread),
                         new {questionId = mark.Postid}
-                        )
+                    )
                 });
             }
 
