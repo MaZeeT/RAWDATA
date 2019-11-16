@@ -13,8 +13,10 @@ namespace DatabaseService
         //using varchar resolveid(postid int) in db
         {
             System.Console.WriteLine($"Postid -- {postId}");
-            var postid = new NpgsqlParameter("postid", NpgsqlTypes.NpgsqlDbType.Integer);
-            postid.Value = postId;
+            var postid = new NpgsqlParameter("postid", NpgsqlTypes.NpgsqlDbType.Integer)
+            {
+                Value = postId
+            };
             using var db = new DatabaseContext();
             string tablename = db.PostsTable
                 .FromSqlRaw("SELECT * from resolveid(@postid)", postid).First().resolveid;
@@ -133,7 +135,7 @@ namespace DatabaseService
             }
             else return null;
         }
-
+/*
         public int GetPagination(int matchcount, PagingAttributes pagingAttributes)
         {
             //calc max pages and set requested page to last page if out of bounds
@@ -152,8 +154,34 @@ namespace DatabaseService
             }
             else page = pagingAttributes.Page - 1;
 
+            Console.WriteLine($"{page} page");
+            Console.WriteLine($"{pagingAttributes.Page} paginattr.page");
+
             return page;
         }
+        */
+
+        public int GetPagination(int matchcount, PagingAttributes pagingAttributes)
+        {
+            //calc max pages and set requested page to last page if out of bounds
+            var maxPages = (int)Math.Ceiling((double)matchcount / pagingAttributes.PageSize);
+            var minPages = 1;
+
+            System.Console.WriteLine($"{maxPages} calculated pages.");
+
+            if (pagingAttributes.Page > maxPages)
+            {
+                pagingAttributes.Page = maxPages;
+            }
+            else if (pagingAttributes.Page < minPages)
+            {
+                pagingAttributes.Page = minPages;
+            }
+            return pagingAttributes.Page - 1;    // return 0 indexed
+
+        }
+
+
 
     }
 }
