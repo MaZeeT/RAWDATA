@@ -34,35 +34,26 @@ namespace DatabaseService
                }
            }
            */
-        public (List<Searches>,int) GetSearchesList(int userId, PagingAttributes pagingAttributes)
+        public (List<Searches>, int) GetSearchesList(int userId, PagingAttributes pagingAttributes)
         {
             using var db = new DatabaseContext();
 
+            var count = db.Searches
+                .Where(x => x.UserId == userId)
+                .OrderBy(x => x.Date)
+                .Count();
+
             //try to convert back from 1-based pages
-            int page;
-            if (pagingAttributes.Page <= 0)
-            {
-                page = 0;
-            }
-            else page = pagingAttributes.Page - 1;
+            int page = _sharedService.GetPagination(count, pagingAttributes);
 
             var list = db.Searches
-                .Where(x =>
-                    x.UserId == userId)
+                .Where(x => x.UserId == userId)
                 .OrderBy(x => x.Date)
                 .Skip(page * pagingAttributes.PageSize)
                 .Take(pagingAttributes.PageSize)
                 .ToList();
 
-            var count = db.Searches
-    .Where(x =>
-        x.UserId == userId)
-    .OrderBy(x => x.Date)
-    .Count();
-
-
-
-            return (list,count);
+            return (list, count);
         }
         /*
                 public List<History> GetBookmarkList(int userId)

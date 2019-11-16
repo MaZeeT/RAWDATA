@@ -63,7 +63,6 @@ namespace WebService.Controllers
                 return NotFound(); 
             }
 
-
             var t = _sharedService.GetThread(questionId);
             if (t != null && useridok) // then we got a thread!
             {
@@ -92,10 +91,10 @@ namespace WebService.Controllers
                     pt.Annotations = tempanno;
                     pt.createBookmarkLink = Url.Link(  nameof(BookmarkController.AddBookmark),  new { postId = p.Id });
                     AnnotationsDto anno = new AnnotationsDto();
-                    anno.Body = "form/similar would be here to POST a new annotation";
+                    anno.Body = "form_or_similar_would_be_here_to_POST_a_new_annotation";
                     anno.PostId = p.Id;
                     pt.createAnnotationLink = Url.Link(nameof(AnnotationsController.AddAnnotation), anno);
-                    // i know its supposed to be a form/post. just thought it'd be neat to have a link mockup. oh well maybe its more confusing this way :(
+                    // i know its supposed to be a form/post. just thought it'd be neat to have a link mockup. 
                     thread.Add(pt);
                 }
                 return Ok(thread);
@@ -129,7 +128,7 @@ namespace WebService.Controllers
             var prev = attr.Page > 1
                 ? CreatePagingLink(attr.Page - 1, attr.PageSize)
                 : null;
-            var next = attr.Page < numberOfPages - 1
+            var next = attr.Page < numberOfPages 
                 ? CreatePagingLink(attr.Page + 1, attr.PageSize)
                 : null;
 

@@ -39,17 +39,12 @@ namespace WebService.Controllers
                 return NotFound();
             }
 
-
             var result = CreateResult(shistory, count, pagingAttributes);
             if (result != null)
             {
                 return Ok(result);
             }
             else return NoContent();
-
-
-
-            return Ok(shistory);
         }
 
         [HttpDelete("delete/all", Name = nameof(ClearSearchHistory))]
@@ -66,7 +61,6 @@ namespace WebService.Controllers
             {
                 return NotFound();
             }
-
             return Ok(result);
         }
 
@@ -90,8 +84,6 @@ namespace WebService.Controllers
                         s,
                         stype
                     });
-            
-  
 
             dto.SearchMethod = searches.SearchType;
             dto.SearchString = searches.SearchString;
@@ -121,7 +113,6 @@ namespace WebService.Controllers
                     prev,
                     next,
                     items = searches.Select(CreateSearchHistoryResultDto)
-                    //items = searches
                 };
             }
             else
