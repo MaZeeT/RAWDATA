@@ -14,8 +14,8 @@ namespace DatabaseService.Services
         {
             database = new DatabaseContext();
         }
-
-
+        
+        
         public bool Add(int UserId, int PostId, bool isBookmark)
         {
             var appuserid = new NpgsqlParameter("appuserid", NpgsqlTypes.NpgsqlDbType.Integer);
@@ -64,16 +64,7 @@ namespace DatabaseService.Services
 
         public List<History> GetHistoryList(int userId, PagingAttributes pageAtt)
         {
-            var list = database.History
-                .Where(x =>
-                    x.Userid == userId &&
-                    x.isBookmark == false)
-                .OrderBy(x => x.Date)
-                .Skip((pageAtt.Page - 1) * pageAtt.PageSize)
-                .Take(pageAtt.PageSize)
-                .ToList();
-
-            return list;
+            return GetListFromQuery(userId, false, pageAtt);
         }
 
         public List<History> GetBookmarkList(int userId)
@@ -84,16 +75,7 @@ namespace DatabaseService.Services
 
         public List<History> GetBookmarkList(int userId, PagingAttributes pageAtt)
         {
-            var list = database.History
-                .Where(x =>
-                    x.Userid == userId &&
-                    x.isBookmark == true)
-                .OrderBy(x => x.Date)
-                .Skip((pageAtt.Page - 1) * pageAtt.PageSize)
-                .Take(pageAtt.PageSize)
-                .ToList();
-
-            return list;
+            return GetListFromQuery(userId, true, pageAtt);
         }
 
         public bool DeleteUserHistory(int userId)
@@ -151,8 +133,24 @@ namespace DatabaseService.Services
                     history.Userid == userId &&
                     history.Postid == postId)
                 .ToList();
-            
+
             return result.Count > 0;
+        }
+
+        private List<History> GetListFromQuery(int userId, bool isBookmark, PagingAttributes pageAtt)
+        {
+            // This enforces the page upper and lower limits
+            SharedService sharedService = new SharedService();
+            sharedService.GetPagination(GetCount(userId, true), pageAtt);
+
+            return database.History
+                .Where(x =>
+                    x.Userid == userId &&
+                    x.isBookmark == isBookmark)
+                .OrderBy(x => x.Date)
+                .Skip((pageAtt.Page - 1) * pageAtt.PageSize)
+                .Take(pageAtt.PageSize)
+                .ToList();
         }
 
         private int GetCount(int userId, bool isBookmark)
