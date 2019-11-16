@@ -21,13 +21,7 @@ namespace DatabaseService
             //// for browsing the full list of questions
             using var db = new DatabaseContext();
 
-            //try to convert back from 1-based pages
-            /* int page;
-             if (pagingAttributes.Page <= 0)
-             {
-                 page = 0;
-             }
-             else page = pagingAttributes.Page - 1;*/
+            //convert back from 1-based pages + check/fix page
             int page = _sharedService.GetPagination(_sharedService.NumberOfQuestions(), pagingAttributes);
 
             return db.Questions
@@ -200,10 +194,10 @@ namespace DatabaseService
 
         public string BuildSearchString(string searchstring, bool reverse)
         {
-            //convert query search string to appsearch db func search string
+            //convert query search string to appsearch db func search string or the reverse
             string[] separators = { ",", ".", "...", " " };
 
-            string[] words = searchstring.Split(separators, System.StringSplitOptions.RemoveEmptyEntries);
+            string[] words = searchstring.Split(separators, StringSplitOptions.RemoveEmptyEntries);
             System.Console.WriteLine($"{words.Length} tokens in search");
 
             string finalstring;
@@ -219,6 +213,7 @@ namespace DatabaseService
         }
         public int SearchTypeLookup(string searchmethod)
         {
+            //get stype from string methodname
             Modules.SearchTypeLookupTable st = new Modules.SearchTypeLookupTable();
             int stype = Array.FindIndex(st.searchType, s => s.Equals(searchmethod));
             return stype;

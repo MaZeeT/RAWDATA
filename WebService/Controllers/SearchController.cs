@@ -74,7 +74,11 @@ namespace WebService.Controllers
                 //checking of params
                 if (searchparams.stype >= 0 && searchparams.stype <= 3)
                 {
+                    //do search, fix page also if needed as a bonus
                     var search = _dataService.Search(userId, searchparams.s, searchparams.stype, pagingAttributes);
+
+                    // try to fix searchsting for link generation if it seems useable but ugly
+                    searchparams.s = _dataService.BuildSearchString(searchparams.s, true); 
 
                     var result = CreateResult(search, searchparams, pagingAttributes);
                     if (result != null)
