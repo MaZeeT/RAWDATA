@@ -8,31 +8,31 @@ namespace DatabaseService.Services
 {
     public class HistoryService : IHistoryService
     {
-        DatabaseContext database;
-        private const int DefaultIndex = 1;
-        private const int DefaultSize = 25;
+        private readonly DatabaseContext _database;
 
         public HistoryService()
         {
-            database = new DatabaseContext();
+            _database = new DatabaseContext();
         }
 
 
-        public bool Add(int UserId, int PostId, bool isBookmark)
+        public bool Add(int userId, int postId, bool isBookmark)
         {
-            var appuserid = new NpgsqlParameter("appuserid", NpgsqlTypes.NpgsqlDbType.Integer);
-            var ipostid = new NpgsqlParameter("ipostid", NpgsqlTypes.NpgsqlDbType.Integer);
-            var addbookmark = new NpgsqlParameter("addbookmark", NpgsqlTypes.NpgsqlDbType.Boolean);
+            // ReSharper disable StringLiteralTypo
+            var appUserId = new NpgsqlParameter("appuserid", NpgsqlTypes.NpgsqlDbType.Integer);
+            var iPostId = new NpgsqlParameter("ipostid", NpgsqlTypes.NpgsqlDbType.Integer);
+            var addBookmark = new NpgsqlParameter("addbookmark", NpgsqlTypes.NpgsqlDbType.Boolean);
+            // ReSharper restore StringLiteralTypo
 
-            appuserid.Value = UserId;
-            ipostid.Value = PostId;
-            addbookmark.Value = isBookmark;
+            appUserId.Value = userId;
+            iPostId.Value = postId;
+            addBookmark.Value = isBookmark;
 
-            database.Database.ExecuteSqlRaw(
+            _database.Database.ExecuteSqlRaw(
                 "SELECT * from add_history(@appuserid, @ipostid, @addbookmark)",
-                appuserid, ipostid, addbookmark);
+                appUserId, iPostId, addBookmark);
 
-            return HistoryExist(UserId, PostId);
+            return HistoryExist(userId, postId);
         }
 
         public bool Add(History history)
@@ -42,12 +42,12 @@ namespace DatabaseService.Services
 
         public History Get(int historyId)
         {
-            return database.History.Find(historyId);
+            return _database.History.Find(historyId);
         }
 
         public History Get(int userId, int postId)
         {
-            var histories = database.History.Where(user => user.Userid == userId && user.Postid == postId).ToList();
+            var histories = _database.History.Where(user => user.Userid == userId && user.Postid == postId).ToList();
             if (histories.Count > 0)
             {
                 return histories.First();
@@ -60,64 +60,48 @@ namespace DatabaseService.Services
 
         public List<History> GetHistoryList(int userId)
         {
-            return GetHistoryList(userId, DefaultIndex, DefaultSize);
+            var pagingAttributes = new PagingAttributes();
+            return GetHistoryList(userId, pagingAttributes);
         }
 
-        public List<History> GetHistoryList(int userId, int pageIndex, int pageSize)
+        public List<History> GetHistoryList(int userId, PagingAttributes pageAtt)
         {
-            var list = database.History
-                .Where(x =>
-                    x.Userid == userId &&
-                    x.isBookmark == false)
-                .OrderBy(x => x.Date)
-                .Skip((pageIndex - 1) * pageSize)
-                .Take(pageSize)
-                .ToList();
-
-            return list;
+            return GetListFromQuery(userId, false, pageAtt);
         }
 
         public List<History> GetBookmarkList(int userId)
         {
-            return GetBookmarkList(userId, DefaultIndex, DefaultSize);
+            var pagingAttributes = new PagingAttributes();
+            return GetBookmarkList(userId, pagingAttributes);
         }
 
-        public List<History> GetBookmarkList(int userId, int pageIndex, int pageSize)
+        public List<History> GetBookmarkList(int userId, PagingAttributes pageAtt)
         {
-            var list = database.History
-                .Where(x =>
-                    x.Userid == userId &&
-                    x.isBookmark == true)
-                .OrderBy(x => x.Date)
-                .Skip((pageIndex - 1) * pageSize)
-                .Take(pageSize)
-                .ToList();
-
-            return list;
+            return GetListFromQuery(userId, true, pageAtt);
         }
 
         public bool DeleteUserHistory(int userId)
         {
-            var history = database.History.Where(x =>
+            var history = _database.History.Where(x =>
                 x.Userid == userId &&
                 x.isBookmark == false);
 
-            foreach (var entry in history)
+            foreach (History entry in history)
             {
-                database.History.Remove(entry);
+                _database.History.Remove(entry);
             }
 
-            return database.SaveChanges() > 0;
+            return _database.SaveChanges() > 0;
         }
 
         public bool DeleteHistory(int historyId)
         {
             if (HistoryExist(historyId))
             {
-                var history = database.History.Find(historyId);
-                database.History.Remove(history);
+                History history = _database.History.Find(historyId);
+                _database.History.Remove(history);
 
-                return database.SaveChanges() > 0;
+                return _database.SaveChanges() > 0;
             }
 
             return false;
@@ -125,33 +109,57 @@ namespace DatabaseService.Services
 
         public bool DeleteBookmark(int userId, int postId)
         {
-            var history = database.History.Where(x =>
+            var history = _database.History.Where(x =>
                 x.Userid == userId &&
                 x.Postid == postId &&
                 x.isBookmark == true);
 
-            foreach (var h in history)
+            foreach (History h in history)
             {
-                database.History.Update(h);
+                _database.History.Update(h);
                 h.isBookmark = false;
             }
 
-            return database.SaveChanges() > 0;
+            return _database.SaveChanges() > 0;
         }
 
         public bool HistoryExist(int historyId)
         {
-            var result = database.History.Find(historyId);
+            History result = _database.History.Find(historyId);
             return result != null;
         }
 
         public bool HistoryExist(int userId, int postId)
         {
-            var result = database.History.Where(history =>
+            var result = _database.History.Where(history =>
                     history.Userid == userId &&
                     history.Postid == postId)
                 .ToList();
+
             return result.Count > 0;
+        }
+
+        private List<History> GetListFromQuery(int userId, bool isBookmark, PagingAttributes pageAtt)
+        {
+            // This enforces the page upper and lower limits
+            var sharedService = new SharedService();
+            sharedService.GetPagination(GetCount(userId, true), pageAtt);
+
+            return _database.History
+                .Where(x =>
+                    x.Userid == userId &&
+                    x.isBookmark == isBookmark)
+                .OrderBy(x => x.Date)
+                .Skip((pageAtt.Page - 1) * pageAtt.PageSize)
+                .Take(pageAtt.PageSize)
+                .ToList();
+        }
+
+        private int GetCount(int userId, bool isBookmark)
+        {
+            return _database.History.Count(x =>
+                x.Userid == userId &&
+                x.isBookmark == isBookmark);
         }
     }
 }
