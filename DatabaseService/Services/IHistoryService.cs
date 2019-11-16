@@ -10,9 +10,9 @@ namespace DatabaseService.Services
         History Get(int historyId);
         History Get(int userId, int postId);
         List<History> GetHistoryList(int userId);
-        List<History> GetHistoryList(int userId, int pageIndex, int pageSize);
+        List<History> GetHistoryList(int userId, PagingAttributes pagingAttributes);
         List<History> GetBookmarkList(int userId);
-        List<History> GetBookmarkList(int userId, int pageIndex, int pageSize);
+        List<History> GetBookmarkList(int userId, PagingAttributes pagingAttributes);
         bool DeleteUserHistory(int userId);
         bool DeleteHistory(int historyId);
         bool DeleteBookmark(int userId, int postId);

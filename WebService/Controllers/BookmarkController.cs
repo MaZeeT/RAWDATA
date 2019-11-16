@@ -35,7 +35,12 @@ namespace WebService.Controllers
             if (page < 1 || pageSize < 1) return NotFound();
             
             var userId = GetAuthUserId().Item1;
-            var bookmarks = _historyService.GetBookmarkList(userId,page, pageSize);
+            PagingAttributes pagingAttributes = new PagingAttributes
+            {
+                Page = page,
+                PageSize = pageSize
+            };
+            var bookmarks = _historyService.GetBookmarkList(userId,pagingAttributes);
 
             if (bookmarks == null)
             {

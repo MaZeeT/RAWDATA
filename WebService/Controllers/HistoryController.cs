@@ -35,7 +35,12 @@ namespace WebService.Controllers
             if (page < 1 || pageSize < 1) return NotFound();
             
             var userId = GetAuthUserId().Item1;
-            var history = _historyService.GetHistoryList(userId,page,pageSize);
+            PagingAttributes pagingAttributes = new PagingAttributes
+            {
+                Page = page,
+                PageSize = pageSize
+            };
+            var history = _historyService.GetHistoryList(userId, pagingAttributes);
             if (history == null)
             {
                 return NotFound();
