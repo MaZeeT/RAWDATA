@@ -21,13 +21,8 @@ namespace DatabaseService
             //// for browsing the full list of questions
             using var db = new DatabaseContext();
 
-            //try to convert back from 1-based pages
-            int page;
-            if (pagingAttributes.Page <= 0)
-            {
-                page = 0;
-            }
-            else page = pagingAttributes.Page - 1;
+            //convert back from 1-based pages + check/fix page
+            int page = _sharedService.GetPagination(_sharedService.NumberOfQuestions(), pagingAttributes);
 
             return db.Questions
                 .OrderBy(u => u.Id)
@@ -49,8 +44,10 @@ namespace DatabaseService
             ////get params for db.func
             ///
             //build searchstring
-            var search = new NpgsqlParameter("search", NpgsqlTypes.NpgsqlDbType.Text);
-            search.Value = BuildSearchString(searchstring, false);
+            var search = new NpgsqlParameter("search", NpgsqlTypes.NpgsqlDbType.Text)
+            {
+                Value = BuildSearchString(searchstring, false)
+            };
 
             //lookup searchtype string
             var searchtype = new NpgsqlParameter("searchtype", NpgsqlTypes.NpgsqlDbType.Text);
@@ -61,12 +58,16 @@ namespace DatabaseService
             else searchtype.Value = st.searchType[3];
 
             //userid 
-            var appuserid = new NpgsqlParameter("appuserid", NpgsqlTypes.NpgsqlDbType.Integer);
-            appuserid.Value = userid;
+            var appuserid = new NpgsqlParameter("appuserid", NpgsqlTypes.NpgsqlDbType.Integer)
+            {
+                Value = userid
+            };
 
             //if internal call is specified, stored function appsearch won't add to searches/searchhistory
-            var internalcall = new NpgsqlParameter("internalcall", NpgsqlTypes.NpgsqlDbType.Boolean);
-            internalcall.Value = true;
+            var internalcall = new NpgsqlParameter("internalcall", NpgsqlTypes.NpgsqlDbType.Boolean)
+            {
+                Value = true
+            };
 
             //count all matches
             var matchcount = db.Search
@@ -90,8 +91,6 @@ namespace DatabaseService
 
             foreach (Search s in resultlist)
             {
-                //different mapping for results that are questions and answers
-
                 Posts p = new Posts();
                 SinglePost sp = new SinglePost();
                 sp = _sharedService.GetPost(s.postid);
@@ -107,40 +106,6 @@ namespace DatabaseService
                 p.Totalresults = matchcount;
                 p.Rank = s.rank;
                 resultposts.Add(p);
-
-                //old version, keeping for a few ticks
-                /*string tablename = _sharedService.GetPostType(s.postid);
-                if (tablename == "answers")
-                {
-                    Posts p = new Posts();
-                    p.Parentid = _sharedService.GetAnswer(s.postid).Parentid;
-                    p.Id = s.postid;
-
-                    var endpos = 100;
-                    if (_sharedService.GetAnswer(s.postid).Body.Length < 100)
-                    { endpos = _sharedService.GetAnswer(s.postid).Body.Length; }
-                    p.Body = _sharedService.GetAnswer(s.postid).Body.Substring(0, endpos);
-
-                    p.Title = _sharedService.GetQuestion(p.Parentid).Title;
-                    p.Totalresults = matchcount;
-                    p.Rank = s.rank;
-                    resultposts.Add(p);
-                }
-                else 
-                {
-                    Posts p = new Posts();
-                    p.Id = s.postid;
-
-                    var endpos = 100;
-                    if (_sharedService.GetQuestion(s.postid).Body.Length < 100)
-                    { endpos = _sharedService.GetQuestion(s.postid).Body.Length; }
-                    p.Body = _sharedService.GetQuestion(s.postid).Body.Substring(0, endpos);
-
-                    p.Title = _sharedService.GetQuestion(s.postid).Title;
-                    p.Totalresults = matchcount;
-                    p.Rank = s.rank;
-                    resultposts.Add(p);
-                }*/
             }
             return resultposts;
         }
@@ -159,8 +124,10 @@ namespace DatabaseService
             ////get params for db.func
             ///
             //build searchstring
-            var search = new NpgsqlParameter("search", NpgsqlTypes.NpgsqlDbType.Text);
-            search.Value = BuildSearchString(searchstring, false);
+            var search = new NpgsqlParameter("search", NpgsqlTypes.NpgsqlDbType.Text)
+            {
+                Value = BuildSearchString(searchstring, false)
+            };
 
             //lookup searchtype string
             var searchtype = new NpgsqlParameter("searchtype", NpgsqlTypes.NpgsqlDbType.Text);
@@ -171,12 +138,16 @@ namespace DatabaseService
             else searchtype.Value = st.searchType[5];
 
             //userid 
-            var appuserid = new NpgsqlParameter("appuserid", NpgsqlTypes.NpgsqlDbType.Integer);
-            appuserid.Value = userid;
+            var appuserid = new NpgsqlParameter("appuserid", NpgsqlTypes.NpgsqlDbType.Integer)
+            {
+                Value = userid
+            };
 
             //if internal call is specified, stored function appsearch won't add to searches/searchhistory
-            var internalcall = new NpgsqlParameter("internalcall", NpgsqlTypes.NpgsqlDbType.Boolean);
-            internalcall.Value = true;
+            var internalcall = new NpgsqlParameter("internalcall", NpgsqlTypes.NpgsqlDbType.Boolean)
+            {
+                Value = true
+            };
 
             //count all matches
             var matchcount = db.Search
@@ -184,8 +155,10 @@ namespace DatabaseService
                 .Count();
             System.Console.WriteLine($"{matchcount} results.");
 
-            var limit = new NpgsqlParameter("limit", NpgsqlTypes.NpgsqlDbType.Integer);
-            limit.Value = 10;
+            var limit = new NpgsqlParameter("limit", NpgsqlTypes.NpgsqlDbType.Integer)
+            {
+                Value = 10
+            };
             if (maxresults != null)
             {
                 limit.Value = maxresults;
@@ -199,10 +172,10 @@ namespace DatabaseService
 
         public string BuildSearchString(string searchstring, bool reverse)
         {
-            //convert query search string to appsearch db func search string
+            //convert query search string to appsearch db func search string or the reverse
             string[] separators = { ",", ".", "...", " " };
 
-            string[] words = searchstring.Split(separators, System.StringSplitOptions.RemoveEmptyEntries);
+            string[] words = searchstring.Split(separators, StringSplitOptions.RemoveEmptyEntries);
             System.Console.WriteLine($"{words.Length} tokens in search");
 
             string finalstring;
@@ -218,6 +191,7 @@ namespace DatabaseService
         }
         public int SearchTypeLookup(string searchmethod)
         {
+            //get stype from string methodname
             Modules.SearchTypeLookupTable st = new Modules.SearchTypeLookupTable();
             int stype = Array.FindIndex(st.searchType, s => s.Equals(searchmethod));
             return stype;
