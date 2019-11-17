@@ -83,7 +83,8 @@ namespace DatabaseService.Services
         public List<SimpleAnnotationDto> GetUserAnnotationsMadeOnAPost(int userId, int postId, PagingAttributes pagingAttributes)
         {
             using var DB = new DatabaseContext();
-            var page = GetPagination(UserAnnotOnPostListCount(userId, postId), pagingAttributes);
+            var sharedService = new SharedService();
+            var page = sharedService.GetPagination(UserAnnotOnPostListCount(userId, postId), pagingAttributes);
             var annotationsOfPostList =  (from annot in DB.Annotations
                                          join hist in DB.History on annot.HistoryId equals hist.Id
                                          where hist.Postid == postId && annot.UserId == userId
@@ -119,8 +120,9 @@ namespace DatabaseService.Services
         public List<PostAnnotationsDto> GetAllAnnotationsOfUser(int userId, PagingAttributes pagingAttributes, out int count)
         {
             using var DB = new DatabaseContext();
+            var sharedService = new SharedService();
             count = GetAllAnnotationsOfUserCount(userId);
-            var page = GetPagination(count, pagingAttributes);
+            var page = sharedService.GetPagination(count, pagingAttributes);
 
             var result = (from annot in DB.Annotations
                           join hist in DB.History on annot.HistoryId equals hist.Id
@@ -216,25 +218,6 @@ namespace DatabaseService.Services
                 return false;
             }
 
-        }
-
-        private int GetPagination(int matchcount, PagingAttributes pagingAttributes)
-        {
-            //calc max pages and set requested page to last page if out of bounds
-            var calculatedNumberOfPages = (int)Math.Ceiling((double)matchcount / pagingAttributes.PageSize) - 1;
-            System.Console.WriteLine($"{calculatedNumberOfPages} calculated pages.");
-            int page;
-            if (pagingAttributes.Page > calculatedNumberOfPages)
-            {
-                page = calculatedNumberOfPages;
-            }
-
-            if (pagingAttributes.Page <= 0)
-            {
-                page = 0;
-            }
-            else page = pagingAttributes.Page - 1;
-            return page;
         }
 
     }
