@@ -152,7 +152,6 @@ namespace WebService.Controllers
             if (_annotationService.CreateAnnotation_withFunction(newAnnotation, out newId))
             {
                 var createdAnnotation = _annotationService.GetAnnotation(newId);
-                var so = createdAnnotation;
                 return Ok(CreateLink(createdAnnotation));
             }
             return BadRequest();

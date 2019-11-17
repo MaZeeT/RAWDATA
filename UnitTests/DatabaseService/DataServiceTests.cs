@@ -6,57 +6,37 @@ namespace UnitTests.DatabaseService
 {
     public class DataServiceTests
     {
+        
         [Fact]
         public void Create_New_Annotation()
         {
 
             var service = new AnnotationService();
             // example of request aspect when coming from API
-            var newAnnotation = new Annotations
+            var newAnnotation = new AnnotationsDto
             {
                 UserId = 2,
                 HistoryId = 71,
                 Body = "This is a test :) "
             };
 
-            var result = service.CreateAnnotation_withFunction(newAnnotation, out newAnnotation);
-            Assert.True(result);
-            Assert.True(newAnnotation.Id > 0);
+            // need to see why this test returns false;
+            // should run on a cloud db;
+            var result = service.CreateAnnotation_withFunction(newAnnotation, out int newAnnotationId);
 
+            Assert.True(result);
+            Assert.True(newAnnotationId > 0);
+
+            var getRes = service.GetAnnotationByUserId(newAnnotationId, 2);
+            Assert.Equal("This is a test :) ", getRes.Body);
+
+            var alterBody = "Updated body of this is a test annotation";
+            var isUpdated = service.UpdateAnnotation(newAnnotationId, alterBody);
+            Assert.True(isUpdated);
             // cleanup
-            service.DeleteAnnotation(newAnnotation.Id);
+            var delete = service.DeleteAnnotation(newAnnotationId, 2);
+            Assert.True(delete);
         }
-/*
-        [Fact]
-        public void SearchTest()
-        {
-            var service = new DataService();
-            var list = service.Search("chocolate");
-            Assert.True(list.Count > 0);
-        }
-*/
-        [Fact]
-        public void GetAnnotationById()
-        {
-            var service = new AnnotationService();
-            var result = service.GetAnnotation(1);
-            Assert.Equal(2, result.UserId);
-            Assert.Equal(3, result.HistoryId);
-            Assert.Equal("my note for post 71: this post is very relevant", result.Body);
-        }
-
-        /*[Fact]
-        public void UpdateExistingAnnotation()
-        {
-            var service = new AppUsersDataService();
-            var newAnnotation = new AnnotationsDto
-            {
-                AnnotationId = 2,
-                Body = "This is updated annotation body becase we can :) ! <3"
-            };
-            var result = service.UpdateAnnotationBody(newAnnotation);
-            Assert.True(result);
-        }*/
 
     }
 }
