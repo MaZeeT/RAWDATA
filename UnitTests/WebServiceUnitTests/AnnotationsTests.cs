@@ -20,14 +20,29 @@ namespace UnitTests.WebServiceUnitTests
         private string AuthenticateUserUrl = "http://localhost:5001/api/auth";
         public string UserToken { get; set; }
 
+        private string UserName
+        {
+            get
+            {
+                return "Fun";
+            }
+        }
+        private string UserPassword
+        {
+            get
+            {
+                return "Birds";
+            }
+        }
+
        
         [Fact]
-        public void User_Signup_Bad_Request()
+        public void User_Signup_Bad_Request_AlreadySignedUp()
         {
             var signupUser = new SignupUserDto
             {
-                Username = "Fun",
-                Password = "Birds"
+                Username = UserName,
+                Password = UserPassword
             };
 
             var (_, statusCode) = PostData(AuthenticateUserUrl+"/users", signupUser, string.Empty);
@@ -39,8 +54,8 @@ namespace UnitTests.WebServiceUnitTests
         {
             var user = new LoginUserDto
             {
-                Username = "Monica",
-                Password = "Toader"
+                Username = UserName,
+                Password = UserPassword
             };
 
             var (loggedInUser, statusCode) = PostData(AuthenticateUserUrl+"/tokens", user, string.Empty);
@@ -156,12 +171,15 @@ namespace UnitTests.WebServiceUnitTests
             Assert.Equal(HttpStatusCode.OK, statusCode);
         }
 
+        ///////////////////////////////////////////////////////////////
+        // Helpers
+        ///////////////////////////////////////////////////////////////
         private string GetToken()
         {
             var user = new LoginUserDto
             {
-                Username = "Fun",
-                Password = "Birds"
+                Username = UserName,
+                Password = UserPassword
             };
 
             var (loggedInUser, statusCode) = PostData(AuthenticateUserUrl + "/tokens", user, string.Empty);
@@ -170,7 +188,6 @@ namespace UnitTests.WebServiceUnitTests
         }
 
 
-        // Helpers
         (JArray, HttpStatusCode) GetArray(string url, string userToken)
         {
             var client = new HttpClient();
