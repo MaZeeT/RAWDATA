@@ -1,0 +1,29 @@
+{
+  "version": "1.0",
+  "defaultProvider": "unpkg",
+  "libraries": [
+    {
+      "library": "requirejs@2.3.6",
+      "destination": "lib/requirejs/",
+      "files": [
+        "require.js"
+      ]
+    },
+    {
+      "library": "jquery@3.4.1",
+      "destination": "lib/jquery",
+      "files": [
+        "dist/jquery.js",
+        "dist/jquery.min.js"
+      ]
+    },
+    {
+      "library": "knockout@3.5.1",
+      "destination": "lib/knockout",
+      "files": [
+        "build/output/knockout-latest.debug.js",
+        "build/output/knockout-latest.js"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>index</title>
+</head>
+<body>
+    <input data-bind="textInput: firstName" />
+    <input data-bind="textInput: lastName" />
+    <div data-bind="text: fullName"></div>
+    <button data-bind="click: addName">Add</button>
+    <ul data-bind="foreach: names">
+        <li>
+            <span data-bind="text: $data"></span>
+            <button data-bind="click: $parent.delName">Del</button>
+        </li>
+    </ul>
+
+
+    <script data-main="js/main.js" src="lib/requirejs/require.js"></script>
+</body>
+</html>

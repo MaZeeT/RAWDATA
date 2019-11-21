@@ -63,9 +63,14 @@ namespace WebService
             {
                 app.UseDeveloperExceptionPage();
             }
+            
+            //Needed for serving wwwroot files frontend
+            app.UseFileServer();
 
+            //Needed for api routing
             app.UseRouting();
 
+            //Authentication & authorization
             app.UseAuthentication();
             app.UseAuthorization();
 

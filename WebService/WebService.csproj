@@ -23,4 +23,8 @@
     <ProjectReference Include="..\DatabaseService\DatabaseService.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\lib\" />
+  </ItemGroup>
+
 </Project>
