@@ -20,7 +20,7 @@ namespace DatabaseService
         }
         public int PageSize {
             get => _pageSize;
-            set => _pageSize = Math.Min(value, MaxPageSize);
+            set => _pageSize = Math.Abs(Math.Min(value, MaxPageSize));
         }
     }
 }
