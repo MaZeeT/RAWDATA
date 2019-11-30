@@ -11,7 +11,7 @@
     },
     {
       "library": "jquery@3.4.1",
-      "destination": "lib/jquery",
+      "destination": "jquery/",
       "files": [
         "dist/jquery.js",
         "dist/jquery.min.js"
@@ -19,10 +19,17 @@
     },
     {
       "library": "knockout@3.5.1",
-      "destination": "lib/knockout",
+      "destination": "lib/knockout/",
       "files": [
         "build/output/knockout-latest.debug.js",
         "build/output/knockout-latest.js"
+      ]
+    },
+    {
+      "library": "requirejs-text@2.0.15",
+      "destination": "lib/requirejs-text/",
+      "files": [
+        "text.js"
       ]
     }
   ]

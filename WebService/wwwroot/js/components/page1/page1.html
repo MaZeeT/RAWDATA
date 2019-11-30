@@ -1,0 +1,38 @@
+﻿
+<div style="background-color:slategray;">
+
+    <h1>Page1</h1>
+
+    <div>
+        <div>
+            Search: <input data-bind="textInput: search" />
+        </div>
+        <div style="border: 2px solid red">
+            <ul data-bind="foreach: searchResult">
+                <li><span data-bind="text: name"></span></li>
+            </ul>
+        </div>
+    </div>
+
+    <input data-bind="textInput: firstName" />
+    <input data-bind="textInput: lastName" />
+    <div data-bind="text: fullName, visible: showFullName"></div>
+    <button data-bind="click: addName">Add</button>
+    <input type="checkbox" data-bind="checked: showFullName" />
+    <ul data-bind="foreach: names">
+        <li>
+            <span data-bind="text: $data"></span>
+            <button data-bind="click: $parent.delName">Del</button>
+        </li>
+    </ul>
+
+    <div data-bind="css: currentBox">
+        <div data-bind="html: someHtml"></div>
+    </div>
+    <div><button data-bind="click: changeBox">Change style</button></div>
+
+    <div>
+        <select data-bind="options: countries, value: currentCountry"></select>
+    </div>
+
+</div>

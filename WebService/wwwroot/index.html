@@ -2,20 +2,14 @@
 <html>
 <head>
     <title>index</title>
+    <link href="../../../styles/app.css" rel="stylesheet" />
 </head>
 <body>
-    <input data-bind="textInput: firstName" />
-    <input data-bind="textInput: lastName" />
-    <div data-bind="text: fullName"></div>
-    <button data-bind="click: addName">Add</button>
-    <ul data-bind="foreach: names">
-        <li>
-            <span data-bind="text: $data"></span>
-            <button data-bind="click: $parent.delName">Del</button>
-        </li>
-    </ul>
+    <div style="background-color: darkred">
+        <div><button data-bind="click: changeContent">Change content</button></div>
+        <div data-bind="component: {name: currentComponent, params: currentParams}"></div>
 
-
-    <script data-main="js/main.js" src="lib/requirejs/require.js"></script>
+    </div>
+    <script data-main="/js/main.js" src="/lib/requirejs/require.js"></script>
 </body>
 </html>
