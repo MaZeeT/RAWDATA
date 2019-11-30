@@ -1,26 +1,8 @@
 
+<div>
+    <h3>History Component</h3>
 
-    <div style="background-color:crimson">
-
-        <h3>History Component</h3>
-
-
-        <div>
-            <div>
-                Search: <input data-bind="textInput: search" />
-            </div>
-            <div style="border: 2px solid red">
-                <ul data-bind="foreach: searchResult">
-                    <li><span data-bind="text: name"></span></li>
-                </ul>
-            </div>
-        </div>
-
-        <input data-bind="textInput: firstName" />
-
-        <!--<button data-bind="click:GetHistory">Get History</button>-->
-        <!--<button>Delete History</button>-->
-        <!--<table>
+    <table>
         <thead>
             <tr>
                 <th>Title</th>
@@ -28,14 +10,14 @@
                 <th>Date</th>
             </tr>
         </thead>
-        <tbody data-bind="foreach: getHistory">
-             Bind to list
+        <tbody data-bind="foreach: historyItems">
+                <!--Bind to list-->
             <tr>
-                <td data-bind="text:title"></td>   Bind to attribute
-                <td data-bind="text:url"></td>     Bind to attribute
-                <td data-bind="text:date"></td>    Bind to attribute
+                <td data-bind="text:title"></td>  
+                <td data-bind="text:url"></td>     
+                <td data-bind="text:date"></td>    
             </tr>
         </tbody>
 
-    </table>-->
-    </div>
+    </table>
+</div>

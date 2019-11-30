@@ -1,17 +1,16 @@
 ﻿define(["knockout"], function (ko) {
-    var currentComponent = ko.observable("page1");
+ 
+    var currentComponent = ko.observable("index");
     var currentParams = ko.observable({});
-    var changeContent = () => {
-        if (currentComponent() === "page1") {
-            currentComponent("HistoryComponent");
-        } else {
-            currentComponent("page1");
-        }
-    };
+
+    var onMenuItemClick = function (componentName) {
+        currentComponent(componentName);
+    }
+
 
     return {
         currentComponent,
         currentParams,
-        changeContent
+        onMenuItemClick
     };
 });

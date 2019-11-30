@@ -1,26 +1,5 @@
-﻿define(["knockout", "dataService"], function (ko, ds) {
+﻿define(["knockout", "dataservice"], function (ko, ds) {
     return function () {
-        var firstName = ko.observable("Peter");
-        var lastName = ko.observable("Smith");
-
-        var fullName = ko.computed(function () {
-            return firstName() + " " + lastName();
-        });
-
-        var showFullName = ko.observable(true);
-
-        var names = ko.observableArray([]);
-
-        var addName = function (data) {
-            names.push(fullName());
-        };
-
-        var delName = function (name) {
-            names.remove(name);
-        };
-
-        var search = ko.observable("");
-
         var firstNames = [
             { "name": "David" }, { "name": "Drew" }, { "name": "Preston" }, { "name": "Neville" },
             { "name": "Garrett" }, { "name": "Jerry" }, { "name": "George" }, { "name": "Brendan" },
@@ -46,9 +25,9 @@
             { "name": "Rajah" }, { "name": "Wyatt" }, { "name": "Sebastian" }, { "name": "Anthony" }, { "name": "Tad" },
             { "name": "Burton" }, { "name": "Garth" }, { "name": "Dale" }
         ];
-
+        var names = ko.observableArray([]);
+        var search = ko.observable("");
         var searchResult = ko.observableArray([]);
-
         search.subscribe(function (data) {
             if (data.length === 0) {
                 searchResult([]);
@@ -58,59 +37,11 @@
             searchResult(res);
         });
 
-        var someHtml = "<ul><li>dfsdf</li></ul>";
-
-        var currentBox = ko.observable("redbox");
-
-        var changeBox = function () {
-            if (currentBox() === "greenbox") {
-                currentBox("redbox");
-            } else {
-                currentBox("greenbox");
-            }
-        }
-
-        var countries = ko.observableArray(["denmark", "sweeden", "norway"]);
-        var currentCountry = ko.observable();
-
-        var currentContent = ko.observable("simpleTemplate");
-        var changeContent = () => {
-            if (currentContent() === "simpleTemplate") {
-                currentContent("firstTemplate");
-            } else {
-                currentContent("simpleTemplate");
-            }
-        };
-
-        //ds.getNamesWithJQyery(function(data) {
-        //    names(data);
-        //});
-
-        //ds.getNamesWithFetch(function(data) {
-        //    names(data);
-        //});
-
-        //ds.getNamesWithFetchAsync(function (data) {
-        //    names(data);
-        //});
+       
 
         return {
-            firstName,
-            lastName,
-            fullName,
-            names,
-            addName,
-            delName,
             search,
-            searchResult,
-            showFullName,
-            someHtml,
-            currentBox,
-            changeBox,
-            countries,
-            currentCountry,
-            currentContent,
-            changeContent
+            searchResult
 
         };
     };
