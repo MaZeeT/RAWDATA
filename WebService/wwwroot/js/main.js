@@ -5,7 +5,8 @@ require.config({
         jquery: "../jquery/dist/jquery",
         knockout: "../lib/knockout/build/output/knockout-latest.debug",
         text: "../lib/requirejs-text/text",
-        dataservice: "services/HistoryService"
+        dataservice: "services/HistoryService",
+        authservice: "services/AuthenticationService"
 
     }
 });
@@ -35,7 +36,7 @@ require(["knockout"], function (ko) {
 
 
 
-require(["knockout", "app"], function (ko, app, ds) {
+require(["knockout", "app"], function (ko, app, authserv) {
     //console.log(app.name);
 
     ko.applyBindings(app);

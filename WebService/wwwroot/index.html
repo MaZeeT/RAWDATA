@@ -8,7 +8,7 @@
 <body>
 
     <div class="main-index-page-container">
-   
+
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
 
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
@@ -29,7 +29,32 @@
             </div>
 
         </nav>
-        <!--<div data-bind='component: "nav-bar"'></div>-->
+
+        <div class="login-form-container">
+            <!-- Default form login -->
+            <div class="text-center border border-light p-5">
+
+                <p class="h4 mb-4">Sign in</p>
+
+                <!-- Email -->
+                <input class="form-control mb-4" data-bind="value: loginUsername">
+
+                <!-- Password -->
+                <input class="form-control mb-4" data-bind="value: loginPassword">
+
+                <!-- Sign in button -->
+                <button class="btn btn-info btn-block my-4" data-bind="click: loginUser">Sign in</button>
+
+                <!-- Register -->
+                <p>
+                    Not a member?
+                    <a data-bind="click: newUserSignup">Register</a>
+                </p>
+
+            </div>
+            <!-- Default form login -->
+        </div>
+       
 
         <div data-bind="component: {name: currentComponent, params: currentParams}"></div>
 
