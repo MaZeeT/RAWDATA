@@ -1,4 +1,4 @@
-﻿define(["knockout", "authservice"], function (ko, authserv) {
+﻿define(["knockout", "authservice"], function (ko, authservice) {
 
     //Navigation menu
     var currentComponent = ko.observable("index");
@@ -17,7 +17,7 @@
         if (username && username !== "Username" && password && password !== "Password") {
             console.log("Correct");
            
-            authserv.getLoginUser(function (data) {
+            authservice.getLoginUser(function (data) {
                 console.log("Data ", data);
             });
 

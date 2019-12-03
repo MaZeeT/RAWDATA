@@ -36,7 +36,7 @@ require(["knockout"], function (ko) {
 
 
 
-require(["knockout", "app"], function (ko, app, authserv) {
+require(["knockout", "app"], function (ko, app) {
     //console.log(app.name);
 
     ko.applyBindings(app);

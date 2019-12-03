@@ -1,13 +1,7 @@
-﻿define(["jquery"], function ($) {
-    //var getLoginUser = function (callback) {
-    //    $.getJSON("api/auth/tokens", callback);
-    //};
-
+﻿define(["jquery","app"], function () {
+    
     const data = { Username: 'Monica', Password:'Test'};
     var getLoginUser = async function (callback) {
-        //var response = await fetch("api/auth/tokens");
-        //var data = await response.json();
-        //callback(data);
 
         try {
             const response = await fetch("api/auth/tokens", {
@@ -17,7 +11,6 @@
                     'Content-Type': 'application/json'
                 }
             });
-            const response = await response.json();
             //console.log('Success:', JSON.stringify(response));
             callback(response)
         } catch (error) {
