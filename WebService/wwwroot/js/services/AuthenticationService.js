@@ -1,4 +1,4 @@
-﻿define(["jquery","app"], function () {
+﻿define(["jquery"], function () {
     
     const data = { Username: 'Monica', Password:'Test'};
     var getLoginUser = async function (callback) {

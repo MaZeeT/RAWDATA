@@ -1,4 +1,4 @@
-define(["knockout", "dataservice"], function (ko, ds) {
+define(["knockout", "historyService"], function (ko, ds) {
 
     return function () {
 

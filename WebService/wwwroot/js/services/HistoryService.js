@@ -1,5 +1,3 @@
-
-
 define(["jquery"], function() {
 
     var getNamesWithFetch = function(callback) {
