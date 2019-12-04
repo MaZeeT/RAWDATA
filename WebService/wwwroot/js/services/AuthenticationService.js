@@ -1,18 +1,19 @@
 ﻿define(["jquery"], function () {
-    
-    const data = { Username: 'Monica', Password:'Test'};
-    var getLoginUser = async function (callback) {
-
+    var getLoginUser = async function (incomingUserCredentials, callback) {
         try {
             const response = await fetch("api/auth/tokens", {
                 method: 'POST', // or 'PUT'
-                body: JSON.stringify(data), // data can be `string` or {object}!
+                body: JSON.stringify(incomingUserCredentials), // data can be `string` or {object}!
                 headers: {
                     'Content-Type': 'application/json'
                 }
+            }).then(function (response) {
+                return response.json();
+            }).then(function (responseBody) {
+                return responseBody;
             });
-            //console.log('Success:', JSON.stringify(response));
-            callback(response)
+            callback(response);
+            
         } catch (error) {
             console.error('Error:', error);
         }

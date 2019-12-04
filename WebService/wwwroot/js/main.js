@@ -8,16 +8,12 @@ require.config({
         historyService: "services/HistoryService",
         authservice: "services/AuthenticationService",
         bookmarksService: "services/BookmarksService",
-        homepageService: "services/AuthenticationService",
+        homepageService: "services/HomePageService",
         annotationsService: "services/AnnotationsService"
     }
 });
 
 require(["knockout"], function (ko) {
-    ko.components.register('index', {
-        viewModel: { require: "components/page1/page1" },
-        template: { require: "text!components/page1/page1.html" }
-    });
     ko.components.register('history', {
         viewModel: { require: "components/HistoryPage/HistoryComponent" },
         template: { require: "text!components/HistoryPage/HistoryComponent.html" }
