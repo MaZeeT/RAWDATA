@@ -1,0 +1,13 @@
+﻿.main-search-bar > .form-control {
+    margin-left: 1rem;
+    margin-right: 1rem;
+    width: -webkit-fill-available;
+    height: auto;
+    height: 55px;
+    font-size: x-large;
+    text-align: center;
+}
+.collapse:not(.show) {
+    display: unset;
+    text-align: center;
+}

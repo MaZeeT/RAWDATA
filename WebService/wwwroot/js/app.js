@@ -1,27 +1,42 @@
-﻿define(["knockout"], function (ko) {
-    var firstName = ko.observable("Peter");
-    var lastName = ko.observable("Smith");
+﻿define(["knockout", "authservice"], function (ko, authservice) {
 
-    var fullName = ko.computed(function () {
-        return firstName() + " " + lastName();
-    });
+    //Navigation menu
+    var currentComponent = ko.observable("index");
+    var currentParams = ko.observable({});
 
-    var names = ko.observableArray(["Peter", "John"]);
-
-    var addName = function (data) {
-        names.push(fullName());
+    var onMenuItemClick = function (componentName) {
+        currentComponent(componentName);
     };
 
-    var delName = function (name) {
-        names.remove(name);
+    //LogInForm
+    var loginUsername = ko.observable("Username");
+    var loginPassword = ko.observable("Password");
+    var loginUser = function (data) {
+        let username = loginUsername();
+        let password = loginPassword();
+        if (username && username !== "Username" && password && password !== "Password") {
+            console.log("Correct");
+           
+            authservice.getLoginUser(function (data) {
+                console.log("Data ", data);
+            });
+
+        } else {
+            console.log("Incorrect");
+        }
     };
+
+    var newUserSignup = function () {
+        console.log("I have been clicked for signup new user");
+    }
 
     return {
-        firstName,
-        lastName,
-        fullName,
-        names,
-        addName,
-        delName
+        currentComponent,
+        currentParams,
+        onMenuItemClick,
+        loginUsername,
+        loginPassword,
+        loginUser,
+        newUserSignup
     };
 });

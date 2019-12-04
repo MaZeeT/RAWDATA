@@ -2,20 +2,63 @@
 <html>
 <head>
     <title>index</title>
+    <link href="/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/styles/app.css" rel="stylesheet" />
 </head>
 <body>
-    <input data-bind="textInput: firstName" />
-    <input data-bind="textInput: lastName" />
-    <div data-bind="text: fullName"></div>
-    <button data-bind="click: addName">Add</button>
-    <ul data-bind="foreach: names">
-        <li>
-            <span data-bind="text: $data"></span>
-            <button data-bind="click: $parent.delName">Del</button>
-        </li>
-    </ul>
 
+    <div class="main-index-page-container">
 
-    <script data-main="js/main.js" src="lib/requirejs/require.js"></script>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav">
+                    <li class="nav-item active">
+                        <a class="nav-link" data-bind="click: onMenuItemClick('index')">Home <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bind="click: onMenuItemClick('history')">History</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bind="click: onMenuItemClick('annotations')">Annotations</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bind="click: onMenuItemClick('bookmarks')">Bookmarks</a>
+                    </li>
+                </ul>
+            </div>
+
+        </nav>
+
+        <div class="login-form-container">
+            <!-- Default form login -->
+            <div class="text-center border border-light p-5">
+
+                <p class="h4 mb-4">Sign in</p>
+
+                <!-- Email -->
+                <input class="form-control mb-4" data-bind="value: loginUsername">
+
+                <!-- Password -->
+                <input class="form-control mb-4" data-bind="value: loginPassword">
+
+                <!-- Sign in button -->
+                <button class="btn btn-info btn-block my-4" data-bind="click: loginUser">Sign in</button>
+
+                <!-- Register -->
+                <p>
+                    Not a member?
+                    <a data-bind="click: newUserSignup">Register</a>
+                </p>
+
+            </div>
+            <!-- Default form login -->
+        </div>
+       
+
+        <div data-bind="component: {name: currentComponent, params: currentParams}"></div>
+
+    </div>
+    <script data-main="/js/main.js" src="/lib/requirejs/require.js"></script>
 </body>
 </html>
