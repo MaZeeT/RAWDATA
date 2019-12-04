@@ -9,16 +9,21 @@
     };
 
     //LogInForm
-    var loginUsername = ko.observable("Username");
-    var loginPassword = ko.observable("Password");
-    var loginUser = function (data) {
+    let loginUsername = ko.observable("Username");
+    let loginPassword = ko.observable("Password");
+    let loginUser = function (data) {
         let username = loginUsername();
         let password = loginPassword();
         if (username && username !== "Username" && password && password !== "Password") {
             console.log("Correct");
-           
-            authservice.getLoginUser(function (data) {
-                console.log("Data ", data);
+            const incomingUserCredentials = { Username: username, Password: password };
+            authservice.getLoginUser(incomingUserCredentials, function (authenticationResponse) {
+                const token = authenticationResponse.token;
+                if (token) {
+                    console.log('If token yes');
+                    window.localStorage.setItem("userToken", token);
+                    currentComponent("homepage");
+                }
             });
 
         } else {
