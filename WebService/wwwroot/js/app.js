@@ -33,7 +33,7 @@
 
     var newUserSignup = function () {
         console.log("I have been clicked for signup new user");
-    }
+    };
 
     return {
         currentComponent,
