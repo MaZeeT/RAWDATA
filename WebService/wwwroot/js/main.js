@@ -20,7 +20,7 @@ require(["knockout"], function (ko) {
     });
     ko.components.register('annotations', {
         viewModel: { require: "components/AnnotationsPage/AnnotationsPage" },
-        template: { require: "text!components/AnnotationsPage/HistoryComponent.html" }
+        template: { require: "text!components/AnnotationsPage/AnnotationsPage.html" }
     });
     ko.components.register('bookmarks', {
         viewModel: { require: "components/BookmarksPage/BookmarksPage" },
