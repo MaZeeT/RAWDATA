@@ -5,10 +5,10 @@ require.config({
         jquery: "../jquery/dist/jquery",
         knockout: "../lib/knockout/build/output/knockout-latest.debug",
         text: "../lib/requirejs-text/text",
+        messaging: "services/MessagingService",
         historyService: "services/HistoryService",
         authservice: "services/AuthenticationService",
         bookmarksService: "services/BookmarksService",
-        homepageService: "services/HomePageService",
         annotationsService: "services/AnnotationsService"
     }
 });
@@ -26,12 +26,14 @@ require(["knockout"], function (ko) {
         viewModel: { require: "components/BookmarksPage/BookmarksPage" },
         template: { require: "text!components/BookmarksPage/BookmarksPage.html" }
     });
-    ko.components.register('homepage', {
-        viewModel: { require: "components/HomePage/HomePage" },
-        template: { require: "text!components/HomePage/HomePage.html" }
+    ko.components.register('authentication', {
+        viewModel: { require: "components/AuthenticationPage/AuthenticationPage" },
+        template: { require: "text!components/AuthenticationPage/AuthenticationPage.html" }
     });
+   
 });
 
-require(["knockout", "app"], function (ko, app) {
+require(["knockout", "messaging", "navbar"], function (ko, messaging, app) {
+    messaging.subscribe(() => console.log(messaging.getState()));
     ko.applyBindings(app);
 });
