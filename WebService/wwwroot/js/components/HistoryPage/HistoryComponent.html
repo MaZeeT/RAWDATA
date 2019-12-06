@@ -1,6 +1,11 @@
 <div>
     <h3>History Component</h3>
-
+    <div>
+        <button data-bind="click:deletions">Click</button>
+        <br>
+        <button data-bind="click:prevPage">Prev Page</button>
+        <button data-bind="click:nextPage">Next Page</button>
+    </div>
     <table>
         <thead>
         <tr>
@@ -9,12 +14,7 @@
             <th>Date</th>
         </tr>
         </thead>
-        <div>
-            <button data-bind="click:deletions">Click</button>
-            <br>
-            <button data-bind="click:prevPage">Prev Page</button>
-            <button data-bind="click:nextPage">Next Page</button>
-        </div>
+
 
         <tbody data-bind="foreach: historyItems">
         <!--Bind to list-->

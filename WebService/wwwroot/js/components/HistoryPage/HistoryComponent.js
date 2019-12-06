@@ -30,7 +30,9 @@ define(["knockout", "historyService"], function (ko, ds) {
             nextPage,
             historyItems,
             deletions
-        }
-    }
+        };
+
+
+    };
 
 });
