@@ -1,4 +1,36 @@
 ﻿<div class="home-page-container">
     <input class="form-control form-control-lg" data-bind="value: searchTerms">
+    <!--<div style="border: 2px solid red">
+        <ul data-bind="foreach: searchResult">
+            <li>
+                <span class="search-rank" data-bind="text: rank"></span>
+                <span class="search-title" data-bind="text: questionTitle"></span>
+                <span class="search-body" data-bind="text: postBody"></span>
+            </li>
+
+        </ul>
+    </div>-->
+
+
+    <div data-bind="if: showTable"  class="container">
+        <h2>Totak results <p data-bind="text: totalResults"></p></h2>
+        <p>The .table class adds basic styling (light padding and only horizontal dividers) to a table:</p>
+        <table class="table col-sm">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Title</th>
+                    <th>Body</th>
+                </tr>
+            </thead>
+            <tbody data-bind="foreach: searchResult">
+                <tr>
+                    <td data-bind="text: rank"></td>
+                    <td data-bind="text: questionTitle"></td>
+                    <td  data-bind="text: postBody"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
 </div>
