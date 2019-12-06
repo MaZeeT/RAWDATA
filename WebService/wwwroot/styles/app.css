@@ -1,1 +1,38 @@
 ﻿
+.navbar-toggler {
+   
+    background-color: white;
+    border: 1px solid white;
+   
+}
+.navbar-collapse {
+    font-size: 1.3rem;
+}
+.navbar-light .navbar-brand {
+    color: white;
+    font-size: xx-large;
+}
+.navbar-light .navbar-nav .nav-link {
+    color: white;
+}
+.navbar-light .navbar-nav .active > .nav-link {
+    font-weight: bold;
+    color: white;
+}
+.mr-auto {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+a.nav-link.signout-btn {
+    padding-left: 0;
+    color: white;
+    /* border: 1px solid white; */
+}
+
+/**********************************HOME PAGE STYLING***************************************/
+.home-page-container {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
+}

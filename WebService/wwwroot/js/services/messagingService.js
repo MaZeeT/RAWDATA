@@ -1,5 +1,5 @@
 ﻿define(["knockout"], function (ko) {
-    //const selectGeneralComp = "SELECT_Gen_Comp";
+    const selectGeneralComp = "SELECT_Gen_Comp";
     const selectMenu = "SELECT_MENU";
 
     var subscribers = [];
@@ -18,8 +18,8 @@
 
     var reducer = function (state, action) {
         switch (action.type) {
-            //case selectGeneralComp:
-            //    return Object.assign({}, state, { selectedComponent: "history" });
+            case selectGeneralComp:
+                return Object.assign({}, state, { selectedComp: action.selectedComp });
             case selectMenu:
                 return Object.assign({}, state, { selectedMenu: action.selectedMenu });
             default:
@@ -34,11 +34,12 @@
     };
 
     var actions = {
-        //selectGeneralComponent: function () {
-        //    return {
-        //        type: selectGeneralComp
-        //    };
-        //},
+        selectGeneralComponent: function (component) {
+              return {
+                  type: selectGeneralComp,
+                  selectedComp: component
+              };
+        },
         selectMenu: function (menu) {
             return {
                 type: selectMenu,

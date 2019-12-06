@@ -9,11 +9,16 @@ require.config({
         historyService: "services/HistoryService",
         authservice: "services/AuthenticationService",
         bookmarksService: "services/BookmarksService",
-        annotationsService: "services/AnnotationsService"
+        annotationsService: "services/AnnotationsService",
+        homeService: "services/HomePageService",
     }
 });
 
 require(["knockout"], function (ko) {
+    ko.components.register('homepage', {
+        viewModel: { require: "components/HomePage/HomePage" },
+        template: { require: "text!components/HomePage/HomePage.html" }
+    });
     ko.components.register('history', {
         viewModel: { require: "components/HistoryPage/HistoryComponent" },
         template: { require: "text!components/HistoryPage/HistoryComponent.html" }
