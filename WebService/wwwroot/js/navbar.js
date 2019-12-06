@@ -28,13 +28,12 @@
 
     var currentMenu = ko.observable(menuElements[0]);
     var currentComponent = ko.observable();
-    //let isTokenSet = ko.observable("");
+    let isTokenSet = ko.observable(false);
     if (window.localStorage.getItem('userToken')) {
         currentComponent = ko.observable(currentMenu().component);
-       // isTokenSet(true);
+        isTokenSet(true);
     } else {
         currentComponent = ko.observable(otherElements[0].component);
-       // isTokenSet(false);
     }
    
 
@@ -62,8 +61,8 @@
         currentComponent,
         menuElements,
         changeContent,
-        isSelected
-        //isTokenSet
+        isSelected,
+        isTokenSet
         
     };
 });
