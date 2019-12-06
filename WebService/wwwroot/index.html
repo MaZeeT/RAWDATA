@@ -7,58 +7,30 @@
 </head>
 <body>
 
-    <div class="main-index-page-container">
+    <nav data-bind="visible: isTokenSet" class="navbar navbar-expand-lg navbar-light bg-info">
+        <a class="navbar-brand" href="#">SOVA</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-
-            <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                <ul class="navbar-nav">
-                    <li class="nav-item active">
-                        <a class="nav-link" data-bind="click: onMenuItemClick('homepage')">Home <span class="sr-only">(current)</span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-bind="click: onMenuItemClick('history')">History</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-bind="click: onMenuItemClick('annotations')">Annotations</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-bind="click: onMenuItemClick('bookmarks')">Bookmarks</a>
-                    </li>
-                </ul>
-            </div>
-
-        </nav>
-
-        <div class="login-form-container">
-            <!-- Default form login -->
-            <div class="text-center border border-light p-5">
-
-                <p class="h4 mb-4">Sign in</p>
-
-                <!-- Email -->
-                <input class="form-control mb-4" data-bind="value: loginUsername">
-
-                <!-- Password -->
-                <input class="form-control mb-4" data-bind="value: loginPassword">
-
-                <!-- Sign in button -->
-                <button class="btn btn-info btn-block my-4" data-bind="click: loginUser">Sign in</button>
-
-                <!-- Register -->
-                <p>
-                    Not a member?
-                    <a data-bind="click: newUserSignup">Register</a>
-                </p>
-
-            </div>
-            <!-- Default form login -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto" data-bind="foreach: menuElements">
+                <li class="nav-item" data-bind="css: $parent.isSelected($data)">
+                    <a class="nav-link" href="#" data-bind="click: $parent.changeContent">
+                        <span data-bind="text: name"></span>
+                    </a>
+                </li>
+            </ul>
+            <a href="#" class="nav-link signout-btn">Sign Out</a>
         </div>
-       
 
-        <div data-bind="component: {name: currentComponent, params: currentParams}"></div>
+    </nav>
 
-    </div>
+        <div data-bind="component: {name: currentComponent}"></div>
+
+    <!--Scripts for requirejs and bootstrap-->
+    <script src="jquery/dist/jquery.min.js"></script>
+    <script src="lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script data-main="js/main.js" src="lib/requirejs/require.js"></script>
 </body>
 </html>
