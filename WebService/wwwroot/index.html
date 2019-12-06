@@ -3,32 +3,34 @@
 <head>
     <title>index</title>
     <link href="lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <!--<link href="styles/app.css" rel="stylesheet" />-->
+    <link href="styles/app.css" rel="stylesheet" />
 </head>
 <body>
 
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="#">Navbar</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+    <nav data-bind="visible: isTokenSet" class="navbar navbar-expand-lg navbar-light bg-info">
+        <a class="navbar-brand" href="#">SOVA</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav mr-auto" data-bind="foreach: menuElements">
-                    <li class="nav-item" data-bind="css: $parent.isSelected($data)">
-                        <a class="nav-link" href="#" data-bind="click: $parent.changeContent">
-                            <span data-bind="text: name"></span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto" data-bind="foreach: menuElements">
+                <li class="nav-item" data-bind="css: $parent.isSelected($data)">
+                    <a class="nav-link" href="#" data-bind="click: $parent.changeContent">
+                        <span data-bind="text: name"></span>
+                    </a>
+                </li>
+            </ul>
+            <a href="#" class="nav-link signout-btn">Sign Out</a>
+        </div>
+
+    </nav>
 
         <div data-bind="component: {name: currentComponent}"></div>
 
     <!--Scripts for requirejs and bootstrap-->
-    <script src="../../jquery/dist/jquery.min.js"></script>
-    <script src="../../lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="jquery/dist/jquery.min.js"></script>
+    <script src="lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script data-main="js/main.js" src="lib/requirejs/require.js"></script>
 </body>
 </html>

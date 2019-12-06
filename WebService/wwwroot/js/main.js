@@ -6,19 +6,24 @@ require.config({
         knockout: "../lib/knockout/build/output/knockout-latest.debug",
         text: "../lib/requirejs-text/text",
         messaging: "services/MessagingService",
-        //historyService: "services/HistoryService",
+        historyService: "services/HistoryService",
         authservice: "services/AuthenticationService",
         bookmarksService: "services/BookmarksService",
         browseService: "services/BrowseService",
         annotationsService: "services/AnnotationsService"
+        homeService: "services/HomePageService",
     }
 });
 
 require(["knockout"], function (ko) {
-   /* ko.components.register('history', {
+    ko.components.register('homepage', {
+        viewModel: { require: "components/HomePage/HomePage" },
+        template: { require: "text!components/HomePage/HomePage.html" }
+    });
+    ko.components.register('history', {
         viewModel: { require: "components/HistoryPage/HistoryComponent" },
         template: { require: "text!components/HistoryPage/HistoryComponent.html" }
-    });*/
+    });
     ko.components.register('annotations', {
         viewModel: { require: "components/AnnotationsPage/AnnotationsPage" },
         template: { require: "text!components/AnnotationsPage/AnnotationsPage.html" }

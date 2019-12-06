@@ -2,7 +2,6 @@
 
     return function () {
 
-
         //LogInForm
         let loginUsername = ko.observable("Username");
         let loginPassword = ko.observable("Password");
@@ -18,7 +17,7 @@
                         console.log('If token yes');
                         window.localStorage.setItem("userToken", token);
                         console.log(messaging.actions);
-                        messaging.dispatch(messaging.actions.selectMenu("History"));
+                        messaging.dispatch(messaging.actions.selectMenu("Home"));
                     }
                 });
 

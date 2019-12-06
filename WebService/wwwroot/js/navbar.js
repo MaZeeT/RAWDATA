@@ -1,10 +1,15 @@
 ﻿define(["knockout", "messaging"], function (ko, messaging) {
 
+    /////////////////Menu elements
     var menuElements = [
-        /*{
+        {
+            name: "Home",
+            component: "homepage"
+        },
+        {
             name: "History",
             component: "history"
-        },*/
+        },
         {
             name: "Bookmarks",
             component: "bookmarks"
@@ -18,6 +23,7 @@
             component: "annotations"
         }
     ];
+    /////////////////Other components elements
     var otherElements = [
         {
             component: "authentication"
@@ -26,8 +32,10 @@
 
     var currentMenu = ko.observable(menuElements[0]);
     var currentComponent = ko.observable();
+    let isTokenSet = ko.observable(false);
     if (window.localStorage.getItem('userToken')) {
         currentComponent = ko.observable(currentMenu().component);
+        isTokenSet(true);
     } else {
         currentComponent = ko.observable(otherElements[0].component);
     }
@@ -50,10 +58,15 @@
         return menu === currentMenu() ? "active" : "";
     };
 
+   
+
+
     return {
         currentComponent,
         menuElements,
         changeContent,
-        isSelected
+        isSelected,
+        isTokenSet
+        
     };
 });
