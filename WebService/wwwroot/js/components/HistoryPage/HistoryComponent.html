@@ -8,20 +8,20 @@
     </div>
 
     <!-- MaxPage dropdown -->
-    <select class="selectpicker">
-        <option title="5 per page">5</option>
-        <option title="10 per page">10</option>
-        <option title="15 per page">15</option>
-    </select>
+    <div class="dropdown">
+        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Entries pr. page
+        </a>
 
-    <select class="selectpicker">
-        <option title="Combo 1">Hot Dog, Fries and a Soda</option>
-        <option title="Combo 2">Burger, Shake and a Smile</option>
-        <option title="Combo 3">Sugar, Spice and all things nice</option>
-    </select>
-
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <a class="dropdown-item" href="#" data-bind="click:maxPages = 5">5</a>
+            <a class="dropdown-item" href="#" data-bind="click:maxPages = 10">10</a>
+            <a class="dropdown-item" href="#" data-bind="click:maxPages = 15">15</a>
+        </div>
+    </div>
 
     <!-- Bootstrap table -->
+ <div class="table-responsive"> 
     <table class="table">
         <thead>
         <tr>
@@ -33,11 +33,12 @@
         <tbody data-bind="foreach: historyItems">
         <tr>
             <td data-bind="text:title"></td>
-            <td data-bind="text:url"></td>
+            <td data-bind="text:threadUrl"></td>
             <td data-bind="text:date"></td>
         </tr>
         </tbody>
     </table>
+</div>
 
 
     <!-- HTML table

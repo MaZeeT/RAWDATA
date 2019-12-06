@@ -1,70 +1,49 @@
-define(["jquery"], function() {
-
-   // var userToken = window.localStorage.getItem(userToken);
-
-    var data = {
-        "historyItems":[
-            {"title": "tester1", "url": "www.something.com", "date": "today"},
-            {"title": "tester32", "url": "www.somethingelse.com", "date": "22/5666"},
-            {"title": "tester45", "url": "www.goggles.com", "date": "24/12"}
-        ]
+define(["jquery"], function () {
+    data = {
+        "historyItems": []
     };
-
-
-    var getHistory = async function(token, page, maxPages, callback) {
-        console.log("token: " + token);
-        console.log("page: " + page + ", max: " + maxPages);
-            callback(data);
-    };
-
-    var deleteHistory = async function(token, callback) {
-        data = {
-            "historyItems":[]
-        };
-        callback(data);
-    };
-
-
-
-/*
-    var getHistory = function(callback) {
-        fetch("api/history")
-            .then(function(response) {
+    
+    var getHistory = async function (token, page, maxPages, callback) {
+        try {
+            const response = await fetch("api/history", {
+                method: 'GET', // or 'PUT'
+                headers: new Headers({
+                    'Authorization': 'Bearer ' + token,
+                    'Content-Type': 'application/json'
+                })
+            }).then(function (response) {
                 return response.json();
-            })
-            .then(function(data) {
-                callback(data);
+            }).then(function (responseBody) {
+                return responseBody;
             });
+            callback(response);
+
+        } catch (error) {
+            console.error('Error:', error);
+        }
+
     };
-*/
+    
+    var deleteHistory = async function (token, callback) {
+        try {
+            console.log("token: " + token);
+            const response = await fetch("api/history/delete/all", {
+                method: 'DELETE', // or 'PUT'
+                headers: new Headers({
+                    'Authorization': 'Bearer ' + token,
+                    'Content-Type': 'application/json'
+                })
+            }).then(function (response) {
+                return response;
+            }).then(function (responseBody) {
+                return responseBody;
+            });
+            callback(response);
 
-    /*async*/
-   /* var getHistory = async function(callback) {
-        var response = await fetch("api/history");
-        var data = await response.json();
-        callback(data);
+        } catch (error) {
+            console.error('Error:', error);
+        }
     };
-
-    /*async*/
-  /*  var deleteHistory = async function(callback) {
-        var URL = "api/history/delete/all";
-
-        const response = await fetch(URL, {
-            method: 'get',
-            headers: new Headers({
-                'Authorization': userToken,
-                'Content-Type': 'application/json'
-            })
-        });
-        const posts = await response.json();
-
-
-
-
-        var data = await response.json();
-        callback(data);
-    };*/
-
 
     return {
         getHistory,

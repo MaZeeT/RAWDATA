@@ -3,8 +3,8 @@ define(["knockout", "historyService"], function (ko, ds) {
     return function () {
         var token = window.localStorage.getItem('userToken');
 
-        var page = 1;
-        var maxPages = 10;
+        var page = ko.observable(2);
+        var maxPages = ko.observable(10);
 
         var prevPage = function(){
             if (page > 1) page--;
@@ -16,9 +16,9 @@ define(["knockout", "historyService"], function (ko, ds) {
             console.log("page value is: " + page);  //todo remove
         };
 
-        const historyItems = ko.observableArray([]);
+        var historyItems = ko.observableArray([]);
         ds.getHistory(token, page, maxPages,function (response) {
-            historyItems(response.historyItems);
+            historyItems(response);
         });
 
         var deletions = function () {
