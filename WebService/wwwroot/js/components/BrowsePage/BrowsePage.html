@@ -1,0 +1,18 @@
+<div data-bind="with: questionlist">
+    <div>Total Questions: <span data-bind="text: totalItems"></span></div>
+    <div>Total Pages: <span data-bind="text: numberOfPages"></span></div>
+    <div>Previous Page: <span data-bind="text: prev"></span></div>
+    <div>Next Page: <span data-bind="text: next"></span></div>
+
+    <ul data-bind="foreach: items">
+        <li>
+            <div>                <span data-bind="text: link"> </span>            </div>
+            <div>                <span data-bind="text: id"> </span>            </div>
+            <div>                <span data-bind="text: title"> </span>            </div>
+            <div>  <span data-bind="text: body"> </span></div>
+        </li>
+    </ul>
+</div>
+
+
+

@@ -1,13 +1,17 @@
 ﻿define(["knockout", "messaging"], function (ko, messaging) {
 
     var menuElements = [
-        {
+        /*{
             name: "History",
             component: "history"
-        },
+        },*/
         {
             name: "Bookmarks",
             component: "bookmarks"
+        },
+        {
+            name: "Browse",
+            component: "browse"
         },
         {
             name: "Annotations",

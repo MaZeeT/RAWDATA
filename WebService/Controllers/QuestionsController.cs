@@ -11,7 +11,7 @@ namespace WebService.Controllers
 {
     [ApiController]
     [Route("api/questions")]
-    [Authorize]
+  //  [Authorize]
     public class QuestionsController : SharedController
     {
         private readonly ISearchDataService _dataService;
