@@ -36,3 +36,20 @@ a.nav-link.signout-btn {
     margin-left: 1rem;
     margin-right: 1rem;
 }
+
+/************************************Tables head******************************************/
+.table-responsive{
+    padding: 0;
+}
+.header-table-style {
+    background-color: #17a2b8;
+    font-size: x-large;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+}
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgb(211, 250, 255);
+}
+
+
