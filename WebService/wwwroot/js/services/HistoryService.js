@@ -11,7 +11,7 @@ define(["jquery"], function() {
     };
 
 
-    var getHistory = async function(token, callback) {
+    var getHistory = async function(token, page, callback) {
         callback(data);
     };
 
@@ -62,9 +62,6 @@ define(["jquery"], function() {
         var data = await response.json();
         callback(data);
     };*/
-
-
-
 
 
     return {

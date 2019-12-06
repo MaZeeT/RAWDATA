@@ -9,7 +9,13 @@
             <th>Date</th>
         </tr>
         </thead>
-        <button data-bind="click:deletions">Click</button>
+        <div>
+            <button data-bind="click:deletions">Click</button>
+            <br>
+            <button data-bind="click:prevPage">Prev Page</button>
+            <button data-bind="click:nextPage">Next Page</button>
+        </div>
+
         <tbody data-bind="foreach: historyItems">
         <!--Bind to list-->
         <tr>
