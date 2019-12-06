@@ -11,8 +11,10 @@ define(["jquery"], function() {
     };
 
 
-    var getHistory = async function(token, page, callback) {
-        callback(data);
+    var getHistory = async function(token, page, maxPages, callback) {
+        console.log("token: " + token);
+        console.log("page: " + page + ", max: " + maxPages);
+            callback(data);
     };
 
     var deleteHistory = async function(token, callback) {
