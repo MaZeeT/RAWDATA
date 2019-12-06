@@ -19,6 +19,10 @@ define([], function () {
         callback(data);
     };
 
+
+
+
+
     function buildUrl(url, parameters) {
         let qs = "";
         for (const key in parameters) {
