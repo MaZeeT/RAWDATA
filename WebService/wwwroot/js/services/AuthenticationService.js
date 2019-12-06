@@ -1,10 +1,10 @@
 ﻿define(["jquery"], function () {
 
-    const baseUrl="http://localhost:5001/"
+
 
     var getLoginUser = async function (incomingUserCredentials, callback) {
         try {
-            const response = await fetch(baseUrl + "api/auth/tokens", {
+            const response = await fetch("api/auth/tokens", {
                 method: 'POST', // or 'PUT'
                 body: JSON.stringify(incomingUserCredentials), // data can be `string` or {object}!
                 headers: {
@@ -23,7 +23,7 @@
     };
     var signUpUser = async function (incomingUserCredentials, callback) {
         try {
-            const response = await fetch(baseUrl + "api/auth/users", {
+            const response = await fetch("api/auth/users", {
                 method: 'POST', // or 'PUT'
                 body: JSON.stringify(incomingUserCredentials), // data can be `string` or {object}!
                 headers: {
