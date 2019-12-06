@@ -10,7 +10,7 @@ require.config({
         authservice: "services/AuthenticationService",
         bookmarksService: "services/BookmarksService",
         browseService: "services/BrowseService",
-        annotationsService: "services/AnnotationsService"
+        annotationsService: "services/AnnotationsService",
         homeService: "services/HomePageService",
     }
 });

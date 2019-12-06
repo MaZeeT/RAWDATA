@@ -1,7 +1,8 @@
 define([], function () {
 
     var getBrowseItems = async function (callback, p, ps) {
-
+        var toekn = window.localStorage.getItem('userToken');
+        console.log(' token '+toekn);
                 var response = await fetch(
             buildUrl("api/questions", {
                 page: p,
@@ -10,7 +11,7 @@ define([], function () {
             {
                 method: "GET",
                 headers: {
-                    Authorization: "toekn"
+                    Authorization: "Bearer "+toekn
                 }
             }
         );
