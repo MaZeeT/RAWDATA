@@ -10,7 +10,8 @@ require.config({
         authservice: "services/AuthenticationService",
         bookmarksService: "services/BookmarksService",
         annotationsService: "services/AnnotationsService",
-        homeService: "services/HomePageService"
+        homeService: "services/HomePageService",
+        postservice:"services/PostService"
     }
 });
 
@@ -34,6 +35,10 @@ require(["knockout"], function (ko) {
     ko.components.register('authentication', {
         viewModel: { require: "components/AuthenticationPage/AuthenticationPage" },
         template: { require: "text!components/AuthenticationPage/AuthenticationPage.html" }
+    });
+    ko.components.register('postdetails', {
+        viewModel: { require: "components/PostDetails/PostDetails" },
+        template: { require: "text!components/PostDetails/PostDetails.html" }
     });
    
 });

@@ -16,8 +16,9 @@
                     if (token) {
                         console.log('If token yes');
                         window.localStorage.setItem("userToken", token);
-                        console.log(messaging.actions);
-                        messaging.dispatch(messaging.actions.selectMenu("Home"));
+                        window.location.reload();
+                        //console.log(messaging.actions);
+                        //messaging.dispatch(messaging.actions.selectMenu("Home"));
                     }
                 });
 
