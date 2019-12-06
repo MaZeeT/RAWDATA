@@ -1,7 +1,7 @@
 define([], function () {
 
-    var getBrowseItems = async function (callback, p, ps) {
-        var toekn = window.localStorage.getItem('userToken');
+    var getBrowseItems = async function (p, ps, callback) {
+        let toekn = window.localStorage.getItem('userToken');
         console.log(' token '+toekn);
                 var response = await fetch(
             buildUrl("api/questions", {

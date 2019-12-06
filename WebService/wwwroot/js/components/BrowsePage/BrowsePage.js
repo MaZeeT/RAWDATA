@@ -1,18 +1,6 @@
 define(['knockout', 'services/BrowseService'], function (ko, bs) {
-    var questionlist = ko.observableArray([]);
-    var p = 1;
-    var ps = 2;
 
-
-
-
-
-
-
-
-
-
-    bs.getBrowseItems(questionlist, p, ps);
+   
 
 
     return function () {
@@ -47,12 +35,26 @@ define(['knockout', 'services/BrowseService'], function (ko, bs) {
              }*/
 
 
+        let questionlist = ko.observableArray([]);
+        let p = 1;
+        let ps = 2;
 
+        let loaded = ko.observable(false);
+
+        
+        bs.getBrowseItems(p, ps, function (data) {
+            console.log("Data from api call search : ", data);
+            if (data) {
+                loaded(true);
+                questionlist(data);
+            }
+        });
 
 
 
         return {
-            questionlist
+            questionlist,
+            loaded
 
         };
     };
