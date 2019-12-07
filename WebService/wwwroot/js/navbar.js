@@ -27,6 +27,9 @@
     var otherElements = [
         {
             component: "authentication"
+        },
+        {
+            component:"postdetails"
         }
     ]
 
@@ -45,12 +48,15 @@
         messaging.dispatch(messaging.actions.selectMenu(menu.name));
     };
 
-    messaging.subscribe(() => {
+    messaging.subscribe("SELECT_MENU", () => {
         var menuName = messaging.getState().selectedMenu;
         var menu = menuElements.find(x => x.name === menuName);
         if (menu) {
             currentMenu(menu);
             currentComponent(menu.component);
+        } else {
+            let component = otherElements.find(x => x.component === menuName);
+            currentComponent(component.component);
         }
     });
 

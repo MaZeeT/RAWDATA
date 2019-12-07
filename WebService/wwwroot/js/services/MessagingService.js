@@ -1,5 +1,5 @@
 ﻿define(["knockout"], function (ko) {
-    const selectGeneralComp = "SELECT_Gen_Comp";
+    const selectPost = "SELECT_POST";
     const selectMenu = "SELECT_MENU";
 
     var subscribers = [];
@@ -8,18 +8,23 @@
 
     var getState = () => currentState;
 
-    var subscribe = function (callback) {
-        subscribers.push(callback);
+    var subscribe = function (action, callback) {
+        let obj = {
+            action,
+            callback
+        }
+        subscribers.push(obj);
 
         return function () {
-            subscribers = subscribers.filter(x => x !== callback);
+            subscribers = subscribers.filter(x => x.action !== action && x.callback !== callback);
         };
     };
 
     var reducer = function (state, action) {
         switch (action.type) {
-            case selectGeneralComp:
-                return Object.assign({}, state, { selectedComp: action.selectedComp });
+            case selectPost:
+                console.log("in reducer: ", action.selectedPost);
+                return Object.assign({}, state, { selectedPost: action.selectedPost });
             case selectMenu:
                 return Object.assign({}, state, { selectedMenu: action.selectedMenu });
             default:
@@ -28,17 +33,19 @@
     };
 
     var dispatch = function (action) {
+        console.log("Subs in action: ", action);
         currentState = reducer(currentState, action);
-
-        subscribers.forEach(callback => callback());
+        console.log("Subs in messaging: ", subscribers);
+        console.log(" subscribers.filter(x => x.action === action): ", subscribers.filter(x => x.action === action));
+        subscribers.filter(x => x.action === action.type).forEach(subscriber => subscriber.callback());
     };
 
     var actions = {
-        selectGeneralComponent: function (component) {
-              return {
-                  type: selectGeneralComp,
-                  selectedComp: component
-              };
+        selectPost: function (post) {
+            return {
+                type: selectPost,
+                selectedPost: post
+            };
         },
         selectMenu: function (menu) {
             return {
