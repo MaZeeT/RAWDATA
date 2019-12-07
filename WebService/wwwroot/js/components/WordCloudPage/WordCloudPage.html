@@ -1,4 +1,5 @@
-﻿<div class="home-page-container">
+﻿<link rel="stylesheet" href="../lib/jqcloud2/dist/jqcloud.min.css">
+<div class="home-page-container">
     <button data-bind="click: changeComp.bind($data, 'search')">
         search
     </button>
@@ -18,8 +19,9 @@
                event: {change: noofresultschanged}"></select>
 
 
-    <div id="cloud" style="border: 2px solid red"></div>
+    <div id="cloud" class="embed-responsive embed-responsive-4by3" style="border: 2px solid red">
 
+    </div>
 
     <table class="table-responsive table-striped table-hover col-sm">
         <tbody data-bind="foreach: searchResult">

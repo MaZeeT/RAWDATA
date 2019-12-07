@@ -7,7 +7,7 @@
         let getnoofresults = ko.observable(); //for getting new number of results to grab
 
         let max = 100;
-        let stype = 5;
+        let stype = 4;
 
         let width = 200;
         let height = 200;
@@ -58,8 +58,7 @@
 
                     $('#cloud').jQCloud(data1,
                         {
-                            width: width,
-                            height: height
+                            autoResize: true
                         });
 
                     loaded(true);
