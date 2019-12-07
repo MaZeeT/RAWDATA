@@ -7,6 +7,7 @@ require.config({
         text: "../lib/requirejs-text/text",
         messaging: "services/MessagingService",
         historyService: "services/HistoryService",
+        //historyService: "services/HistoryServiceMock",    //Mock of historyService
         authservice: "services/AuthenticationService",
         bookmarksService: "services/BookmarksService",
         annotationsService: "services/AnnotationsService",
