@@ -21,7 +21,7 @@
     </div>
 
     <!-- Bootstrap table -->
- <div class="table-responsive"> 
+ <div data-bind="with: historyItems" class="table-responsive"> 
     <table class="table">
         <thead>
         <tr>
@@ -30,7 +30,8 @@
             <th scope="col">Date</th>
         </tr>
         </thead>
-        <tbody data-bind="foreach: historyItems">
+
+        <tbody data-bind="foreach: items">
         <tr>
             <td data-bind="text:title"></td>
             <td data-bind="text:threadUrl"></td>
