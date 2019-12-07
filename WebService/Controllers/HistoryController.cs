@@ -61,52 +61,18 @@ namespace WebService.Controllers
             return Ok(result);
         }
 
-       /* private List<HistoryDTO> ConvertToDto(IEnumerable<History> history)
+        private object CreateResult(IEnumerable<History> list, int count, PagingAttributes attr)
         {
-            List<HistoryDTO> list = new List<HistoryDTO>();
-            foreach (var mark in history)
-            {
-                list.Add(new HistoryDTO
-                {
-                    Title = _sharedService.GetPost(mark.Postid).Title,
-                    Date = mark.Date,
-                    ThreadUrl = Url.Link(
-                        nameof(QuestionsController.GetThread),
-                        new {questionId = mark.Postid}
-                    )
-                });
-            }
-
-            return list;
-        }*/
-
-        private HistoryDTO CreateHistoryResultDto(History hist)
-        {
-            var dto = new HistoryDTO                
-            {
-                Title = _sharedService.GetPost(hist.Postid).Title,
-                Date = hist.Date,
-                ThreadUrl = Url.Link(
-                        nameof(QuestionsController.GetThread),
-                        new { questionId = hist.Postid }
-                    )
-            };
-
-            return dto;
-        }
-
-        private object CreateResult(IEnumerable<History> searches, int count, PagingAttributes attr)
-        {
-            if (searches.FirstOrDefault() != null)
+            if (list.FirstOrDefault() != null)
             {
                 var totalResults = count;
-                var numberOfPages = Math.Ceiling((double)totalResults / attr.PageSize);
+                var numberOfPages = Math.Ceiling((double) totalResults / attr.PageSize);
 
                 var prev = attr.Page > 1
-                    ? CreatePagingLink(attr.Page - 1, attr.PageSize)
+                    ? CreatePagingLink(nameof(GetHistory), attr.Page - 1, attr.PageSize)
                     : null;
                 var next = attr.Page < numberOfPages
-                    ? CreatePagingLink(attr.Page + 1, attr.PageSize)
+                    ? CreatePagingLink(nameof(GetHistory), attr.Page + 1, attr.PageSize)
                     : null;
 
                 return new
@@ -115,7 +81,7 @@ namespace WebService.Controllers
                     numberOfPages,
                     prev,
                     next,
-                    items = searches.Select(CreateHistoryResultDto)
+                    items = list.Select(CreateHistoryResultDto)    //Select() is like a foreach loop
                 };
             }
             else
@@ -124,10 +90,24 @@ namespace WebService.Controllers
             }
         }
 
-        private string CreatePagingLink(int page, int pageSize)
+        private HistoryDTO CreateHistoryResultDto(History hist)
         {
-            return Url.Link(nameof(GetHistory), new { page, pageSize });
+            var dto = new HistoryDTO
+            {
+                Title = _sharedService.GetPost(hist.Postid).Title,
+                Date = hist.Date,
+                ThreadUrl = Url.Link(
+                    nameof(QuestionsController.GetThread),
+                    new {questionId = hist.Postid}
+                )
+            };
+
+            return dto;
         }
 
+        private string CreatePagingLink(string nameof, int page, int pageSize)
+        {
+            return Url.Link(nameof, new {page, pageSize});
+        }
     }
 }
