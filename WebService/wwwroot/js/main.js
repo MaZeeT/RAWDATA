@@ -10,8 +10,9 @@ require.config({
         //historyService: "services/HistoryServiceMock",    //Mock of historyService
         authservice: "services/AuthenticationService",
         bookmarksService: "services/BookmarksService",
+        browseService: "services/BrowseService",
         annotationsService: "services/AnnotationsService",
-        homeService: "services/HomePageService",
+        homeService: "services/HomePageService"
     }
 });
 
@@ -27,6 +28,10 @@ require(["knockout"], function (ko) {
     ko.components.register('annotations', {
         viewModel: { require: "components/AnnotationsPage/AnnotationsPage" },
         template: { require: "text!components/AnnotationsPage/AnnotationsPage.html" }
+    });
+    ko.components.register('browse', {
+        viewModel: { require: "components/BrowsePage/BrowsePage" },
+        template: { require: "text!components/BrowsePage/BrowsePage.html" }
     });
     ko.components.register('bookmarks', {
         viewModel: { require: "components/BookmarksPage/BookmarksPage" },

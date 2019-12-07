@@ -1,17 +1,40 @@
-﻿define(["knockout", "annotationsService"], function (ko, as) {
+define(['knockout', 'browseService', 'messaging'], function (ko, bs, mess) {
 
     return function () {
 
-        let annolist = ko.observableArray([]);
+        let questionlist = ko.observableArray([]);
         let p = 1; //initial page
         let ps = 5; //initial pagesize
 
-        let nexturi = '666'; //placeholder for grabbing querystring page=
-        let prevuri = '666'; //placeholder for grabbing querystring page=
+        let nexturi = '666'; //placeholder for grabbing querystring page= value
+        let prevuri = '666'; //placeholder for grabbing querystring page= value
 
         let pgsizepreset = ko.observableArray(['5', '10', '20', '30', '40', '50']) //selection of pagesizes
-        let loaded = ko.observable(false); //help with hiding elements until initial data has been loaded 
+        let loaded = ko.observable(false); // help with hiding elements until initial data has been loaded 
         let getpgsize = ko.observable(); //for getting new pagesize
+
+
+        //comp change requested
+        function changeComp(component) {
+            if (component === 'search') {
+                mess.dispatch(mess.actions.selectMenu("Home"));
+            } else if (component === 'wordcloud') {
+                mess.dispatch(mess.actions.selectMenu("Home"));
+            } 
+
+            /*console.log("dat: ", direction);
+            console.log("param: ", npg);
+            if (npg) {
+                bs.getBrowseItems(npg, ps, function (data) {
+                    console.log("Data from api call search : ", data);
+                    if (data) {
+                        questionlist(data);
+                        nexturi = data.next;
+                        prevuri = data.prev;
+                    }
+                })
+            };*/
+        };
 
         //grab data when pagesize change
         let pgsizechanged = function setPgSize(context) {
@@ -19,10 +42,10 @@
             if (context.getpgsize()) {
                 ps = context.getpgsize();
                 p = 1;
-                as.getAllAnnos(p, ps, function (data) {
+                bs.getBrowseItems(p, ps, function (data) {
                     console.log("Data from api call search : ", data);
                     if (data) {
-                        annolist(data);
+                        questionlist(data);
                         nexturi = data.next;
                         prevuri = data.prev;
                     }
@@ -33,17 +56,17 @@
         //grab data when page change
         function getPg(direction) {
             let npg = null;
-            if (direction == 'next') {
+            if (direction === 'next') {
                 npg = getParameterByName('page', nexturi);
-            } else if (direction == 'prev') { npg = getParameterByName('page', prevuri); }
+            } else if (direction === 'prev') { npg = getParameterByName('page', prevuri); }
 
             console.log("dat: ", direction);
             console.log("param: ", npg);
             if (npg) {
-                as.getAllAnnos(npg, ps, function (data) {
+                bs.getBrowseItems(npg, ps, function (data) {
                     console.log("Data from api call search : ", data);
                     if (data) {
-                        annolist(data);
+                        questionlist(data);
                         nexturi = data.next;
                         prevuri = data.prev;
                     }
@@ -63,26 +86,28 @@
         }
 
         //grab data for initial view
-        as.getAllAnnos(p, ps, function (data) {
+        bs.getBrowseItems(p, ps, function (data) {
             console.log("Data from api call search : ", data);
 
             if (data) {
-                annolist(data);
+                questionlist(data);
                 nexturi = data.next;
                 prevuri = data.prev;
-                loaded(true); 
+                loaded(true);
             }
         });
-
+        
         //stuff available for binding
         return {
-            annolist,
+            questionlist,
             getPg,
             pgsizepreset,
             getpgsize,
             pgsizechanged,
+            changeComp,
             loaded //note order matters
         };
     };
 
 });
+

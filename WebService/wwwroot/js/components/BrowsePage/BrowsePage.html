@@ -1,5 +1,16 @@
-﻿
+
     <div class="home-page-container">
+        <button data-bind="click: changeComp.bind($data, 'search')">
+            search
+        </button>
+        <button data-bind="click: changeComp.bind($data, 'browse')">
+            browse
+        </button>
+        <button data-bind="click: changeComp.bind($data, 'wordcloud')">
+            wordcloud
+        </button>
+
+
         <div data-bind="if: loaded" class="container">
             <button data-bind="click: getPg.bind($data, 'prev')">
                 prev
@@ -14,7 +25,7 @@
                event: {change: pgsizechanged}"></select>
 
 
-            <div data-bind="with: annolist">
+            <div data-bind="with: questionlist">
 
 
 
@@ -27,21 +38,18 @@
 
                 <ul data-bind="foreach: items">
                     <li>
-                        <div>                <span data-bind="text: annotationId"> </span>            </div>
-                        <div>                <span data-bind="text: body"> </span>            </div>
-                        <div>                <span data-bind="text: date"> </span>            </div>
-                        <div>  <span data-bind="text: postId"> </span></div>
-                        <div>                <span data-bind="text: questionId"> </span>            </div>
+                        <div>                <span data-bind="text: link"> </span>            </div>
+                        <div>                <span data-bind="text: id"> </span>            </div>
                         <div>                <span data-bind="text: title"> </span>            </div>
-                        <div>                <span data-bind="text: postBody"> </span>            </div>
-                        <div>  <span data-bind="text: postUrl"> </span></div>
+                        <div>  <span data-bind="text: body"> </span></div>
                     </li>
                 </ul>
 
             </div>
 
-
-
         </div>
 
+
     </div>
+
+
