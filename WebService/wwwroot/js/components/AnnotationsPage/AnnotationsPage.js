@@ -10,7 +10,7 @@
         let prevuri = '666'; //placeholder for grabbing querystring page=
 
         let pgsizepreset = ko.observableArray(['5', '10', '20', '30', '40', '50']) //selection of pagesizes
-        let loaded = ko.observable(false); //todo: supposed to help with hiding elements until initial data has been loaded 
+        let loaded = ko.observable(false); //help with hiding elements until initial data has been loaded 
         let getpgsize = ko.observable(); //for getting new pagesize
 
         //grab data when pagesize change
@@ -67,12 +67,10 @@
             console.log("Data from api call search : ", data);
 
             if (data) {
-  
                 annolist(data);
                 nexturi = data.next;
                 prevuri = data.prev;
-                loaded(true);
-
+                loaded(true); 
             }
         });
 
@@ -83,7 +81,7 @@
             pgsizepreset,
             getpgsize,
             pgsizechanged,
-            loaded
+            loaded //note order matters
         };
     };
 

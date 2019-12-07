@@ -1,5 +1,16 @@
 
     <div class="home-page-container">
+        <button data-bind="click: changeComp.bind($data, 'search')">
+            search
+        </button>
+        <button data-bind="click: changeComp.bind($data, 'browse')">
+            browse
+        </button>
+        <button data-bind="click: changeComp.bind($data, 'wordcloud')">
+            wordcloud
+        </button>
+
+
         <div data-bind="if: loaded" class="container">
             <button data-bind="click: getPg.bind($data, 'prev')">
                 prev

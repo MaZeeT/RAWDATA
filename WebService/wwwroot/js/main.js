@@ -5,7 +5,7 @@ require.config({
         jquery: "../jquery/dist/jquery",
         knockout: "../lib/knockout/build/output/knockout-latest.debug",
         text: "../lib/requirejs-text/text",
-        messaging: "services/messagingService",
+        messaging: "services/MessagingService",
         historyService: "services/HistoryService",
         authservice: "services/AuthenticationService",
         bookmarksService: "services/BookmarksService",

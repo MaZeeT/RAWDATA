@@ -1,4 +1,4 @@
-define(['knockout', 'browseService'], function (ko, bs) {
+define(['knockout', 'browseService', 'messaging'], function (ko, bs, mess) {
 
     return function () {
 
@@ -6,12 +6,35 @@ define(['knockout', 'browseService'], function (ko, bs) {
         let p = 1; //initial page
         let ps = 5; //initial pagesize
 
-        let nexturi = '666'; //placeholder for grabbing querystring page=
-        let prevuri = '666'; //placeholder for grabbing querystring page=
+        let nexturi = '666'; //placeholder for grabbing querystring page= value
+        let prevuri = '666'; //placeholder for grabbing querystring page= value
 
         let pgsizepreset = ko.observableArray(['5', '10', '20', '30', '40', '50']) //selection of pagesizes
-        let loaded = ko.observable(false); //todo: supposed to help with hiding elements until initial data has been loaded 
+        let loaded = ko.observable(false); // help with hiding elements until initial data has been loaded 
         let getpgsize = ko.observable(); //for getting new pagesize
+
+
+        //comp change requested
+        function changeComp(component) {
+            if (component === 'search') {
+                mess.dispatch(mess.actions.selectMenu("Home"));
+            } else if (component === 'wordcloud') {
+                mess.dispatch(mess.actions.selectMenu("Home"));
+            } 
+
+            /*console.log("dat: ", direction);
+            console.log("param: ", npg);
+            if (npg) {
+                bs.getBrowseItems(npg, ps, function (data) {
+                    console.log("Data from api call search : ", data);
+                    if (data) {
+                        questionlist(data);
+                        nexturi = data.next;
+                        prevuri = data.prev;
+                    }
+                })
+            };*/
+        };
 
         //grab data when pagesize change
         let pgsizechanged = function setPgSize(context) {
@@ -33,9 +56,9 @@ define(['knockout', 'browseService'], function (ko, bs) {
         //grab data when page change
         function getPg(direction) {
             let npg = null;
-            if (direction == 'next') {
+            if (direction === 'next') {
                 npg = getParameterByName('page', nexturi);
-            } else if (direction == 'prev') { npg = getParameterByName('page', prevuri); }
+            } else if (direction === 'prev') { npg = getParameterByName('page', prevuri); }
 
             console.log("dat: ", direction);
             console.log("param: ", npg);
@@ -63,30 +86,26 @@ define(['knockout', 'browseService'], function (ko, bs) {
         }
 
         //grab data for initial view
-        //loaded.subscribe(function () {
         bs.getBrowseItems(p, ps, function (data) {
             console.log("Data from api call search : ", data);
 
             if (data) {
-                
                 questionlist(data);
                 nexturi = data.next;
                 prevuri = data.prev;
                 loaded(true);
-
             }
         });
-       // });
         
         //stuff available for binding
         return {
-
             questionlist,
             getPg,
             pgsizepreset,
             getpgsize,
             pgsizechanged,
-            loaded
+            changeComp,
+            loaded //note order matters
         };
     };
 
