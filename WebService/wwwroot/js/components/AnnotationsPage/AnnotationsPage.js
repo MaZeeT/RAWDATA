@@ -67,10 +67,11 @@
             console.log("Data from api call search : ", data);
 
             if (data) {
-                loaded(true);
+  
                 annolist(data);
                 nexturi = data.next;
                 prevuri = data.prev;
+                loaded(true);
 
             }
         });
@@ -78,12 +79,11 @@
         //stuff available for binding
         return {
             annolist,
-            loaded,
             getPg,
             pgsizepreset,
             getpgsize,
-            pgsizechanged
-
+            pgsizechanged,
+            loaded
         };
     };
 

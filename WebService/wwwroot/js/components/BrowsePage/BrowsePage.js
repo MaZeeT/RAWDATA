@@ -63,27 +63,30 @@ define(['knockout', 'browseService'], function (ko, bs) {
         }
 
         //grab data for initial view
+        //loaded.subscribe(function () {
         bs.getBrowseItems(p, ps, function (data) {
             console.log("Data from api call search : ", data);
 
             if (data) {
-                loaded(true);
+                
                 questionlist(data);
                 nexturi = data.next;
                 prevuri = data.prev;
+                loaded(true);
 
             }
         });
+       // });
         
         //stuff available for binding
         return {
+
             questionlist,
-            loaded,
             getPg,
             pgsizepreset,
             getpgsize,
-            pgsizechanged
-
+            pgsizechanged,
+            loaded
         };
     };
 
