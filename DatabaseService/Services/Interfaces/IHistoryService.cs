@@ -18,5 +18,6 @@ namespace DatabaseService.Services
         bool DeleteBookmark(int userId, int postId);
         bool HistoryExist(int historyId);
         bool HistoryExist(int userId, int postId);
+        int GetCount(int userId, bool isBookmark);
     }
 }

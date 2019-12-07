@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using DatabaseService.Modules;
@@ -143,7 +144,7 @@ namespace DatabaseService.Services
         {
             // This enforces the page upper and lower limits
             var sharedService = new SharedService();
-            sharedService.GetPagination(GetCount(userId, true), pageAtt);
+            sharedService.GetPagination(GetCount(userId, isBookmark), pageAtt);
 
             return _database.History
                 .Where(x =>
@@ -155,7 +156,7 @@ namespace DatabaseService.Services
                 .ToList();
         }
 
-        private int GetCount(int userId, bool isBookmark)
+        public int GetCount(int userId, bool isBookmark)
         {
             return _database.History.Count(x =>
                 x.Userid == userId &&
