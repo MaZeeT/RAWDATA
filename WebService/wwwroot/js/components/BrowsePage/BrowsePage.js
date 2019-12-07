@@ -1,18 +1,19 @@
-define(['knockout', 'services/BrowseService'], function (ko, bs) {
+define(['knockout', 'browseService'], function (ko, bs) {
 
     return function () {
 
         let questionlist = ko.observableArray([]);
-        let p = 1;
-        let ps = 5;
+        let p = 1; //initial page
+        let ps = 5; //initial pagesize
 
-        let nexturi = '666';
-        let prevuri = '666';
+        let nexturi = '666'; //placeholder for grabbing querystring page=
+        let prevuri = '666'; //placeholder for grabbing querystring page=
 
-        let pgsizepreset = ko.observableArray(['5', '10', '20', '30', '40', '50'])
-        let loaded = ko.observable(false);
-        let getpgsize = ko.observable();
+        let pgsizepreset = ko.observableArray(['5', '10', '20', '30', '40', '50']) //selection of pagesizes
+        let loaded = ko.observable(false); //todo: supposed to help with hiding elements until initial data has been loaded 
+        let getpgsize = ko.observable(); //for getting new pagesize
 
+        //grab data when pagesize change
         let pgsizechanged = function setPgSize(context) {
             console.log("getpgsiz: ", context.getpgsize());
             if (context.getpgsize()) {
@@ -27,10 +28,9 @@ define(['knockout', 'services/BrowseService'], function (ko, bs) {
                     }
                 })
             };
-
         };
 
-
+        //grab data when page change
         function getPg(direction) {
             let npg = null;
             if (direction == 'next') {
@@ -51,6 +51,7 @@ define(['knockout', 'services/BrowseService'], function (ko, bs) {
             };
         };
 
+        //return named querystring value
         function getParameterByName(name, url) {
             if (!url) url = window.location.href;
             name = name.replace(/[\[\]]/g, '\\$&');
@@ -61,6 +62,7 @@ define(['knockout', 'services/BrowseService'], function (ko, bs) {
             return decodeURIComponent(results[2].replace(/\+/g, ' '));
         }
 
+        //grab data for initial view
         bs.getBrowseItems(p, ps, function (data) {
             console.log("Data from api call search : ", data);
 
@@ -72,9 +74,8 @@ define(['knockout', 'services/BrowseService'], function (ko, bs) {
 
             }
         });
-
-
-
+        
+        //stuff available for binding
         return {
             questionlist,
             loaded,
