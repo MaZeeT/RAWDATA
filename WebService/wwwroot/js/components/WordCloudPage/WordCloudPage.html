@@ -1,10 +1,33 @@
-﻿<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <title>wordcloud</title>
-</head>
-<body>
+﻿<div class="home-page-container">
+    <button data-bind="click: changeComp.bind($data, 'search')">
+        search
+    </button>
+    <button data-bind="click: changeComp.bind($data, 'browse')">
+        browse
+    </button>
+    <button data-bind="click: changeComp.bind($data, 'wordcloud')">
+        wordcloud
+    </button>
 
-</body>
-</html>
+
+    <input class="form-control form-control-lg" data-bind="value: searchTerms">
+
+
+    Max. results:
+    <select data-bind="options: noofresults, value: getnoofresults,
+               event: {change: noofresultschanged}"></select>
+
+
+    <div id="cloud" style="border: 2px solid red"></div>
+
+
+    <table class="table-responsive table-striped table-hover col-sm">
+        <tbody data-bind="foreach: searchResult">
+            <tr>
+                <td data-bind="text: rank"></td>
+                <td data-bind="text: term"></td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>

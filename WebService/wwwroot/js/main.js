@@ -5,12 +5,14 @@ require.config({
         jquery: "../jquery/dist/jquery",
         knockout: "../lib/knockout/build/output/knockout-latest.debug",
         text: "../lib/requirejs-text/text",
+        jqcloud: "../lib/jqcloud2/dist/jqcloud",
         messaging: "services/MessagingService",
         historyService: "services/HistoryService",
         //historyService: "services/HistoryServiceMock",    //Mock of historyService
         authservice: "services/AuthenticationService",
         bookmarksService: "services/BookmarksService",
         browseService: "services/BrowseService",
+        wordCloudService: "services/WordCloudService",
         annotationsService: "services/AnnotationsService",
         homeService: "services/HomePageService",
         postservice:"services/PostService"
