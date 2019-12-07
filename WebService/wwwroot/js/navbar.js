@@ -38,7 +38,7 @@
 
     var currentMenu = ko.observable(menuElements[0]);
     var currentComponent = ko.observable();
-    let isTokenSet = ko.observable(true);
+    let isTokenSet = ko.observable(false);
     if (window.localStorage.getItem('userToken')) {
         currentComponent = ko.observable(currentMenu().component);
         isTokenSet(true);
