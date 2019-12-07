@@ -19,21 +19,8 @@ define(['knockout', 'browseService', 'messaging'], function (ko, bs, mess) {
             if (component === 'search') {
                 mess.dispatch(mess.actions.selectMenu("Home"));
             } else if (component === 'wordcloud') {
-                mess.dispatch(mess.actions.selectMenu("Home"));
+                mess.dispatch(mess.actions.selectMenu("wordcloud"));
             } 
-
-            /*console.log("dat: ", direction);
-            console.log("param: ", npg);
-            if (npg) {
-                bs.getBrowseItems(npg, ps, function (data) {
-                    console.log("Data from api call search : ", data);
-                    if (data) {
-                        questionlist(data);
-                        nexturi = data.next;
-                        prevuri = data.prev;
-                    }
-                })
-            };*/
         };
 
         //grab data when pagesize change

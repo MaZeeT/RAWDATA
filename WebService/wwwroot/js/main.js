@@ -34,6 +34,10 @@ require(["knockout"], function (ko) {
         viewModel: { require: "components/BrowsePage/BrowsePage" },
         template: { require: "text!components/BrowsePage/BrowsePage.html" }
     });
+    ko.components.register('wordcloud', {
+        viewModel: { require: "components/WordCloudPage/WordCloudPage" },
+        template: { require: "text!components/WordCloudPage/WordCloudPage.html" }
+    });
     ko.components.register('bookmarks', {
         viewModel: { require: "components/BookmarksPage/BookmarksPage" },
         template: { require: "text!components/BookmarksPage/BookmarksPage.html" }
