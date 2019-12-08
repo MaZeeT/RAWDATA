@@ -52,4 +52,37 @@ a.nav-link.signout-btn {
     background-color: rgb(211, 250, 255);
 }
 
+/***********************************PostDetails Page***************************************/
+/*.card {
+    background-color: #17a2b8;
+    margin-top: 30px;
+}
+.card .post-details-card-container {
+    width: auto;
+    background-color: #17a2b8;
+    margin-top: 30px;
+}
+.post-details-card-container img {
+    max-width: -webkit-fill-available;
+    max-block-size: fit-content;
+    
+}
+.post-card-details-container {
+    margin-bottom: 1.5rem;
+}
+.card-body {
+    background-color: aliceblue;
+}
+.card-text {
+    padding: 0.5rem;
+    background-color: white;
+}
+.card-bottom-link-buttons {
+    text-align: center;
+}
+.card-link {
+    color: #17a2b8;
+    font-size: large;
+    font-weight: 500;
+}*/
 

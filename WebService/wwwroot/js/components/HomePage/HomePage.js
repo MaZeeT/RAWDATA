@@ -19,6 +19,7 @@
                 if (responseData) {
                     totalResults(responseData.totalResults);
                     searchResult(responseData.items);
+                    console.log(searchResult());
                     showTable(true);
                 }
                
