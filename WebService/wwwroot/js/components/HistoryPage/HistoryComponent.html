@@ -2,8 +2,8 @@
     <h3>History Component</h3>
     <div>
         <br>
-        <button data-bind="click:prevPage" type="button" class="btn btn-primary btn-sm">Prev Page</button>
-        <button data-bind="click:nextPage" type="button" class="btn btn-primary btn-sm">Next Page</button>
+        <button data-bind="click:prevPage(1)" type="button" class="btn btn-primary btn-sm">Prev Page</button>
+        <button data-bind="click:nextPage(1)" type="button" class="btn btn-primary btn-sm">Next Page</button>
         <input data-bind="value: maxPages">
     </div>
 
@@ -21,7 +21,7 @@
     </div>
 
     <!-- Bootstrap table -->
- <div data-bind="with: historyItems" class="table-responsive"> 
+ <div data-bind="foreach: historyItems" class="table-responsive"> 
     <table class="table">
         <thead>
         <tr>

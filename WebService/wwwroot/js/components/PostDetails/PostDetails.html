@@ -8,8 +8,21 @@
     <div data-bind="ifnot: showspinner" class="card post-details-card-container">
         <div class="card-body" data-bind="foreach: postDetails">
             <div class="post-card-details-container">
-                <h5 data-bind="text: title"></h5>
+                <h2 data-bind="text: title"></h2>
                 <p class="card-text" data-bind="html: body"></p>
+                <div class="card existing-annotations-content" data-bind="visible: annotations.length > 0">
+                    <h6 class="card-subtitle mb-2 text-muted">Your annotations</h6>
+                    <div class="card-body" data-bind="foreach: annotations">
+                        <div class="card-annotation-body-content">
+                            <p class="card-text annotation-text" data-bind="html: body"></p>
+                            <p class="card-text annotation-text" data-bind="html: date"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body card-annotation-body-content" data-bind="visible: $parent.newAnnotation().body">
+                    <p class="card-text annotation-text" data-bind="html: $parent.newAnnotation().body"></p>
+                    <p class="card-text annotation-text" data-bind="html: $parent.newAnnotation().date"></p>
+                </div>
                 <div class="card-bottom-link-buttons">
                     <a data-bind="attr: { href: '#collapseExample-'+ id }, click: $parent.annotatedPostValues" class="card-link" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseExample">Add Annotation</a>
                     <a href="#" data-bind="attr: { id: id }, click: $parent.addBookmark" class="card-link" data-toggle="modal" data-target=".bd-example-modal-sm">Add as Bookmark</a>

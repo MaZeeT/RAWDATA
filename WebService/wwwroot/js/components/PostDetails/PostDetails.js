@@ -5,13 +5,18 @@
         let annotatedPostValues = ko.observable();
 
         var postDetails = ko.observable([]);
+        var postAnnotationsArray = ko.observable([]);
         var showspinner = ko.observable(true);
         var showAnnotTextArea = ko.observable(false);
         var responseData = ko.observable(false);
+        var newAnnotation = ko.observable({});
        
         postservice.getAllChildDataOfPostUrl(postUrl(), function (responseData) {
             if (responseData) {
+                console.log("What is passed to postDetails: ", responseData[0].annotations);
                 postDetails(responseData);
+                console.log("What is passed to postDetails: ", postDetails()[1].annotations);
+                postAnnotationsArray(responseData)
                 showspinner(false);
             } 
 
@@ -46,11 +51,12 @@
             };
             postservice.saveAnnotationOnPost(createAnnotObject, function (responseData) {
                 if (responseData) {
-                    console.log(responseData);
-                    //TODO: Append the annotation text that is currently added as well as append the existing annotations on the thread if there are any ;) -> 
-                    // how to do: 1. the text needs to append on the observable with the proper id... probably need an array or something of that kind... also if there are existing annotations and they are seen
-                    // then these need to be updatable and then updating on view procedure is the same as for no 1. 
-                    // if too complicated then change approach somehow... though it should work. 
+                    console.log("Moni, you were a smart kookie here :D ", responseData);
+                    annotationBodyText("");
+                    newAnnotation(responseData)
+                    console.log("what i wanna do: ", newAnnotation());
+                    //TODO: delete an annotation 
+                    //TODO: update an annotation
                 }
 
             });
@@ -65,7 +71,8 @@
             showAnnotTextArea,
             responseData,
             annotationBodyText,
-            annotatedPostValues
+            annotatedPostValues,
+            newAnnotation
         };
     };
 });
