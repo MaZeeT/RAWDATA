@@ -1,15 +1,15 @@
 ﻿define(['knockout', 'postservice', 'messaging'], function (ko, postservice ,messaging) {
     return function () {
-        var postUrl = ko.observable(messaging.getState().selectedPost);
-        var annotationBodyText = ko.observable("");
+        let postUrl = ko.observable(messaging.getState().selectedPost);
+        let annotationBodyText = ko.observable("");
         let annotatedPostValues = ko.observable();
 
-        var postDetails = ko.observable([]);
-        var postAnnotationsArray = ko.observable([]);
-        var showspinner = ko.observable(true);
-        var showAnnotTextArea = ko.observable(false);
-        var responseData = ko.observable(false);
-        var newAnnotation = ko.observable({});
+        let postDetails = ko.observable([]);
+        let postAnnotationsArray = ko.observable([]);
+        let showspinner = ko.observable(true);
+        let showAnnotTextArea = ko.observable(false);
+        let responseData = ko.observable(false);
+        let newAnnotation = ko.observable({});
        
         postservice.getAllChildDataOfPostUrl(postUrl(), function (responseData) {
             if (responseData) {
