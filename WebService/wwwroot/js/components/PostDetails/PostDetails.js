@@ -4,7 +4,9 @@
 
         var postDetails = ko.observable([]);
         var showspinner = ko.observable(true);
+        var responseData = ko.observable(false);
         var showAnnotTextArea = ko.observable(false);
+        let enableDetails = ko.observable(true);
        
         console.log("You only see ....", postUrl());
         postservice.getAllChildDataOfPostUrl(postUrl(), function (responseData) {
@@ -23,6 +25,15 @@
         
         var addBookmark = function (value) {
             console.log(value.id, value.createBookmarkLink);
+            const createBookmarkUrl = value.createBookmarkLink;
+            postservice.savePostAsBookmark(createBookmarkUrl, function (responseFromServer) {
+                console.log("ResponseDataFromBookmarkis: ", responseData);
+                console.log("ResponseDataFromBookmarkis: ", responseFromServer);
+                responseData(responseFromServer);
+                console.log("responseFromServer is now: ", responseData());
+               
+
+            });
 
         };
 
@@ -33,7 +44,9 @@
             addAnnotation,
             addBookmark,
             showAnnotTextArea,
-            showspinner
+            showspinner,
+            enableDetails,
+            responseData
         };
     };
 });

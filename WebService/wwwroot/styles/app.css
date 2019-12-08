@@ -53,7 +53,7 @@ a.nav-link.signout-btn {
 }
 
 /***********************************PostDetails Page***************************************/
-/*.card {
+.card {
     background-color: #17a2b8;
     margin-top: 30px;
 }
@@ -84,5 +84,17 @@ a.nav-link.signout-btn {
     color: #17a2b8;
     font-size: large;
     font-weight: 500;
-}*/
+}
+.modal-content {
+    padding: 1rem;
+    font-size: larger;
+    background-color: aliceblue;
+    font-weight: 400;
+    text-align: center;
+    border: 0.5px solid #17a2b8;
+    border-radius: .7rem;
+}
+.modal.show .modal-dialog {
+    top: 30%;
+}
 
