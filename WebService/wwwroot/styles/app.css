@@ -85,6 +85,9 @@ a.nav-link.signout-btn {
     font-size: large;
     font-weight: 500;
 }
+.card .card-body .card-annotation-collapse-body {
+    background-color: white;
+}
 .modal-content {
     padding: 1rem;
     font-size: larger;
@@ -96,5 +99,11 @@ a.nav-link.signout-btn {
 }
 .modal.show .modal-dialog {
     top: 30%;
+}
+
+textarea {
+    width: 100%;
+    border: solid 1px aliceblue;
+    border-radius: 1rem;
 }
 

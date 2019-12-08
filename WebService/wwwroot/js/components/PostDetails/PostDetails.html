@@ -11,20 +11,24 @@
                 <h5 data-bind="text: title"></h5>
                 <p class="card-text" data-bind="html: body"></p>
                 <div class="card-bottom-link-buttons">
-                    <a href="#" data-bind="attr: { id: id }, click: $parent.addAnnotation" class="card-link">Add Annotation</a>
+                    <a data-bind="attr: { href: '#collapseExample-'+ id }, click: $parent.annotatedPostValues" class="card-link" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseExample">Add Annotation</a>
                     <a href="#" data-bind="attr: { id: id }, click: $parent.addBookmark" class="card-link" data-toggle="modal" data-target=".bd-example-modal-sm">Add as Bookmark</a>
+                </div>
+                <div class="collapse" data-bind="attr: { id: 'collapseExample-'+ id }">
+                    <textarea class="form-control form-control-lg" data-bind="attr: { id: 'collapseExample-'+ id }, value: $parent.annotationBodyText"></textarea>
                 </div>
             </div>
         </div>
-        <!--<textarea></textarea>-->
     </div>
+
+
     <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-        <div  class="modal-dialog modal-sm">
+        <div class="modal-dialog modal-sm">
             <div data-bind="visible: responseData() == true" class="modal-content success">
                 <p>Your bookmark has been saved.</p>
                 <p>You can access all your bookmarks from the menu.</p>
             </div>
-            <div  data-bind="visible: responseData() == false" class="modal-content fail">
+            <div data-bind="visible: responseData() == false" class="modal-content fail">
                 <p>We could not save your bookmark.</p>
                 <p>Please try again later</p>
             </div>
@@ -32,3 +36,9 @@
     </div>
 
 </div>
+
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="popover"]').popover();
+    });
+</script>
