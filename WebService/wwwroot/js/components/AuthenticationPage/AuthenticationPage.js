@@ -27,6 +27,18 @@
             }
         };
 
+        function clrinputfield(field) {
+            
+            if (field === 'user' && loginUsername() === "Username") {
+                loginUsername('')
+            }
+            else if (field === 'pass' && loginPassword() === "Password") {
+                loginPassword('')
+            }
+
+        }
+
+
         var newUserSignup = function () {
             console.log("I have been clicked for signup new user");
         }
@@ -35,6 +47,7 @@
             loginUsername,
             loginPassword,
             loginUser,
+            clrinputfield,
             newUserSignup
             
         }
