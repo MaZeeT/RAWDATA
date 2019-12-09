@@ -2,67 +2,49 @@
     <h3>History Component</h3>
     <div>
         <br>
-        <button data-bind="click:navPage(prevUrl()), disable: !prevUrl()" type="button" class="btn btn-primary btn-sm">Prev Page</button>
-        <button data-bind="click:navPage(nextUrl()), disable: !nextUrl()" type="button" class="btn btn-primary btn-sm">Next Page</button>
+        <button data-bind="click:navPage(prevUrl()), disable: !prevUrl()" type="button" class="btn btn-primary btn-sm">
+            Prev Page
+        </button>
+        <button data-bind="click:navPage(nextUrl()), disable: !nextUrl()" type="button" class="btn btn-primary btn-sm">
+            Next Page
+        </button>
     </div>
 
     <!-- MaxPage dropdown -->
-       <div class="dropdown">
-           <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-               Entries pr. page
-       </a>
-  
-           <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-               <a class="dropdown-item" href="#" data-bind="click:maxPages(5)">5</a>
-               <a class="dropdown-item" href="#" data-bind="click:maxPages(10)">10</a>
-               <a class="dropdown-item" href="#" data-bind="click:maxPages(15)">15</a>
-           </div>
-         
+    <div class="dropdown">
+        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+           aria-haspopup="true" aria-expanded="false">
+            Entries pr. page
+        </a>
+
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <a class="dropdown-item" href="#" data-bind="click:maxPages(5)">5</a>
+            <a class="dropdown-item" href="#" data-bind="click:maxPages(10)">10</a>
+            <a class="dropdown-item" href="#" data-bind="click:maxPages(15)">15</a>
+        </div>
+
     </div>
-    
+
     <!-- Bootstrap table -->
- <div class="table-responsive"> 
-    <table class="table">
-        <thead>
-        <tr>
-            <th scope="col">Title</th>
-            <th scope="col">ThreadUrl</th>
-            <th scope="col">Date</th>
-        </tr>
-        </thead>
-        <tbody data-bind="foreach: items">
-        <tr>
-            <td data-bind="text:title"></td>
-            <td data-bind="text:threadUrl"></td>
-            <td data-bind="text:date"></td>
-        </tr>
-        </tbody>
-        
-    </table>
-</div>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Title</th>
+                <th scope="col">ThreadUrl</th>
+                <th scope="col">Date</th>
+            </tr>
+            </thead>
+            <tbody data-bind="foreach: items">
+            <tr>
+                <td data-bind="text:title"></td>
+                <td data-bind="text:threadUrl"></td>
+                <td data-bind="text:date"></td>
+            </tr>
+            </tbody>
 
-
-    <!-- HTML table
-    <table>
-        <thead>
-        <tr>
-            <th>Title</th>
-            <th>ThreadUrl</th>
-            <th>Date</th>
-        </tr>
-        </thead>
-
-
-        <tbody data-bind="foreach: historyItems">
-
-        <tr>
-            <td data-bind="text:title"></td>
-            <td data-bind="text:url"></td>
-            <td data-bind="text:date"></td>
-        </tr>
-        </tbody>
-
-    </table>-->
+        </table>
+    </div>
 
     <button data-bind="click:deletions" type="button" class="btn btn-danger">Delete History</button>
 

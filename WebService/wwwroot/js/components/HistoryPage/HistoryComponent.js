@@ -2,7 +2,7 @@ define(["knockout", "historyService"], function (ko, ds) {
 
     return function () {
         var token = window.localStorage.getItem('userToken');
-        
+
         var maxPages = ko.observable(10);
         var totalPages = ko.observable();
         var prevUrl = ko.observable();
@@ -24,17 +24,9 @@ define(["knockout", "historyService"], function (ko, ds) {
         getData(url);
 
         var navPage = function (url) {
-            if (url != null){
+            if (url != null) {
                 getData(url);
             }
-        };
-        
-        var prevPage = function () {
-            navPage(prevUrl());
-        };
-
-        var nextPage = function () {
-            navPage(nextUrl);
         };
 
         var deletions = function () {
@@ -49,10 +41,8 @@ define(["knockout", "historyService"], function (ko, ds) {
             navPage,
             nextUrl,
             prevUrl,
-            prevPage,
-            nextPage,
             deletions
         };
-        
+
     };
 });
