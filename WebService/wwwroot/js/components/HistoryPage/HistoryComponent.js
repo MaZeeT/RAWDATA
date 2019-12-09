@@ -1,16 +1,16 @@
 define(["knockout", "historyService"], function (ko, ds) {
 
     return function () {
-        var token = window.localStorage.getItem('userToken');
+        let token = window.localStorage.getItem('userToken');
 
-        var maxPages = ko.observable(10);
-        var totalPages = ko.observable();
-        var prevUrl = ko.observable();
-        var nextUrl = ko.observable();
-        var items = ko.observableArray();
+        let maxPages = ko.observable(10);
+        let totalPages = ko.observable();
+        let prevUrl = ko.observable();
+        let nextUrl = ko.observable();
+        let items = ko.observableArray();
         console.log("maxpage value is: " + maxPages());  //todo remove
 
-        var getData = function (url) {
+        let getData = function (url) {
             ds.getHistory(token, url, function (response) {
                 totalPages(response.numberOfPages);
                 prevUrl(response.prev);
@@ -19,17 +19,17 @@ define(["knockout", "historyService"], function (ko, ds) {
             });
         };
 
-        var page = 1;
-        var url = ds.buildUrl(page, maxPages());
+        let page = 1;
+        let url = ds.buildUrl(page, maxPages());
         getData(url);
 
-        var navPage = function (url) {
+        let navPage = function (url) {
             if (url != null) {
                 getData(url);
             }
         };
 
-        var deletions = function () {
+        let deletions = function () {
             ds.deleteHistory("goat", function (response) {
                 return response;
             })
