@@ -157,7 +157,7 @@ namespace DatabaseService
 
             var limit = new NpgsqlParameter("limit", NpgsqlTypes.NpgsqlDbType.Integer)
             {
-                Value = 10
+                Value = 1000
             };
             if (maxresults != null)
             {

@@ -2,17 +2,17 @@
 
     return function () {
 
-        let noofresults = ko.observableArray(['5', '10', '20', '30', '40', '50', '100', '200']) //selection of results todo: make into slider or sth
+       // let noofresults = ko.observableArray(['5', '10', '20', '30', '40', '50', '100', '200']) //selection of results todo: make into slider or sth
         let loaded = ko.observable(false); // help with hiding elements until initial data has been loaded 
-        let getnoofresults = ko.observable(); //for getting new number of results to grab
+     //   let getnoofresults = ko.observable(); //for getting new number of results to grab
 
         let max = 15;
         let stype = 4;
 
         let selectedValue = ko.observable(15);
 
-        let width = 200;
-        let height = 200;
+     //   let width = 200;
+     //   let height = 200;
 
         const placeholderStr = "Search with terms here..."
         let searchTerms = ko.observable(placeholderStr);
@@ -67,13 +67,11 @@
                     });
                     console.log("datamap: ", data1);
 
-                  ///  $('#update-demo').on('click', function () {
-                    //    words.splice(-5);
                     $('#cloud').jQCloud('destroy');
-                    $('#cloud').jQCloud(data1);
-                  //  });
-
-                  //  loaded(true);
+                    $('#cloud').jQCloud(data1,
+                        {
+                            autoResize: true
+                        });
                 }
             });
 
@@ -125,8 +123,8 @@
         return {
             searchTerms,
             searchResult,
-            getnoofresults,
-            noofresults,
+         //   getnoofresults,
+         //   noofresults,
             changeComp,
            // noofresultschanged,
             cloudupdate,

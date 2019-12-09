@@ -2,20 +2,37 @@ define([], function () {
 
     var getWCItems = async function (s, st, max, callback) {
         let toekn = window.localStorage.getItem('userToken');
-        console.log(' token '+toekn);
-                var response = await fetch(
-            buildUrl("api/search/wordrank", {
-                s: s,
-                stype: st,
-                maxresults: max
-            }),
-            {
-                method: "GET",
-                headers: {
-                    Authorization: "Bearer "+toekn
+        console.log(' token ' + toekn);
+        if (max == 0) {
+            console.log(' equal ' + max);
+            var response = await fetch(
+                buildUrl("api/search/wordrank", {
+                    s: s,
+                    stype: st
+                }),
+                {
+                    method: "GET",
+                    headers: {
+                        Authorization: "Bearer " + toekn
+                    }
                 }
-            }
-        );
+            ); }
+        else {
+            console.log(' notequal ' + max);
+            var response = await fetch(
+                buildUrl("api/search/wordrank", {
+                    s: s,
+                    stype: st,
+                    maxresults: max
+                }),
+                {
+                    method: "GET",
+                    headers: {
+                        Authorization: "Bearer " + toekn
+                    }
+                }
+            );}
+
         var data = await response.json();
         callback(data);
     };
