@@ -21,6 +21,14 @@
      //   let showTable = ko.observable(false);
      //   let totalResults = ko.observable("0");
 
+      /*  function enter(data, event) {
+            if (event.which == 13) {
+                //call method here
+                console.log('Enter Key Pressed!');
+            }
+        }*/
+
+
 
         //comp change requested
         function changeComp(component) {
@@ -140,6 +148,7 @@
          //   getnoofresults,
          //   noofresults,
             changeComp,
+            enter,
            // noofresultschanged,
             cloudupdate,
             clrsearchfield,

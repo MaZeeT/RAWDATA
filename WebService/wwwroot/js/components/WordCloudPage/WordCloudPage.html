@@ -16,8 +16,8 @@
 
     <div class="card post-details-card-container">
 
-
         <input class="form-control form-control-lg" data-bind="value: searchTerms, click: clrsearchfield">
+        <!-- <input class="form-control form-control-lg" data-bind="value: searchTerms, click: clrsearchfield, event: {keypress: enter}"> -->
         <div class="card-bottom-link-buttons">
             Max. results:
 
@@ -25,7 +25,7 @@
             <input type="range" min="0" max="200" class="slider" data-bind="value: selectedValue, valueUpdate: 'input'" />
 
             <!-- <select data-bind="options: noofresults, value: getnoofresults,
-            event: {change: noofresultschanged}"></select> -->
+        event: {change: noofresultschanged}"></select> -->
 
             <button data-bind="click: cloudupdate">
                 update
