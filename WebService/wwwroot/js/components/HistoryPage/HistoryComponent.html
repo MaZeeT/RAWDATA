@@ -2,8 +2,8 @@
     <h3>History Component</h3>
     <div>
         <br>
-        <button data-bind="click:prevPage" type="button" class="btn btn-primary btn-sm">Prev Page</button>
-        <button data-bind="click:nextPage" type="button" class="btn btn-primary btn-sm">Next Page</button>
+        <button data-bind="click:navPage(prevUrl()), disable: !prevUrl()" type="button" class="btn btn-primary btn-sm">Prev Page</button>
+        <button data-bind="click:navPage(nextUrl()), disable: !nextUrl()" type="button" class="btn btn-primary btn-sm">Next Page</button>
     </div>
 
     <!-- MaxPage dropdown -->

@@ -3,18 +3,18 @@ define(["knockout", "historyService"], function (ko, ds) {
     return function () {
         var token = window.localStorage.getItem('userToken');
         
-        var maxPages = ko.observable(15);
+        var maxPages = ko.observable(10);
         var totalPages = ko.observable();
-        var prevUrl = null;
-        var nextUrl = null;
+        var prevUrl = ko.observable();
+        var nextUrl = ko.observable();
         var items = ko.observableArray();
         console.log("maxpage value is: " + maxPages());  //todo remove
 
         var getData = function (url) {
             ds.getHistory(token, url, function (response) {
                 totalPages(response.numberOfPages);
-                prevUrl = response.prev;
-                nextUrl = response.next;
+                prevUrl(response.prev);
+                nextUrl(response.next);
                 items(response.items);
             });
         };
@@ -23,16 +23,18 @@ define(["knockout", "historyService"], function (ko, ds) {
         var url = ds.buildUrl(page, maxPages());
         getData(url);
 
-        var prevPage = function () {
-            if (prevUrl != null){
-                getData(prevUrl);    
+        var navPage = function (url) {
+            if (url != null){
+                getData(url);
             }
+        };
+        
+        var prevPage = function () {
+            navPage(prevUrl());
         };
 
         var nextPage = function () {
-            if (nextUrl != null) {
-                getData(nextUrl);
-            }
+            navPage(nextUrl);
         };
 
         var deletions = function () {
@@ -44,6 +46,9 @@ define(["knockout", "historyService"], function (ko, ds) {
         return {
             maxPages,
             items,
+            navPage,
+            nextUrl,
+            prevUrl,
             prevPage,
             nextPage,
             deletions
