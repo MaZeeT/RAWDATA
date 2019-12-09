@@ -1,32 +1,57 @@
-﻿<h1>PostDetails</h1>
+﻿<div class="container">
+    <div data-bind="if: showspinner" class="d-flex justify-content-center">
+        <div class="spinner-border" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
 
-<!--<div data-bind="text: person"></div>-->
+    <div data-bind="ifnot: showspinner" class="card post-details-card-container">
+        <div class="card-body" data-bind="foreach: postDetails">
+            <div class="post-card-details-container">
+                <h2 data-bind="text: title"></h2>
+                <p class="card-text" data-bind="html: body"></p>
+                <div class="card existing-annotations-content" data-bind="visible: annotations.length > 0">
+                    <h6 class="card-subtitle mb-2 text-muted">Your annotations</h6>
+                    <div class="card-body" data-bind="foreach: annotations">
+                        <div class="card-annotation-body-content">
+                            <p class="card-text annotation-text" data-bind="html: body"></p>
+                            <p class="card-text annotation-text" data-bind="html: date"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body card-annotation-body-content" data-bind="visible: $parent.newAnnotation().body">
+                    <p class="card-text annotation-text" data-bind="html: $parent.newAnnotation().body"></p>
+                    <p class="card-text annotation-text" data-bind="html: $parent.newAnnotation().date"></p>
+                </div>
+                <div class="card-bottom-link-buttons">
+                    <a data-bind="attr: { href: '#collapseExample-'+ id }, click: $parent.annotatedPostValues" class="card-link" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseExample">Add Annotation</a>
+                    <a href="#" data-bind="attr: { id: id }, click: $parent.addBookmark" class="card-link" data-toggle="modal" data-target=".bd-example-modal-sm">Add as Bookmark</a>
+                </div>
+                <div class="collapse" data-bind="attr: { id: 'collapseExample-'+ id }">
+                    <textarea class="form-control form-control-lg" data-bind="attr: { id: 'collapseExample-'+ id }, value: $parent.annotationBodyText"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<div class="container">
-    <!--<h2>Answers on that thread <p data-bind="text: totalResults"></p></h2>-->
-    <table class="table-responsive table-striped table-hover col-sm">
-        <thead class="header-table-style">
-            <tr>
-                <th>Rank</th>
-                <th>Title</th>
-                <th>Body</th>
-            </tr>
-        </thead>
-        <tbody data-bind="foreach: postDetails">
-            <!--<tr>
-                <td data-bind="text: rank"></td>
-                <td data-bind="text: questionTitle"></td>
-                <td data-bind="html: postBody"></td>
-            </tr>-->
-        </tbody>
-    </table>
-    <nav aria-label="Page navigation example">
-        <ul class="pagination">
-            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item"><a class="page-link" href="#">Next</a></li>
-        </ul>
-    </nav>
+
+    <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div data-bind="visible: responseData() == true" class="modal-content success">
+                <p>Your bookmark has been saved.</p>
+                <p>You can access all your bookmarks from the menu.</p>
+            </div>
+            <div data-bind="visible: responseData() == false" class="modal-content fail">
+                <p>We could not save your bookmark.</p>
+                <p>Please try again later</p>
+            </div>
+        </div>
+    </div>
+
 </div>
+
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="popover"]').popover();
+    });
+</script>

@@ -17,8 +17,10 @@
             
             homeserv.getSearchItems(searchStr, function (responseData) {
                 if (responseData) {
+                    console.log("Responsedata from homeage is: ", responseData);
                     totalResults(responseData.totalResults);
                     searchResult(responseData.items);
+                    console.log(searchResult());
                     showTable(true);
                 }
                
@@ -27,6 +29,7 @@
 
         let selectSearchResultItem = function (item) {
             console.log("Item.threadlink is: ", item.threadLink);
+            console.log("Item is: ", item);
             messaging.dispatch(messaging.actions.selectPost(item.threadLink));
             console.log("In between dispatches");
             messaging.dispatch(messaging.actions.selectMenu("postdetails"));
