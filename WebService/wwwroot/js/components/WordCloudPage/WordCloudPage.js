@@ -60,6 +60,20 @@
                 console.log("Data from api call search : ", data);
 
                 if (data) {
+
+                    console.log("data status : ", data.status);
+
+                    if (data.status == 400) {
+                        //bad request
+                        searchResult([]);
+                        searchTerms('Try searching for something!');
+                        return;
+                    } else if (data.status == 401) {
+                        //unauthorized, goto login page
+                        mess.dispatch(mess.actions.selectMenu("authentication"));
+                    }
+
+                    loaded(true);
                     searchResult(data);
 
                     data1 = data.map(function (a) {

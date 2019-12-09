@@ -31,10 +31,22 @@ define([], function () {
                         Authorization: "Bearer " + toekn
                     }
                 }
-            );}
+            );
+        }
 
-        var data = await response.json();
-        callback(data);
+        try {
+            var data = await response.json();
+
+            callback(data);
+        } catch (error) {
+            console.error('Exxor:', error);
+            var errorresponse = new Object();
+            errorresponse.status = 401;
+
+           // var jsonerror = JSON.stringify(errorresponse);
+            console.log('Eor:', errorresponse.status);
+            callback(errorresponse);
+        }
     };
 
 

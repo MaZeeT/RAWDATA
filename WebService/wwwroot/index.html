@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>index</title>
+    <link href="lib/bootstrap-slider/css/bootstrap-slider.min.css" rel="stylesheet" />
     <link href="lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="styles/app.css" rel="stylesheet" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -27,14 +28,15 @@
 
     </nav>
 
-        <div data-bind="component: {name: currentComponent}"></div>
+    <div data-bind="component: {name: currentComponent}"></div>
 
     <!--Scripts for requirejs and bootstrap-->
     <script src="jquery/dist/jquery.min.js"></script>
     <script src="lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/bootstrap-slider/bootstrap-slider.min.js"></script>
     <script data-main="js/main.js" src="lib/requirejs/require.js"></script>
 
 
-    
+
 </body>
 </html>
