@@ -5,7 +5,7 @@ define(["jquery"], function () {
     
     var getHistory = async function (token, page, maxPages, callback) {
         try {
-            const response = await fetch("api/history", {
+            const response = await fetch(`api/history?Page=${page}&PageSize=${maxPages}`, {
                 method: 'GET', // or 'PUT'
                 headers: new Headers({
                     'Authorization': 'Bearer ' + token,

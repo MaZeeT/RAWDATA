@@ -4,7 +4,7 @@ define(["knockout", "historyService"], function (ko, ds) {
         var token = window.localStorage.getItem('userToken');
 
         var page = 2;
-        var maxPages = ko.observable(10);
+        var maxPages = ko.observable(15);
         var totalPages = ko.observable();
         var prevUrl = ko.observable();
         var nextUrl = ko.observable();
@@ -24,7 +24,7 @@ define(["knockout", "historyService"], function (ko, ds) {
         var historyItems = ko.observableArray();
         var items = ko.observableArray();
         console.log("page value is: " + page);
-        ds.getHistory(token, page, maxPages, function (response) {
+        ds.getHistory(token, page, maxPages(), function (response) {
             historyItems(response);
             totalPages(response.numberOfPages);
             prevUrl(response.prev);
