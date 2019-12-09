@@ -2,10 +2,15 @@ define(["jquery"], function () {
     data = {
         "historyItems": []
     };
-    
-    var getHistory = async function (token, page, maxPages, callback) {
+
+    var buildUrl = function (page, maxPages) {
+        return `api/history?Page=${page}&PageSize=${maxPages}`;
+    };
+
+    var getHistory = async function (token, url, callback) {
+        console.log(url);
         try {
-            const response = await fetch(`api/history?Page=${page}&PageSize=${maxPages}`, {
+            const response = await fetch(url, {
                 method: 'GET', // or 'PUT'
                 headers: new Headers({
                     'Authorization': 'Bearer ' + token,
@@ -23,7 +28,7 @@ define(["jquery"], function () {
         }
 
     };
-    
+
     var deleteHistory = async function (token, callback) {
         try {
             console.log("token: " + token);
@@ -46,6 +51,7 @@ define(["jquery"], function () {
     };
 
     return {
+        buildUrl,
         getHistory,
         deleteHistory
     }
