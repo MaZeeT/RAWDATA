@@ -1,4 +1,5 @@
-﻿<link rel="stylesheet" href="../lib/jqcloud2/dist/jqcloud.min.css">
+﻿
+<link rel="stylesheet" href="../lib/jqcloud2/dist/jqcloud.min.css">
 <div class="home-page-container">
     <button data-bind="click: changeComp.bind($data, 'search')">
         search
@@ -10,26 +11,42 @@
         wordcloud
     </button>
 
+    <div class="card post-details-card-container">
 
-    <input class="form-control form-control-lg" data-bind="value: searchTerms">
+        
+        <input class="form-control form-control-lg" data-bind="value: searchTerms, click: clrsearchfield">
+        <div class="card-bottom-link-buttons">
+            Max. results:
+
+            <input type="text" data-bind="value: selectedValue" />
+            <input type="range" min="0" max="200" class="slider" data-bind="value: selectedValue, valueUpdate: 'input'" />
+
+            <!-- <select data-bind="options: noofresults, value: getnoofresults,
+    event: {change: noofresultschanged}"></select> -->
+
+            <button data-bind="click: cloudupdate">
+                update
+            </button>
+        </div>
+
+        <div data-bind="if: loaded">
+            <div class="card-body">
 
 
-    Max. results:
-    <select data-bind="options: noofresults, value: getnoofresults,
-               event: {change: noofresultschanged}"></select>
+                <div id="cloud" class="embed-responsive embed-responsive-4by3 rounded-lg">
 
+                </div>
 
-    <div id="cloud" class="embed-responsive embed-responsive-4by3" style="border: 2px solid red">
+                <table class="table-responsive table-striped table-hover col-sm">
+                    <tbody data-bind="foreach: searchResult">
+                        <tr>
+                            <td data-bind="text: rank"></td>
+                            <td data-bind="text: term"></td>
+                        </tr>
+                    </tbody>
+                </table>
 
+            </div>
+        </div>
     </div>
-
-    <table class="table-responsive table-striped table-hover col-sm">
-        <tbody data-bind="foreach: searchResult">
-            <tr>
-                <td data-bind="text: rank"></td>
-                <td data-bind="text: term"></td>
-            </tr>
-        </tbody>
-    </table>
-
-</div>
+    </div>

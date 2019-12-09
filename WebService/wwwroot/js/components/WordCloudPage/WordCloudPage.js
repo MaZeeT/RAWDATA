@@ -2,15 +2,17 @@
 
     return function () {
 
-        let noofresults = ko.observableArray(['5', '10', '20', '30', '40', '50', '100', '200']) //selection of results todo: make into slider or sth
+       // let noofresults = ko.observableArray(['5', '10', '20', '30', '40', '50', '100', '200']) //selection of results todo: make into slider or sth
         let loaded = ko.observable(false); // help with hiding elements until initial data has been loaded 
-        let getnoofresults = ko.observable(); //for getting new number of results to grab
+     //   let getnoofresults = ko.observable(); //for getting new number of results to grab
 
-        let max = 100;
+        let max = 15;
         let stype = 4;
 
-        let width = 200;
-        let height = 200;
+        let selectedValue = ko.observable(15);
+
+     //   let width = 200;
+     //   let height = 200;
 
         const placeholderStr = "Search with terms here..."
         let searchTerms = ko.observable(placeholderStr);
@@ -31,21 +33,30 @@
 
 
         //max results
-        let noofresultschanged = function setPgSize(context) {
+     /*   let noofresultschanged = function setPgSize(context) {
             console.log("getmax: ", context.getnoofresults());
             if (context.getnoofresults()) {
                 max = context.getnoofresults();
             };
-        };
+        };*/
 
-
-        searchTerms.subscribe(function (searchStr) {
-            if (searchStr.length === 0) {
-                searchResult([]);
-                return;
+        let clrsearchfield = function upd() {
+            console.log("searchreerm : ", searchTerms());
+            if (searchTerms() === placeholderStr) {
+                searchTerms('');
             }
+            console.log("searchreerm : ", searchTerms());
+        }
 
-            wc.getWCItems(searchStr, stype, max, function (data) {
+        let cloudupdate = function upd() {
+
+            console.log("searchreerm : ", searchTerms());
+            console.log("stypw : ", stype);
+            max = selectedValue();
+            console.log("maxres : ", max);
+            console.log("slider value : ", selectedValue());
+
+            wc.getWCItems(searchTerms(), stype, max, function (data) {
                 console.log("Data from api call search : ", data);
 
                 if (data) {
@@ -56,12 +67,44 @@
                     });
                     console.log("datamap: ", data1);
 
+                    $('#cloud').jQCloud('destroy');
+                    $('#cloud').jQCloud(data1,
+                        {
+                            autoResize: true
+                        });
+                }
+            });
+
+        };
+
+        searchTerms.subscribe(function (searchStr) {
+            if (searchStr.length === 0) {
+                searchResult([]);
+                return;
+            };
+            max = selectedValue();
+            console.log("maxres : ", max);
+            console.log("slider value : ", selectedValue());
+
+            wc.getWCItems(searchStr, stype, max, function (data) {
+                console.log("Data from api call search : ", data);
+                searchTerms(searchStr);
+                if (data) {
+                    loaded(true);
+                    searchResult(data);
+
+                    data1 = data.map(function (a) {
+                        return { text: a.term, weight: a.rank };
+                    });
+                    console.log("datamap: ", data1);
+
+                    $('#cloud').jQCloud('destroy'); /// cant figure out how to update lol! so am destroying it..
                     $('#cloud').jQCloud(data1,
                         {
                             autoResize: true
                         });
 
-                    loaded(true);
+                   
                 }
             });
         });
@@ -80,10 +123,13 @@
         return {
             searchTerms,
             searchResult,
-            getnoofresults,
-            noofresults,
+         //   getnoofresults,
+         //   noofresults,
             changeComp,
-            noofresultschanged,
+           // noofresultschanged,
+            cloudupdate,
+            clrsearchfield,
+            selectedValue,
             loaded
 
         }
