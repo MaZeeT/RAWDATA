@@ -3,23 +3,26 @@
         let postUrl = ko.observable(messaging.getState().selectedPost);
         let annotationBodyText = ko.observable("");
         let annotatedPostValues = ko.observable();
+        let updateAnnotationValue = ko.observable("");
 
         let postDetails = ko.observable([]);
         let postAnnotationsArray = ko.observable([]);
         let showspinner = ko.observable(true);
         let showAnnotTextArea = ko.observable(false);
         let responseData = ko.observable(false);
+        let deletedAnnotStatus = ko.observable(false);
         let newAnnotation = ko.observable({});
-       
-        postservice.getAllChildDataOfPostUrl(postUrl(), function (responseData) {
-            if (responseData) {
-                console.log("What is passed to postDetails: ", responseData[0].annotations);
-                postDetails(responseData);
-                console.log("What is passed to postDetails: ", postDetails()[1].annotations);
-                postAnnotationsArray(responseData)
-                showspinner(false);
-            } 
 
+        
+
+        postservice.getAllChildDataOfPostUrl(postUrl(), function (responseFromServer) {
+            if (responseFromServer) {
+                console.log("What is passed to postDetails: ", responseFromServer[0].annotations);
+                postDetails(responseFromServer);
+                console.log("What is passed to postDetails: ", postDetails()[1].annotations);
+                postAnnotationsArray(responseFromServer)
+                showspinner(false);
+            }
         });
 
         let addAnnotation = function (value, event) {
@@ -38,6 +41,48 @@
             });
         };
 
+
+        let updateAnnotation = function (value) {
+            console.log("This is new: ", updateAnnotationValue());
+            if (updateAnnotationValue() && value.annotationId) {
+                console.log("Now one can update the selected annotation with data: ", value);
+                let annotationId = value.annotationId;
+                let annotationBody = updateAnnotationValue();
+                postservice.updateAnnotation(annotationId, annotationBody, function (serverResponse) {
+                    let status = serverResponse.status;
+                    if (status === 204) {
+                        callServiceGetThread(postUrl());
+                        updateAnnotationValue("");
+                    }
+                });
+            }
+        }
+
+        let deleteAnnotation = function (value) {
+
+            if (value.annotationId) {
+                let annotationId = value.annotationId;
+                postservice.deleteAnnotation(annotationId, function (serverResponse) {
+                    let status = serverResponse.status;
+                    console.log("Serv response: ", serverResponse);
+                    if (status === 200) {
+                        callServiceGetThread(postUrl());
+                        updateAnnotationValue("");
+                        callServiceGetThread(postUrl());
+                        deletedAnnotStatus(true);
+                    } else {
+                        deletedAnnotStatus(false);
+                    }
+                });
+
+            } else {
+                deletedAnnotStatus(false);
+            }
+
+        };
+       
+
+
         annotationBodyText.subscribe(function (annotBody) {
             console.log("Value from test: ", annotBody);
             console.log("myStinkingValue: ", annotatedPostValues());
@@ -49,18 +94,33 @@
                 postid: annotatedPostValues().id,
                 annotBody
             };
-            postservice.saveAnnotationOnPost(createAnnotObject, function (responseData) {
-                if (responseData) {
-                    console.log("Moni, you were a smart kookie here :D ", responseData);
+
+            postservice.saveAnnotationOnPost(createAnnotObject, function (responseFromServer) {
+                if (responseFromServer) {
+                    console.log("Moni, you were a smart kookie here :D ", responseFromServer);
                     annotationBodyText("");
-                    newAnnotation(responseData)
+                    newAnnotation(responseFromServer)
                     console.log("what i wanna do: ", newAnnotation());
-                    //TODO: delete an annotation 
-                    //TODO: update an annotation
+                    callServiceGetThread(postUrl());
                 }
 
             });
         });
+
+      
+
+
+        function callServiceGetThread(postUrl) {
+            postservice.getAllChildDataOfPostUrl(postUrl, function (responseFromServer) {
+                if (responseFromServer) {
+                    console.log("What is passed to postDetails: ", responseFromServer[0].annotations);
+                    postDetails(responseFromServer);
+                    console.log("What is passed to postDetails: ", postDetails()[1].annotations);
+                    postAnnotationsArray(responseFromServer)
+                    showspinner(false);
+                }
+            });
+        }
 
         return {
             postUrl,
@@ -72,7 +132,11 @@
             responseData,
             annotationBodyText,
             annotatedPostValues,
-            newAnnotation
+            newAnnotation,
+            updateAnnotationValue,
+            updateAnnotation,
+            deleteAnnotation,
+            deletedAnnotStatus
         };
     };
 });

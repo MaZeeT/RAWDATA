@@ -73,11 +73,58 @@
         }
     }
 
+    let updateAnnotation = async function (annotationId, newAnnotationBody, callback) {
+        console.log("Save annotation postid: ", annotationId);
+        console.log("Save annotation body: ", newAnnotationBody);
+        const requestBody = { Body: newAnnotationBody };
+        const url = "http://localhost:5001/api/annotations/" + annotationId;
+        try {
+            const response = await fetch(url, {
+                method: 'PUT', // or 'PUT'
+                body: JSON.stringify(requestBody), // data can be `string` or {object}!
+
+                headers: new Headers({
+                    'Authorization': 'Bearer ' + window.localStorage.getItem("userToken"),
+                    'Content-Type': 'application/json'
+                }),
+            }).then(function (response) {
+                return response;
+            });
+            callback(response);
+
+        } catch (error) {
+            console.log('Error:', error);
+        }
+    }
+
+    let deleteAnnotation = async function (annotationId, callback) {
+        console.log("Annotation to be deleted id is: ", annotationId);
+        const url = "http://localhost:5001/api/annotations/" + annotationId;
+        try {
+            const response = await fetch(url, {
+                method: 'DELETE', // or 'PUT'
+                
+                headers: new Headers({
+                    'Authorization': 'Bearer ' + window.localStorage.getItem("userToken"),
+                    'Content-Type': 'application/json'
+                }),
+            }).then(function (response) {
+                return response;
+            });
+            callback(response);
+
+        } catch (error) {
+            console.log('Error:', error);
+        }
+    }
+
 
     return {
         getAllChildDataOfPostUrl,
         savePostAsBookmark,
-        saveAnnotationOnPost
+        saveAnnotationOnPost,
+        updateAnnotation,
+        deleteAnnotation
     }
 
 
