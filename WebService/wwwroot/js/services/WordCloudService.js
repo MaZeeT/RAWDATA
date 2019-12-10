@@ -16,7 +16,8 @@ define([], function () {
                         Authorization: "Bearer " + toekn
                     }
                 }
-            ); }
+            );
+        }
         else {
             console.log(' notequal ' + max);
             var response = await fetch(
@@ -34,19 +35,24 @@ define([], function () {
             );
         }
 
-        try {
-            var data = await response.json();
 
-            callback(data);
-        } catch (error) {
-            console.error('Exxor:', error);
+        var data = await response;
+        if (response.status != 401) //we are not unauthorized
+        {
+            try {
+                data = await response.json();    //try to parse
+            }
+            catch (error) {         //json was incomplete
+                var errorresponse = new Object();
+                errorresponse.status = 666;
+                data = errorresponse;
+            }
+        } else if (response.status == 401) { //we are unauthorized!
             var errorresponse = new Object();
-            errorresponse.status = 401;
-
-           // var jsonerror = JSON.stringify(errorresponse);
-            console.log('Eor:', errorresponse.status);
-            callback(errorresponse);
+            errorresponse.status = response.status;  //send back status 401
+            data = errorresponse;
         }
+        callback(data);     //ok? then send it back
     };
 
 

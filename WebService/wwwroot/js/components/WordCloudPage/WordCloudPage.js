@@ -76,24 +76,26 @@
                         searchResult([]);
                         searchTerms('Try searching for something!');
                         return;
-                    } else if (data.status == 401) {
-                        //unauthorized, goto login page
+                    } else if (data.status == 401 || data.status == 666) {
+                        //unauthorized or incomplete, goto login page
                         mess.dispatch(mess.actions.selectMenu("authentication"));
-                    }
+                        return;
+                    } else {
+                        //ok so far
+                        loaded(true);
+                        searchResult(data);
 
-                    loaded(true);
-                    searchResult(data);
-
-                    data1 = data.map(function (a) {
-                        return { text: a.term, weight: a.rank };
-                    });
-                    console.log("datamap: ", data1);
-
-                    $('#cloud').jQCloud('destroy');
-                    $('#cloud').jQCloud(data1,
-                        {
-                            autoResize: true
+                        data1 = data.map(function (a) {
+                            return { text: a.term, weight: a.rank };
                         });
+                        console.log("datamap: ", data1);
+
+                        $('#cloud').jQCloud('destroy');
+                        $('#cloud').jQCloud(data1,
+                            {
+                                autoResize: true
+                            });
+                    }
                 }
             });
 
@@ -148,7 +150,7 @@
          //   getnoofresults,
          //   noofresults,
             changeComp,
-            enter,
+           // enter,
            // noofresultschanged,
             cloudupdate,
             clrsearchfield,
