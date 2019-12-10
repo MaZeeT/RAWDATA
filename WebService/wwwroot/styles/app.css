@@ -115,7 +115,13 @@ select {
     padding-bottom: 0px;
     border: 1px solid aliceblue;
     border-radius: 1rem;
+    /*overflow-y: scroll;
+    height: 300px;*/
 }
+    .card-body.annotations-container {
+        overflow-y: scroll;
+        height: 300px;
+    }
 .card-text.annotation-text {
     padding-bottom: 0px;
     margin-bottom: 0px;
