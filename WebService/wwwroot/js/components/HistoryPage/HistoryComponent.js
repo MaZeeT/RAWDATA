@@ -1,41 +1,54 @@
 define(["knockout", "historyService"], function (ko, ds) {
 
     return function () {
-        var token = window.localStorage.getItem('userToken');
+        let token = window.localStorage.getItem('userToken');
 
-        var page = ko.observable(2);
-        var maxPages = ko.observable(10);
+        let pgSize = ko.observable(10);
+        let totalPages = ko.observable();
+        let prevUrl = ko.observable();
+        let nextUrl = ko.observable();
+        let items = ko.observableArray();
+        console.log("maxpage value is: " + pgSize());  //todo remove
 
-        var prevPage = function (pageVal){
-            if (page > 1) page--;
-            console.log("page value is: " + pageVal);  //todo remove
+        let getData = function (url) {
+            ds.getHistory(token, url, function (response) {
+                totalPages(response.numberOfPages);
+                prevUrl(response.prev);
+                nextUrl(response.next);
+                items(response.items);
+            });
         };
 
-        var nextPage = function(value){
-            page++;
-            console.log("page value is: " + value);  //todo remove
+        let page = 1;
+        let url = ds.buildUrl(page, pgSize());
+        getData(url);
+
+        let pageSize = function (size){
+            pgSize(size);
+            let url = ds.buildUrl(page, pgSize());
+            getData(url);
+        };
+        
+        let navPage = function (url) {
+            if (url != null) {
+                getData(url);
+            }
         };
 
-        var historyItems = ko.observableArray([]);
-        ds.getHistory(token, page, maxPages,function (response) {
-            historyItems(response);
-        });
-
-        var deletions = function () {
+        let deletions = function () {
             ds.deleteHistory("goat", function (response) {
                 return response;
             })
         };
 
         return {
-            maxPages,
-            prevPage,
-            nextPage,
-            historyItems,
+            pageSize,
+            items,
+            navPage,
+            nextUrl,
+            prevUrl,
             deletions
         };
 
-
     };
-
 });
