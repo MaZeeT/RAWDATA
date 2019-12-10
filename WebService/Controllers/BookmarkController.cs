@@ -41,7 +41,8 @@ namespace WebService.Controllers
                 return NotFound();
             }
 
-            return Ok(ConvertToDto(bookmarks));
+            var count = _historyService.GetCount(userId, true);
+            return Ok(CreateResult(bookmarks, count, pagingAttributes));
         }
 
         [HttpPost("add/{postId}", Name = nameof(AddBookmark))]
@@ -93,23 +94,56 @@ namespace WebService.Controllers
             return Ok(result);
         }
 
-        private List<BookmarkDTO> ConvertToDto(IEnumerable<History> bookmarks)
-        {
-            List<BookmarkDTO> list = new List<BookmarkDTO>();
-            foreach (var mark in bookmarks)
-            {
-                list.Add(new BookmarkDTO
-                {
-                    Title = _sharedService.GetPost(mark.Postid).Title,
-                    Date = mark.Date,
-                    ThreadUrl = Url.Link(
-                        nameof(QuestionsController.GetThread),
-                        new {questionId = mark.Postid}
-                    )
-                });
-            }
 
-            return list;
+        private object CreateResult(IEnumerable<History> list, int count, PagingAttributes attr)
+        {
+            if (list.FirstOrDefault() != null)
+            {
+                var totalResults = count;
+                var numberOfPages = Math.Ceiling((double) totalResults / attr.PageSize);
+
+                var prev = attr.Page > 1
+                    ? CreatePagingLink(nameof(GetBookmarkList), attr.Page - 1, attr.PageSize)
+                    : null;
+                var next = attr.Page < numberOfPages
+                    ? CreatePagingLink(nameof(GetBookmarkList), attr.Page + 1, attr.PageSize)
+                    : null;
+
+                return new
+                {
+                    totalResults,
+                    numberOfPages,
+                    prev,
+                    next,
+                    items = list.Select(CreateBookmarkResultDto) //Select() is like a foreach loop
+                };
+            }
+            else
+            {
+                return null;
+            }
         }
+
+        private BookmarkDTO CreateBookmarkResultDto(History hist)
+        {
+            var dto = new BookmarkDTO
+            {
+                Title = _sharedService.GetPost(hist.Postid).Title,
+                Date = hist.Date,
+                ThreadUrl = Url.Link(
+                    nameof(QuestionsController.GetThread),
+                    new {questionId = hist.Postid}
+                )
+            };
+
+            return dto;
+        }
+
+
+        public string CreatePagingLink(string nameof, int page, int pageSize)
+        {
+            return Url.Link(nameof, new {page, pageSize});
+        }
+
     }
 }

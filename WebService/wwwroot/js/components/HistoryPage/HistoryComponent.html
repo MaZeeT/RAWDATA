@@ -2,67 +2,61 @@
     <h3>History Component</h3>
     <div>
         <br>
-        <button data-bind="click:prevPage(1)" type="button" class="btn btn-primary btn-sm">Prev Page</button>
-        <button data-bind="click:nextPage(1)" type="button" class="btn btn-primary btn-sm">Next Page</button>
-        <input data-bind="value: maxPages">
+        <button data-bind="click:navPage(prevUrl()), disable: !prevUrl()" type="button" class="btn btn-primary btn-sm">
+            Prev Page
+        </button>
+        <button data-bind="click:navPage(nextUrl()), disable: !nextUrl()" type="button" class="btn btn-primary btn-sm">
+            Next Page
+        </button>
     </div>
 
     <!-- MaxPage dropdown -->
+    <!--
     <div class="dropdown">
-        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+           aria-haspopup="true" aria-expanded="false">
             Entries pr. page
         </a>
 
         <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-            <a class="dropdown-item" href="#" data-bind="click:maxPages = 5">5</a>
-            <a class="dropdown-item" href="#" data-bind="click:maxPages = 10">10</a>
-            <a class="dropdown-item" href="#" data-bind="click:maxPages = 15">15</a>
+            <a class="dropdown-item" href="#" data-bind="value:pageSize(5)">5</a>
+            <a class="dropdown-item" href="#" data-bind="value:pageSize(10)">10</a>
+            <a class="dropdown-item" href="#" data-bind="value:pageSize(15)">15</a>
         </div>
+
+    </div>
+    -->
+    <div>
+        <select class="mdb-select md-form">
+            <option value="" disabled selected>Choose your car</option>
+            <option data-bind="pageSize(5)">5</option>
+            <option data-bind="pageSize(10)">10</option>
+            <option data-bind="pageSize(15)">15</option>
+            <option data-bind="pageSize(25)">25</option>
+            <option data-bind="pageSize(50)">50</option>
+        </select>
     </div>
 
     <!-- Bootstrap table -->
- <div data-bind="foreach: historyItems" class="table-responsive"> 
-    <table class="table">
-        <thead>
-        <tr>
-            <th scope="col">Title</th>
-            <th scope="col">ThreadUrl</th>
-            <th scope="col">Date</th>
-        </tr>
-        </thead>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Title</th>
+                <th scope="col">ThreadUrl</th>
+                <th scope="col">Date</th>
+            </tr>
+            </thead>
+            <tbody data-bind="foreach: items">
+            <tr>
+                <td data-bind="text:title"></td>
+                <td data-bind="text:threadUrl"></td>
+                <td data-bind="text:date"></td>
+            </tr>
+            </tbody>
 
-        <tbody data-bind="foreach: items">
-        <tr>
-            <td data-bind="text:title"></td>
-            <td data-bind="text:threadUrl"></td>
-            <td data-bind="text:date"></td>
-        </tr>
-        </tbody>
-    </table>
-</div>
-
-
-    <!-- HTML table
-    <table>
-        <thead>
-        <tr>
-            <th>Title</th>
-            <th>ThreadUrl</th>
-            <th>Date</th>
-        </tr>
-        </thead>
-
-
-        <tbody data-bind="foreach: historyItems">
-
-        <tr>
-            <td data-bind="text:title"></td>
-            <td data-bind="text:url"></td>
-            <td data-bind="text:date"></td>
-        </tr>
-        </tbody>
-
-    </table>-->
+        </table>
+    </div>
 
     <button data-bind="click:deletions" type="button" class="btn btn-danger">Delete History</button>
 
