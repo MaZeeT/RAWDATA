@@ -87,6 +87,16 @@ select {
     background-color: rgb(211, 250, 255);
 }
 
+/******************************************Browsing page *************************************/
+.browsepage-2nd-nav-btn {
+    border: 1px solid #17a2b8;
+    color: #17a2b8;
+}
+
+.card.post-details-card-container.browsepage {
+    margin-top: 0px;
+}
+
 /***********************************PostDetails Page***************************************/
 .card {
     background-color: #17a2b8;
@@ -103,7 +113,6 @@ select {
 .post-details-card-container img {
     max-width: -webkit-fill-available;
     max-block-size: fit-content;
-    
 }
 .post-card-details-container {
     margin-bottom: 1.5rem;
