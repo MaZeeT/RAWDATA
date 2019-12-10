@@ -67,15 +67,19 @@
         return menu === currentMenu() ? "active" : "";
     };
 
-   
-
+    var signOutUser = function () {
+        console.log("It has been clicked");
+        window.localStorage.clear();
+        window.location.reload();
+    }
 
     return {
         currentComponent,
         menuElements,
         changeContent,
         isSelected,
-        isTokenSet
+        isTokenSet,
+        signOutUser
         
     };
 });

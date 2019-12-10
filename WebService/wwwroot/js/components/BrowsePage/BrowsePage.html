@@ -1,37 +1,45 @@
-<link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
-<div class="home-page-container">
-    <button data-bind="click: changeComp.bind($data, 'search')">
-         search
-     </button>
-     <button data-bind="click: changeComp.bind($data, 'browse')">
-         browse
-     </button>
-     <button data-bind="click: changeComp.bind($data, 'wordcloud')">
-         wordcloud
-     </button>
+<!--<link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">-->
+<div class="home-page-container ">
+    <div class="pagination-container">
 
-    <div data-bind="ifnot: loaded" class="d-flex justify-content-center">
-        <div class="spinner-border" role="status">
-            <span class="sr-only">Loading...</span>
+        <button class="btn btn-light browsepage-2nd-nav-btn" data-bind="visible: onSmallDevice, click: changeComp.bind($data, 'search')">
+            search
+        </button>
+        <button class="btn btn-light browsepage-2nd-nav-btn" data-bind="visible: onSmallDevice, click: changeComp.bind($data, 'browse')">
+            browse
+        </button>
+        <button class="btn btn-light browsepage-2nd-nav-btn" data-bind="visible: onSmallDevice, click: changeComp.bind($data, 'wordcloud')">
+            wordcloud
+        </button>
+
+        <div data-bind="ifnot: loaded" class="d-flex justify-content-center">
+            <div class="spinner-border" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
         </div>
+
     </div>
 
 
-    <div data-bind="if: loaded" class="card post-details-card-container">
+    <div data-bind="if: loaded" class="card post-details-card-container browsepage">
         <div class="card-body">
 
-            <button type="button" class="card-bottom-link-buttons" data-bind="click: getPg.bind($data, 'prev')">
-                prev
-            </button>
-            <button type="button" class="card-bottom-link-buttons" data-bind="click: getPg.bind($data, 'next')">
-                next
-            </button>
+            <div class="pagination-container">
+                <div class="pagination-buttons">
+                    <button type="button" class="btn btn-info" data-bind="click: getPg.bind($data, 'prev')">
+                        prev
+                    </button>
+                    <button type="button" class="btn btn-info" data-bind="click: getPg.bind($data, 'next')">
+                        next
+                    </button>
+                </div>
+                <div class="dropdown-containers">
+                    <p class="label">Results/page:</p>
+                    <select class="selector-dropdown" data-bind="options: pgsizepreset, value: getpgsize,event: {change: pgsizechanged}"></select>
+                </div>
 
-
-            Results/page:
-            <select data-bind="options: pgsizepreset, value: getpgsize,
-               event: {change: pgsizechanged}"></select>
-
+            </div>
+            
 
             <div data-bind="with: questionlist">
                 <div class="post-card-details-container">
@@ -40,33 +48,33 @@
                         <div>Total Pages: <span data-bind="text: numberOfPages"></span></div>
                         <div>Current Page: <span data-bind="text: $parent.pshow"></span></div>
                     </div>
-                <!--      <div>Previous Page: <span data-bind="text: prev"></span></div>
+                    <!--      <div>Previous Page: <span data-bind="text: prev"></span></div>
             <div>Next Page: <span data-bind="text: next"></span></div> -->
 
-                <div class="container-fluid col-sm">
-   
-                    <div data-bind="foreach: items" class="card-body" >
+                    <div class="container-fluid col-sm">
 
-                        <div style="cursor: pointer" data-bind="click: $parents[1].selectPostItem">
-                            <div data-bind="text: id">
+                        <div data-bind="foreach: items" class="card-body">
+
+                            <div style="cursor: pointer" data-bind="click: $parents[1].selectPostItem">
+                                <div data-bind="text: id">
+
+                                </div>
+                                <div class="card-text">
+
+                                    <h3 data-bind="text: title"></h3>
+
+                                </div>
 
                             </div>
-                            <div class="card-text">
-
-                                <h3 data-bind="text: title"></h3>
-
-                            </div>
-
-                        </div>
 
                             <div class="card-text" data-bind="html: body"></div>
-                       
 
+
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!--     <ul data-bind="foreach: items">
+                <!--     <ul data-bind="foreach: items">
             <li>
                 <div>                <span data-bind="text: link"> </span>            </div>
                 <div>                <span data-bind="text: id"> </span>            </div>
@@ -75,9 +83,9 @@
             </li>
         </ul> -->
 
+            </div>
         </div>
-    </div>
-    </div>
+        </div>
 
 
 </div>
