@@ -2,16 +2,19 @@
 
     return function () {
 
+        //Pagination
         let pageSizeSelection = ko.observableArray(['5', '10', '20', '30', '40', '50']); //selection of pagesizes
         let getPageSize = ko.observable(5);
         let selectedPageSize = ko.observable();
+        let currentPage = ko.observable(1);
 
+        //Other dropdowns
         let searchTypeValSelector = ko.observableArray(['TFIDF', 'Exact Match', 'Simple Match', 'Best Match']); //selection of pagesizes
         let searchTypeValue = ko.observable(0);
         let selectedSearchType = ko.observable();
 
-        let currentPage = ko.observable(1);
-
+        
+        //Search
         const placeholderStr = "Search with terms here..."
         let searchTerms = ko.observable(placeholderStr);
         let searchstring = ko.observable("");
@@ -20,120 +23,63 @@
         let showTable = ko.observable(false);
         let totalResults = ko.observable("0");
 
-        
-
         ///////////////////////////////////////////////////////////////////////////////////////////
 
+        //Pasing the linkthread url from homepage component & navigating to postdetails page;
+        let selectSearchResultItem = function (item) {
+            messaging.dispatch(messaging.actions.selectPost(item.threadLink));
+            messaging.dispatch(messaging.actions.selectMenu("postdetails"));
+        };
+
+        let clearInputField = function () {
+            searchTerms("");
+        }
 
         searchTerms.subscribe(function (searchStr) {
             if (searchStr.length === 0) {
                 searchResult([]);
                 return;
             }
-
             searchstring(searchStr);
-            let givenSearchType = searchTypeSelectorMapping(searchTypeValue());
-            let object = conputeUrlStringWithPagination(searchstring(), givenSearchType, getPageSize(), currentPage());
-            console.log("Computed object is now: ", object);
-            
-            homeserv.getSearchItems(object, function (responseData) {
-                if (responseData) {
-                    console.log("Responsedata from homeage is: ", responseData);
-                    totalResults(responseData.totalResults);
-                    searchResult(responseData.items);
-                    console.log(searchResult());
-                    showTable(true);
-                }
-               
-            });
+            callService(searchstring(), searchTypeValue(), getPageSize(), currentPage());
+
         });
 
         selectedPageSize.subscribe(function (value) {
             getPageSize(value[0]);
-            if (searchstring()) {
-
-                let givenSearchType = searchTypeSelectorMapping(searchTypeValue());
-                let object = conputeUrlStringWithPagination(searchstring(), givenSearchType, getPageSize(), currentPage());
-                console.log("Computed object is now: ", object);
-
-                homeserv.getSearchItems(object, function (responseData) {
-                    if (responseData) {
-                        console.log("Responsedata from homeage is: ", responseData);
-                        totalResults(responseData.totalResults);
-                        searchResult(responseData.items);
-                        console.log(searchResult());
-                        showTable(true);
-                    }
-
-                });
-
-            }
+            callService(searchstring(), searchTypeValue(), getPageSize(), currentPage());
         });
 
         selectedSearchType.subscribe(function (value) {
-            console.log("My val is an array ", value[0]);
             searchTypeValue(value[0]);
+            callService(searchstring(), searchTypeValue(), getPageSize(), currentPage());
 
-            if (searchstring()) {
-
-                let givenSearchType = searchTypeSelectorMapping(searchTypeValue());
-                let object = conputeUrlStringWithPagination(searchstring(), givenSearchType, getPageSize(), currentPage());
-                console.log("Computed object is now: ", object);
-
-                homeserv.getSearchItems(object, function (responseData) {
-                    if (responseData) {
-                        console.log("Responsedata from homeage is: ", responseData);
-                        totalResults(responseData.totalResults);
-                        searchResult(responseData.items);
-                        console.log(searchResult());
-                        showTable(true);
-                    }
-
-                });
-
-            }
         });
-
 
         let next = function () {
             console.log("currentPage page on next", currentPage());
             currentPage(currentPage() + 1);
             console.log("currentPage page oafter change next", currentPage());
 
-            let searchStr = searchstring();
-            if (searchStr) {
-
-                let givenSearchType = searchTypeSelectorMapping(searchTypeValue());
-                let object = conputeUrlStringWithPagination(searchstring(), givenSearchType, getPageSize(), currentPage());
-                console.log("Computed object is now: ", object);
-
-                homeserv.getSearchItems(object, function (responseData) {
-                    if (responseData) {
-                        console.log("Responsedata from homeage is: ", responseData);
-                        totalResults(responseData.totalResults);
-                        searchResult(responseData.items);
-                        console.log(searchResult());
-                        showTable(true);
-                    }
-
-                });
-
-                //util.callService(searchString, searchType, pageSize, pageNumber);
-
-            }
+            callService(searchstring(), searchTypeValue(), getPageSize(), currentPage());
+           
         }
         let prev = function () {
-            console.log("currentPage page on prev", currentPage());
             const pageValueUpdated = currentPage();
             if (pageValueUpdated > 1) {
                 currentPage(pageValueUpdated - 1);
             }
-            console.log("currentPage page after change prev", currentPage());
+            callService(searchstring(), searchTypeValue(), getPageSize(), currentPage());
 
-            if (searchstring()) {
+           
+        }
 
-                let givenSearchType = searchTypeSelectorMapping(searchTypeValue());
-                let object = conputeUrlStringWithPagination(searchstring(), givenSearchType, getPageSize(), currentPage());
+
+        function callService(searchString, srcTypeVal, pageSize, currPage) {
+            if (searchString) {
+
+                let givenSearchType = util.searchTypeSelectorMapping(srcTypeVal);
+                let object = util.conputeUrlStringWithPagination(searchString, givenSearchType, pageSize, currPage);
                 console.log("Computed object is now: ", object);
 
                 homeserv.getSearchItems(object, function (responseData) {
@@ -147,59 +93,11 @@
 
                 });
 
-                //util.callService(searchString, searchType, pageSize, pageNumber);
 
             }
         }
 
-        let selectSearchResultItem = function (item) {
-            console.log("Item.threadlink is: ", item.threadLink);
-            console.log("Item is: ", item);
-            messaging.dispatch(messaging.actions.selectPost(item.threadLink));
-            console.log("In between dispatches");
-            messaging.dispatch(messaging.actions.selectMenu("postdetails"));
-        };
-
-       
-        ////Function that builds the URL - could be taken out in a utils file/ folder and used wherever in the code needed. 
-        function conputeUrlStringWithPagination(searchStr, searchTypeVal, pageItemSize, pageNo) {
-            const searchString = searchStr ? "?s=" + searchStr : "";
-            const searchType = searchTypeVal ? "&stype=" + searchTypeVal : "&stype=0";
-            const pageSize = pageItemSize ? "&pageSize=" + pageItemSize : "&pageSize=5";
-            const pageNumber = pageNo ? "&page=" + pageNo : "&page=1";
-
-            let paginationObject = {
-                searchString,
-                searchType,
-                pageSize,
-                pageNumber
-            }
-            return paginationObject;
-        }
-
-        function searchTypeSelectorMapping(value) {
-            switch (value) {
-                case "TFIDF":
-                    return 0;
-                    break;
-                case "Exact Match":
-                    return 1;
-                    break;
-                case "Simple Match":
-                    return 2;
-                    break;
-                case "Best Match":
-                    return 3;
-                    break;
-                default:
-                    return 0;
-            }
-        }
-
-
-
-
-
+      
 
         return {
             searchTerms,
@@ -207,10 +105,6 @@
             showTable,
             totalResults,
             selectSearchResultItem,
-            //getPg,
-            //pageSizeSelection,
-            //getpgsize,
-            //pgsizechanged,
             currentPage,
             next,
             prev,
@@ -219,7 +113,8 @@
             selectedPageSize,
             searchTypeValSelector,
             searchTypeValue,
-            selectedSearchType
+            selectedSearchType,
+            clearInputField
 
         }
     }

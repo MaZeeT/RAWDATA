@@ -1,22 +1,27 @@
 ﻿<div class="home-page-container">
 
-    <input class="form-control form-control-lg" data-bind="value: searchTerms">
+    <input class="form-control form-control-lg" data-bind="value: searchTerms, click: clearInputField">
 
-    <button type="button" class="card-bottom-link-buttons" data-bind="click: prev">
-        prev
-    </button>
-    <button type="button" class="card-bottom-link-buttons" data-bind="click: next">
-        next
-    </button>
-    Results/page:
-    <select data-bind="options: pageSizeSelection, selectedOptions: selectedPageSize"></select>
+    <div class="pagination-container">
+        <button type="button" class="btn btn-info" data-bind="click: prev">
+            prev
+        </button>
+        <button type="button" class="btn btn-info" data-bind="click: next">
+            next
+        </button>
+        <div class="dropdown-containers">
+            <p class="label">Results/page:</p>
+            <select class="selector-dropdown" data-bind="options: pageSizeSelection, selectedOptions: selectedPageSize"></select>
 
-    Search type:
-    <select data-bind="options: searchTypeValSelector, selectedOptions: selectedSearchType"></select>
+            <p class="label">Search type:</p>
+            <select class="selector-dropdown" data-bind="options: searchTypeValSelector, selectedOptions: selectedSearchType"></select>
+        </div>
+       
+    </div>
+  
 
     <div data-bind="if: showTable" class="container">
-        <h2>Total results <p data-bind="text: totalResults"></p></h2>
-        <p>The .table class adds basic styling (light padding and only horizontal dividers) to a table:</p>
+        <h2>Total results:  <p data-bind="text: totalResults"></p></h2>
         <table class="table-responsive table-striped table-hover col-sm">
             <thead class="header-table-style">
                 <tr>
