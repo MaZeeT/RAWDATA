@@ -11,6 +11,7 @@
     </div>
 
     <!-- MaxPage dropdown -->
+    <!--
     <div class="dropdown">
         <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
            aria-haspopup="true" aria-expanded="false">
@@ -18,11 +19,22 @@
         </a>
 
         <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-            <a class="dropdown-item" href="#" data-bind="click:maxPages(5)">5</a>
-            <a class="dropdown-item" href="#" data-bind="click:maxPages(10)">10</a>
-            <a class="dropdown-item" href="#" data-bind="click:maxPages(15)">15</a>
+            <a class="dropdown-item" href="#" data-bind="value:pageSize(5)">5</a>
+            <a class="dropdown-item" href="#" data-bind="value:pageSize(10)">10</a>
+            <a class="dropdown-item" href="#" data-bind="value:pageSize(15)">15</a>
         </div>
 
+    </div>
+    -->
+    <div>
+        <select class="mdb-select md-form">
+            <option value="" disabled selected>Choose your car</option>
+            <option data-bind="pageSize(5)">5</option>
+            <option data-bind="pageSize(10)">10</option>
+            <option data-bind="pageSize(15)">15</option>
+            <option data-bind="pageSize(25)">25</option>
+            <option data-bind="pageSize(50)">50</option>
+        </select>
     </div>
 
     <!-- Bootstrap table -->

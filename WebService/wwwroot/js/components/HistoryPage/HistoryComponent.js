@@ -3,12 +3,12 @@ define(["knockout", "historyService"], function (ko, ds) {
     return function () {
         let token = window.localStorage.getItem('userToken');
 
-        let maxPages = ko.observable(10);
+        let pgSize = ko.observable(10);
         let totalPages = ko.observable();
         let prevUrl = ko.observable();
         let nextUrl = ko.observable();
         let items = ko.observableArray();
-        console.log("maxpage value is: " + maxPages());  //todo remove
+        console.log("maxpage value is: " + pgSize());  //todo remove
 
         let getData = function (url) {
             ds.getHistory(token, url, function (response) {
@@ -20,9 +20,15 @@ define(["knockout", "historyService"], function (ko, ds) {
         };
 
         let page = 1;
-        let url = ds.buildUrl(page, maxPages());
+        let url = ds.buildUrl(page, pgSize());
         getData(url);
 
+        let pageSize = function (size){
+            pgSize(size);
+            let url = ds.buildUrl(page, pgSize());
+            getData(url);
+        };
+        
         let navPage = function (url) {
             if (url != null) {
                 getData(url);
@@ -36,7 +42,7 @@ define(["knockout", "historyService"], function (ko, ds) {
         };
 
         return {
-            maxPages,
+            pageSize,
             items,
             navPage,
             nextUrl,
