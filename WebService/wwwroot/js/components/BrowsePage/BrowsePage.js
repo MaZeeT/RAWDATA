@@ -4,12 +4,13 @@ define(['knockout', 'browseService', 'messaging'], function (ko, bs, mess) {
 
         let questionlist = ko.observableArray([]);
         let p = 1; //initial page
+        let pshow = ko.observable();
         let ps = 5; //initial pagesize
 
         let nexturi = '666'; //placeholder for grabbing querystring page= value
         let prevuri = '666'; //placeholder for grabbing querystring page= value
 
-        let pgsizepreset = ko.observableArray(['5', '10', '20', '30', '40', '50']) //selection of pagesizes
+        let pgsizepreset = ko.observableArray(['5', '10', '20', '30', '40', '50']); //selection of pagesizes
         let loaded = ko.observable(false); // help with hiding elements until initial data has been loaded 
         let getpgsize = ko.observable(); //for getting new pagesize
 
@@ -19,22 +20,19 @@ define(['knockout', 'browseService', 'messaging'], function (ko, bs, mess) {
             if (component === 'search') {
                 mess.dispatch(mess.actions.selectMenu("Home"));
             } else if (component === 'wordcloud') {
-                mess.dispatch(mess.actions.selectMenu("Home"));
+                mess.dispatch(mess.actions.selectMenu("wordcloud"));
             } 
-
-            /*console.log("dat: ", direction);
-            console.log("param: ", npg);
-            if (npg) {
-                bs.getBrowseItems(npg, ps, function (data) {
-                    console.log("Data from api call search : ", data);
-                    if (data) {
-                        questionlist(data);
-                        nexturi = data.next;
-                        prevuri = data.prev;
-                    }
-                })
-            };*/
         };
+
+        //thread requested
+        let selectPostItem = function (item) {
+            console.log("Item.threadlink is: ", item.link);
+            console.log("Item is: ", item);
+            mess.dispatch(mess.actions.selectPost(item.link));
+            console.log("In between dispatches");
+            mess.dispatch(mess.actions.selectMenu("postdetails"));
+        };
+
 
         //grab data when pagesize change
         let pgsizechanged = function setPgSize(context) {
@@ -42,6 +40,7 @@ define(['knockout', 'browseService', 'messaging'], function (ko, bs, mess) {
             if (context.getpgsize()) {
                 ps = context.getpgsize();
                 p = 1;
+                pshow(p);
                 bs.getBrowseItems(p, ps, function (data) {
                     console.log("Data from api call search : ", data);
                     if (data) {
@@ -66,6 +65,8 @@ define(['knockout', 'browseService', 'messaging'], function (ko, bs, mess) {
                 bs.getBrowseItems(npg, ps, function (data) {
                     console.log("Data from api call search : ", data);
                     if (data) {
+                        p = npg;
+                        pshow(p);
                         questionlist(data);
                         nexturi = data.next;
                         prevuri = data.prev;
@@ -90,6 +91,7 @@ define(['knockout', 'browseService', 'messaging'], function (ko, bs, mess) {
             console.log("Data from api call search : ", data);
 
             if (data) {
+                pshow(p);
                 questionlist(data);
                 nexturi = data.next;
                 prevuri = data.prev;
@@ -105,6 +107,8 @@ define(['knockout', 'browseService', 'messaging'], function (ko, bs, mess) {
             getpgsize,
             pgsizechanged,
             changeComp,
+            selectPostItem,
+            pshow,
             loaded //note order matters
         };
     };

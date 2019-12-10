@@ -5,12 +5,14 @@ require.config({
         jquery: "../jquery/dist/jquery",
         knockout: "../lib/knockout/build/output/knockout-latest.debug",
         text: "../lib/requirejs-text/text",
+        jqcloud: "../lib/jqcloud2/dist/jqcloud",
         messaging: "services/MessagingService",
         historyService: "services/HistoryService",
         //historyService: "services/HistoryServiceMock",    //Mock of historyService
         authservice: "services/AuthenticationService",
         bookmarksService: "services/BookmarksService",
         browseService: "services/BrowseService",
+        wordCloudService: "services/WordCloudService",
         annotationsService: "services/AnnotationsService",
         homeService: "services/HomePageService",
         postservice:"services/PostService"
@@ -33,6 +35,10 @@ require(["knockout"], function (ko) {
     ko.components.register('browse', {
         viewModel: { require: "components/BrowsePage/BrowsePage" },
         template: { require: "text!components/BrowsePage/BrowsePage.html" }
+    });
+    ko.components.register('wordcloud', {
+        viewModel: { require: "components/WordCloudPage/WordCloudPage" },
+        template: { require: "text!components/WordCloudPage/WordCloudPage.html" }
     });
     ko.components.register('bookmarks', {
         viewModel: { require: "components/BookmarksPage/BookmarksPage" },

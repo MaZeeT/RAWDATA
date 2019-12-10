@@ -30,6 +30,9 @@
         },
         {
             component:"postdetails"
+        },
+        {
+            component: "wordcloud"
         }
     ]
 
