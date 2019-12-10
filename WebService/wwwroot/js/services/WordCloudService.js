@@ -44,7 +44,7 @@ define([], function () {
             }
             catch (error) {         //json was incomplete
                 var errorresponse = new Object();
-                errorresponse.status = 666;
+                errorresponse.status = 666; //custom status code
                 data = errorresponse;
             }
         } else if (response.status == 401) { //we are unauthorized!
