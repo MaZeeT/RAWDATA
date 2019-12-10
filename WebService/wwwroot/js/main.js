@@ -15,7 +15,8 @@ require.config({
         wordCloudService: "services/WordCloudService",
         annotationsService: "services/AnnotationsService",
         homeService: "services/HomePageService",
-        postservice:"services/PostService"
+        postservice: "services/PostService",
+        util: "utils/util"
     }
 });
 

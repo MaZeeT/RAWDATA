@@ -36,6 +36,41 @@ a.nav-link.signout-btn {
     margin-left: 1rem;
     margin-right: 1rem;
 }
+.home-page-container .form-control.form-control-lg {
+    border: 1px solid #17a2b8;
+}
+    .home-page-container .container > h2 {
+        font-size: large;
+        color: #17a2b8;
+        margin-bottom: 0px;
+        display: inline-flex;
+    }
+h2 > p {
+    padding-left: 1rem;
+}
+.pagination-container {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+.dropdown-containers .label {
+    margin-top: 1rem;
+    margin-bottom: 0px;
+    font-weight: 500;
+    color: #17a2b8;
+    padding-left: 5px;
+}
+
+.selector-dropdown {
+    background-color: aliceblue;
+    border: 1px solid #17a2b8;
+    border-radius: 1rem;
+    width: 110px;
+}
+select {
+    color: #17a2b8;
+    font-weight: 400;
+}
 
 /************************************Tables head******************************************/
 .table-responsive{

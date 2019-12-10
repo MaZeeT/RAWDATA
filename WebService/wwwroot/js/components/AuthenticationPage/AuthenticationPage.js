@@ -27,7 +27,7 @@
             }
         };
 
-        function clrinputfield(field) {
+        function clearInputFields(field) {
             
             if (field === 'user' && loginUsername() === "Username") {
                 loginUsername('')
@@ -47,7 +47,7 @@
             loginUsername,
             loginPassword,
             loginUser,
-            clrinputfield,
+            clearInputFields,
             newUserSignup
             
         }
