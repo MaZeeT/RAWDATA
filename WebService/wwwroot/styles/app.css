@@ -52,4 +52,102 @@ a.nav-link.signout-btn {
     background-color: rgb(211, 250, 255);
 }
 
+/***********************************PostDetails Page***************************************/
+.card {
+    background-color: #17a2b8;
+    margin-top: 30px;
+}
+.card.post-details-card-container {
+        width: auto;
+        background-color: #17a2b8;
+        margin-top: 30px;
+        border: 1px solid aliceblue;
+        border-radius: 1rem;
+}
+
+.post-details-card-container img {
+    max-width: -webkit-fill-available;
+    max-block-size: fit-content;
+    
+}
+.post-card-details-container {
+    margin-bottom: 1.5rem;
+    margin-top: 1.5rem;
+}
+.card-body {
+    background-color: aliceblue;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    border: 1px solid aliceblue;
+    border-radius: 1rem;
+}
+.card-text.annotation-text {
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+    padding-top: 0px;
+}
+.card-text {
+    padding: 0.5rem;
+    background-color: white;
+}
+.card-bottom-link-buttons {
+    text-align: center;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+.card-link {
+    color: #17a2b8;
+    font-size: large;
+    font-weight: 500;
+}
+.card .card-body .card-annotation-collapse-body {
+    background-color: white;
+}
+.card .existing-annotations-content {
+    background-color: aliceblue;
+    border: 0px;
+    margin:0px;
+}
+.card h6 {
+    text-align: center;
+    margin-top: 1rem;
+}
+.card-annotation-body-content {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+}
+.card-body.card-annotation-body-content {
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.modal-content {
+    padding: 1rem;
+    font-size: larger;
+    background-color: aliceblue;
+    font-weight: 400;
+    text-align: center;
+    border: 0.5px solid #17a2b8;
+    border-radius: .7rem;
+}
+.modal.show .modal-dialog {
+    top: 30%;
+}
+
+textarea {
+    width: 100%;
+    border: solid 1px aliceblue;
+    border-radius: 1rem;
+}
+h6.card-subtitle {
+    color: #17a2b8 !important;
+    font-size: larger;
+    font-weight: 500;
+}
+h2 {
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
 

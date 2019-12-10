@@ -1,21 +1,29 @@
+<link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+<div class="home-page-container">
+    <button data-bind="click: changeComp.bind($data, 'search')">
+         search
+     </button>
+     <button data-bind="click: changeComp.bind($data, 'browse')">
+         browse
+     </button>
+     <button data-bind="click: changeComp.bind($data, 'wordcloud')">
+         wordcloud
+     </button>
 
-    <div class="home-page-container">
-        <button data-bind="click: changeComp.bind($data, 'search')">
-            search
-        </button>
-        <button data-bind="click: changeComp.bind($data, 'browse')">
-            browse
-        </button>
-        <button data-bind="click: changeComp.bind($data, 'wordcloud')">
-            wordcloud
-        </button>
+    <div data-bind="ifnot: loaded" class="d-flex justify-content-center">
+        <div class="spinner-border" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
 
 
-        <div data-bind="if: loaded" class="container">
-            <button data-bind="click: getPg.bind($data, 'prev')">
+    <div data-bind="if: loaded" class="card post-details-card-container">
+        <div class="card-body">
+
+            <button type="button" class="card-bottom-link-buttons" data-bind="click: getPg.bind($data, 'prev')">
                 prev
             </button>
-            <button data-bind="click: getPg.bind($data, 'next')">
+            <button type="button" class="card-bottom-link-buttons" data-bind="click: getPg.bind($data, 'next')">
                 next
             </button>
 
@@ -26,30 +34,52 @@
 
 
             <div data-bind="with: questionlist">
+                <div class="post-card-details-container">
+                    <div class="card-body">
+                        <div>Total Questions: <span data-bind="text: totalItems"></span></div>
+                        <div>Total Pages: <span data-bind="text: numberOfPages"></span></div>
+                        <div>Current Page: <span data-bind="text: $parent.pshow"></span></div>
+                    </div>
+                <!--      <div>Previous Page: <span data-bind="text: prev"></span></div>
+            <div>Next Page: <span data-bind="text: next"></span></div> -->
 
+                <div class="container-fluid col-sm">
+   
+                    <div data-bind="foreach: items" class="card-body" >
 
+                        <div style="cursor: pointer" data-bind="click: $parents[1].selectPostItem">
+                            <div data-bind="text: id">
 
-                <div>Total Questions: <span data-bind="text: totalItems"></span></div>
-                <div>Total Pages: <span data-bind="text: numberOfPages"></span></div>
-                <div>Previous Page: <span data-bind="text: prev"></span></div>
-                <div>Next Page: <span data-bind="text: next"></span></div>
+                            </div>
+                            <div class="card-text">
 
+                                <h3 data-bind="text: title"></h3>
 
+                            </div>
 
-                <ul data-bind="foreach: items">
-                    <li>
-                        <div>                <span data-bind="text: link"> </span>            </div>
-                        <div>                <span data-bind="text: id"> </span>            </div>
-                        <div>                <span data-bind="text: title"> </span>            </div>
-                        <div>  <span data-bind="text: body"> </span></div>
-                    </li>
-                </ul>
+                        </div>
 
+                            <div class="card-text" data-bind="html: body"></div>
+                       
+
+                    </div>
+                </div>
             </div>
 
+            <!--     <ul data-bind="foreach: items">
+            <li>
+                <div>                <span data-bind="text: link"> </span>            </div>
+                <div>                <span data-bind="text: id"> </span>            </div>
+                <div>                <span data-bind="text: title"> </span>            </div>
+                <div>  <span data-bind="html: body"> </span></div>
+            </li>
+        </ul> -->
+
         </div>
-
-
     </div>
+    </div>
+
+
+</div>
 
 

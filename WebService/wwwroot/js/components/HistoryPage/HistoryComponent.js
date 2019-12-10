@@ -6,14 +6,14 @@ define(["knockout", "historyService"], function (ko, ds) {
         var page = ko.observable(2);
         var maxPages = ko.observable(10);
 
-        var prevPage = function(){
+        var prevPage = function (pageVal){
             if (page > 1) page--;
-            console.log("page value is: " + page);  //todo remove
+            console.log("page value is: " + pageVal);  //todo remove
         };
 
-        var nextPage = function(){
+        var nextPage = function(value){
             page++;
-            console.log("page value is: " + page);  //todo remove
+            console.log("page value is: " + value);  //todo remove
         };
 
         var historyItems = ko.observableArray([]);
