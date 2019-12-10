@@ -1,37 +1,46 @@
-<!--<link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">-->
-<div class="home-page-container">
-    <button data-bind="click: changeComp.bind($data, 'search')">
-        search
-    </button>
-    <button data-bind="click: changeComp.bind($data, 'browse')">
-        browse
-    </button>
-    <button data-bind="click: changeComp.bind($data, 'wordcloud')">
-        wordcloud
-    </button>
 
-    <div data-bind="ifnot: loaded" class="d-flex justify-content-center">
-        <div class="spinner-border" role="status">
-            <span class="sr-only">Loading...</span>
+<div class="home-page-container ">
+    <div class="pagination-container">
+
+        <button class="btn btn-light browsepage-2nd-nav-btn" data-bind="visible: onSmallDevice, click: changeComp.bind($data, 'search')">
+            search
+        </button>
+        <button class="btn btn-light browsepage-2nd-nav-btn" data-bind="visible: onSmallDevice, click: changeComp.bind($data, 'browse')">
+            browse
+        </button>
+        <button class="btn btn-light browsepage-2nd-nav-btn" data-bind="visible: onSmallDevice, click: changeComp.bind($data, 'wordcloud')">
+            wordcloud
+        </button>
+
+        <div data-bind="ifnot: loaded" class="d-flex justify-content-center">
+            <div class="spinner-border" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+
         </div>
+
     </div>
 
 
-    <div data-bind="if: loaded" class="card post-details-card-container">
+    <div data-bind="if: loaded" class="card post-details-card-container browsepage">
         <div class="card-body">
 
-            <button type="button" class="card-bottom-link-buttons" data-bind="click: getPg.bind($data, 'prev')">
-                prev
-            </button>
-            <button type="button" class="card-bottom-link-buttons" data-bind="click: getPg.bind($data, 'next')">
-                next
-            </button>
+            <div class="pagination-container">
+                <div class="pagination-buttons">
+                    <button type="button" class="btn btn-info" data-bind="click: getPg.bind($data, 'prev')">
+                        prev
+                    </button>
+                    <button type="button" class="btn btn-info" data-bind="click: getPg.bind($data, 'next')">
+                        next
+                    </button>
+                </div>
+                <div class="dropdown-containers">
+                    <p class="label">Results/page:</p>
+                    <select class="selector-dropdown" data-bind="options: pgsizepreset, value: getpgsize,event: {change: pgsizechanged}"></select>
+                </div>
 
-
-            Results/page:
-            <select data-bind="options: pgsizepreset, value: getpgsize,
-               event: {change: pgsizechanged}"></select>
-
+            </div>
+            
 
             <div data-bind="with: questionlist">
                 <div class="post-card-details-container">
@@ -65,9 +74,11 @@
                 </div>
 
 
+
             </div>
         </div>
     </div>
+
 
 
 </div>
