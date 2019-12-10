@@ -56,9 +56,6 @@ define([], function () {
     };
 
 
-
-
-
     function buildUrl(url, parameters) {
         let qs = "";
         for (const key in parameters) {

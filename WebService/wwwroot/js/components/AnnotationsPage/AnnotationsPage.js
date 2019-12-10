@@ -1,10 +1,11 @@
-﻿define(["knockout", "annotationsService"], function (ko, as) {
+﻿define(["knockout", "annotationsService", "messaging"], function (ko, as, mess) {
 
     return function () {
 
         let annolist = ko.observableArray([]);
         let p = 1; //initial page
         let ps = 5; //initial pagesize
+        let pshow = ko.observable();
 
         let nexturi = '666'; //placeholder for grabbing querystring page=
         let prevuri = '666'; //placeholder for grabbing querystring page=
@@ -19,6 +20,7 @@
             if (context.getpgsize()) {
                 ps = context.getpgsize();
                 p = 1;
+                pshow(p);
                 as.getAllAnnos(p, ps, function (data) {
                     console.log("Data from api call search : ", data);
                     if (data) {
@@ -28,6 +30,15 @@
                     }
                 })
             };
+        };
+
+        //thread requested
+        let selectPostItem = function (item) {
+            console.log("Item.threadlink is: ", item.postUrl);
+            console.log("Item is: ", item);
+            mess.dispatch(mess.actions.selectPost(item.postUrl));
+            console.log("In between dispatches");
+            mess.dispatch(mess.actions.selectMenu("postdetails"));
         };
 
         //grab data when page change
@@ -43,6 +54,8 @@
                 as.getAllAnnos(npg, ps, function (data) {
                     console.log("Data from api call search : ", data);
                     if (data) {
+                        p = npg;
+                        pshow(p);
                         annolist(data);
                         nexturi = data.next;
                         prevuri = data.prev;
@@ -67,6 +80,7 @@
             console.log("Data from api call search : ", data);
 
             if (data) {
+                pshow(p);
                 annolist(data);
                 nexturi = data.next;
                 prevuri = data.prev;
@@ -79,8 +93,10 @@
             annolist,
             getPg,
             pgsizepreset,
+            selectPostItem,
             getpgsize,
             pgsizechanged,
+            pshow,
             loaded //note order matters
         };
     };

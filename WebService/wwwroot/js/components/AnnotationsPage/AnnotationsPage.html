@@ -1,47 +1,70 @@
 ﻿
     <div class="home-page-container">
-        <div data-bind="if: loaded" class="container">
-            <button data-bind="click: getPg.bind($data, 'prev')">
-                prev
-            </button>
-            <button data-bind="click: getPg.bind($data, 'next')">
-                next
-            </button>
+
+        <div data-bind="ifnot: loaded" class="d-flex justify-content-center">
+            <div class="spinner-border" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+
+        <div data-bind="if: loaded" class="card post-details-card-container">
+            <div class="card-body">
+                <button data-bind="click: getPg.bind($data, 'prev')">
+                    prev
+                </button>
+                <button data-bind="click: getPg.bind($data, 'next')">
+                    next
+                </button>
 
 
-            Results/page:
-            <select data-bind="options: pgsizepreset, value: getpgsize,
+                Results/page:
+                <select data-bind="options: pgsizepreset, value: getpgsize,
                event: {change: pgsizechanged}"></select>
 
 
-            <div data-bind="with: annolist">
+
+                <div data-bind="with: annolist">
+                    <div class="post-card-details-container">
+                        <div class="card-body">
 
 
+                            <div>Total Questions: <span data-bind="text: totalItems"></span></div>
+                            <div>Total Pages: <span data-bind="text: numberOfPages"></span></div>
+                            <div>Current Page: <span data-bind="text: $parent.pshow"></span></div>
 
-                <div>Total Questions: <span data-bind="text: totalItems"></span></div>
-                <div>Total Pages: <span data-bind="text: numberOfPages"></span></div>
-                <div>Previous Page: <span data-bind="text: prev"></span></div>
-                <div>Next Page: <span data-bind="text: next"></span></div>
+                            <div class="container-fluid col-sm">
+                                <ul data-bind="foreach: items" class="card-body">
+                                    <li>
+                                        <div class="card-text">
+                                            <!-- <div>                <span data-bind="text: annotationId"> </span>            </div>-->
+                                            <div>                <span data-bind="html: body"> </span>            </div>
+                                            <div>                <span data-bind="html: date"> </span>            </div>
+                                        </div>
 
-
-
-                <ul data-bind="foreach: items">
-                    <li>
-                        <div>                <span data-bind="text: annotationId"> </span>            </div>
-                        <div>                <span data-bind="text: body"> </span>            </div>
-                        <div>                <span data-bind="text: date"> </span>            </div>
-                        <div>  <span data-bind="text: postId"> </span></div>
-                        <div>                <span data-bind="text: questionId"> </span>            </div>
-                        <div>                <span data-bind="text: title"> </span>            </div>
-                        <div>                <span data-bind="text: postBody"> </span>            </div>
-                        <div>  <span data-bind="text: postUrl"> </span></div>
-                    </li>
-                </ul>
+                                        <!--    <div class="card-bottom-link-buttons">
+                        <a  class="card-link" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseExample">Edit</a>
+                        <a href="#" class="card-link" data-toggle="modal" data-target=".bd-example-modal-sm">Delete</a>
+                    </div>
+                    <div class="collapse" >
+                        <textarea class="form-control form-control-lg" ></textarea>
+                </div>
+                -->
+                                        <h6 class="card-subtitle mb-2 text-muted">Annotated post</h6>
+                                        <div style="cursor: pointer" data-bind="click: $parents[1].selectPostItem">
+                                            <div>  <span data-bind="text: postId"> </span></div>
+                                            <!--<div>                <span data-bind="text: questionId"> </span>            </div>-->
+                                            <div>                <span data-bind="text: title"> </span>            </div>
+                                        </div>
+                                        <div class="collapse">                <span data-bind="html: postBody"> </span>            </div>
+                                        <!-- <div>  <span data-bind="text: postUrl"> </span></div>-->
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                </div>
+        </div>
+    </div>
 
             </div>
 
-
-
         </div>
-
-    </div>
