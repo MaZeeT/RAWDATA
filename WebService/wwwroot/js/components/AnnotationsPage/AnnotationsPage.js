@@ -8,7 +8,6 @@
 
         let annolist = ko.observableArray([]);
         let p = 1; //initial page
-        let ps = 5; //initial pagesize
         let pshow = ko.observable();
 
         let nexturi = '666'; //placeholder for grabbing querystring page=
@@ -16,7 +15,8 @@
 
         let pgsizepreset = ko.observableArray(['5', '10', '20', '30', '40', '50']) //selection of pagesizes
         let loaded = ko.observable(false); //help with hiding elements until initial data has been loaded 
-        let getpgsize = ko.observable(); //for getting new pagesize
+        let getpgsize = ko.observable(10); //for getting new pagesize
+        let ps = getpgsize(); //initial pagesize
 
         //grab data when pagesize change
         let pgsizechanged = function setPgSize(context) {
@@ -31,6 +31,7 @@
 
         //thread requested, switch to thread view
         let selectPostItem = function (item) {
+            saveStuff();
             mess.dispatch(mess.actions.selectPost(item.postUrl));
             mess.dispatch(mess.actions.selectMenu("postdetails"));
         };
@@ -51,18 +52,13 @@
 
         //update anno
         let updateAnnotation = function (value) {
-            //console.log("This is new: ", updateAnnotationValue());
-            //console.log("This is val: ", value.annotationId);
             if (updateAnnotationValue() && value.annotationId) {
-                //console.log("This is valsth: ", value.annotationId);
-                ///console.log("Now one can update the selected annotation with data: ", value);
                 let annotationId = value.annotationId;
                 let annotationBody = updateAnnotationValue();
                 postservice.updateAnnotation(annotationId, annotationBody, function (serverResponse) {
                     let status = serverResponse.status;
                     if (status === 204) {
                         getAnnos(p, ps);
-                        //callServiceGetThread(postUrl());
                         updateAnnotationValue("");
                     }
                 });
@@ -77,11 +73,8 @@
                     let status = serverResponse.status;
                     console.log("Server response: ", serverResponse);
                     if (status === 200) {
-                        //console.log("posturl: ", postUrl());
                         getAnnos(p, ps);
-                      //  callServiceGetThread(postUrl());
                         updateAnnotationValue("");
-                       // callServiceGetThread(postUrl());
                         deletedAnnotStatus(true);
                     } else {
                         deletedAnnotStatus(false);
@@ -103,9 +96,35 @@
                     nexturi = data.next;
                     prevuri = data.prev;
                     loaded(true);
+                    saveStuff();
                 }
-            })
+            });
         };
+
+
+        //store stuff from this view
+        let saveStuff = function () {
+            mess.dispatch(mess.actions.selectCurrentPage(p));
+            mess.dispatch(mess.actions.selectMaxPages(ps));
+        }
+
+        //run when changeing to this view
+        //get previous component/view
+        let storedPreviousView = mess.getState().selectedPreviousView;
+
+        //store current component name
+        mess.dispatch(mess.actions.selectPreviousView("Annotations"));
+
+        //restore fields
+        let storedMaxPages = mess.getState().selectedMaxPages;
+        let storedCurrentPage = mess.getState().selectedCurrentPage;
+        console.log("currp::", storedCurrentPage);
+
+        if (storedPreviousView == "Annotations" && (storedCurrentPage)) { p = storedCurrentPage; }
+        if (storedMaxPages) {
+            ps = storedMaxPages;
+            getpgsize(ps);
+        }
 
         //grab data for initial view
         getAnnos(p, ps);

@@ -2,9 +2,7 @@
 
     return function () {
 
-       // let noofresults = ko.observableArray(['5', '10', '20', '30', '40', '50', '100', '200']) //selection of results todo: make into slider or sth
         let loaded = ko.observable(false); // help with hiding elements until initial data has been loaded 
-     //   let getnoofresults = ko.observable(); //for getting new number of results to grab
 
         let max = 15;
         let stype = 4;
@@ -13,60 +11,51 @@
 
         let selectedValue = ko.observable(15);
 
-     //   let width = 200;
-     //   let height = 200;
-
         const placeholderStr = "Input search terms here..."
         let searchTerms = ko.observable(placeholderStr);
 
         let searchResult = ko.observableArray([]);
-     //   let showTable = ko.observable(false);
-     //   let totalResults = ko.observable("0");
-
-      /*  function enter(data, event) {
-            if (event.which == 13) {
-                //call method here
-                console.log('Enter Key Pressed!');
-            }
-        }*/
-
 
 
         //comp change requested
         function changeComp(component) {
             if (component === 'search') {
+                saveStuff();
+                mess.dispatch(mess.actions.selectPreviousView("wordcloud"));
                 mess.dispatch(mess.actions.selectMenu("Home"));
             } else if (component === 'browse') {
+                saveStuff();
+                mess.dispatch(mess.actions.selectPreviousView("wordcloud"));
                 mess.dispatch(mess.actions.selectMenu("Browse"));
+            } else if (component === 'unauth') {
+                saveStuff();
+                mess.dispatch(mess.actions.selectPreviousView("wordcloud"));
+                mess.dispatch(mess.actions.selectMenu("authentication"));
             }
         };
 
-
-        //max results
-     /*   let noofresultschanged = function setPgSize(context) {
-            console.log("getmax: ", context.getnoofresults());
-            if (context.getnoofresults()) {
-                max = context.getnoofresults();
-            };
-        };*/
-
+        //clearing searchfield when clicked
         let clrsearchfield = function upd() {
-            //console.log("searchreerm : ", searchTerms());
             if (searchTerms() === placeholderStr) {
                 searchTerms('');
             }
-            //console.log("searchreerm : ", searchTerms());
+        };
+
+        //store stuff from this view
+        let saveStuff = function () {
+            mess.dispatch(mess.actions.selectSearchTerms(searchTerms()));
+            mess.dispatch(mess.actions.selectSearchOptions(stypebtn()));
+            mess.dispatch(mess.actions.selectMaxWords(selectedValue()));
         }
 
+
+
+        //for geting new data and updating wordcloud
         let cloudupdate = function upd() {
 
-            //console.log("searchreerm : ", searchTerms());
-            //console.log("stypw : ", stype);
-            max = selectedValue();
-            //console.log("maxres : ", max);
-            //console.log("slider value : ", selectedValue());
-            //console.log("stypeval : ", stypebtn());
+            saveStuff();
 
+            max = selectedValue();
             if (stypebtn() == 'tfidf') { stype = 4; } else stype = 5;
 
             wc.getWCItems(searchTerms(), stype, max, function (data) {
@@ -88,7 +77,8 @@
                         return;
                     } else if (data.status == 401) {
                         //unauthorized, goto login page
-                        mess.dispatch(mess.actions.selectMenu("authentication"));
+                        changeComp('unauth');
+                        //mess.dispatch(mess.actions.selectMenu("authentication"));
                         return;
                     } else {
                         //ok so far
@@ -98,7 +88,6 @@
                         data1 = data.map(function (a) {
                             return { text: a.term, weight: a.rank };
                         });
-                        //console.log("datamap: ", data1);
 
                         $('#cloud').jQCloud('destroy');
                         $('#cloud').jQCloud(data1,
@@ -144,31 +133,41 @@
             });
         });
 
-     /*   let selectSearchResultItem = function (item) {
-            console.log("Item.threadlink is: ", item.threadLink);
-            mess.dispatch(mess.actions.selectPost(item.threadLink));
-            console.log("In between dispatches");
-            mess.dispatch(messaging.actions.selectMenu("postdetails"));
-        };*/
 
+        //execute on coming to this view
+        console.log("contesnt of searchterms : ", mess.getState().selectedSearchTerms);
+        console.log("contesnt of searchopts : ", mess.getState().selectedSearchOptions);   
 
-                     
+        //get previous component/view
+        let storedPreviousView = mess.getState().selectedPreviousView;
+
+        //store current component name
+        mess.dispatch(mess.actions.selectPreviousView("wordcloud"));
+
+        //restore fields
+        let storedSearchTerms = mess.getState().selectedSearchTerms;
+        let storedSearchOptions = mess.getState().selectedSearchOptions;
+        let storedMaxWords = mess.getState().selectedMaxWords;
+
+        if (storedMaxWords) { selectedValue(storedMaxWords) }
+        if (storedSearchTerms) { searchTerms(storedSearchTerms) }
+        if (storedSearchOptions == "best" || storedSearchOptions == "Best Match") {
+            stypebtn("best")
+        } else {
+            stypebtn("tfidf")
+        }
+
 
 
         return {
             searchTerms,
             searchResult,
-         //   getnoofresults,
-         //   noofresults,
             changeComp,
-           // enter,
-           // noofresultschanged,
             cloudupdate,
             stypebtn,
             clrsearchfield,
             selectedValue,
             loaded
-
         }
     }
 
