@@ -11,11 +11,13 @@
         </button>
     </div>
 
+    <!-- 
     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
         <a class="dropdown-item" href="#" data-bind="click:maxPages = 5">5</a>
         <a class="dropdown-item" href="#" data-bind="click:maxPages = 10">10</a>
         <a class="dropdown-item" href="#" data-bind="click:maxPages = 15">15</a>
     </div>
+    -->
 </div>
 
 <!-- Bootstrap table -->
@@ -36,40 +38,10 @@
         </tr>
         </tbody>
 
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-            <a class="dropdown-item" href="#" data-bind="click:maxPages = 5">5</a>
-            <a class="dropdown-item" href="#" data-bind="click:maxPages = 10">10</a>
-            <a class="dropdown-item" href="#" data-bind="click:maxPages = 15">15</a>
-        </div>
-    </div>
-
-    <!-- Bootstrap table -->
-    <div data-bind="with: bookmarkItems" class="table-responsive">
-        <table class="table">
-            <thead>
-            <tr>
-                <th scope="col">Title</th>
-                <th scope="col">ThreadUrl</th>
-                <th scope="col">Date</th>
-            </tr>
-            </thead>
-
-            <tbody data-bind="foreach: items">
-            <tr>
-                <td data-bind="text:title"></td>
-                <td data-bind="text:threadUrl"></td>
-                <td data-bind="text:date"></td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+    </table>
 </div>
 
 <div>
-    <button data-bind="click:deletions" type="button" class="btn btn-danger">Delete History</button>
+    <button data-bind="click:deletions" type="button" class="btn btn-danger">Delete Bookmarks</button>
 </div>
 
-
-<div>
-    <button data-bind="click:deletions" type="button" class="btn btn-danger">Delete History</button>
-</div>
