@@ -25,9 +25,10 @@
 
 
     <div class="card">
-
+        <div class="card-body"><p> On this page you can conduct a word2word search with posts from Stackoverflow. The list of words returned by the search will be displayed as a word cloud. (Set max. results to 0 to get the most words returned.))</p></div>
         <div class="input-group input-group-lg">
             <div class="input-group-prepend">
+
                 <span class="input-group-text" id="inputGroup-sizing-lg">Search:</span>
             </div>
             <input type="text" class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm" data-bind="value: searchTerms, click: clrsearchfield">
@@ -41,11 +42,11 @@
 
                     <h6 class="card-link">Max. results:</h6>
                     <!-- <div class="input-group input-group-sm mb-3">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="inputGroup-sizing-sm">Max. results:</span>
-                        </div>
-                        <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" data-bind="value: selectedValue">
-                    </div>-->
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-sm">Max. results:</span>
+                    </div>
+                    <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" data-bind="value: selectedValue">
+                </div>-->
 
                     <input type="text" class="form-control form-control-sm w-25 h-25" data-bind="value: selectedValue">
 
@@ -59,7 +60,7 @@
                 </div>
 
                 <!-- <select data-bind="options: noofresults, value: getnoofresults,
-                event: {change: noofresultschanged}"></select> -->
+            event: {change: noofresultschanged}"></select> -->
                 <div class="card-body col-xs-4 text-center">
                     <button type="button" class="card-link h-100 w-75 btn btn-light" data-bind="click: cloudupdate">
                         Update Cloud
