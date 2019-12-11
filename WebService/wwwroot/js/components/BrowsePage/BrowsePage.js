@@ -2,7 +2,7 @@ define(['knockout', 'browseService', 'messaging'], function (ko, bs, mess) {
 
     return function () {
         //detect device size
-        let onSmallDevice = ko.observable(true); // not implemented yet but something
+        //let onSmallDevice = ko.observable(true); // not implemented yet but something
         // like window.onload that is not working should do the trick .... 
 
         let questionlist = ko.observableArray([]);
@@ -105,7 +105,7 @@ define(['knockout', 'browseService', 'messaging'], function (ko, bs, mess) {
         
         //stuff available for binding
         return {
-            onSmallDevice,
+            //onSmallDevice,
             questionlist,
             getPg,
             pgsizepreset,

@@ -56,6 +56,15 @@
 
         });
 
+        //comp change requested
+        function changeComp(component) {
+            if (component === 'browse') {
+                messaging.dispatch(messaging.actions.selectMenu("Browse"));
+            } else if (component === 'wordcloud') {
+                messaging.dispatch(messaging.actions.selectMenu("wordcloud"));
+            }
+        };
+
         let next = function () {
             console.log("currentPage page on next", currentPage());
             currentPage(currentPage() + 1);
@@ -97,11 +106,12 @@
             }
         }
 
-      
+
 
         return {
             searchTerms,
             searchResult,
+            changeComp,
             showTable,
             totalResults,
             selectSearchResultItem,
