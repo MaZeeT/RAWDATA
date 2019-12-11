@@ -1,6 +1,9 @@
 define(['knockout', 'browseService', 'messaging'], function (ko, bs, mess) {
 
     return function () {
+        //detect device size
+        let onSmallDevice = ko.observable(true); // not implemented yet but something
+        // like window.onload that is not working should do the trick .... 
 
         let questionlist = ko.observableArray([]);
         let p = 1; //initial page
@@ -37,6 +40,7 @@ define(['knockout', 'browseService', 'messaging'], function (ko, bs, mess) {
         //grab data when pagesize change
         let pgsizechanged = function setPgSize(context) {
             console.log("getpgsiz: ", context.getpgsize());
+            console.log("Size: ", window.innerWidth);
             if (context.getpgsize()) {
                 ps = context.getpgsize();
                 p = 1;
@@ -101,6 +105,7 @@ define(['knockout', 'browseService', 'messaging'], function (ko, bs, mess) {
         
         //stuff available for binding
         return {
+            onSmallDevice,
             questionlist,
             getPg,
             pgsizepreset,

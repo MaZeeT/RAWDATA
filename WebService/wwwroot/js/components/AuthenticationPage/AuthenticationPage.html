@@ -5,10 +5,10 @@
         <p class="h4 mb-4">Sign in</p>
 
         <!-- Email -->
-        <input class="form-control mb-4" data-bind="value: loginUsername, click: clrinputfield.bind($data, 'user')">
+        <input class="form-control mb-4" data-bind="value: loginUsername, click: clearInputFields.bind($data, 'user')">
 
         <!-- Password -->
-        <input class="form-control mb-4" data-bind="value: loginPassword, click: clrinputfield.bind($data, 'pass')">
+        <input class="form-control mb-4" data-bind="value: loginPassword, click: clearInputFields.bind($data, 'pass')">
 
         <!-- Sign in button -->
         <button class="btn btn-info btn-block my-4" data-bind="click: loginUser">Sign in</button>

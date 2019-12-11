@@ -94,7 +94,7 @@ namespace WebService.Controllers
             return Ok(result);
         }
 
-        
+
         private object CreateResult(IEnumerable<History> list, int count, PagingAttributes attr)
         {
             if (list.FirstOrDefault() != null)
@@ -115,7 +115,7 @@ namespace WebService.Controllers
                     numberOfPages,
                     prev,
                     next,
-                    items = list.Select(CreateBookmarkResultDto)    //Select() is like a foreach loop
+                    items = list.Select(CreateBookmarkResultDto) //Select() is like a foreach loop
                 };
             }
             else
@@ -139,31 +139,11 @@ namespace WebService.Controllers
             return dto;
         }
 
-        private string CreatePagingLink(string nameof, int page, int pageSize)
+
+        public string CreatePagingLink(string nameof, int page, int pageSize)
         {
             return Url.Link(nameof, new {page, pageSize});
         }
-        
-        /*
-        private List<BookmarkDTO> ConvertToDto(IEnumerable<History> bookmarks)
-        {
-            List<BookmarkDTO> list = new List<BookmarkDTO>();
-            foreach (var mark in bookmarks)
-            {
-                list.Add(new BookmarkDTO
-                {
-                    Title = _sharedService.GetPost(mark.Postid).Title,
-                    Date = mark.Date,
-                    ThreadUrl = Url.Link(
-                        nameof(QuestionsController.GetThread),
-                        new {questionId = mark.Postid}
-                    )
-                });
-            }
 
-            return list;
-        }
-        */
-        
     }
 }
