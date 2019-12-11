@@ -2,7 +2,9 @@
 
     return function () {
 
+       // let postUrl = ko.observable(mess.getState().selectedPost);
         let updateAnnotationValue = ko.observable("");
+        let deletedAnnotStatus = ko.observable(false);
 
         let annolist = ko.observableArray([]);
         let p = 1; //initial page
@@ -23,23 +25,13 @@
                 ps = context.getpgsize();
                 p = 1;
                 pshow(p);
-                as.getAllAnnos(p, ps, function (data) {
-                    console.log("Data from api call search : ", data);
-                    if (data) {
-                        annolist(data);
-                        nexturi = data.next;
-                        prevuri = data.prev;
-                    }
-                })
+                getAnnos(p, ps);
             };
         };
 
-        //thread requested
+        //thread requested, switch to thread view
         let selectPostItem = function (item) {
-            console.log("Item.threadlink is: ", item.postUrl);
-            console.log("Item is: ", item);
             mess.dispatch(mess.actions.selectPost(item.postUrl));
-            console.log("In between dispatches");
             mess.dispatch(mess.actions.selectMenu("postdetails"));
         };
 
@@ -53,16 +45,7 @@
             console.log("dat: ", direction);
             console.log("param: ", npg);
             if (npg) {
-                as.getAllAnnos(npg, ps, function (data) {
-                    console.log("Data from api call search : ", data);
-                    if (data) {
-                        p = npg;
-                        pshow(p);
-                        annolist(data);
-                        nexturi = data.next;
-                        prevuri = data.prev;
-                    }
-                })
+                getAnnos(npg, ps);
             };
         };
 
@@ -75,48 +58,76 @@
             if (!results) return null;
             if (!results[2]) return '';
             return decodeURIComponent(results[2].replace(/\+/g, ' '));
-        }
+        };
 
-        //grab data for initial view
-        as.getAllAnnos(p, ps, function (data) {
-            console.log("Data from api call search : ", data);
 
-            if (data) {
-                pshow(p);
-                annolist(data);
-                nexturi = data.next;
-                prevuri = data.prev;
-                loaded(true); 
+
+        let updateAnnotation = function (value) {
+            //console.log("This is new: ", updateAnnotationValue());
+            //console.log("This is val: ", value.annotationId);
+            if (updateAnnotationValue() && value.annotationId) {
+                //console.log("This is valsth: ", value.annotationId);
+                ///console.log("Now one can update the selected annotation with data: ", value);
+                let annotationId = value.annotationId;
+                let annotationBody = updateAnnotationValue();
+                postservice.updateAnnotation(annotationId, annotationBody, function (serverResponse) {
+                    let status = serverResponse.status;
+                    if (status === 204) {
+                        getAnnos(p, ps);
+                        //callServiceGetThread(postUrl());
+                        updateAnnotationValue("");
+                    }
+                });
             }
-        });
+        };
 
-
+        //delete annotation
         let deleteAnnotation = function (value) {
-
             if (value.annotationId) {
                 let annotationId = value.annotationId;
                 postservice.deleteAnnotation(annotationId, function (serverResponse) {
                     let status = serverResponse.status;
                     console.log("Serv response: ", serverResponse);
                     if (status === 200) {
-                        callServiceGetThread(postUrl());
+                        //console.log("posturl: ", postUrl());
+                        getAnnos(p, ps);
+                      //  callServiceGetThread(postUrl());
                         updateAnnotationValue("");
-                        callServiceGetThread(postUrl());
+                       // callServiceGetThread(postUrl());
                         deletedAnnotStatus(true);
                     } else {
                         deletedAnnotStatus(false);
                     }
                 });
-
             } else {
                 deletedAnnotStatus(false);
             }
-
         };
+
+        //get all annos
+        function getAnnos(npg, ps) {
+            as.getAllAnnos(npg, ps, function (data) {
+                console.log("Data from api call search : ", data);
+                if (data) {
+                    p = npg;
+                    pshow(p);
+                    annolist(data);
+                    nexturi = data.next;
+                    prevuri = data.prev;
+                    loaded(true);
+                }
+            })
+        };
+
+        //grab data for initial view
+        getAnnos(p, ps);
 
         //stuff available for binding
         return {
+            updateAnnotation,
+            updateAnnotationValue,
             deleteAnnotation,
+            deletedAnnotStatus,
             annolist,
             getPg,
             pgsizepreset,

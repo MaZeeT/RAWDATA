@@ -1,38 +1,38 @@
 ﻿
-<div class="home-page-container">
+    <div class="home-page-container">
 
-    <div data-bind="ifnot: loaded" class="d-flex justify-content-center">
-        <div class="spinner-border" role="status">
-            <span class="sr-only">Loading...</span>
+        <div data-bind="ifnot: loaded" class="d-flex justify-content-center">
+            <div class="spinner-border" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
         </div>
-    </div>
 
-    <div data-bind="if: loaded" class="card post-details-card-container">
-        <div class="card-body">
-            <button data-bind="click: getPg.bind($data, 'prev')">
-                prev
-            </button>
-            <button data-bind="click: getPg.bind($data, 'next')">
-                next
-            </button>
+        <div data-bind="if: loaded" class="card post-details-card-container">
+            <div class="card-body">
+                <button data-bind="click: getPg.bind($data, 'prev')">
+                    prev
+                </button>
+                <button data-bind="click: getPg.bind($data, 'next')">
+                    next
+                </button>
 
 
-            Results/page:
-            <select data-bind="options: pgsizepreset, value: getpgsize,
+                Results/page:
+                <select data-bind="options: pgsizepreset, value: getpgsize,
                event: {change: pgsizechanged}"></select>
 
 
 
-            <div data-bind="with: annolist">
-                <div class="post-card-details-container">
-                    <div class="card-body">
+                <div data-bind="with: annolist">
+                    <div class="post-card-details-container">
+                        <div class="card-body">
 
 
-                        <div>Total Annotations: <span data-bind="text: totalItems"></span></div>
-                        <div>Total Pages: <span data-bind="text: numberOfPages"></span></div>
-                        <div>Current Page: <span data-bind="text: $parent.pshow"></span></div>
+                            <div>Total Annotations: <span data-bind="text: totalItems"></span></div>
+                            <div>Total Pages: <span data-bind="text: numberOfPages"></span></div>
+                            <div>Current Page: <span data-bind="text: $parent.pshow"></span></div>
 
-                        
+
                             <div data-bind="foreach: items" class="card-body">
                                 <div class="container">
                                     <div class="row">
@@ -63,10 +63,35 @@
                                     </div>
                                 </div>
                             </div>
-                     
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+                <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-sm">
+                        <!--  <div data-bind="visible: responseData() == true" class="modal-content success">
+           <p>Your bookmark has been saved.</p>
+           <p>You can access all your bookmarks from the menu.</p>
+       </div>-->
+                        <div data-bind="visible: deletedAnnotStatus() == true" class="modal-content success">
+                            <p>Your annotation has been deleted successfully.</p>
+                            <p>You can access all your annotations from the menu.</p>
+                        </div>
+                        <div data-bind="visible: deletedAnnotStatus() == false" class="modal-content fail">
+                            <p>Oops!!!</p>
+                            <p>We could not complete your request.</p>
+                            <p>Please try again later</p>
+                        </div>
                     </div>
                 </div>
 
-            </div>
-
+            
         </div>
+    </div>
+        <script>
+        $(document).ready(function () {
+            $('[data-toggle="popover"]').popover();
+        });
+        </script>
