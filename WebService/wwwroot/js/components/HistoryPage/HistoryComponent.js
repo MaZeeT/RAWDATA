@@ -35,12 +35,7 @@ define(["knockout", "historyService"], function (ko, ds) {
             }
         };
 
-        var historyItems = ko.observableArray([]);
-        ds.getHistory(token, page, maxPages,function (response) {
-            historyItems(response);
-        });
-
-        var deletions = function () {
+        let deletions = function () {
             ds.deleteHistory(token, function (response) {
                 return response;
             })
