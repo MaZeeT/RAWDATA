@@ -16,7 +16,7 @@ require.config({
         annotationsService: "services/AnnotationsService",
         homeService: "services/HomePageService",
         postservice: "services/PostService",
-        util: "utils/util"
+        utility: "utility/utility"
     }
 });
 

@@ -33,9 +33,14 @@
                 return 0;
         }
     }
+    
+    function whatDoWeSay(message){
+        console.log(message)
+    }
 
     return {
         conputeUrlStringWithPagination,
-        searchTypeSelectorMapping
+        searchTypeSelectorMapping,
+        whatDoWeSay
     }
-})
+});

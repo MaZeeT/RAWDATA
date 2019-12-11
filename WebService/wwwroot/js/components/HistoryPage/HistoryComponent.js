@@ -1,4 +1,4 @@
-define(["knockout", "historyService"], function (ko, ds) {
+define(["knockout", "historyService", "utility"], function (ko, ds, util) {
 
     return function () {
         let token = window.localStorage.getItem('userToken');
@@ -9,6 +9,7 @@ define(["knockout", "historyService"], function (ko, ds) {
         let nextUrl = ko.observable();
         let items = ko.observableArray();
         console.log("maxpage value is: " + pgSize());  //todo remove
+        util.whatDoWeSay("Hello world")
 
         let getData = function (url) {
             ds.getHistory(token, url, function (response) {
