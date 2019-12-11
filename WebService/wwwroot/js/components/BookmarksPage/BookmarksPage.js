@@ -20,12 +20,12 @@
         };
 
         let page = 1;
-        let url = ds.buildUrl(page, pgSize());
+        let url = bs.buildUrl(page, pgSize());
         getData(url);
 
         let pageSize = function (size){
             pgSize(size);
-            let url = ds.buildUrl(page, pgSize());
+            let url = bs.buildUrl(page, pgSize());
             getData(url);
         };
 
@@ -36,7 +36,7 @@
         };
 
         let deletions = function () {
-            ds.deleteBookmarks("goat", function (response) {
+            bs.deleteBookmarks(token, function (response) {
                 return response;
             })
         };

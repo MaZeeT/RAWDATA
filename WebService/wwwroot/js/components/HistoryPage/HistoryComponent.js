@@ -22,7 +22,7 @@ define(["knockout", "historyService"], function (ko, ds) {
         });
 
         var deletions = function () {
-            ds.deleteHistory("goat", function (response) {
+            ds.deleteHistory(token, function (response) {
                 return response;
             })
         };
