@@ -1,6 +1,55 @@
 ﻿define(["jquery"], function () {
 
+    var buildUrl = function (page, maxPages) {
+        return `api/bookmark?Page=${page}&PageSize=${maxPages}`;
+    };
+
+    var getBookmarks = async function (token, url, callback) {
+        console.log(url);
+        try {
+            const response = await fetch(url, {
+                method: 'GET', // or 'PUT'
+                headers: new Headers({
+                    'Authorization': 'Bearer ' + token,
+                    'Content-Type': 'application/json'
+                })
+            }).then(function (response) {
+                return response.json();
+            }).then(function (responseBody) {
+                return responseBody;
+            });
+            callback(response);
+
+        } catch (error) {
+            console.error('Error:', error);
+        }
+
+    };
+
+    var deleteBookmarks = async function (token, callback) {
+        try {
+            console.log("token: " + token);
+            const response = await fetch("api/bookmark/delete/all", {
+                method: 'DELETE', // or 'PUT'
+                headers: new Headers({
+                    'Authorization': 'Bearer ' + token,
+                    'Content-Type': 'application/json'
+                })
+            }).then(function (response) {
+                return response;
+            }).then(function (responseBody) {
+                return responseBody;
+            });
+            callback(response);
+
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
     return {
-        
+        buildUrl,
+        getBookmarks,
+        deleteBookmarks
     }
 });
