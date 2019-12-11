@@ -1,4 +1,4 @@
-define(["knockout", "historyService"], function (ko, ds) {
+define(["knockout", "historyService", "util"], function (ko, ds, util) {
 
     return function () {
         let token = window.localStorage.getItem('userToken');
@@ -13,7 +13,7 @@ define(["knockout", "historyService"], function (ko, ds) {
 
         let getData = function (url) {
             ds.getHistory(token, url, function (response) {
-                currentPage(getParameterByName('page', url));
+                currentPage(util.getParameterByName('page', url));
                 totalPages(response.numberOfPages);
                 prevUrl(response.prev);
                 nextUrl(response.next);
@@ -44,16 +44,6 @@ define(["knockout", "historyService"], function (ko, ds) {
         };
 
 
-        //return named querystring value
-        function getParameterByName(name, url) {
-            if (!url) url = window.location.href;
-            name = name.replace(/[\[\]]/g, '\\$&');
-            var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
-                results = regex.exec(url);
-            if (!results) return null;
-            if (!results[2]) return '';
-            return decodeURIComponent(results[2].replace(/\+/g, ' '));
-        }
 
         return {
             totalPages,

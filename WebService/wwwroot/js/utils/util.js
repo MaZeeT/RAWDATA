@@ -1,4 +1,17 @@
 ﻿define([""], function () {
+
+    //return named querystring value
+    function getParameterByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, '\\$&');
+        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    };
+
+
     ////Function that builds the URL - could be taken out in a utils file/ folder and used wherever in the code needed. 
     function conputeUrlStringWithPagination(searchStr, searchTypeVal, pageItemSize, pageNo) {
         const searchString = searchStr ? "?s=" + searchStr : "";
@@ -36,6 +49,7 @@
 
     return {
         conputeUrlStringWithPagination,
-        searchTypeSelectorMapping
+        searchTypeSelectorMapping,
+        getParameterByName
     }
 })

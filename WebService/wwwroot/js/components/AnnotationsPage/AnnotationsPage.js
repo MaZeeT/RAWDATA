@@ -1,4 +1,4 @@
-﻿define(["knockout", "annotationsService", "messaging", 'postservice'], function (ko, as, mess, postservice) {
+﻿define(["knockout", "annotationsService", "messaging", "postservice", "util"], function (ko, as, mess, postservice, util) {
 
     return function () {
 
@@ -39,8 +39,8 @@
         function getPg(direction) {
             let npg = null;
             if (direction == 'next') {
-                npg = getParameterByName('page', nexturi);
-            } else if (direction == 'prev') { npg = getParameterByName('page', prevuri); }
+                npg = util.getParameterByName('page', nexturi);
+            } else if (direction == 'prev') { npg = util.getParameterByName('page', prevuri); }
 
             console.log("dat: ", direction);
             console.log("param: ", npg);
@@ -49,19 +49,7 @@
             };
         };
 
-        //return named querystring value
-        function getParameterByName(name, url) {
-            if (!url) url = window.location.href;
-            name = name.replace(/[\[\]]/g, '\\$&');
-            var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
-                results = regex.exec(url);
-            if (!results) return null;
-            if (!results[2]) return '';
-            return decodeURIComponent(results[2].replace(/\+/g, ' '));
-        };
-
-
-
+        //update anno
         let updateAnnotation = function (value) {
             //console.log("This is new: ", updateAnnotationValue());
             //console.log("This is val: ", value.annotationId);
@@ -87,7 +75,7 @@
                 let annotationId = value.annotationId;
                 postservice.deleteAnnotation(annotationId, function (serverResponse) {
                     let status = serverResponse.status;
-                    console.log("Serv response: ", serverResponse);
+                    console.log("Server response: ", serverResponse);
                     if (status === 200) {
                         //console.log("posturl: ", postUrl());
                         getAnnos(p, ps);
