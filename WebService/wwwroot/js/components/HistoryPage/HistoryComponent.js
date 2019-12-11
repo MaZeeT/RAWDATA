@@ -3,6 +3,7 @@ define(["knockout", "historyService"], function (ko, ds) {
     return function () {
         let token = window.localStorage.getItem('userToken');
 
+        let pgSizeOptions = ko.observableArray([5, 10, 15, 25, 50, 100]);
         let pgSize = ko.observable(10);
         let totalPages = ko.observable();
         let prevUrl = ko.observable();
@@ -23,7 +24,7 @@ define(["knockout", "historyService"], function (ko, ds) {
         let url = ds.buildUrl(page, pgSize());
         getData(url);
 
-        let pageSize = function (size){
+        let pageSize = function (size) {
             pgSize(size);
             let url = ds.buildUrl(page, pgSize());
             getData(url);
@@ -43,6 +44,8 @@ define(["knockout", "historyService"], function (ko, ds) {
 
         return {
             pageSize,
+            pgSize,
+            pgSizeOptions,
             items,
             navPage,
             nextUrl,

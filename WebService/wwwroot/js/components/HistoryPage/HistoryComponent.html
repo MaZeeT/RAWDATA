@@ -2,39 +2,21 @@
     <h3>History Component</h3>
     <div>
         <br>
-        <button data-bind="click:navPage.bind($data, prevUrl()), disable: !prevUrl()" type="button" class="btn btn-primary btn-sm">
+        <button data-bind="click:navPage.bind($data, prevUrl()), disable: !prevUrl()" type="button"
+                class="btn btn-primary btn-sm">
             Prev Page
         </button>
-        <button data-bind="click:navPage.bind($data, nextUrl()), disable: !nextUrl()" type="button" class="btn btn-primary btn-sm">
+        <button data-bind="click:navPage.bind($data, nextUrl()), disable: !nextUrl()" type="button"
+                class="btn btn-primary btn-sm">
             Next Page
         </button>
     </div>
 
     <!-- MaxPage dropdown -->
-    <!--
-    <div class="dropdown">
-        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
-           aria-haspopup="true" aria-expanded="false">
-            Entries pr. page
-        </a>
-
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-            <a class="dropdown-item" href="#" data-bind="value:pageSize(5)">5</a>
-            <a class="dropdown-item" href="#" data-bind="value:pageSize(10)">10</a>
-            <a class="dropdown-item" href="#" data-bind="value:pageSize(15)">15</a>
-        </div>
-
-    </div>
-    -->
-    <div>
-        <select class="mdb-select md-form">
-            <option value="" disabled selected>Choose your car</option>
-            <option data-bind="pageSize(5)">5</option>
-            <option data-bind="pageSize(10)">10</option>
-            <option data-bind="pageSize(15)">15</option>
-            <option data-bind="pageSize(25)">25</option>
-            <option data-bind="pageSize(50)">50</option>
-        </select>
+    <div class="dropdown-containers">
+        <p class="label">Results/page:</p>
+        <select class="selector-dropdown"
+                data-bind="options: pgSizeOptions, value: pgSize, event: {change: pageSize}"></select>
     </div>
 
     <!-- Bootstrap table -->
@@ -54,7 +36,6 @@
                 <td data-bind="text:date"></td>
             </tr>
             </tbody>
-
         </table>
     </div>
 
