@@ -3,46 +3,46 @@
     <!-- Page Buttons -->
     <div>
         <br>
-        <button data-bind="click:prevPage" type="button" class="btn btn-primary btn-sm">Prev Page</button>
-        <button data-bind="click:nextPage" type="button" class="btn btn-primary btn-sm">Next Page</button>
-        <input data-bind="value: maxPages">
+        <button data-bind="click:navPage.bind($data, prevUrl()), disable: !prevUrl()" type="button" class="btn btn-primary btn-sm">
+            Prev Page
+        </button>
+        <button data-bind="click:navPage.bind($data, nextUrl()), disable: !nextUrl()" type="button" class="btn btn-primary btn-sm">
+            Next Page
+        </button>
     </div>
 
-    <!-- MaxPage dropdown -->
-    <div class="dropdown">
-        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Entries pr. page
-        </a>
-
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-            <a class="dropdown-item" href="#" data-bind="click:maxPages = 5">5</a>
-            <a class="dropdown-item" href="#" data-bind="click:maxPages = 10">10</a>
-            <a class="dropdown-item" href="#" data-bind="click:maxPages = 15">15</a>
-        </div>
+    <!-- 
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+        <a class="dropdown-item" href="#" data-bind="click:maxPages = 5">5</a>
+        <a class="dropdown-item" href="#" data-bind="click:maxPages = 10">10</a>
+        <a class="dropdown-item" href="#" data-bind="click:maxPages = 15">15</a>
     </div>
-    
-    <!-- Bootstrap table -->
-    <div data-bind="with: bookmarkItems" class="table-responsive">
-        <table class="table">
-            <thead>
-            <tr>
-                <th scope="col">Title</th>
-                <th scope="col">ThreadUrl</th>
-                <th scope="col">Date</th>
-            </tr>
-            </thead>
+    -->
+</div>
 
-            <tbody data-bind="foreach: items">
-            <tr>
-                <td data-bind="text:title"></td>
-                <td data-bind="text:threadUrl"></td>
-                <td data-bind="text:date"></td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+<!-- Bootstrap table -->
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Title</th>
+            <th scope="col">ThreadUrl</th>
+            <th scope="col">Date</th>
+        </tr>
+        </thead>
+        <tbody data-bind="foreach: items">
+        <tr>
+            <td data-bind="text:title"></td>
+            <td data-bind="text:threadUrl"></td>
+            <td data-bind="text:date"></td>
+            <td><button data-bind="click:$parent.deleteBookmark.bind($data, postId)" type="button" class="btn btn-danger">Delete</button></td>
+        </tr>
+        </tbody>
+
+    </table>
 </div>
 
 <div>
-    <button data-bind="click:deletions" type="button" class="btn btn-danger">Delete History</button>
+    <button data-bind="click:deletions" type="button" class="btn btn-danger">Delete Bookmarks</button>
 </div>
+
