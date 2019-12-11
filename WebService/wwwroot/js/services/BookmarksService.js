@@ -26,6 +26,28 @@
 
     };
 
+    let deleteBookmark = async function (token, postId, callback) {
+        let url = `api/bookmark/delete/${postId}`;
+        try {
+            console.log("token: " + token);
+            const response = await fetch(url, {
+                method: 'DELETE', // or 'PUT'
+                headers: new Headers({
+                    'Authorization': 'Bearer ' + token,
+                    'Content-Type': 'application/json'
+                })
+            }).then(function (response) {
+                return response;
+            }).then(function (responseBody) {
+                return responseBody;
+            });
+            callback(response);
+
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
     let deleteBookmarks = async function (token, callback) {
         try {
             console.log("token: " + token);
@@ -50,6 +72,7 @@
     return {
         buildUrl,
         getBookmarks,
+        deleteBookmark,
         deleteBookmarks
     }
 });

@@ -23,7 +23,7 @@
         let url = bs.buildUrl(page, pgSize());
         getData(url);
 
-        let pageSize = function (size){
+        let pageSize = function (size) {
             pgSize(size);
             let url = bs.buildUrl(page, pgSize());
             getData(url);
@@ -33,6 +33,18 @@
             if (url != null) {
                 getData(url);
             }
+        };
+
+        let deleteBookmark = function (postId) {
+            //delete on backend
+            bs.deleteBookmark(token, postId, function (response) {
+                return response;
+            });
+
+            //delete on fronted
+            items.remove(function (currentItem) {
+                return currentItem.postId === postId
+            });
         };
 
         let deletions = function () {
@@ -47,6 +59,7 @@
             navPage,
             nextUrl,
             prevUrl,
+            deleteBookmark,
             deletions
         };
     }
