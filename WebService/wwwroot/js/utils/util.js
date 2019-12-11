@@ -3,7 +3,7 @@
     //return named querystring value
     function getParameterByName(name, url) {
 
-        //example url: http://localhost:5001/api/search?s=gnu,bear,gcc&stype=0&page=1&pageSize=5
+        //example url: http://localhost:5001/api/search?s=gnu,bear,gcc&stype=0&page=2&pageSize=5
         //example name: page
 
         var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'), //this line builds the regex string
