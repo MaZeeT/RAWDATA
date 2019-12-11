@@ -1,10 +1,10 @@
 ﻿define(["jquery"], function () {
 
-    var buildUrl = function (page, maxPages) {
+    let buildUrl = function (page, maxPages) {
         return `api/bookmark?Page=${page}&PageSize=${maxPages}`;
     };
 
-    var getBookmarks = async function (token, url, callback) {
+    let getBookmarks = async function (token, url, callback) {
         console.log(url);
         try {
             const response = await fetch(url, {
@@ -26,7 +26,7 @@
 
     };
 
-    var deleteBookmarks = async function (token, callback) {
+    let deleteBookmarks = async function (token, callback) {
         try {
             console.log("token: " + token);
             const response = await fetch("api/bookmark/delete/all", {
