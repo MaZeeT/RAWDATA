@@ -3,10 +3,10 @@
     <!-- Page Buttons -->
     <div>
         <br>
-        <button data-bind="click:navPage(prevUrl()), disable: !prevUrl()" type="button" class="btn btn-primary btn-sm">
+        <button data-bind="click:navPage.bind($data, prevUrl()), disable: !prevUrl()" type="button" class="btn btn-primary btn-sm">
             Prev Page
         </button>
-        <button data-bind="click:navPage(nextUrl()), disable: !nextUrl()" type="button" class="btn btn-primary btn-sm">
+        <button data-bind="click:navPage.bind($data, nextUrl()), disable: !nextUrl()" type="button" class="btn btn-primary btn-sm">
             Next Page
         </button>
     </div>
