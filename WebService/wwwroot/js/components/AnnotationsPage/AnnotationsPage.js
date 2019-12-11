@@ -1,6 +1,8 @@
-﻿define(["knockout", "annotationsService", "messaging"], function (ko, as, mess) {
+﻿define(["knockout", "annotationsService", "messaging", 'postservice'], function (ko, as, mess, postservice) {
 
     return function () {
+
+        let updateAnnotationValue = ko.observable("");
 
         let annolist = ko.observableArray([]);
         let p = 1; //initial page
@@ -88,8 +90,33 @@
             }
         });
 
+
+        let deleteAnnotation = function (value) {
+
+            if (value.annotationId) {
+                let annotationId = value.annotationId;
+                postservice.deleteAnnotation(annotationId, function (serverResponse) {
+                    let status = serverResponse.status;
+                    console.log("Serv response: ", serverResponse);
+                    if (status === 200) {
+                        callServiceGetThread(postUrl());
+                        updateAnnotationValue("");
+                        callServiceGetThread(postUrl());
+                        deletedAnnotStatus(true);
+                    } else {
+                        deletedAnnotStatus(false);
+                    }
+                });
+
+            } else {
+                deletedAnnotStatus(false);
+            }
+
+        };
+
         //stuff available for binding
         return {
+            deleteAnnotation,
             annolist,
             getPg,
             pgsizepreset,

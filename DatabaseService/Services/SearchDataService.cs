@@ -179,6 +179,7 @@ namespace DatabaseService
             System.Console.WriteLine($"{words.Length} tokens in search");
 
             //added to filter non-aplhanumeric chars
+            //better to have it at backend if some1 sends weird request :)
             List<string> filteredtokens = new List<string>();
             foreach (string s in words)
             {

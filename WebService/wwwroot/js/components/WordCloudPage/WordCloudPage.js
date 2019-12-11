@@ -81,8 +81,13 @@
                         searchResult([]);
                         searchTerms('Try searching for something!');
                         return;
-                    } else if (data.status == 401 || data.status == 666) {
-                        //unauthorized or incomplete, goto login page
+                    } else if (data.status == 666) {
+                        //incomplete json/weird response
+                        searchResult([]);
+                        searchTerms('Try again!');
+                        return;
+                    } else if (data.status == 401) {
+                        //unauthorized, goto login page
                         mess.dispatch(mess.actions.selectMenu("authentication"));
                         return;
                     } else {

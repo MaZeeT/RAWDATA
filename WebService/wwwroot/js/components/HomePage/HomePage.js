@@ -9,7 +9,7 @@
         let currentPage = ko.observable(1);
 
         //Other dropdowns
-        let searchTypeValSelector = ko.observableArray(['TFIDF', 'Exact Match', 'Simple Match', 'Best Match']); //selection of pagesizes
+        let searchTypeValSelector = ko.observableArray(['TFIDF', 'Exact Match', 'Simple Match', 'Best Match']); //selection of searchtypes
         let searchTypeValue = ko.observable(0);
         let selectedSearchType = ko.observable();
 

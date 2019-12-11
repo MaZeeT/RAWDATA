@@ -18,7 +18,7 @@ define(['knockout', 'browseService', 'messaging'], function (ko, bs, mess) {
         let getpgsize = ko.observable(); //for getting new pagesize
 
 
-        //comp change requested
+        //comp change requested; switch view
         function changeComp(component) {
             if (component === 'search') {
                 mess.dispatch(mess.actions.selectMenu("Home"));
@@ -27,17 +27,14 @@ define(['knockout', 'browseService', 'messaging'], function (ko, bs, mess) {
             } 
         };
 
-        //thread requested
+        //thread requested; switch to thread view
         let selectPostItem = function (item) {
-            console.log("Item.threadlink is: ", item.link);
-            console.log("Item is: ", item);
             mess.dispatch(mess.actions.selectPost(item.link));
-            console.log("In between dispatches");
             mess.dispatch(mess.actions.selectMenu("postdetails"));
         };
 
 
-        //grab data when pagesize change
+        //grab/refresh data when pagesize change
         let pgsizechanged = function setPgSize(context) {
             console.log("getpgsiz: ", context.getpgsize());
             console.log("Size: ", window.innerWidth);
@@ -56,7 +53,7 @@ define(['knockout', 'browseService', 'messaging'], function (ko, bs, mess) {
             };
         };
 
-        //grab data when page change
+        //grab/refresh data when page change
         function getPg(direction) {
             let npg = null;
             if (direction === 'next') {
