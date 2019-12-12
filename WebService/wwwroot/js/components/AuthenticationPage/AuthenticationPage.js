@@ -5,12 +5,20 @@
         //LogInForm
         let loginUsername = ko.observable("Username");
         let loginPassword = ko.observable("Password");
+
+        let getCredentials = function (username, password) {
+            if (username && username !== "Username" && password && password !== "Password") {
+                console.log("Correct");
+                return {Username: username, Password: password};
+            }
+        };
+
         let loginUser = function (data) {
             let username = loginUsername();
             let password = loginPassword();
             if (username && username !== "Username" && password && password !== "Password") {
                 console.log("Correct");
-                const incomingUserCredentials = { Username: username, Password: password };
+                const incomingUserCredentials = {Username: username, Password: password};
                 authservice.getLoginUser(incomingUserCredentials, function (authenticationResponse) {
                     const token = authenticationResponse.token;
                     if (token) {
@@ -28,20 +36,25 @@
         };
 
         function clearInputFields(field) {
-            
+
             if (field === 'user' && loginUsername() === "Username") {
                 loginUsername('')
-            }
-            else if (field === 'pass' && loginPassword() === "Password") {
+            } else if (field === 'pass' && loginPassword() === "Password") {
                 loginPassword('')
             }
 
         }
 
 
-        var newUserSignup = function () {
+        let newUserSignup = function () {
+            const login = getCredentials(loginUsername(), loginPassword());
+            authservice.signUpUser(login, function (authenticationResponse) {
+                const token = authenticationResponse.token;
+                console.log("User created");
+                console.log(token);
+            });
             console.log("I have been clicked for signup new user");
-        }
+        };
 
         return {
             loginUsername,
@@ -49,7 +62,7 @@
             loginUser,
             clearInputFields,
             newUserSignup
-            
+
         }
     }
 

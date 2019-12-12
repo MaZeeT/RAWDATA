@@ -21,7 +21,7 @@
             console.error('Error:', error);
         }
     };
-    var signUpUser = async function (incomingUserCredentials, callback) {
+    let signUpUser = async function (incomingUserCredentials, callback) {
         try {
             const response = await fetch("api/auth/users", {
                 method: 'POST', // or 'PUT'
@@ -42,6 +42,7 @@
     };
 
     return {
-        getLoginUser
+        getLoginUser,
+        signUpUser
     }
 });
