@@ -178,12 +178,28 @@ namespace DatabaseService
             string[] words = searchstring.Split(separators, StringSplitOptions.RemoveEmptyEntries);
             System.Console.WriteLine($"{words.Length} tokens in search");
 
-            string finalstring;
-            if (reverse==true)
+            //added to filter non-aplhanumeric chars
+            //better to have it at backend if some1 sends weird request :)
+            List<string> filteredtokens = new List<string>();
+            foreach (string s in words)
             {
-                finalstring = string.Join(",", words);
-            } else { 
-                finalstring = string.Join(" ", words); 
+                char[] filterarray = s.ToCharArray();
+                filterarray = Array.FindAll<char>(filterarray, (c => (char.IsLetterOrDigit(c)
+                                                  || char.IsWhiteSpace(c)
+                                                  || c == '-')));
+                var filteredtoken = new string(filterarray);
+                filteredtokens.Add(filteredtoken);
+            }
+            //
+
+            string finalstring;
+            if (reverse == true)
+            {
+                finalstring = string.Join(",", filteredtokens);
+            }
+            else
+            {
+                finalstring = string.Join(" ", filteredtokens);
             }
 
             System.Console.WriteLine("Built search string: " + finalstring);
