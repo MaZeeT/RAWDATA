@@ -10,13 +10,15 @@
             if (username && username !== "Username" && password && password !== "Password") {
                 console.log("Correct");
                 return {Username: username, Password: password};
-            }else {
+            } else {
                 console.log("Incorrect");
+                return null;
             }
         };
 
         let loginUser = function (data) {
-                const login = getCredentials(loginUsername(), loginPassword());
+            const login = getCredentials(loginUsername(), loginPassword());
+            if (login !== null) {
                 authservice.getLoginUser(login, function (authenticationResponse) {
                     const token = authenticationResponse.token;
                     if (token) {
@@ -27,7 +29,7 @@
                         //messaging.dispatch(messaging.actions.selectMenu("Home"));
                     }
                 });
-
+            }
         };
 
         function clearInputFields(field) {
@@ -43,12 +45,14 @@
 
         let newUserSignup = function () {
             const login = getCredentials(loginUsername(), loginPassword());
-            authservice.signUpUser(login, function (authenticationResponse) {
-                const token = authenticationResponse.token;
-                console.log("User created");
-                console.log(token);
-            });
-            console.log("I have been clicked for signup new user");
+            if (login !== null) {
+                authservice.signUpUser(login, function (authenticationResponse) {
+                    const token = authenticationResponse.token;
+                    console.log("User created");
+                    console.log(token);
+                });
+                console.log("I have been clicked for signup new user");
+            }
         };
 
         return {
