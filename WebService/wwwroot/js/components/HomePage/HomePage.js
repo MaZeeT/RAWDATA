@@ -4,8 +4,8 @@
 
         //Pagination
         let pageSizeSelection = ko.observableArray(['5', '10', '20', '30', '40', '50']); //selection of pagesizes
-        let selectedPageSize = ko.observable('10');
-        let getPageSize = ko.observable(selectedPageSize());
+        let selectedPageSize = ko.observable();
+        let getPageSize = ko.observable(5);
 
         let currentPage = ko.observable(1);
 
