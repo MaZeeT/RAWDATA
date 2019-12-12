@@ -25,12 +25,15 @@
             <thead>
             <tr>
                 <th scope="col">Title</th>
+                <th scope="col">Body</th>
                 <th scope="col">Date</th>
             </tr>
             </thead>
             <tbody data-bind="foreach: items">
             <tr style="cursor: pointer" data-bind="click: $parent.selectPostItem.bind($data, threadUrl)">
+                
                 <td data-bind="text:title"></td>
+                <td data-bind="text:body"></td>
                 <td data-bind="text:date"></td>
             </tr>
             </tbody>
