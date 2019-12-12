@@ -1,4 +1,4 @@
-define(["knockout", "historyService"], function (ko, ds) {
+define(["knockout", "historyService", "util"], function (ko, ds, util) {
 
     return function () {
         let token = window.localStorage.getItem('userToken');
@@ -6,6 +6,7 @@ define(["knockout", "historyService"], function (ko, ds) {
         let pgSizeOptions = ko.observableArray([5, 10, 15, 25, 50, 100]);
         let pgSize = ko.observable(10);
         let totalPages = ko.observable();
+        let currentPage = ko.observable(1);
         let prevUrl = ko.observable();
         let nextUrl = ko.observable();
         let items = ko.observableArray();
@@ -13,6 +14,7 @@ define(["knockout", "historyService"], function (ko, ds) {
 
         let getData = function (url) {
             ds.getHistory(token, url, function (response) {
+                currentPage(util.getParameterByName('page', url));
                 totalPages(response.numberOfPages);
                 prevUrl(response.prev);
                 nextUrl(response.next);
@@ -20,13 +22,13 @@ define(["knockout", "historyService"], function (ko, ds) {
             });
         };
 
-        let page = 1;
-        let url = ds.buildUrl(page, pgSize());
+        //let page = 1;
+        let url = ds.buildUrl(currentPage(), pgSize());
         getData(url);
 
         let pageSize = function (size) {
             pgSize(size);
-            let url = ds.buildUrl(page, pgSize());
+            let url = ds.buildUrl(currentPage(), pgSize());
             getData(url);
         };
 
@@ -42,7 +44,11 @@ define(["knockout", "historyService"], function (ko, ds) {
             })
         };
 
+
+
         return {
+            totalPages,
+            currentPage,
             pageSize,
             pgSize,
             pgSizeOptions,
