@@ -50,6 +50,28 @@ define(["knockout", "historyService", 'messaging', 'util'], function (ko, ds, me
             mess.dispatch(mess.actions.selectMenu("postdetails"));
         };
 
+        //store stuff from this view
+        let saveStuff = function () {
+            mess.dispatch(mess.actions.selectCurrentPage(p));
+            mess.dispatch(mess.actions.selectMaxPages(ps));
+        }
+
+        //comp change requested
+        function changeComp(component) {
+            if (component === 'anno') {
+                saveStuff();
+                mess.dispatch(messaging.actions.selectMenu("Annotations"));
+            } else if (component === 'book') {
+                saveStuff()
+                mess.dispatch(messaging.actions.selectMenu("Bookmarks"));
+            } else if (component === 'previous' && storedPreviousView) {
+                saveStuff();
+                mess.dispatch(messaging.actions.selectMenu(storedPreviousView));
+            }
+        };
+
+        mess.actions.selectMenu("prebuttcomp");
+
         return {
             totalPages,
             currentPage,
@@ -61,6 +83,7 @@ define(["knockout", "historyService", 'messaging', 'util'], function (ko, ds, me
             nextUrl,
             prevUrl,
             deletions,
+            changeComp,
             selectPostItem
         };
 

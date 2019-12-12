@@ -1,6 +1,8 @@
 ﻿
     <div class="home-page-container">
 
+        <prebuttcomp></prebuttcomp>
+
         <div data-bind="ifnot: loaded" class="d-flex justify-content-center">
             <div class="spinner-border" role="status">
                 <span class="sr-only">Loading...</span>
@@ -25,9 +27,11 @@
 
                 <div data-bind="with: annolist">
                     <div class="post-card-details-container">
-                        <p> On this page you can browse all the annotations you have made on posts from Stackoverflow. 
-                        You can also update their contents or delete them.
-                        Click on the title of an annotated post to view the full thread.</p>
+                        <p>
+                            On this page you can browse all the annotations you have made on posts from Stackoverflow.
+                            You can also update their contents or delete them.
+                            Click on the title of an annotated post to view the full thread.
+                        </p>
                         <div class="card-body">
 
 
@@ -72,25 +76,25 @@
 
                 </div>
             </div>
-                <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-sm">
-                        <!--  <div data-bind="visible: responseData() == true" class="modal-content success">
-           <p>Your bookmark has been saved.</p>
-           <p>You can access all your bookmarks from the menu.</p>
-       </div>-->
-                        <div data-bind="visible: deletedAnnotStatus() == true" class="modal-content success">
-                            <p>Your annotation has been deleted successfully.</p>
-                            <p>You can access all your annotations from the menu.</p>
-                        </div>
-                        <div data-bind="visible: deletedAnnotStatus() == false" class="modal-content fail">
-                            <p>Oops!!!</p>
-                            <p>We could not complete your request.</p>
-                            <p>Please try again later</p>
-                        </div>
+            <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-sm">
+                    <!--  <div data-bind="visible: responseData() == true" class="modal-content success">
+                    <p>Your bookmark has been saved.</p>
+                    <p>You can access all your bookmarks from the menu.</p>
+                </div>-->
+                    <div data-bind="visible: deletedAnnotStatus() == true" class="modal-content success">
+                        <p>Your annotation has been deleted successfully.</p>
+                        <p>You can access all your annotations from the menu.</p>
+                    </div>
+                    <div data-bind="visible: deletedAnnotStatus() == false" class="modal-content fail">
+                        <p>Oops!!!</p>
+                        <p>We could not complete your request.</p>
+                        <p>Please try again later</p>
                     </div>
                 </div>
+            </div>
 
-            
+
         </div>
     </div>
         <script>

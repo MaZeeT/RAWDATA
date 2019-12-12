@@ -66,7 +66,7 @@
                     let status = serverResponse.status;
                     console.log("Serv response: ", serverResponse);
                     if (status === 200) {
-                        callServiceGetThread(postUrl());
+                        //callServiceGetThread(postUrl());
                         updateAnnotationValue("");
                         callServiceGetThread(postUrl());
                         deletedAnnotStatus(true);
@@ -106,9 +106,7 @@
 
             });
         });
-
-      
-
+ 
 
         function callServiceGetThread(postUrl) {
             postservice.getAllChildDataOfPostUrl(postUrl, function (responseFromServer) {
@@ -121,6 +119,13 @@
                 }
             });
         }
+
+        //get previous component/view
+        let storedPreviousView = mess.getState().selectedPreviousView;
+
+        //store current component name
+        mess.dispatch(mess.actions.selectPreviousView("postdetails"));
+        mess.actions.selectMenu("prebuttcomp");
 
         return {
             postUrl,

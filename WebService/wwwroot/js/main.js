@@ -53,7 +53,10 @@ require(["knockout"], function (ko) {
         viewModel: { require: "components/PostDetails/PostDetails" },
         template: { require: "text!components/PostDetails/PostDetails.html" }
     });
-   
+    ko.components.register('prebuttcomp', {
+        viewModel: { require: "components/PreviousButtonComponent/PreviousButtonComponent" },
+        template: { require: "text!components/PreviousButtonComponent/PreviousButtonComponent.html" }
+    });
 });
 
 require(["knockout", "messaging", "navbar"], function (ko, messaging, app) {

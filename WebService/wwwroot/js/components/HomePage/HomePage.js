@@ -65,6 +65,7 @@
             messaging.dispatch(messaging.actions.selectSearchOptions(selectedSearchType()));
             messaging.dispatch(messaging.actions.selectCurrentPage(currentPage()));
             messaging.dispatch(messaging.actions.selectMaxPages(getPageSize()));
+            messaging.dispatch(messaging.actions.selectPreviousView("Home"));
         };
 
         //comp change requested
@@ -75,6 +76,9 @@
             } else if (component === 'wordcloud') {
                 saveStuff()
                 messaging.dispatch(messaging.actions.selectMenu("wordcloud"));
+            } else if (component === 'previous' && storedPreviousView) {
+                saveStuff();
+                messaging.dispatch(messaging.actions.selectMenu(storedPreviousView));
             }
         };
 
@@ -139,6 +143,8 @@
         } else {
            
         }*/ //confused about how to set that option
+
+        messaging.actions.selectMenu("prebuttcomp");
 
         return {
             searchTerms,

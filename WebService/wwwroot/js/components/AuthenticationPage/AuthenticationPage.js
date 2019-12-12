@@ -3,15 +3,19 @@
     return function () {
 
         //LogInForm
-        let loginUsername = ko.observable("Username");
-        let loginPassword = ko.observable("Password");
+        let usernamePrefill = "Username";
+        let passwordPrefill = "Password";
+
+        let loginUsername = ko.observable(usernamePrefill);
+        let loginPassword = ko.observable(passwordPrefill);
 
         let getCredentials = function (username, password) {
-            if (username && username !== "Username" && password && password !== "Password") {
+            if (username && username !== usernamePrefill && password && password !== passwordPrefill) {
                 console.log("Correct");
                 return {Username: username, Password: password};
             } else {
                 console.log("Incorrect");
+                usernamePrefill = "Input your username here :)";
                 return null;
             }
         };
@@ -27,6 +31,13 @@
                         window.location.reload();
                         //console.log(messaging.actions);
                         //messaging.dispatch(messaging.actions.selectMenu("Home"));
+
+                       /* //get previous component/view
+                        let storedPreviousView = messaging.getState().selectedPreviousView;
+                        console.log('stored comp : ', storedPreviousView);
+                        if (storedPreviousView) {
+                            messaging.dispatch(messaging.actions.selectMenu(storedPreviousView));
+                        } else messaging.dispatch(messaging.actions.selectMenu("Home"));*/
                     }
                 });
             }
@@ -34,9 +45,9 @@
 
         function clearInputFields(field) {
 
-            if (field === 'user' && loginUsername() === "Username") {
+            if (field === 'user' && loginUsername() === usernamePrefill) {
                 loginUsername('')
-            } else if (field === 'pass' && loginPassword() === "Password") {
+            } else if (field === 'pass' && loginPassword() === passwordPrefill) {
                 loginPassword('')
             }
 

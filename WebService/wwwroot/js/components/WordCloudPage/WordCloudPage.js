@@ -21,16 +21,16 @@
         function changeComp(component) {
             if (component === 'search') {
                 saveStuff();
-                mess.dispatch(mess.actions.selectPreviousView("wordcloud"));
                 mess.dispatch(mess.actions.selectMenu("Home"));
             } else if (component === 'browse') {
                 saveStuff();
-                mess.dispatch(mess.actions.selectPreviousView("wordcloud"));
                 mess.dispatch(mess.actions.selectMenu("Browse"));
             } else if (component === 'unauth') {
                 saveStuff();
-                mess.dispatch(mess.actions.selectPreviousView("wordcloud"));
                 mess.dispatch(mess.actions.selectMenu("authentication"));
+            } else if (component === 'previous' && storedPreviousView) {
+                saveStuff();
+                mess.dispatch(mess.actions.selectMenu(storedPreviousView));
             }
         };
 
@@ -46,6 +46,7 @@
             mess.dispatch(mess.actions.selectSearchTerms(searchTerms()));
             mess.dispatch(mess.actions.selectSearchOptions(stypebtn()));
             mess.dispatch(mess.actions.selectMaxWords(selectedValue()));
+            mess.dispatch(mess.actions.selectPreviousView("wordcloud"));
         }
 
 
@@ -137,6 +138,7 @@
         //execute on coming to this view
         console.log("contesnt of searchterms : ", mess.getState().selectedSearchTerms);
         console.log("contesnt of searchopts : ", mess.getState().selectedSearchOptions);   
+        mess.actions.selectMenu("prebuttcomp");
 
         //get previous component/view
         let storedPreviousView = mess.getState().selectedPreviousView;

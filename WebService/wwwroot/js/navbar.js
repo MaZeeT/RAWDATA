@@ -32,6 +32,9 @@
             component:"postdetails"
         },
         {
+            component: "prebuttcomp"
+        },
+        {
             component: "wordcloud"
         }
     ]
@@ -68,8 +71,9 @@
     };
 
     var signOutUser = function () {
-        console.log("It has been clicked");
-        window.localStorage.clear();
+        console.log("sign out clicked");
+        localStorage.removeItem('userToken');
+        //window.localStorage.clear();
         window.location.reload();
     }
 

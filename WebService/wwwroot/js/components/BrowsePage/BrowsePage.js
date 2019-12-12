@@ -25,7 +25,10 @@ define(['knockout', 'browseService', 'messaging', 'util'], function (ko, bs, mes
             } else if (component === 'wordcloud') {
                 saveStuff();
                 mess.dispatch(mess.actions.selectMenu("wordcloud"));
-            } 
+            } else if (component === 'previous' && storedPreviousView) {
+                saveStuff();
+                mess.dispatch(mess.actions.selectMenu(storedPreviousView));
+            }
         };
 
         //thread requested; switch to thread view
@@ -79,6 +82,7 @@ define(['knockout', 'browseService', 'messaging', 'util'], function (ko, bs, mes
         let saveStuff = function () {
             mess.dispatch(mess.actions.selectCurrentPage(p));
             mess.dispatch(mess.actions.selectMaxPages(ps));
+            mess.dispatch(mess.actions.selectPreviousView("Browse"));
         }
 
         //run when changeing to this view
@@ -97,6 +101,9 @@ define(['knockout', 'browseService', 'messaging', 'util'], function (ko, bs, mes
             ps = storedMaxPages;
             getpgsize(ps);
         }
+
+        //include buttons
+        mess.actions.selectMenu("prebuttcomp");
         
         //grab data for initial view
         getBrowsing(p, ps);
