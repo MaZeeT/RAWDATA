@@ -26,14 +26,12 @@
             <thead>
             <tr>
                 <th scope="col">Title</th>
-                <th scope="col">ThreadUrl</th>
                 <th scope="col">Date</th>
             </tr>
             </thead>
             <tbody data-bind="foreach: items">
-            <tr>
+            <tr  style="cursor: pointer" data-bind="click: $parent.selectPostItem.bind($data, threadUrl)">
                 <td data-bind="text:title"></td>
-                <td data-bind="text:threadUrl"></td>
                 <td data-bind="text:date"></td>
                 <td>
                     <button data-bind="click:$parent.deleteBookmark.bind($data, postId)" type="button"
