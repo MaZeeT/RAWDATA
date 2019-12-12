@@ -92,9 +92,11 @@ namespace WebService.Controllers
 
         private HistoryDTO CreateHistoryResultDto(History hist)
         {
+            var post = _sharedService.GetPost(hist.Postid);
             var dto = new HistoryDTO
             {
-                Title = _sharedService.GetPost(hist.Postid).Title,
+                Title = post.Title,
+                Body = post.Body,
                 Date = hist.Date,
                 ThreadUrl = Url.Link(
                     nameof(QuestionsController.GetThread),
