@@ -7,5 +7,6 @@ namespace WebService.DTOs
         public string Title { get; set; }
         public string ThreadUrl { get; set; }
         public DateTime Date { get; set; }
+        public int PostId { get; set; }
     }
 }

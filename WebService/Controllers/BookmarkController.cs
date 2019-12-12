@@ -133,7 +133,8 @@ namespace WebService.Controllers
                 ThreadUrl = Url.Link(
                     nameof(QuestionsController.GetThread),
                     new {questionId = hist.Postid}
-                )
+                ),
+                PostId = hist.Postid
             };
 
             return dto;

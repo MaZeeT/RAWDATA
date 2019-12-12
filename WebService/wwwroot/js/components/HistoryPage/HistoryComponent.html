@@ -2,10 +2,12 @@
     <h3>History Component</h3>
     <div>
         <br>
-        <button data-bind="click:navPage(prevUrl()), disable: !prevUrl()" type="button" class="btn btn-primary btn-sm">
+        <button data-bind="click:navPage.bind($data, prevUrl()), disable: !prevUrl()" type="button"
+                class="btn btn-primary btn-sm">
             Prev Page
         </button>
-        <button data-bind="click:navPage(nextUrl()), disable: !nextUrl()" type="button" class="btn btn-primary btn-sm">
+        <button data-bind="click:navPage.bind($data, nextUrl()), disable: !nextUrl()" type="button"
+                class="btn btn-primary btn-sm">
             Next Page
         </button>
     </div>
@@ -35,6 +37,10 @@
             <option data-bind="pageSize(25)">25</option>
             <option data-bind="pageSize(50)">50</option>
         </select>
+    <div class="dropdown-containers">
+        <p class="label">Results/page:</p>
+        <select class="selector-dropdown"
+                data-bind="options: pgSizeOptions, value: pgSize, event: {change: pageSize}"></select>
     </div>
 
     <h6>Current page:  <span data-bind="text: currentPage"></span></h6>
@@ -57,7 +63,6 @@
                     <td data-bind="text:date"></td>
                 </tr>
             </tbody>
-
         </table>
     </div>
 
