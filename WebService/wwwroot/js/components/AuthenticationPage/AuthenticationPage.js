@@ -10,16 +10,14 @@
             if (username && username !== "Username" && password && password !== "Password") {
                 console.log("Correct");
                 return {Username: username, Password: password};
+            }else {
+                console.log("Incorrect");
             }
         };
 
         let loginUser = function (data) {
-            let username = loginUsername();
-            let password = loginPassword();
-            if (username && username !== "Username" && password && password !== "Password") {
-                console.log("Correct");
-                const incomingUserCredentials = {Username: username, Password: password};
-                authservice.getLoginUser(incomingUserCredentials, function (authenticationResponse) {
+                const login = getCredentials(loginUsername(), loginPassword());
+                authservice.getLoginUser(login, function (authenticationResponse) {
                     const token = authenticationResponse.token;
                     if (token) {
                         console.log('If token yes');
@@ -30,9 +28,6 @@
                     }
                 });
 
-            } else {
-                console.log("Incorrect");
-            }
         };
 
         function clearInputFields(field) {
