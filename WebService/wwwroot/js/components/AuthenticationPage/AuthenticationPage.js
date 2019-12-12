@@ -5,13 +5,21 @@
         //LogInForm
         let loginUsername = ko.observable("Username");
         let loginPassword = ko.observable("Password");
-        let loginUser = function (data) {
-            let username = loginUsername();
-            let password = loginPassword();
+
+        let getCredentials = function (username, password) {
             if (username && username !== "Username" && password && password !== "Password") {
                 console.log("Correct");
-                const incomingUserCredentials = { Username: username, Password: password };
-                authservice.getLoginUser(incomingUserCredentials, function (authenticationResponse) {
+                return {Username: username, Password: password};
+            } else {
+                console.log("Incorrect");
+                return null;
+            }
+        };
+
+        let loginUser = function (data) {
+            const login = getCredentials(loginUsername(), loginPassword());
+            if (login !== null) {
+                authservice.getLoginUser(login, function (authenticationResponse) {
                     const token = authenticationResponse.token;
                     if (token) {
                         console.log('If token yes');
@@ -21,27 +29,31 @@
                         //messaging.dispatch(messaging.actions.selectMenu("Home"));
                     }
                 });
-
-            } else {
-                console.log("Incorrect");
             }
         };
 
         function clearInputFields(field) {
-            
+
             if (field === 'user' && loginUsername() === "Username") {
                 loginUsername('')
-            }
-            else if (field === 'pass' && loginPassword() === "Password") {
+            } else if (field === 'pass' && loginPassword() === "Password") {
                 loginPassword('')
             }
 
         }
 
 
-        var newUserSignup = function () {
-            console.log("I have been clicked for signup new user");
-        }
+        let newUserSignup = function () {
+            const login = getCredentials(loginUsername(), loginPassword());
+            if (login !== null) {
+                authservice.signUpUser(login, function (authenticationResponse) {
+                    const token = authenticationResponse.token;
+                    console.log("User created");
+                    console.log(token);
+                });
+                console.log("I have been clicked for signup new user");
+            }
+        };
 
         return {
             loginUsername,
@@ -49,7 +61,7 @@
             loginUser,
             clearInputFields,
             newUserSignup
-            
+
         }
     }
 

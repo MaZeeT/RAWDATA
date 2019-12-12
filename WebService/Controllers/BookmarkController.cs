@@ -126,14 +126,17 @@ namespace WebService.Controllers
 
         private BookmarkDTO CreateBookmarkResultDto(History hist)
         {
+            var post = _sharedService.GetPost(hist.Postid);
             var dto = new BookmarkDTO
             {
-                Title = _sharedService.GetPost(hist.Postid).Title,
+                Title = post.Title,
+                Body = post.Body,
                 Date = hist.Date,
                 ThreadUrl = Url.Link(
                     nameof(QuestionsController.GetThread),
                     new {questionId = hist.Postid}
-                )
+                ),
+                PostId = hist.Postid
             };
 
             return dto;
@@ -144,6 +147,5 @@ namespace WebService.Controllers
         {
             return Url.Link(nameof, new {page, pageSize});
         }
-
     }
 }

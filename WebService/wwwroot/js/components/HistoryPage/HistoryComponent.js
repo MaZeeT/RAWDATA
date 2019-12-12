@@ -1,10 +1,12 @@
-define(["knockout", "historyService"], function (ko, ds) {
+define(["knockout", "historyService", 'messaging', 'util'], function (ko, ds, mess, util) {
 
     return function () {
         let token = window.localStorage.getItem('userToken');
 
+        let pgSizeOptions = ko.observableArray([5, 10, 15, 25, 50, 100]);
         let pgSize = ko.observable(10);
         let totalPages = ko.observable();
+        let currentPage = ko.observable(1);
         let prevUrl = ko.observable();
         let nextUrl = ko.observable();
         let items = ko.observableArray();
@@ -12,6 +14,7 @@ define(["knockout", "historyService"], function (ko, ds) {
 
         let getData = function (url) {
             ds.getHistory(token, url, function (response) {
+                currentPage(util.getParameterByName('page', url));
                 totalPages(response.numberOfPages);
                 prevUrl(response.prev);
                 nextUrl(response.next);
@@ -19,16 +22,16 @@ define(["knockout", "historyService"], function (ko, ds) {
             });
         };
 
-        let page = 1;
-        let url = ds.buildUrl(page, pgSize());
+        //let page = 1;
+        let url = ds.buildUrl(currentPage(), pgSize());
         getData(url);
 
-        let pageSize = function (size){
+        let pageSize = function (size) {
             pgSize(size);
-            let url = ds.buildUrl(page, pgSize());
+            let url = ds.buildUrl(currentPage(), pgSize());
             getData(url);
         };
-        
+
         let navPage = function (url) {
             if (url != null) {
                 getData(url);
@@ -36,18 +39,29 @@ define(["knockout", "historyService"], function (ko, ds) {
         };
 
         let deletions = function () {
-            ds.deleteHistory("goat", function (response) {
+            ds.deleteHistory(token, function (response) {
                 return response;
             })
         };
 
+        let selectPostItem = function (item) {
+            console.log("Item is: ", item);
+            mess.dispatch(mess.actions.selectPost(item));
+            mess.dispatch(mess.actions.selectMenu("postdetails"));
+        };
+
         return {
+            totalPages,
+            currentPage,
             pageSize,
+            pgSize,
+            pgSizeOptions,
             items,
             navPage,
             nextUrl,
             prevUrl,
-            deletions
+            deletions,
+            selectPostItem
         };
 
     };

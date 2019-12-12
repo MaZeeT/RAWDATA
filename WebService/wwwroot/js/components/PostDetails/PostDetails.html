@@ -1,66 +1,68 @@
-﻿<div class="container">
-    <div data-bind="if: showspinner" class="d-flex justify-content-center">
-        <div class="spinner-border" role="status">
-            <span class="sr-only">Loading...</span>
-        </div>
-    </div>
+﻿<div class="home-page-container">
 
-    <div data-bind="ifnot: showspinner" class="card post-details-card-container">
-        <div class="card-body" data-bind="foreach: postDetails">
-            <div class="post-card-details-container">
-                <h2 data-bind="text: title"></h2>
-                <p class="card-text" data-bind="html: body"></p>
-                <div class="card existing-annotations-content" data-bind="visible: annotations.length > 0">
-                    <h6 class="card-subtitle mb-2 text-muted">Your annotations</h6>
-                    <div class="card-body annotations-container" data-bind="foreach: annotations">
-                        <div class="card-annotation-body-content">
-                            <p class="card-text annotation-text" data-bind="html: body"></p>
-                            <p class="card-text annotation-text" data-bind="html: date"></p>
+    <div class="container">
+        <div data-bind="if: showspinner" class="d-flex justify-content-center">
+            <div class="spinner-border" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+
+        <div data-bind="ifnot: showspinner" class="card post-details-card-container">
+            <div class="card-body" data-bind="foreach: postDetails">
+                <div class="post-card-details-container">
+                    <h2 data-bind="text: title"></h2>
+                    <p class="card-text" data-bind="html: body"></p>
+                    <div class="card existing-annotations-content" data-bind="visible: annotations.length > 0">
+                        <h6 class="card-subtitle mb-2 text-muted">Your annotations</h6>
+                        <div class="card-body annotations-container" data-bind="foreach: annotations">
+                            <div class="card-annotation-body-content">
+                                <p class="card-text annotation-text" data-bind="html: body"></p>
+                                <p class="card-text annotation-text" data-bind="html: date"></p>
+                            </div>
+                            <div class="card-bottom-link-buttons">
+                                <a data-bind="attr: { href: '#collapseUpdate-'+ annotationId }, click: $component.updateAnnotation" class="badge badge-pill badge-info" data-toggle="collapse" aria-expanded="false" aria-controls="collapseExample">Update</a>
+                                <a href="#" data-bind="attr: { href: '#collapseUpdate-'+ annotationId }, click: $component.deleteAnnotation" class="badge badge-pill badge-info" data-toggle="modal" data-target=".bd-example-modal-sm">Delete</a>
+                            </div>
+                            <div class="collapse" data-bind="attr: { id: 'collapseUpdate-'+ annotationId }">
+                                <textarea class="form-control form-control-lg" data-bind="value: $component.updateAnnotationValue"></textarea>
+                            </div>
                         </div>
-                        <div class="card-bottom-link-buttons">
-                            <a data-bind="attr: { href: '#collapseUpdate-'+ annotationId }, click: $component.updateAnnotation" class="badge badge-pill badge-info" data-toggle="collapse" aria-expanded="false" aria-controls="collapseExample">Update</a>
-                            <a href="#" data-bind="attr: { href: '#collapseUpdate-'+ annotationId }, click: $component.deleteAnnotation" class="badge badge-pill badge-info" data-toggle="modal" data-target=".bd-example-modal-sm">Delete</a>
-                        </div>
-                        <div class="collapse" data-bind="attr: { id: 'collapseUpdate-'+ annotationId }">
-                            <textarea class="form-control form-control-lg" data-bind="value: $component.updateAnnotationValue"></textarea>
-                        </div>
+
                     </div>
-                    
-                </div>
-                <div class="card-bottom-link-buttons">
-                    <a data-bind="attr: { href: '#collapseExample-'+ id }, click: $parent.annotatedPostValues" class="card-link" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseExample">Add Annotation</a>
-                    <a href="#" data-bind="attr: { id: id }, click: $parent.addBookmark" class="card-link" data-toggle="modal" data-target=".bd-example-modal-sm">Add as Bookmark</a>
-                </div>
-                <div class="collapse" data-bind="attr: { id: 'collapseExample-'+ id }">
-                    <textarea class="form-control form-control-lg" data-bind="attr: { id: 'collapseExample-'+ id }, value: $parent.annotationBodyText"></textarea>
+                    <div class="card-bottom-link-buttons">
+                        <a data-bind="attr: { href: '#collapseExample-'+ id }, click: $parent.annotatedPostValues" class="card-link" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseExample">Add Annotation</a>
+                        <a href="#" data-bind="attr: { id: id }, click: $parent.addBookmark" class="card-link" data-toggle="modal" data-target=".bd-example-modal-sm">Add as Bookmark</a>
+                    </div>
+                    <div class="collapse" data-bind="attr: { id: 'collapseExample-'+ id }">
+                        <textarea class="form-control form-control-lg" data-bind="attr: { id: 'collapseExample-'+ id }, value: $parent.annotationBodyText"></textarea>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
 
-    <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
-            <div data-bind="visible: responseData() == true" class="modal-content success">
-                <p>Your bookmark has been saved.</p>
-                <p>You can access all your bookmarks from the menu.</p>
-            </div>
-            <div data-bind="visible: deletedAnnotStatus() == true" class="modal-content success">
-                <p>Your annotation has been deleted successfully.</p>
-                <p>You can access all your annotations from the menu.</p>
-            </div>
-            <div data-bind="visible: deletedAnnotStatus() == false && responseData() == false" class="modal-content fail">
-                <p>Oops!!!</p>
-                <p>We could not complete your request.</p>
-                <p>Please try again later</p>
+        <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-sm">
+                <div data-bind="visible: responseData() == true" class="modal-content success">
+                    <p>Your bookmark has been saved.</p>
+                    <p>You can access all your bookmarks from the menu.</p>
+                </div>
+                <div data-bind="visible: deletedAnnotStatus() == true" class="modal-content success">
+                    <p>Your annotation has been deleted successfully.</p>
+                    <p>You can access all your annotations from the menu.</p>
+                </div>
+                <div data-bind="visible: deletedAnnotStatus() == false && responseData() == false" class="modal-content fail">
+                    <p>Oops!!!</p>
+                    <p>We could not complete your request.</p>
+                    <p>Please try again later</p>
+                </div>
             </div>
         </div>
-    </div>
 
+    </div>
 </div>
-
-<script>
-    $(document).ready(function () {
-        $('[data-toggle="popover"]').popover();
-    });
-</script>
+    <script>
+        $(document).ready(function () {
+            $('[data-toggle="popover"]').popover();
+        });
+    </script>
