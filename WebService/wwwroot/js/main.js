@@ -16,7 +16,8 @@ require.config({
         annotationsService: "services/AnnotationsService",
         homeService: "services/HomePageService",
         postservice: "services/PostService",
-        util: "utils/util"
+        util: "utils/util",
+        validation: "utils/validation"
     }
 });
 
@@ -58,5 +59,6 @@ require(["knockout"], function (ko) {
 
 require(["knockout", "messaging", "navbar"], function (ko, messaging, app) {
     messaging.subscribe(() => console.log(messaging.getState()));
+    // enable validation
     ko.applyBindings(app);
 });
