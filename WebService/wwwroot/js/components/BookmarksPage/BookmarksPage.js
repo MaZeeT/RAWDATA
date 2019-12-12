@@ -1,4 +1,4 @@
-﻿define(["knockout", "bookmarksService"], function (ko, bs) { //todo typo
+﻿define(["knockout", "bookmarksService", 'messaging'], function (ko, bs, mess) {
 
     return function () {
         let token = window.localStorage.getItem('userToken');
@@ -54,6 +54,12 @@
             })
         };
 
+        let selectPostItem = function (item) {
+            console.log("Item is: ", item);
+            mess.dispatch(mess.actions.selectPost(item));
+            mess.dispatch(mess.actions.selectMenu("postdetails"));
+        };
+
         return {
             pageSize,
             pgSize,
@@ -63,7 +69,8 @@
             nextUrl,
             prevUrl,
             deleteBookmark,
-            deletions
+            deletions,
+            selectPostItem
         };
     }
 

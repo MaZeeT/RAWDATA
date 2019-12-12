@@ -1,4 +1,4 @@
-define(["knockout", "historyService"], function (ko, ds) {
+define(["knockout", "historyService", 'messaging'], function (ko, ds, mess) {
 
     return function () {
         let token = window.localStorage.getItem('userToken');
@@ -42,6 +42,12 @@ define(["knockout", "historyService"], function (ko, ds) {
             })
         };
 
+        let selectPostItem = function (item) {
+            console.log("Item is: ", item);
+            mess.dispatch(mess.actions.selectPost(item));
+            mess.dispatch(mess.actions.selectMenu("postdetails"));
+        };
+
         return {
             pageSize,
             pgSize,
@@ -50,7 +56,8 @@ define(["knockout", "historyService"], function (ko, ds) {
             navPage,
             nextUrl,
             prevUrl,
-            deletions
+            deletions,
+            selectPostItem
         };
 
     };
