@@ -3,8 +3,16 @@
     /////////////////Menu elements
     var menuElements = [
         {
-            name: "Home",
+            name: "Search",
             component: "homepage"
+        },
+        {
+            name: "Browse",
+            component: "browse"
+        },
+        {
+            name: "WordCloud",
+            component: "wordcloud"
         },
         {
             name: "History",
@@ -15,12 +23,12 @@
             component: "bookmarks"
         },
         {
-            name: "Browse",
-            component: "browse"
-        },
-        {
             name: "Annotations",
             component: "annotations"
+        },
+        {
+            name: "Search History",
+            component: "searchhistory"
         }
     ];
     /////////////////Other components elements
@@ -35,7 +43,10 @@
             component: "prebuttcomp"
         },
         {
-            component: "wordcloud"
+            component: "searchbuttcomp"
+        },
+        {
+            component: "hisbuttcomp"
         }
     ]
 

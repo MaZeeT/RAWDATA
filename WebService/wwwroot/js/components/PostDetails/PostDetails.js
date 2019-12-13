@@ -120,14 +120,23 @@
             });
         }
 
+        //comp change requested
+        function changeComp(component) {
+            if (component === 'previous' && storedPreviousView) {
+               // saveStuff();
+                messaging.dispatch(messaging.actions.selectMenu(storedPreviousView));
+            }
+        };
+
         //get previous component/view
-        let storedPreviousView = mess.getState().selectedPreviousView;
+        let storedPreviousView = messaging.getState().selectedPreviousView;
 
         //store current component name
-        mess.dispatch(mess.actions.selectPreviousView("postdetails"));
-        mess.actions.selectMenu("prebuttcomp");
+        //messaging.dispatch(messaging.actions.selectPreviousView("postdetails"));
+        messaging.actions.selectMenu("prebuttcomp");
 
         return {
+            changeComp,
             postUrl,
             postDetails,
             addAnnotation,

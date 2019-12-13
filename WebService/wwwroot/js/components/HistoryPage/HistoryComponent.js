@@ -70,6 +70,25 @@ define(["knockout", "historyService", 'messaging', 'util'], function (ko, ds, me
             }
         };
 
+        //restore stuff to this view
+        let restoreStuff = function () {
+            //get previous component/view
+            storedPreviousView = mess.getState().selectedPreviousView;
+            //restore fields
+            let storedMaxPages = mess.getState().selectedMaxPages;
+            let storedCurrentPage = mess.getState().selectedCurrentPage;
+            console.log("currp::", storedCurrentPage);
+
+            if (storedPreviousView == "History" && (storedCurrentPage)) { p = storedCurrentPage; }
+            if (storedMaxPages) {
+                ps = storedMaxPages;
+                getpgsize(ps);
+            }
+        };
+
+        //restore, save, include buttons
+        restoreStuff();
+        savestuff();
         mess.actions.selectMenu("prebuttcomp");
 
         return {

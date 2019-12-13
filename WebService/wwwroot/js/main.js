@@ -45,6 +45,10 @@ require(["knockout"], function (ko) {
         viewModel: { require: "components/BookmarksPage/BookmarksPage" },
         template: { require: "text!components/BookmarksPage/BookmarksPage.html" }
     });
+    ko.components.register('searchhistory', {
+        viewModel: { require: "components/SearchHistoryPage/SearchHistoryPage" },
+        template: { require: "text!components/SearchHistoryPage/SearchHistoryPage.html" }
+    });
     ko.components.register('authentication', {
         viewModel: { require: "components/AuthenticationPage/AuthenticationPage" },
         template: { require: "text!components/AuthenticationPage/AuthenticationPage.html" }
@@ -56,6 +60,14 @@ require(["knockout"], function (ko) {
     ko.components.register('prebuttcomp', {
         viewModel: { require: "components/PreviousButtonComponent/PreviousButtonComponent" },
         template: { require: "text!components/PreviousButtonComponent/PreviousButtonComponent.html" }
+    });
+    ko.components.register('searchbuttcomp', {
+        viewModel: { require: "components/SearchButtonComponent/SearchButtonComponent" },
+        template: { require: "text!components/SearchButtonComponent/SearchButtonComponent.html" }
+    });
+    ko.components.register('hisbuttcomp', {
+        viewModel: { require: "components/HistoryButtonComponent/HistoryButtonComponent" },
+        template: { require: "text!components/HistoryButtonComponent/HistoryButtonComponent.html" }
     });
 });
 

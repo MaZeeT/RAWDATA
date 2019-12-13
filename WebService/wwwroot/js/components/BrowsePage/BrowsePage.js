@@ -21,7 +21,7 @@ define(['knockout', 'browseService', 'messaging', 'util'], function (ko, bs, mes
         function changeComp(component) {
             if (component === 'search') {
                 saveStuff();
-                mess.dispatch(mess.actions.selectMenu("Home"));
+                mess.dispatch(mess.actions.selectMenu("Search"));
             } else if (component === 'wordcloud') {
                 saveStuff();
                 mess.dispatch(mess.actions.selectMenu("wordcloud"));
@@ -103,7 +103,7 @@ define(['knockout', 'browseService', 'messaging', 'util'], function (ko, bs, mes
         }
 
         //include buttons
-        mess.actions.selectMenu("prebuttcomp");
+        mess.actions.selectMenu("searchbuttcomp");
         
         //grab data for initial view
         getBrowsing(p, ps);

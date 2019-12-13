@@ -1,7 +1,9 @@
 ﻿<div class="home-page-container">
 
-    <prebuttcomp></prebuttcomp>
-
+ 
+  
+            <searchbuttcomp></searchbuttcomp>
+   
     <!--<div class="container text-center">
         <div class="row pagination-buttons">
             <div class="col-4  p-0">
@@ -33,18 +35,18 @@
 
 
         <div class="pagination-container">
-            <button type="button" class="btn btn-info" data-bind="click: prev">
+            <button type="button" class="btn btn-info" data-bind="click: getPg.bind($data, 'prev')">
                 prev
             </button>
-            <button type="button" class="btn btn-info" data-bind="click: next">
+            <button type="button" class="btn btn-info" data-bind="click: getPg.bind($data, 'next')">
                 next
             </button>
             <div class="dropdown-containers">
                 <p class="label">Results/page:</p>
-                <select class="selector-dropdown" data-bind="options: pageSizeSelection, selectedOptions: selectedPageSize"></select>
+                <select class="selector-dropdown" data-bind="options: pageSizeSelection, value: getPageSize, event: {change: selectedPageSize}"></select>
 
                 <p class="label">Search type:</p>
-                <select class="selector-dropdown" data-bind="options: searchTypeValSelector, selectedOptions: selectedSearchType"></select>
+                <select class="selector-dropdown" data-bind="options: searchTypeValSelector, value: searchTypeValue, event: {change: selectedSearchType}"></select>
             </div>
 
         </div>
@@ -52,6 +54,8 @@
 
         <div data-bind="if: showTable" class="container">
             <h2>Total results:  <span data-bind="text: totalResults"></span></h2>
+            <h2>Total Pages: <span data-bind="text: numberOfPages"> </span></h2>
+            <h2>Current Page: <span data-bind="text: currentPage"> </span></h2>
             <table class="table-responsive table-striped table-hover col-sm">
                 <thead class="header-table-style">
                     <tr>
@@ -69,18 +73,18 @@
                 </tbody>
             </table>
             <!--<nav aria-label="Page navigation example">
-                <ul class="pagination">
-                    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                </ul>
-            </nav>-->
+        <ul class="pagination">
+            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+        </ul>
+    </nav>-->
         </div>
 
     </div>
 </div>
 
-    <!--<postdetails></postdetails>-->
+        <!--<postdetails></postdetails>-->
 

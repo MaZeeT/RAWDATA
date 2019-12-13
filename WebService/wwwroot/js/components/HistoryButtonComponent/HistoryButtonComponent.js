@@ -12,7 +12,7 @@
         //store current component name
        // mess.dispatch(mess.actions.selectPreviousView("postdetails"));
 
-     /*   if (storedPreviousView == "Browse" || storedPreviousView == "wordcloud" || storedPreviousView == "Home") {
+        if (storedPreviousView == "Browse" || storedPreviousView == "wordcloud" || storedPreviousView == "Home") {
             searchpart(true);
             historypart(false);
         } else if (storedPreviousView == "History" || storedPreviousView == "Annotations" || storedPreviousView == "Bookmarks") {
@@ -22,7 +22,7 @@
         else {
             searchpart(false);
             historypart(false);
-        }*/
+        }
 
 
         return {

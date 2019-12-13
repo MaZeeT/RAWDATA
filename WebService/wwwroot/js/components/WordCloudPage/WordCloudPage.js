@@ -21,7 +21,7 @@
         function changeComp(component) {
             if (component === 'search') {
                 saveStuff();
-                mess.dispatch(mess.actions.selectMenu("Home"));
+                mess.dispatch(mess.actions.selectMenu("Search"));
             } else if (component === 'browse') {
                 saveStuff();
                 mess.dispatch(mess.actions.selectMenu("Browse"));
@@ -138,7 +138,8 @@
         //execute on coming to this view
         console.log("contesnt of searchterms : ", mess.getState().selectedSearchTerms);
         console.log("contesnt of searchopts : ", mess.getState().selectedSearchOptions);   
-        mess.actions.selectMenu("prebuttcomp");
+        //mess.actions.selectMenu("prebuttcomp");
+        mess.actions.selectMenu("searchbuttcomp");
 
         //get previous component/view
         let storedPreviousView = mess.getState().selectedPreviousView;
