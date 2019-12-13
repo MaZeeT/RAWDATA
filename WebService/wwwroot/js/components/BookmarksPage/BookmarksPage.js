@@ -56,8 +56,12 @@
 
         let deletions = function () {
             bs.deleteBookmarks(token, function (response) {
-                return response;
+              //  return response;
+                currentPage(1);
+                let url = bs.buildUrl(currentPage(), pgSize());
+                getData(url);
             })
+
         };
 
         let selectPostItem = function (item) {

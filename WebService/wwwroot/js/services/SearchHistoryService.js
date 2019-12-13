@@ -19,8 +19,23 @@
                 }
             }
         );
-        var data = await response.json();
-        callback(data);
+        var data = await response;
+        if (response.status != 401) //we are not unauthorized
+        {
+            try {
+                data = await response.json();    //try to parse
+            }
+            catch (error) {         //json was incomplete
+                var errorresponse = new Object();
+                errorresponse.status = 666; //custom status code
+                data = errorresponse;
+            }
+        } else if (response.status == 401) { //we are unauthorized!
+            var errorresponse = new Object();
+            errorresponse.status = response.status;  //send back status 401
+            data = errorresponse;
+        }
+        callback(data);     //ok? then send it back
     };
 
     function buildUrl(url, parameters) {
@@ -43,12 +58,32 @@
 
 
 
-    //DELETE http://localhost:5001/api/annotations/52
+    //DELETE http://localhost:5001/api/history/searches/delete/all
     //del specific anno
+    let deleteSearchHistory = async function (callback) {
+        //console.log("Annotation to be deleted id is: ", annotationId);
+        const url = "api/history/searches/delete/all"
+        try {
+            const response = await fetch(url, {
+                method: 'DELETE', 
 
+                headers: new Headers({
+                    'Authorization': 'Bearer ' + window.localStorage.getItem("userToken"),
+                    'Content-Type': 'application/json'
+                }),
+            }).then(function (response) {
+                return response;
+            });
+            callback(response);
+
+        } catch (error) {
+            console.log('Error:', error);
+        }
+    }
 
 
     return {
-        getSearchHist
+        getSearchHist,
+        deleteSearchHistory
     }
 });

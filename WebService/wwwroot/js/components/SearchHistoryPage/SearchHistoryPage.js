@@ -1,9 +1,7 @@
-﻿define(["knockout", "searchHistoryService", "messaging", "postservice", "util"], function (ko, shs, mess, postservice, util) {
+﻿define(["knockout", "searchHistoryService", "messaging", "util"], function (ko, shs, mess, util) {
 
     return function () {
 
-        // let postUrl = ko.observable(mess.getState().selectedPost);
-        let updateAnnotationValue = ko.observable("");
         let deletedAnnotStatus = ko.observable(false);
 
         let annolist = ko.observableArray([]);
@@ -19,10 +17,10 @@
         let ps = getpgsize(); //initial pagesize
 
         //grab data when pagesize change
-        let pgsizechanged = function setPgSize(context) {
-            console.log("getpgsiz: ", context.getpgsize());
-            if (context.getpgsize()) {
-                ps = context.getpgsize();
+        let pgsizechanged = function setPgSize() {
+            console.log("getpgsiz: ", getpgsize());
+            if (getpgsize()) {
+                ps = getpgsize();
                 p = 1;
                 pshow(p);
                 getSearchHistory(p, ps);
@@ -38,34 +36,6 @@
             let stype = resolveHelper(item)[1];
             let s = item.searchString;
             let gotoSearch = resolveHelper(item)[0];
-
-           // let pagename = resolveHelper(item)[0];
-           // let methodname = resolveHelper(item)[1];
-
-          /*  if (stype == "tfidf") {
-                mess.dispatch(mess.actions.selectSearchOptions("TFIDF"));
-                gotoSearch = "Search";
-            }
-            else if (stype == "bestmatch") {
-                mess.dispatch(mess.actions.selectSearchOptions("Best Match"));
-                gotoSearch = "Search";
-            }
-            else if (stype == "exactmatch") {
-                mess.dispatch(mess.actions.selectSearchOptions("Exact Match"));
-                gotoSearch = "Search";
-            }
-            else if (stype == "simple") {
-                mess.dispatch(mess.actions.selectSearchOptions("Simple Match"));
-                gotoSearch = "Search";
-            }
-            else if (stype == "wordsbest") {
-                mess.dispatch(mess.actions.selectSearchOptions("best"));
-                gotoSearch = "WordCloud";
-            }
-            else if (stype == "wordstfidf") {
-                mess.dispatch(mess.actions.selectSearchOptions("tfidf"));
-                gotoSearch = "WordCloud";
-            }*/
 
             mess.dispatch(mess.actions.selectSearchOptions(stype));
             mess.dispatch(mess.actions.selectSearchTerms(s));
@@ -89,25 +59,20 @@
             };
         };
 
-
-        //delete annotation
-        let deleteAnnotation = function (value) {
-            if (value.annotationId) {
-                let annotationId = value.annotationId;
-                postservice.deleteAnnotation(annotationId, function (serverResponse) {
-                    let status = serverResponse.status;
-                    console.log("Server response: ", serverResponse);
-                    if (status === 200) {
-                        getAnnos(p, ps);
-                        updateAnnotationValue("");
-                        deletedAnnotStatus(true);
-                    } else {
-                        deletedAnnotStatus(false);
-                    }
-                });
-            } else {
-                deletedAnnotStatus(false);
-            }
+        //delete all search history
+        let deleteSearchHistory = function () {
+            shs.deleteSearchHistory(function (serverResponse) {
+                let status = serverResponse.status;
+                console.log("Server response: ", serverResponse);
+                if (status === 200) {
+                    p = 1;
+                    pshow(p);
+                    getSearchHistory(p, ps);
+                    deletedAnnotStatus(true);
+                } else {
+                    deletedAnnotStatus(false);
+                }
+            });
         };
 
         //get all annos
@@ -115,47 +80,60 @@
             shs.getSearchHist(npg, ps, function (data) {
                 console.log("Data from api call search : ", data);
                 if (data) {
-                    p = npg;
-                    pshow(p);
-                    annolist(data);
-                    nexturi = data.next;
-                    prevuri = data.prev;
-                    loaded(true);
-                    //resolveSearchType(data)
-                    saveStuff();
+
+                    if (data.status == 400 || data.status == 666) {
+                        //bad request / incomplete json/weird response
+                        return;
+                    } else if (data.status == 401) {
+                        //unauthorized, goto login page
+                        changeComp('unauth');
+                        return;
+                    } else {
+                        //ok so far
+                        p = npg;
+                        pshow(p);
+                        annolist(data);
+                        nexturi = data.next;
+                        prevuri = data.prev;
+                        loaded(true);
+                        saveStuff();
+                    }
                 }
             });
         };
 
         let resolveHelper = function (item) {
             let stype = item.searchMethod;
-            //let s = item.searchString;
+
             let gotoSearch;
             let methodUsed;
 
             if (stype == "tfidf") {
-                methodUsed="TFIDF";
+                methodUsed = "TFIDF";
                 gotoSearch = "Search";
             }
             else if (stype == "bestmatch") {
-                methodUsed ="Best Match";
+                methodUsed = "Best Match";
                 gotoSearch = "Search";
             }
             else if (stype == "exactmatch") {
-                methodUsed ="Exact Match";
+                methodUsed = "Exact Match";
                 gotoSearch = "Search";
             }
             else if (stype == "simple") {
-                methodUsed ="Simple Match";
+                methodUsed = "Simple Match";
                 gotoSearch = "Search";
             }
             else if (stype == "wordsbest") {
-                methodUsed ="Best Match";
+                methodUsed = "Best Match";
                 gotoSearch = "WordCloud";
             }
             else if (stype == "wordstfidf") {
-                methodUsed ="TFIDF";
+                methodUsed = "TFIDF";
                 gotoSearch = "WordCloud";
+            } else if (!stype) {
+                methodUsed = "";
+                gotoSearch = "";
             }
             return [gotoSearch, methodUsed];
         };
@@ -165,9 +143,6 @@
             let methodname = resolveHelper(item)[1];
             return (pagename.concat(' - ', methodname));
         };
-
-
-        
 
         //comp change requested
         function changeComp(component) {
@@ -180,12 +155,14 @@
             } else if (component === 'anno') {
                 saveStuff()
                 mess.dispatch(mess.actions.selectMenu("Bookmarks"));
-            }else if (component === 'previous' && storedPreviousView) {
+            } else if (component === 'unauth') {
+                saveStuff();
+                mess.dispatch(mess.actions.selectMenu("authentication"));
+            } else if (component === 'previous' && storedPreviousView) {
                 saveStuff();
                 mess.dispatch(mess.actions.selectMenu(storedPreviousView));
             }
         };
-
 
         //store stuff from this view
         let saveStuff = function () {
@@ -217,7 +194,7 @@
         saveStuff();
 
         //include buttons
-      //  mess.actions.selectMenu("hisbuttcomp");
+        //  mess.actions.selectMenu("hisbuttcomp");
 
         //grab data for initial view
         getSearchHistory(p, ps);
@@ -225,7 +202,7 @@
         //stuff available for binding
         return {
             resolveSearchMethod,
-            deleteAnnotation,
+            deleteSearchHistory,
             deletedAnnotStatus,
             annolist,
             getPg,

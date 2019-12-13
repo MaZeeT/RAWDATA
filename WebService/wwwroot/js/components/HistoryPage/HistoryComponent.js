@@ -42,8 +42,12 @@ define(["knockout", "historyService", 'messaging', 'util'], function (ko, ds, me
 
         let deletions = function () {
             ds.deleteHistory(token, function (response) {
-                return response;
+                //return response;
+                currentPage(1)
+                let url = ds.buildUrl(currentPage(), pgSize());
+                getData(url);
             })
+
         };
 
         let selectPostItem = function (item) {
