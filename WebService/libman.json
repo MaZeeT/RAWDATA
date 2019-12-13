@@ -10,6 +10,10 @@
       "provider": "cdnjs",
       "library": "bootstrap-slider@10.6.2",
       "destination": "wwwroot/lib/bootstrap-slider/"
+    },
+    {
+      "library": "knockout.validation@2.0.4",
+      "destination": "wwwroot/knockout.validation/"
     }
   ]
 }

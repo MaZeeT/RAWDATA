@@ -1,66 +1,83 @@
-﻿define(["knockout", "authservice", "messaging"], function (ko, authservice, messaging) {
-
+﻿define(["knockout", "authservice", "messaging", "validation"], function (ko, authservice, messaging, validation) {
     return function () {
+        
+        let loginUsername = ko.observable();
+        let loginPassword = ko.observable();
+        let errorMessage = ko.observable(false);
+        let errorDuplicatedUserMessage = ko.observable(false);
+        let showlogInUserForm = ko.observable(true);
+        let showSignUpForm = ko.observable(false);
 
-        //LogInForm
-        let loginUsername = ko.observable("Username");
-        let loginPassword = ko.observable("Password");
-
-        let getCredentials = function (username, password) {
-            if (username && username !== "Username" && password && password !== "Password") {
-                console.log("Correct");
-                return {Username: username, Password: password};
-            } else {
-                console.log("Incorrect");
-                return null;
-            }
-        };
-
-        let loginUser = function (data) {
-            const login = getCredentials(loginUsername(), loginPassword());
-            if (login !== null) {
-                authservice.getLoginUser(login, function (authenticationResponse) {
-                    const token = authenticationResponse.token;
-                    if (token) {
-                        console.log('If token yes');
-                        window.localStorage.setItem("userToken", token);
-                        window.location.reload();
-                        //console.log(messaging.actions);
-                        //messaging.dispatch(messaging.actions.selectMenu("Home"));
-                    }
-                });
-            }
-        };
-
-        function clearInputFields(field) {
-
-            if (field === 'user' && loginUsername() === "Username") {
-                loginUsername('')
-            } else if (field === 'pass' && loginPassword() === "Password") {
-                loginPassword('')
-            }
+        let signupUserActionButton = function () {
+            //hide the previous form and show new one
+            showlogInUserForm(false);
 
         }
+        let alreadyExistingUser = function () {
+            //hide signup form and show login form
+            showlogInUserForm(true);
+        }
 
-
-        let newUserSignup = function () {
-            const login = getCredentials(loginUsername(), loginPassword());
-            if (login !== null) {
-                authservice.signUpUser(login, function (authenticationResponse) {
-                    const token = authenticationResponse.token;
-                    console.log("User created");
-                    console.log(token);
-                });
-                console.log("I have been clicked for signup new user");
+        // this function does the validation and depending on which form the request is coming from, it does login or signup
+        let formSubmitAction = function () {        
+            let validPassword = validation.isValidPassword(loginPassword());
+            let validUsername = validation.isValidUsername(loginUsername());
+            if (!validPassword || !validUsername) {
+                errorMessage(true);
+                return; // return to break the if and not go further;
             }
-        };
+            let userCredentials = { Username: loginUsername(), Password: loginPassword() };
+            if (showlogInUserForm()) {
+                loginUser(userCredentials);
+            } else {
+                signupUser(userCredentials);
+            }
+        }
+
+        //register a new user
+        function signupUser(userCredentials) {
+            authservice.signUpUser(userCredentials, function (authenticationResponse) {
+                console.log("response from server: ", authenticationResponse)
+                // fyi: registering a new user doesn't come with a token by default ;) 
+                if (authenticationResponse.status === 201) {
+                    loginUser(userCredentials);
+                    return;
+                }
+                // this one below is correct - the request is either 400 because of not unique user
+                //or if the user manages to pass over bootstrap validation then iot can be 400 as well but for a different reason. 
+                if (authenticationResponse.status === 400 && authenticationResponse.statusText == "Bad Request") {
+                    errorDuplicatedUserMessage(true);
+                } else {
+                    errorMessage(true);
+                }
+            });
+        }
+
+        //login the user - set token to localstorage and then reload the page so that the home component loads
+        function loginUser(userCredentials) {
+            authservice.getLoginUser(userCredentials, function (authenticationResponse) {
+                const token = authenticationResponse.token;
+                if (token) {
+                    window.localStorage.setItem("userToken", token);
+                    window.location.reload();
+                    messaging.dispatch(messaging.actions.selectMenu("Home"));
+                }
+            });
+        }
+
 
         return {
             loginUsername,
             loginPassword,
             loginUser,
-            clearInputFields,
-            newUserSignup
+            signupUser,
+            formSubmitAction,
+            errorMessage,
+            showlogInUserForm,
+            showSignUpForm,
+            signupUserActionButton,
+            alreadyExistingUser,
+            errorDuplicatedUserMessage
 
         }
     }

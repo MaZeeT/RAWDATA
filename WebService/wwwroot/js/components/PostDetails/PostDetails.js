@@ -17,7 +17,7 @@
 
         postservice.getAllChildDataOfPostUrl(postUrl(), function (responseFromServer) {
             if (responseFromServer) {
-                console.log("What is passed to postDetails: ", responseFromServer[0].annotations);
+                console.log("What is passed to postDetails: ", responseFromServer   );
                 postDetails(responseFromServer);
                 console.log("What is passed to postDetails: ", postDetails()[1].annotations);
                 postAnnotationsArray(responseFromServer)
@@ -66,7 +66,6 @@
                     let status = serverResponse.status;
                     console.log("Serv response: ", serverResponse);
                     if (status === 200) {
-                        callServiceGetThread(postUrl());
                         updateAnnotationValue("");
                         callServiceGetThread(postUrl());
                         deletedAnnotStatus(true);

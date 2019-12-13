@@ -24,15 +24,13 @@
     let signUpUser = async function (incomingUserCredentials, callback) {
         try {
             const response = await fetch("api/auth/users", {
-                method: 'POST', // or 'PUT'
-                body: JSON.stringify(incomingUserCredentials), // data can be `string` or {object}!
+                method: 'POST',
+                body: JSON.stringify(incomingUserCredentials),
                 headers: {
                     'Content-Type': 'application/json'
                 }
             }).then(function (response) {
-                return response.json();
-            }).then(function (responseBody) {
-                return responseBody;
+                return response;
             });
             callback(response);
 
