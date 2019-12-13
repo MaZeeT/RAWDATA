@@ -1,32 +1,38 @@
-﻿define(["knockout", "bookmarksService", 'messaging'], function (ko, bs, mess) {
+﻿define(["knockout", "bookmarksService", 'messaging', 'util'], function (ko, bs, mess, util) {
 
     return function () {
         let token = window.localStorage.getItem('userToken');
 
-        let pgSizeOptions = ko.observableArray([5, 10, 15, 25, 50, 100]);
+        let pgSizeOptions = ko.observableArray([5, 10, 20, 30, 40, 50]);
         let pgSize = ko.observable(10);
         let totalPages = ko.observable();
+        let totalResults = ko.observable();
+        let currentPage = ko.observable(1);
+
         let prevUrl = ko.observable();
         let nextUrl = ko.observable();
         let items = ko.observableArray();
-        console.log("maxpage value is: " + pgSize());  //todo remove
 
         let getData = function (url) {
             bs.getBookmarks(token, url, function (response) {
+                if (util.getParameterByName('page', url)) {
+                    currentPage(util.getParameterByName('page', url));
+                };
                 totalPages(response.numberOfPages);
+                totalResults(response.totalResults);
                 prevUrl(response.prev);
                 nextUrl(response.next);
                 items(response.items);
+                saveStuff();
             });
         };
 
-        let page = 1;
-        let url = bs.buildUrl(page, pgSize());
-        getData(url);
+
 
         let pageSize = function (size) {
             pgSize(size);
-            let url = bs.buildUrl(page, pgSize());
+            currentPage(1);
+            let url = bs.buildUrl(currentPage(), pgSize());
             getData(url);
         };
 
@@ -62,21 +68,25 @@
 
         //store stuff from this view
         let saveStuff = function () {
-            mess.dispatch(mess.actions.selectCurrentPage(p));
-            mess.dispatch(mess.actions.selectMaxPages(ps));
-        }
+            mess.dispatch(mess.actions.selectCurrentPage(currentPage()));
+            mess.dispatch(mess.actions.selectMaxPages(pgSize()));
+            mess.dispatch(mess.actions.selectPreviousView("Bookmarks"));
+        };
 
         //comp change requested
         function changeComp(component) {
             if (component === 'anno') {
                 saveStuff();
-                mess.dispatch(messaging.actions.selectMenu("Annotations"));
+                mess.dispatch(mess.actions.selectMenu("Annotations"));
             } else if (component === 'history') {
                 saveStuff()
-                mess.dispatch(messaging.actions.selectMenu("History"));
+                mess.dispatch(mess.actions.selectMenu("History"));
+            } else if (component === 'searchhistory') {
+                saveStuff()
+                mess.dispatch(mess.actions.selectMenu("Search History"));
             } else if (component === 'previous' && storedPreviousView) {
                 saveStuff();
-                mess.dispatch(messaging.actions.selectMenu(storedPreviousView));
+                mess.dispatch(mess.actions.selectMenu(storedPreviousView));
             }
         };
 
@@ -87,21 +97,25 @@
             //restore fields
             let storedMaxPages = mess.getState().selectedMaxPages;
             let storedCurrentPage = mess.getState().selectedCurrentPage;
-            console.log("currp::", storedCurrentPage);
-
-            if (storedPreviousView == "Bookmarks" && (storedCurrentPage)) { p = storedCurrentPage; }
+            if (storedPreviousView == "Bookmarks" && (storedCurrentPage)) { currentPage(storedCurrentPage); }
             if (storedMaxPages) {
-                ps = storedMaxPages;
-                getpgsize(ps);
+                pgSize(storedMaxPages);
             }
         };
 
-        //restore, save, include buttons
+        //run initially
+      //  mess.actions.selectMenu("hisbuttcomp");
+        let storedPreviousView;
         restoreStuff();
-        savestuff();
-        mess.actions.selectMenu("hisbuttcomp");
+        saveStuff();
+        //let page = 1;
+        let url = bs.buildUrl(currentPage(), pgSize());
+        getData(url);
 
         return {
+            totalPages,
+            totalResults,
+            currentPage,
             pageSize,
             pgSize,
             pgSizeOptions,

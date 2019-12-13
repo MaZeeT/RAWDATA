@@ -53,14 +53,20 @@
 
         });
 
-        selectedPageSize.subscribe(function (value) {
-          /*  getPageSize(value[0]);
-            callService(searchstring(), searchTypeValue(), getPageSize(), currentPage());*/
+        selectedPageSize.subscribe(function () {
+
+            console.log("selectedPageSize: ", getPageSize());
+           // getPageSize();
+        /*  getPageSize(value[0]);*/
+            callService(searchstring(), searchTypeValue(), getPageSize(), currentPage());
         });
 
-        selectedSearchType.subscribe(function (value) {
-           /* searchTypeValue(value[0]);
-            callService(searchstring(), searchTypeValue(), getPageSize(), currentPage());*/
+        selectedSearchType.subscribe(function () {
+
+            console.log("selectedSearchType: ", searchTypeValue());
+           // searchTypeValue();
+        /* searchTypeValue(value[0]);*/
+            callService(searchstring(), searchTypeValue(), getPageSize(), currentPage());
 
         });
 
@@ -100,7 +106,6 @@
         function callService(searchString, srcTypeVal, pageSize, currPage) {
             if (searchString) {
 
-
                 let givenSearchType = util.searchTypeSelectorMapping(srcTypeVal);
                 let object = util.conputeUrlStringWithPagination(searchString, givenSearchType, pageSize, currPage);
                 console.log("Computed object is now: ", object);
@@ -128,7 +133,7 @@
         //store stuff from this view
         function saveStuff() {
             messaging.dispatch(messaging.actions.selectSearchTerms(searchTerms()));
-            messaging.dispatch(messaging.actions.selectSearchOptions(selectedSearchType()));
+            messaging.dispatch(messaging.actions.selectSearchOptions(searchTypeValue()));
             messaging.dispatch(messaging.actions.selectCurrentPage(currentPage()));
             messaging.dispatch(messaging.actions.selectMaxPages(getPageSize()));
             messaging.dispatch(messaging.actions.selectPreviousView("Search"));
@@ -141,7 +146,7 @@
                 messaging.dispatch(messaging.actions.selectMenu("Browse"));
             } else if (component === 'wordcloud') {
                 saveStuff();
-                messaging.dispatch(messaging.actions.selectMenu("wordcloud"));
+                messaging.dispatch(messaging.actions.selectMenu("WordCloud"));
             } else if (component === 'previous' && storedPreviousView) {
                 saveStuff();
                 messaging.dispatch(messaging.actions.selectMenu(storedPreviousView));
@@ -158,22 +163,27 @@
             let storedSearchOptions = messaging.getState().selectedSearchOptions;
             let storedMaxPages = messaging.getState().selectedMaxPages;
             let storedCurrentPage = messaging.getState().selectedCurrentPage;
-            console.log("storedCurrentPage: ", storedCurrentPage);
+            //console.log("storedSearchOptions: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", storedSearchOptions);
 
             if (storedPreviousView == "Search" && (storedCurrentPage)) { currentPage(storedCurrentPage) };
             if (storedSearchTerms) { searchTerms(storedSearchTerms) };
-         /*   if (storedMaxPages) {
-                ps = storedMaxPages;
-                getpgsize(ps);
-            }*/
+            if (storedMaxPages) {
+           
+                getPageSize(storedMaxPages);
+            };
+            if (storedSearchOptions) {
+                if (storedSearchOptions == "tfidf") { storedSearchOptions = "TFIDF" }
+                if (storedSearchOptions == "best") { storedSearchOptions = "Best Match" }
+
+                searchTypeValue(storedSearchOptions);
+            };
         };
 
         //run when changing to this view
-
         let storedPreviousView;
         restoreStuff();
         saveStuff();
-        messaging.actions.selectMenu("searchbuttcomp");
+      //  messaging.actions.selectMenu("searchbuttcomp");
 
         return {
             getPg,

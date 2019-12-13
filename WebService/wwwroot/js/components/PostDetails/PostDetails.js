@@ -133,7 +133,7 @@
 
         //store current component name
         //messaging.dispatch(messaging.actions.selectPreviousView("postdetails"));
-        messaging.actions.selectMenu("prebuttcomp");
+      //  messaging.actions.selectMenu("prebuttcomp");
 
         return {
             changeComp,

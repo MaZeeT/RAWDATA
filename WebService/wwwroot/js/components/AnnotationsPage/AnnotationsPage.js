@@ -105,13 +105,16 @@
         function changeComp(component) {
             if (component === 'history') {
                 saveStuff();
-                mess.dispatch(messaging.actions.selectMenu("History"));
+                mess.dispatch(mess.actions.selectMenu("History"));
             } else if (component === 'book') {
                 saveStuff()
-                mess.dispatch(messaging.actions.selectMenu("Bookmarks"));
+                mess.dispatch(mess.actions.selectMenu("Bookmarks"));
+            } else if (component === 'searchhistory') {
+                saveStuff()
+                mess.dispatch(mess.actions.selectMenu("Search History"));
             } else if (component === 'previous' && storedPreviousView) {
                 saveStuff();
-                mess.dispatch(messaging.actions.selectMenu(storedPreviousView));
+                mess.dispatch(mess.actions.selectMenu(storedPreviousView));
             }
         };
 
@@ -131,7 +134,6 @@
             //restore fields
             let storedMaxPages = mess.getState().selectedMaxPages;
             let storedCurrentPage = mess.getState().selectedCurrentPage;
-            console.log("currp::", storedCurrentPage);
 
             if (storedPreviousView == "Annotations" && (storedCurrentPage)) { p = storedCurrentPage; }
             if (storedMaxPages) {
@@ -147,7 +149,7 @@
         saveStuff();
 
         //include buttons
-        mess.actions.selectMenu("prebuttcomp");
+     //   mess.actions.selectMenu("hisbuttcomp");
 
         //grab data for initial view
         getAnnos(p, ps);

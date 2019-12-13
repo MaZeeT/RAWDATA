@@ -1,7 +1,7 @@
 ﻿define(['knockout', 'postservice', 'messaging'], function (ko, postservice, mess) {
     return function () {
 
-        let searchpart = ko.observable(false); // help with hiding elements until initial data has been loaded 
+      /*  let searchpart = ko.observable(false); // help with hiding elements until initial data has been loaded 
         let historypart = ko.observable(false); // help with hiding elements until initial data has been loaded 
 
 
@@ -22,12 +22,12 @@
         else {
             searchpart(false);
             historypart(false);
-        }
+        }*/
 
 
         return {
-            searchpart,
-            historypart
+         //   searchpart,
+          //  historypart
         };
     };
 });

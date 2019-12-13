@@ -1,7 +1,7 @@
 ﻿define(['knockout', 'postservice', 'messaging'], function (ko, postservice, mess) {
     return function () {
 
-        let searchpart = ko.observable(false); // help with hiding elements until initial data has been loaded 
+     /*   let searchpart = ko.observable(false); // help with hiding elements until initial data has been loaded 
         let historypart = ko.observable(false); // help with hiding elements until initial data has been loaded 
 
 
@@ -10,7 +10,7 @@
         let storedPreviousView = mess.getState().selectedPreviousView;
         console.log("included button ", storedPreviousView);
         //store current component name
-       // mess.dispatch(mess.actions.selectPreviousView("postdetails"));
+       // mess.dispatch(mess.actions.selectPreviousView("postdetails"));*/
 
      /*   if (storedPreviousView == "Browse" || storedPreviousView == "wordcloud" || storedPreviousView == "Home") {
             searchpart(true);
@@ -26,8 +26,8 @@
 
 
         return {
-            searchpart,
-            historypart
+           // searchpart,
+           // historypart
         };
     };
 });
