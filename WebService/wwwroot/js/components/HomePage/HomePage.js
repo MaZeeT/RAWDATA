@@ -173,8 +173,9 @@
             };
             if (storedSearchOptions) {
                 if (storedSearchOptions == "tfidf") { storedSearchOptions = "TFIDF" }
-                if (storedSearchOptions == "best") { storedSearchOptions = "Best Match" }
+                else if (storedSearchOptions == "best") { storedSearchOptions = "Best Match" }
 
+                console.log("retrieved search options xxxxxxxxxxxxxxx :", storedSearchOptions);
                 searchTypeValue(storedSearchOptions);
             };
         };

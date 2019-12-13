@@ -18,7 +18,7 @@ namespace DatabaseService
 
             var count = db.Searches
                 .Where(x => x.UserId == userId)
-                .OrderBy(x => x.Date)
+                .OrderByDescending(x => x.Date)
                 .Count();
 
             //try to convert back from 1-based pages
@@ -26,7 +26,7 @@ namespace DatabaseService
 
             var list = db.Searches
                 .Where(x => x.UserId == userId)
-                .OrderBy(x => x.Date)
+                .OrderByDescending(x => x.Date)
                 .Skip(page * pagingAttributes.PageSize)
                 .Take(pagingAttributes.PageSize)
                 .ToList();

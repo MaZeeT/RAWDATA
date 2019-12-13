@@ -1,8 +1,8 @@
-﻿define(["knockout", "annotationsService", "messaging", "postservice", "util"], function (ko, as, mess, postservice, util) {
+﻿define(["knockout", "searchHistoryService", "messaging", "postservice", "util"], function (ko, shs, mess, postservice, util) {
 
     return function () {
 
-       // let postUrl = ko.observable(mess.getState().selectedPost);
+        // let postUrl = ko.observable(mess.getState().selectedPost);
         let updateAnnotationValue = ko.observable("");
         let deletedAnnotStatus = ko.observable(false);
 
@@ -25,15 +25,54 @@
                 ps = context.getpgsize();
                 p = 1;
                 pshow(p);
-                getAnnos(p, ps);
+                getSearchHistory(p, ps);
             };
         };
 
         //thread requested, switch to thread view
-        let selectPostItem = function (item) {
+        let selectSearchHistoryItem = function (item) {
             saveStuff();
-            mess.dispatch(mess.actions.selectPost(item.postUrl));
-            mess.dispatch(mess.actions.selectMenu("postdetails"));
+            console.log("item searchmethod: ", item.searchMethod);
+            console.log("item searchrerms: ", item.searchString);
+
+            let stype = resolveHelper(item)[1];
+            let s = item.searchString;
+            let gotoSearch = resolveHelper(item)[0];
+
+           // let pagename = resolveHelper(item)[0];
+           // let methodname = resolveHelper(item)[1];
+
+          /*  if (stype == "tfidf") {
+                mess.dispatch(mess.actions.selectSearchOptions("TFIDF"));
+                gotoSearch = "Search";
+            }
+            else if (stype == "bestmatch") {
+                mess.dispatch(mess.actions.selectSearchOptions("Best Match"));
+                gotoSearch = "Search";
+            }
+            else if (stype == "exactmatch") {
+                mess.dispatch(mess.actions.selectSearchOptions("Exact Match"));
+                gotoSearch = "Search";
+            }
+            else if (stype == "simple") {
+                mess.dispatch(mess.actions.selectSearchOptions("Simple Match"));
+                gotoSearch = "Search";
+            }
+            else if (stype == "wordsbest") {
+                mess.dispatch(mess.actions.selectSearchOptions("best"));
+                gotoSearch = "WordCloud";
+            }
+            else if (stype == "wordstfidf") {
+                mess.dispatch(mess.actions.selectSearchOptions("tfidf"));
+                gotoSearch = "WordCloud";
+            }*/
+
+            mess.dispatch(mess.actions.selectSearchOptions(stype));
+            mess.dispatch(mess.actions.selectSearchTerms(s));
+
+            if (gotoSearch) {
+                mess.dispatch(mess.actions.selectMenu(gotoSearch));
+            }
         };
 
         //grab data when page change
@@ -46,24 +85,10 @@
             console.log("dat: ", direction);
             console.log("param: ", npg);
             if (npg) {
-                getAnnos(npg, ps);
+                getSearchHistory(npg, ps);
             };
         };
 
-        //update anno
-        let updateAnnotation = function (value) {
-            if (updateAnnotationValue() && value.annotationId) {
-                let annotationId = value.annotationId;
-                let annotationBody = updateAnnotationValue();
-                postservice.updateAnnotation(annotationId, annotationBody, function (serverResponse) {
-                    let status = serverResponse.status;
-                    if (status === 204) {
-                        getAnnos(p, ps);
-                        updateAnnotationValue("");
-                    }
-                });
-            }
-        };
 
         //delete annotation
         let deleteAnnotation = function (value) {
@@ -86,8 +111,8 @@
         };
 
         //get all annos
-        function getAnnos(npg, ps) {
-            as.getAllAnnos(npg, ps, function (data) {
+        function getSearchHistory(npg, ps) {
+            shs.getSearchHist(npg, ps, function (data) {
                 console.log("Data from api call search : ", data);
                 if (data) {
                     p = npg;
@@ -96,10 +121,53 @@
                     nexturi = data.next;
                     prevuri = data.prev;
                     loaded(true);
+                    //resolveSearchType(data)
                     saveStuff();
                 }
             });
         };
+
+        let resolveHelper = function (item) {
+            let stype = item.searchMethod;
+            //let s = item.searchString;
+            let gotoSearch;
+            let methodUsed;
+
+            if (stype == "tfidf") {
+                methodUsed="TFIDF";
+                gotoSearch = "Search";
+            }
+            else if (stype == "bestmatch") {
+                methodUsed ="Best Match";
+                gotoSearch = "Search";
+            }
+            else if (stype == "exactmatch") {
+                methodUsed ="Exact Match";
+                gotoSearch = "Search";
+            }
+            else if (stype == "simple") {
+                methodUsed ="Simple Match";
+                gotoSearch = "Search";
+            }
+            else if (stype == "wordsbest") {
+                methodUsed ="Best Match";
+                gotoSearch = "WordCloud";
+            }
+            else if (stype == "wordstfidf") {
+                methodUsed ="TFIDF";
+                gotoSearch = "WordCloud";
+            }
+            return [gotoSearch, methodUsed];
+        };
+
+        let resolveSearchMethod = function (item) {
+            let pagename = resolveHelper(item)[0];
+            let methodname = resolveHelper(item)[1];
+            return (pagename.concat(' - ', methodname));
+        };
+
+
+        
 
         //comp change requested
         function changeComp(component) {
@@ -152,18 +220,17 @@
       //  mess.actions.selectMenu("hisbuttcomp");
 
         //grab data for initial view
-        getAnnos(p, ps);
+        getSearchHistory(p, ps);
 
         //stuff available for binding
         return {
-            updateAnnotation,
-            updateAnnotationValue,
+            resolveSearchMethod,
             deleteAnnotation,
             deletedAnnotStatus,
             annolist,
             getPg,
             pgsizepreset,
-            selectPostItem,
+            selectSearchHistoryItem,
             getpgsize,
             pgsizechanged,
             pshow,

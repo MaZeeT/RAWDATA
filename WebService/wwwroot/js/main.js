@@ -8,6 +8,7 @@ require.config({
         jqcloud: "../lib/jqcloud2/dist/jqcloud",
         messaging: "services/MessagingService",
         historyService: "services/HistoryService",
+        searchHistoryService: "services/SearchHistoryService",
         //historyService: "services/HistoryServiceMock",    //Mock of historyService
         authservice: "services/AuthenticationService",
         bookmarksService: "services/BookmarksService",

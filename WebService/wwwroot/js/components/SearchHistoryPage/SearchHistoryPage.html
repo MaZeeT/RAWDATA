@@ -30,14 +30,13 @@
                 <div data-bind="with: annolist">
                     <div class="post-card-details-container">
                         <p>
-                            On this page you can browse all the annotations you have made on posts from Stackoverflow.
-                            You can also update their contents or delete them.
-                            Click on the title of an annotated post to view the full thread.
+                            On this page you can browse all the searches you have made.
+                            Click on an entry to go to the specified search page and repeat the search.
                         </p>
                         <div class="card-body">
 
 
-                            <div>Total Annotations: <span data-bind="text: totalItems"></span></div>
+                            <div>Total Annotations: <span data-bind="text: totalResults"></span></div>
                             <div>Total Pages: <span data-bind="text: numberOfPages"></span></div>
                             <div>Current Page: <span data-bind="text: $parent.pshow"></span></div>
 
@@ -46,30 +45,32 @@
                                 <div class="container">
                                     <div class="row">
                                         <div class="col card-text">
-                                            <!-- <div>                <span data-bind="text: annotationId"> </span>            </div>-->
-                                            <div>                <span data-bind="html: body"> </span>            </div>
-                                            <div>                <span data-bind="html: date"> </span>            </div>
-
-                                            <div class="card-bottom-link-buttons">
-                                                <a data-bind="attr: { href: '#collapseUpdate-'+ annotationId }, click: $parents[1].updateAnnotation" class="badge badge-pill badge-info" data-toggle="collapse" aria-expanded="false" aria-controls="collapseExample">Update</a>
-                                                <a href="#" data-bind="attr: { href: '#collapseUpdate-'+ annotationId }, click: $parents[1].deleteAnnotation" class="badge badge-pill badge-info" data-toggle="modal" data-target=".bd-example-modal-sm">Delete</a>
+                                            <div style="cursor: pointer" data-bind="click: $parents[1].selectSearchHistoryItem">
+                                                <!-- <div>                <span data-bind="text: annotationId"> </span>            </div>-->
+                                                <div>     Search method and type used:           <span data-bind="text: $parents[1].resolveSearchMethod($data)"> </span>            </div>
+                                                <div>   Terms searched for:             <span data-bind="text: searchString"> </span>            </div>
+                                                <div>  Date and time of search:              <span data-bind="text: date"> </span>            </div>
                                             </div>
-                                            <div class="collapse" data-bind="attr: { id: 'collapseUpdate-'+ annotationId }">
-                                                <textarea class="form-control form-control-lg" data-bind="value: $parents[1].updateAnnotationValue"></textarea>
+                                            <!--  <div class="card-bottom-link-buttons">
+            <a data-bind="attr: { href: '#collapseUpdate-'+ annotationId }, click: $parents[1].updateAnnotation" class="badge badge-pill badge-info" data-toggle="collapse" aria-expanded="false" aria-controls="collapseExample">Update</a>
+            <a href="#" data-bind="attr: { href: '#collapseUpdate-'+ annotationId }, click: $parents[1].deleteAnnotation" class="badge badge-pill badge-info" data-toggle="modal" data-target=".bd-example-modal-sm">Delete</a>
+        </div>
+        <div class="collapse" data-bind="attr: { id: 'collapseUpdate-'+ annotationId }">
+            <textarea class="form-control form-control-lg" data-bind="value: $parents[1].updateAnnotationValue"></textarea>
+        </div>
                                             </div>
+                                            <div class="col card-text">
+                                                <h6 class="card-subtitle mb-2 text-muted">Annotated post</h6>
+                                                <div style="cursor: pointer" data-bind="click: $parents[1].selectPostItem">
+                                                    <div> Thread ID: <span data-bind="text: postId"> </span></div>
+                                                    <div>                <span data-bind="text: questionId"> </span>            </div>
+                                            <div>    Thread Title:            <span data-bind="text: title"> </span>            </div>
                                         </div>
-                                        <div class="col card-text">
-                                            <h6 class="card-subtitle mb-2 text-muted">Annotated post</h6>
-                                            <div style="cursor: pointer" data-bind="click: $parents[1].selectPostItem">
-                                                <div> Thread ID: <span data-bind="text: postId"> </span></div>
-                                                <!--<div>                <span data-bind="text: questionId"> </span>            </div>-->
-                                                <div>    Thread Title:            <span data-bind="text: title"> </span>            </div>
-                                            </div>
-                                            <div class="card-deck">     Post Body:           <span data-bind="html: postBody"> </span>            </div>
-                                            <!-- <div>  <span data-bind="text: postUrl"> </span></div>-->
+                                        <div class="card-deck">     Post Body:           <span data-bind="html: postBody"> </span>            </div>
+                                         <div>  <span data-bind="text: postUrl"> </span></div>-->
 
-                                        </div>
                                     </div>
+                                        </div>
                                 </div>
                             </div>
 
