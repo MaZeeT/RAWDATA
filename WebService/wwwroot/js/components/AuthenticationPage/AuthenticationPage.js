@@ -20,6 +20,7 @@
 
         // this function does the validation and depending on which form the request is coming from, it does login or signup
         let formSubmitAction = function () {        
+
             let validPassword = validation.isValidPassword(loginPassword());
             let validUsername = validation.isValidUsername(loginUsername());
             if (!validPassword || !validUsername) {

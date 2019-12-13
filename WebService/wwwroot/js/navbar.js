@@ -3,8 +3,16 @@
     /////////////////Menu elements
     var menuElements = [
         {
-            name: "Home",
+            name: "Search",
             component: "homepage"
+        },
+        {
+            name: "Browse",
+            component: "browse"
+        },
+        {
+            name: "WordCloud",
+            component: "wordcloud"
         },
         {
             name: "History",
@@ -15,12 +23,12 @@
             component: "bookmarks"
         },
         {
-            name: "Browse",
-            component: "browse"
-        },
-        {
             name: "Annotations",
             component: "annotations"
+        },
+        {
+            name: "Search History",
+            component: "searchhistory"
         }
     ];
     /////////////////Other components elements
@@ -32,7 +40,13 @@
             component:"postdetails"
         },
         {
-            component: "wordcloud"
+            component: "prebuttcomp"
+        },
+        {
+            component: "searchbuttcomp"
+        },
+        {
+            component: "hisbuttcomp"
         }
     ]
 
@@ -68,8 +82,9 @@
     };
 
     var signOutUser = function () {
-        console.log("It has been clicked");
-        window.localStorage.clear();
+        console.log("sign out clicked");
+        localStorage.removeItem('userToken');
+        //window.localStorage.clear();
         window.location.reload();
     }
 

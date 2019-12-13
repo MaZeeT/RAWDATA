@@ -1,14 +1,5 @@
 ﻿define(["jquery"], function () {
 
-    //POST http://localhost:5001/api/annotations
-    //add annotation
-    //public ActionResult AddAnnotation(AnnotationsDto annotationObj)
-
-    //PUT http://localhost:5001/api/annotations/52
-    //update specific anno
-
-    ///GET [HttpGet("post/{postId}")] 
-    //get annotations on post
 
     //GET http://localhost:5001/api/annotations
     //GetAllAnnotationsOfUser([FromQuery] PagingAttributes pagingAttributes)
@@ -47,13 +38,6 @@
 
         return url;
     }
-
-
-    //GET http://localhost:5001/api/annotations/2
-    //get specific anno
-
-    //DELETE http://localhost:5001/api/annotations/52
-    //del specific anno
 
 
 

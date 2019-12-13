@@ -1,8 +1,8 @@
 ﻿<!--<div class="login-form-container">
      Default form login
     <div class="text-center border border-light p-5">
-
         <p class="h4 mb-4">Sign in</p>
+
 
          Username
         <input data-bind="value: loginUsername, click: clearInputFields.bind($data, 'user')" type="email" id="inputEmail" class="form-control" placeholder="Username" required autofocus>
@@ -13,12 +13,98 @@
          Sign in button
         <button class="btn btn-info btn-block my-4" data-bind="click: loginUser">Sign in</button>
 
+
          Register
         <p>
             Not a member?
             <a data-bind="click: newUserSignup">Register</a>
         </p>
+    </div>
+     Default form login
+</div>-->
+<!--<div class="login-form-container">
+    <div class="text-center border border-light p-5">
+        <p class="h4 mb-4">Sign in</p>
+        <form class="form-signin justify-content-center" data-bind="submit: doSomething">
+            <div class="form-label-group mb-4 align-middle mw-50 col-6">
+                <input data-bind="value: loginUsername, click: clearInputFields.bind($data, 'user')" type="text" id="inputUsername" class="form-control" placeholder="Email address" required autofocus>
+            </div>
+            <div class="form-label-group mb-4 align-middle mw-50 col-6">
+                <input data-bind="validationOptions: decorateInputElement, value: loginPassword, click: clearInputFields.bind($data, 'pass')" type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+            </div>
+            <button class="btn btn-info btn-block mb-4 align-middle mw-50 col-6" type="submit">Sign in</button>
+        </form>
+        <p>
+            Not a member?
+            <a class="btn btn-link" data-bind="click: newUserSignup">Register</a>
+        </p>
+    </div>
+</div>-->
 
+<section data-bind="visible: showlogInUserForm() == true" id="cover" class="min-vh-100">
+    <div id="cover-caption">
+        <div class="container">
+            <div class="row text-info">
+                <div class="col-xl-5 col-lg-6 col-md-8 col-sm-10 mx-auto pt-5 text-center form p-4">
+                    <p class="display-4 py-2 text-truncate">Sign In</p>
+                    <span data-bind="if: errorMessage" class="text text-danger font-weight-bold mb-4">Invalid username or password</span>
+                    <div class="px-2 pt-3">
+                        <form data-bind="submit: formSubmitAction" class="form-signin justify-content-center mb-4">
+                            <div class="form-label-group mb-4">
+                                <input data-bind="value: loginUsername"
+                                       type="text" class="form-control"
+                                       placeholder="Username"
+                                       required autofocus minlength="2" maxlength="50">
+                            </div>
+                            <div class="form-label-group mb-4">
+                                <input data-bind="value: loginPassword" type="password"
+                                       class="form-control" placeholder="Password"
+                                       required autofocus minlength="6">
+                            </div>
+                            <button type="submit" class="btn btn-info btn-lg">Sign In</button>
+                        </form>
+                    </div>
+                    <p>
+                        <a class="btn btn-link" data-bind="click: signupUserActionButton">Not a member?&nbsp Register</a>
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<section data-bind="visible: showlogInUserForm() == false" id="cover" class="min-vh-100">
+    <div id="cover-caption">
+        <div class="container">
+            <div class="row text-info">
+                <div class="col-xl-5 col-lg-6 col-md-8 col-sm-10 mx-auto pt-5 text-center form p-4">
+                    <p class="display-4 py-2 text-truncate">Sign Up</p>
+                    <span data-bind="if: errorMessage" class="text text-danger font-weight-bold mb-4">Vaid usernames and passwords can contain only digits and letters!</span>
+                    <span data-bind="if: errorDuplicatedUserMessage" class="text text-danger font-weight-bold mb-4">This username is take, please use a different one or login to your account!</span>
+                    <div class="px-2 pt-3">
+                        <form data-bind="submit: formSubmitAction" class="form-signin justify-content-center mb-4">
+                            <div class="form-label-group mb-4">
+                                <input data-bind="value: loginUsername"
+                                       type="text" class="form-control"
+                                       placeholder="Username"
+                                       required autofocus minlength="2" maxlength="50">
+                            </div>
+                            <div class="form-label-group mb-4">
+                                <input data-bind="value: loginPassword" type="password"
+                                       class="form-control" placeholder="Password"
+                                       required autofocus minlength="6">
+                            </div>
+                            <button type="submit" class="btn btn-info btn-lg">Sign Up</button>
+                        </form>
+                    </div>
+                    <p>
+                        <a class="btn btn-link" data-bind="click: alreadyExistingUser">Having an active account?&nbsp Go to login</a>
+                    </p>
+                </div>
+
+            </div>
+        </div>
     </div>
      Default form login
 </div>-->
@@ -109,3 +195,4 @@
         </div>
     </div>
 </section>
+

@@ -17,22 +17,7 @@
         let searchResult = ko.observableArray([]);
 
 
-        //comp change requested
-        function changeComp(component) {
-            if (component === 'search') {
-                saveStuff();
-                mess.dispatch(mess.actions.selectPreviousView("wordcloud"));
-                mess.dispatch(mess.actions.selectMenu("Home"));
-            } else if (component === 'browse') {
-                saveStuff();
-                mess.dispatch(mess.actions.selectPreviousView("wordcloud"));
-                mess.dispatch(mess.actions.selectMenu("Browse"));
-            } else if (component === 'unauth') {
-                saveStuff();
-                mess.dispatch(mess.actions.selectPreviousView("wordcloud"));
-                mess.dispatch(mess.actions.selectMenu("authentication"));
-            }
-        };
+
 
         //clearing searchfield when clicked
         let clrsearchfield = function upd() {
@@ -41,12 +26,6 @@
             }
         };
 
-        //store stuff from this view
-        let saveStuff = function () {
-            mess.dispatch(mess.actions.selectSearchTerms(searchTerms()));
-            mess.dispatch(mess.actions.selectSearchOptions(stypebtn()));
-            mess.dispatch(mess.actions.selectMaxWords(selectedValue()));
-        }
 
 
 
@@ -106,57 +85,79 @@
                 return;
             };
             max = selectedValue();
-            //console.log("maxres : ", max);
-            //console.log("slider value : ", selectedValue());
             if (stypebtn() == 'tfidf') { stype = 4; } else stype = 5;
 
             wc.getWCItems(searchStr, stype, max, function (data) {
-                //console.log("Data from api call search : ", data);
                 searchTerms(searchStr);
                 if (data) {
                     loaded(true);
                     searchResult(data);
 
-                    data1 = data.map(function (a) {
+                    data1 = data.map(function (a) { //map data to what jqcloud wants
                         return { text: a.term, weight: a.rank };
                     });
-                    //console.log("datamap: ", data1);
-
                     $('#cloud').jQCloud('destroy'); /// cant figure out how to update lol! so am destroying it..
                     $('#cloud').jQCloud(data1,
                         {
                             autoResize: true
                         });
-
-                   
                 }
             });
         });
 
+        //comp change requested
+        function changeComp(component) {
+            if (component === 'search') {
+                saveStuff();
+                mess.dispatch(mess.actions.selectMenu("Search"));
+            } else if (component === 'browse') {
+                saveStuff();
+                mess.dispatch(mess.actions.selectMenu("Browse"));
+            } else if (component === 'unauth') {
+                saveStuff();
+                mess.dispatch(mess.actions.selectMenu("authentication"));
+            } else if (component === 'previous' && storedPreviousView) {
+                saveStuff();
+                mess.dispatch(mess.actions.selectMenu(storedPreviousView));
+            }
+        };
+
+        //store stuff from this view
+        let saveStuff = function () {
+            mess.dispatch(mess.actions.selectSearchTerms(searchTerms()));
+            if (storedSearchOptions) {
+                if (stypebtn() == "tfidf" && storedSearchOptions != "tfidf" || stypebtn() == "tfidf" && storedSearchOptions != "TFIDF") {
+                    mess.dispatch(mess.actions.selectSearchOptions(stypebtn()));
+                }
+            }
+            mess.dispatch(mess.actions.selectMaxWords(selectedValue()));
+            //store current component name
+            mess.dispatch(mess.actions.selectPreviousView("WordCloud"));
+        };
+
+        let restoreStuff = function () {
+            //get previous component/view
+            storedPreviousView = mess.getState().selectedPreviousView;
+            //restore fields
+            let storedSearchTerms = mess.getState().selectedSearchTerms;
+            storedSearchOptions = mess.getState().selectedSearchOptions;
+            let storedMaxWords = mess.getState().selectedMaxWords;
+
+            if (storedMaxWords) { selectedValue(storedMaxWords) }
+            if (storedSearchTerms) { searchTerms(storedSearchTerms) }
+            if (storedSearchOptions == "tfidf" || storedSearchOptions == "TFIDF") {
+                stypebtn("tfidf")
+            } else {
+                stypebtn("best")
+            }
+        };
 
         //execute on coming to this view
-        console.log("contesnt of searchterms : ", mess.getState().selectedSearchTerms);
-        console.log("contesnt of searchopts : ", mess.getState().selectedSearchOptions);   
-
-        //get previous component/view
-        let storedPreviousView = mess.getState().selectedPreviousView;
-
-        //store current component name
-        mess.dispatch(mess.actions.selectPreviousView("wordcloud"));
-
-        //restore fields
-        let storedSearchTerms = mess.getState().selectedSearchTerms;
-        let storedSearchOptions = mess.getState().selectedSearchOptions;
-        let storedMaxWords = mess.getState().selectedMaxWords;
-
-        if (storedMaxWords) { selectedValue(storedMaxWords) }
-        if (storedSearchTerms) { searchTerms(storedSearchTerms) }
-        if (storedSearchOptions == "best" || storedSearchOptions == "Best Match") {
-            stypebtn("best")
-        } else {
-            stypebtn("tfidf")
-        }
-
+        let storedPreviousView;
+        let storedSearchOptions;
+        restoreStuff();
+        saveStuff();
+       // mess.actions.selectMenu("searchbuttcomp");
 
 
         return {
