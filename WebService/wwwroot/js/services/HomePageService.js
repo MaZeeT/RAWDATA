@@ -1,4 +1,4 @@
-﻿define(["jquery"], function () {
+﻿define([""], function () {
 
 
 
@@ -11,7 +11,6 @@
         try {
             const response = await fetch(searchUrl, {
                 method: 'GET', // or 'PUT'
-                // body: JSON.stringify(incomingUserCredentials), // data can be `string` or {object}!
 
                 headers: new Headers({
                     'Authorization': 'Bearer ' + window.localStorage.getItem("userToken"),

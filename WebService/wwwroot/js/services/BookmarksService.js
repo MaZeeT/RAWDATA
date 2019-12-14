@@ -1,4 +1,4 @@
-﻿define(["jquery"], function () {
+﻿define([""], function () {
 
     let buildUrl = function (page, maxPages) {
         return `api/bookmark?Page=${page}&PageSize=${maxPages}`;

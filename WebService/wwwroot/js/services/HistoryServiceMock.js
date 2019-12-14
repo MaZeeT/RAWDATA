@@ -1,4 +1,4 @@
-define(["jquery"], function() {
+define([""], function() {
 
     // mock data
     var data = {

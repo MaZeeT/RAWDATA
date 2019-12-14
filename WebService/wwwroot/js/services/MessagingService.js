@@ -1,4 +1,4 @@
-﻿define(["knockout"], function (ko) {
+﻿define([""], function () {
     const selectPost = "SELECT_POST";
     const selectSearchTerms = "SELECT_TERMS";
     const selectSearchOptions = "SELECT_OPTIONS";
