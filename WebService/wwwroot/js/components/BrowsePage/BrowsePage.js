@@ -21,11 +21,14 @@ define(['knockout', 'browseService', 'messaging', 'util'], function (ko, bs, mes
         function changeComp(component) {
             if (component === 'search') {
                 saveStuff();
-                mess.dispatch(mess.actions.selectMenu("Home"));
+                mess.dispatch(mess.actions.selectMenu("Search"));
             } else if (component === 'wordcloud') {
                 saveStuff();
-                mess.dispatch(mess.actions.selectMenu("wordcloud"));
-            } 
+                mess.dispatch(mess.actions.selectMenu("WordCloud"));
+            } else if (component === 'previous' && storedPreviousView) {
+                saveStuff();
+                mess.dispatch(mess.actions.selectMenu(storedPreviousView));
+            }
         };
 
         //thread requested; switch to thread view
@@ -79,29 +82,32 @@ define(['knockout', 'browseService', 'messaging', 'util'], function (ko, bs, mes
         let saveStuff = function () {
             mess.dispatch(mess.actions.selectCurrentPage(p));
             mess.dispatch(mess.actions.selectMaxPages(ps));
-        }
+            mess.dispatch(mess.actions.selectPreviousView("Browse"));
+        };
 
-        //run when changeing to this view
-        //get previous component/view
-        let storedPreviousView = mess.getState().selectedPreviousView;
+        let restoreStuff = function () {
+            //get previous component/view
+            storedPreviousView = mess.getState().selectedPreviousView;
+            //store current component name
+            mess.dispatch(mess.actions.selectPreviousView("Browse"));
+            //restore fields
+            let storedMaxPages = mess.getState().selectedMaxPages;
+            let storedCurrentPage = mess.getState().selectedCurrentPage;
+            if (storedPreviousView == "Browse" && (storedCurrentPage)) { p = storedCurrentPage; }
+            if (storedMaxPages) {
+                ps = storedMaxPages;
+                getpgsize(ps);
+            }
+        };
 
-        //store current component name
-        mess.dispatch(mess.actions.selectPreviousView("Browse"));
-
-        //restore fields
-        let storedMaxPages = mess.getState().selectedMaxPages;
-        let storedCurrentPage = mess.getState().selectedCurrentPage;
-
-        if (storedPreviousView == "Browse" && (storedCurrentPage)) { p=storedCurrentPage; }
-        if (storedMaxPages) {
-            ps = storedMaxPages;
-            getpgsize(ps);
-        }
-        
+        //execute on coming to this view
+        let storedPreviousView;
+        restoreStuff();
+        saveStuff();
+        //include buttons
+       // mess.actions.selectMenu("searchbuttcomp");
         //grab data for initial view
         getBrowsing(p, ps);
-
-
 
 
         //stuff available for binding

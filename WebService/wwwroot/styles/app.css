@@ -73,8 +73,9 @@ select {
 }
 
 /************************************Tables head******************************************/
-.table-responsive{
+.table-responsive {
     padding: 0;
+    overflow-x: unset;
 }
 .header-table-style {
     background-color: #17a2b8;
@@ -93,8 +94,17 @@ select {
     color: #17a2b8;
 }
 
+thead.header-table-style.bp {
+    text-align: left;
+}
 .card.post-details-card-container.browsepage {
     margin-top: 0px;
+}
+.handle-with-overflow {
+    max-width: 800px;
+    max-height: 300px;
+    overflow-x: scroll;
+    overflow-y: scroll;
 }
 
 /***********************************PostDetails Page***************************************/
@@ -200,4 +210,9 @@ h2 {
     text-align: center;
 }
 
+/****************************************Annotations page**************************************/
+.card-deck {
+    display: block;
+    margin: 1rem;
+}
 

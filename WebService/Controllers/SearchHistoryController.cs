@@ -34,9 +34,13 @@ namespace WebService.Controllers
             }
 
             (var shistory, int count) = _searchHistoryService.GetSearchesList(userId, pagingAttributes);
-            if (shistory == null)
+            if (shistory == null || count == 0)
             {
-                return NotFound();
+                //return NotFound();
+                shistory = new List<Searches>();
+                var dummyitem = new Searches();
+                shistory.Add(dummyitem);
+                count = 0;
             }
 
             var result = CreateResult(shistory, count, pagingAttributes);
@@ -44,7 +48,7 @@ namespace WebService.Controllers
             {
                 return Ok(result);
             }
-            else return NoContent();
+             else return NoContent();
         }
 
         [HttpDelete("delete/all", Name = nameof(ClearSearchHistory))]
@@ -74,7 +78,10 @@ namespace WebService.Controllers
         {
             var dto = new SearchHistoryListDto();
 
-            var s = _dataService.BuildSearchString(searches.SearchString, true);
+            var s = "";
+            if (searches.SearchString != null) { 
+            s = _dataService.BuildSearchString(searches.SearchString, true);
+            }  
             var stype = _dataService.SearchTypeLookup(searches.SearchType);
 
             dto.SearchLink = Url.Link(

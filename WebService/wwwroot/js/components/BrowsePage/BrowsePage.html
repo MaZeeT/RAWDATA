@@ -3,101 +3,102 @@
 
     <div class="home-page-container ">
 
+        <searchbuttcomp></searchbuttcomp>
 
-        <div class="container text-center">
-            <div class="row pagination-buttons">
-                <div class="col-4  p-0">
-                    <button class="btn btn-sm btn-light browsepage-2nd-nav-btn d-block d-sm-none d-md-none d-lg-none" data-bind="click: changeComp.bind($data, 'search')">
-                        search
-                    </button>
-                </div>
-                <div class="col-4 p-0">
-                    <button class="btn btn-sm btn-light browsepage-2nd-nav-btn d-block d-sm-none d-md-none" data-bind="click: changeComp.bind($data, 'browse')">
-                        browse
-                    </button>
-                </div>
-                <div class="col-4 p-0">
-                    <button class="btn btn-sm btn-light browsepage-2nd-nav-btn d-block d-sm-none d-md-none" data-bind="click: changeComp.bind($data, 'wordcloud')">
-                        wordcloud
-                    </button>
+        <!-- <div class="container text-center">
+        <div class="row pagination-buttons">
+            <div class="col-4  p-0">
+                <button class="btn btn-sm btn-light browsepage-2nd-nav-btn d-block d-sm-none d-md-none d-lg-none" data-bind="click: changeComp.bind($data, 'search')">
+                    search
+                </button>
+            </div>
+            <div class="col-4 p-0">
+                <button class="btn btn-sm btn-light browsepage-2nd-nav-btn d-block d-sm-none d-md-none" data-bind="click: changeComp.bind($data, 'browse')">
+                    browse
+                </button>
+            </div>
+            <div class="col-4 p-0">
+                <button class="btn btn-sm btn-light browsepage-2nd-nav-btn d-block d-sm-none d-md-none" data-bind="click: changeComp.bind($data, 'wordcloud')">
+                    wordcloud
+                </button>
+            </div>
+        </div>
+    </div>-->
+        <h3>Browse Questions</h3>
+
+        <div data-bind="ifnot: loaded" class="d-flex justify-content-center">
+            <div class="card-header">
+                <div class="spinner-border" role="status">
+                    <span class="sr-only">Loading...</span>
                 </div>
             </div>
         </div>
 
 
-            <div data-bind="ifnot: loaded" class="d-flex justify-content-center">
-                <div class="card-header">
-                    <div class="spinner-border" role="status">
-                        <span class="sr-only">Loading...</span>
-                    </div>
-                </div>
-            </div>
+        <div data-bind="if: loaded" class="card post-details-card-container browsepage">
+            <div class="card-body">
 
-
-            <div data-bind="if: loaded" class="card post-details-card-container browsepage">
-                <div class="card-body">
-
-                    <div class="pagination-container">
-                        <div class="pagination-buttons">
-                            <button type="button" class="btn btn-info" data-bind="click: getPg.bind($data, 'prev')">
-                                prev
-                            </button>
-                            <button type="button" class="btn btn-info" data-bind="click: getPg.bind($data, 'next')">
-                                next
-                            </button>
-                            <div class="dropdown-containers">
-                                <p class="label">Results/page:</p>
-                                <select class="selector-dropdown" data-bind="options: pgsizepreset, value: getpgsize, event: {change: pgsizechanged}"></select>
-                            </div>
+                <div class="pagination-container">
+                    <div class="pagination-buttons">
+                        <button type="button" class="btn btn-info" data-bind="click: getPg.bind($data, 'prev')">
+                            prev
+                        </button>
+                        <button type="button" class="btn btn-info" data-bind="click: getPg.bind($data, 'next')">
+                            next
+                        </button>
+                        <div class="dropdown-containers">
+                            <p class="label">Results/page:</p>
+                            <select class="selector-dropdown" data-bind="options: pgsizepreset, value: getpgsize, event: {change: pgsizechanged}"></select>
                         </div>
                     </div>
+                </div>
 
 
-                    <div data-bind="with: questionlist">
-                        <div class="post-card-details-container ">
-                            <p> On this page you can browse the qustions from Stackoverflow. Click on the title of a question to go to the full thread.</p>
-                            <div class="card-body dropdown-containers">
-                                <p class="label">
-                                    Total Questions: <span data-bind="text: totalItems"> </span>
-                                    Total Pages: <span data-bind="text: numberOfPages"> </span>
-                                    Current Page: <span data-bind="text: $parent.pshow"> </span>
-                                </p>
-                            </div>
+                <div data-bind="with: questionlist">
+                    <div class="post-card-details-container ">
+                        <p> On this page you can browse the qustions from Stackoverflow. Click on the title of a question to go to the full thread.</p>
+                        <div class="card-body dropdown-containers">
+                            <p class="label">
+                                Total Questions: <span data-bind="text: totalItems"> </span>
+                                Total Pages: <span data-bind="text: numberOfPages"> </span>
+                                Current Page: <span data-bind="text: $parent.pshow"> </span>
+                            </p>
+                        </div>
 
-                            <div class="container-fluid col">
-                                <div data-bind="foreach: items">
-                                    <div class="card-body dropdown-containers">
-                                        <p class="label">Thread ID: <span data-bind="text: id"></span></p>
-                                        <div style="cursor: pointer" data-bind="click: $parents[1].selectPostItem">
-                                            <!--  <div data-bind="text: id">-->
-                                            <div class="card-text">
-                                                <h5 data-bind="text: title"></h5>
-                                            </div>
+                        <div class="container-fluid col">
+                            <div data-bind="foreach: items">
+                                <div class="card-body dropdown-containers">
+                                    <p class="label">Thread ID: <span data-bind="text: id"></span></p>
+                                    <div style="cursor: pointer" data-bind="click: $parents[1].selectPostItem">
+                                        <!--  <div data-bind="text: id">-->
+                                        <div class="card-text">
+                                            <h5 data-bind="text: title"></h5>
                                         </div>
-                                        <div class="card-text" data-bind="html: body"></div>
                                     </div>
-
+                                    <div class="card-text" data-bind="html: body"></div>
                                 </div>
+
                             </div>
-
                         </div>
+
                     </div>
-
-                    <div class="pagination-container">
-                        <div class="pagination-buttons">
-                            <button type="button" class="btn btn-info" data-bind="click: getPg.bind($data, 'prev')">
-                                prev
-                            </button>
-                            <button type="button" class="btn btn-info" data-bind="click: getPg.bind($data, 'next')">
-                                next
-                            </button>
-                        </div>
-                    </div>
-
-
                 </div>
+
+                <div class="pagination-container">
+                    <div class="pagination-buttons">
+                        <button type="button" class="btn btn-info" data-bind="click: getPg.bind($data, 'prev')">
+                            prev
+                        </button>
+                        <button type="button" class="btn btn-info" data-bind="click: getPg.bind($data, 'next')">
+                            next
+                        </button>
+                    </div>
+                </div>
+
+
             </div>
         </div>
+    </div>
 
 
 

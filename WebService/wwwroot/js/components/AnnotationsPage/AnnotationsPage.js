@@ -101,30 +101,55 @@
             });
         };
 
+        //comp change requested
+        function changeComp(component) {
+            if (component === 'history') {
+                saveStuff();
+                mess.dispatch(mess.actions.selectMenu("History"));
+            } else if (component === 'book') {
+                saveStuff()
+                mess.dispatch(mess.actions.selectMenu("Bookmarks"));
+            } else if (component === 'searchhistory') {
+                saveStuff()
+                mess.dispatch(mess.actions.selectMenu("Search History"));
+            } else if (component === 'previous' && storedPreviousView) {
+                saveStuff();
+                mess.dispatch(mess.actions.selectMenu(storedPreviousView));
+            }
+        };
+
 
         //store stuff from this view
         let saveStuff = function () {
             mess.dispatch(mess.actions.selectCurrentPage(p));
             mess.dispatch(mess.actions.selectMaxPages(ps));
-        }
+            //store current component name
+            mess.dispatch(mess.actions.selectPreviousView("Annotations"));
+        };
 
-        //run when changeing to this view
-        //get previous component/view
-        let storedPreviousView = mess.getState().selectedPreviousView;
+        //restore stuff to this view
+        let restoreStuff = function () {
+            //get previous component/view
+            storedPreviousView = mess.getState().selectedPreviousView;
+            //restore fields
+            let storedMaxPages = mess.getState().selectedMaxPages;
+            let storedCurrentPage = mess.getState().selectedCurrentPage;
 
-        //store current component name
-        mess.dispatch(mess.actions.selectPreviousView("Annotations"));
+            if (storedPreviousView == "Annotations" && (storedCurrentPage)) { p = storedCurrentPage; }
+            if (storedMaxPages) {
+                ps = storedMaxPages;
+                getpgsize(ps);
+            }
+        };
 
-        //restore fields
-        let storedMaxPages = mess.getState().selectedMaxPages;
-        let storedCurrentPage = mess.getState().selectedCurrentPage;
-        console.log("currp::", storedCurrentPage);
+        //run when changing to this view
 
-        if (storedPreviousView == "Annotations" && (storedCurrentPage)) { p = storedCurrentPage; }
-        if (storedMaxPages) {
-            ps = storedMaxPages;
-            getpgsize(ps);
-        }
+        let storedPreviousView;
+        restoreStuff();
+        saveStuff();
+
+        //include buttons
+     //   mess.actions.selectMenu("hisbuttcomp");
 
         //grab data for initial view
         getAnnos(p, ps);
@@ -142,6 +167,7 @@
             getpgsize,
             pgsizechanged,
             pshow,
+            changeComp,
             loaded //note order matters
         };
     };

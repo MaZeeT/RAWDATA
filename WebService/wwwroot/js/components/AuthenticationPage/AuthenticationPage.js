@@ -1,6 +1,6 @@
 ﻿define(["knockout", "authservice", "messaging", "validation"], function (ko, authservice, messaging, validation) {
     return function () {
-        
+
         let loginUsername = ko.observable();
         let loginPassword = ko.observable();
         let errorMessage = ko.observable(false);
@@ -19,7 +19,7 @@
         }
 
         // this function does the validation and depending on which form the request is coming from, it does login or signup
-        let formSubmitAction = function () {        
+        let formSubmitAction = function () {
             let validPassword = validation.isValidPassword(loginPassword());
             let validUsername = validation.isValidUsername(loginUsername());
             if (!validPassword || !validUsername) {
