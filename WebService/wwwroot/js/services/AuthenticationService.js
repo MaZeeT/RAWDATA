@@ -1,6 +1,4 @@
-﻿define(["jquery"], function () {
-
-
+﻿define([""], function () {
 
     var getLoginUser = async function (incomingUserCredentials, callback) {
         try {

@@ -1,4 +1,4 @@
-﻿define(["jquery"], function () {
+﻿define([""], function () {
 
     var getAllChildDataOfPostUrl = async function (url, callback) {
         console.log("Fucking url is: ", url);

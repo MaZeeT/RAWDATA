@@ -1,4 +1,4 @@
-﻿define(["jquery"], function () {
+﻿define([""], function () {
 
 
     //GET http://localhost:5001/api/annotations
