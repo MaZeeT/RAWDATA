@@ -27,8 +27,6 @@
             });
         };
 
-
-
         let pageSize = function (size) {
             pgSize(size);
             currentPage(1);
@@ -65,7 +63,6 @@
         };
 
         let selectPostItem = function (item) {
-            console.log("Item is: ", item);
             mess.dispatch(mess.actions.selectPost(item));
             mess.dispatch(mess.actions.selectMenu("postdetails"));
         };
@@ -108,11 +105,9 @@
         };
 
         //run initially
-      //  mess.actions.selectMenu("hisbuttcomp");
         let storedPreviousView;
         restoreStuff();
         saveStuff();
-        //let page = 1;
         let url = bs.buildUrl(currentPage(), pgSize());
         getData(url);
 

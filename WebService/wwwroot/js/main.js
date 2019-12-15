@@ -9,7 +9,6 @@ require.config({
         messaging: "services/MessagingService",
         historyService: "services/HistoryService",
         searchHistoryService: "services/SearchHistoryService",
-        //historyService: "services/HistoryServiceMock",    //Mock of historyService
         authservice: "services/AuthenticationService",
         bookmarksService: "services/BookmarksService",
         browseService: "services/BrowseService",
@@ -60,21 +59,20 @@ require(["knockout"], function (ko) {
         template: { require: "text!components/PostDetails/PostDetails.html" }
     });
     ko.components.register('prebuttcomp', {
-        viewModel: { require: "components/PreviousButtonComponent/PreviousButtonComponent" },
+      //  viewModel: { require: "components/PreviousButtonComponent/PreviousButtonComponent" },
         template: { require: "text!components/PreviousButtonComponent/PreviousButtonComponent.html" }
     });
     ko.components.register('searchbuttcomp', {
-        viewModel: { require: "components/SearchButtonComponent/SearchButtonComponent" },
+       // viewModel: { require: "components/SearchButtonComponent/SearchButtonComponent" },
         template: { require: "text!components/SearchButtonComponent/SearchButtonComponent.html" }
     });
     ko.components.register('hisbuttcomp', {
-        viewModel: { require: "components/HistoryButtonComponent/HistoryButtonComponent" },
+       // viewModel: { require: "components/HistoryButtonComponent/HistoryButtonComponent" },
         template: { require: "text!components/HistoryButtonComponent/HistoryButtonComponent.html" }
     });
 });
 
 require(["knockout", "messaging", "navbar"], function (ko, messaging, app) {
     messaging.subscribe(() => console.log(messaging.getState()));
-    // enable validation
     ko.applyBindings(app);
 });

@@ -5,7 +5,6 @@
     };
 
     let getBookmarks = async function (token, url, callback) {
-        console.log(url);
         try {
             const response = await fetch(url, {
                 method: 'GET', // or 'PUT'
@@ -29,9 +28,8 @@
     let deleteBookmark = async function (token, postId, callback) {
         let url = `api/bookmark/delete/${postId}`;
         try {
-            console.log("token: " + token);
             const response = await fetch(url, {
-                method: 'DELETE', // or 'PUT'
+                method: 'DELETE', 
                 headers: new Headers({
                     'Authorization': 'Bearer ' + token,
                     'Content-Type': 'application/json'
@@ -50,9 +48,8 @@
 
     let deleteBookmarks = async function (token, callback) {
         try {
-            console.log("token: " + token);
             const response = await fetch("api/bookmark/delete/all", {
-                method: 'DELETE', // or 'PUT'
+                method: 'DELETE', 
                 headers: new Headers({
                     'Authorization': 'Bearer ' + token,
                     'Content-Type': 'application/json'

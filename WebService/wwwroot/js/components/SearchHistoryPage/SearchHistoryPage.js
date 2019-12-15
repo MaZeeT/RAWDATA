@@ -18,7 +18,6 @@
 
         //grab data when pagesize change
         let pgsizechanged = function setPgSize() {
-            console.log("getpgsiz: ", getpgsize());
             if (getpgsize()) {
                 ps = getpgsize();
                 p = 1;
@@ -30,8 +29,6 @@
         //thread requested, switch to thread view
         let selectSearchHistoryItem = function (item) {
             saveStuff();
-            console.log("item searchmethod: ", item.searchMethod);
-            console.log("item searchrerms: ", item.searchString);
 
             let stype = resolveHelper(item)[1];
             let s = item.searchString;
@@ -52,8 +49,6 @@
                 npg = util.getParameterByName('page', nexturi);
             } else if (direction == 'prev') { npg = util.getParameterByName('page', prevuri); }
 
-            console.log("dat: ", direction);
-            console.log("param: ", npg);
             if (npg) {
                 getSearchHistory(npg, ps);
             };
@@ -63,7 +58,6 @@
         let deleteSearchHistory = function () {
             shs.deleteSearchHistory(function (serverResponse) {
                 let status = serverResponse.status;
-                console.log("Server response: ", serverResponse);
                 if (status === 200) {
                     p = 1;
                     pshow(p);
@@ -78,13 +72,14 @@
         //get all annos
         function getSearchHistory(npg, ps) {
             shs.getSearchHist(npg, ps, function (data) {
-                console.log("Data from api call search : ", data);
                 if (data) {
 
                     if (data.status == 400 || data.status == 666) {
                         //bad request / incomplete json/weird response
                         return;
-                    } else if (data.status == 401) {
+                    }
+
+                    if (data.status == 401) {
                         //unauthorized, goto login page
                         changeComp('unauth');
                         return;
@@ -192,9 +187,6 @@
         let storedPreviousView;
         restoreStuff();
         saveStuff();
-
-        //include buttons
-        //  mess.actions.selectMenu("hisbuttcomp");
 
         //grab data for initial view
         getSearchHistory(p, ps);

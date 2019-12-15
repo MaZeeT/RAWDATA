@@ -20,7 +20,6 @@
 
         //grab data when pagesize change
         let pgsizechanged = function setPgSize(context) {
-            console.log("getpgsiz: ", context.getpgsize());
             if (context.getpgsize()) {
                 ps = context.getpgsize();
                 p = 1;
@@ -43,8 +42,6 @@
                 npg = util.getParameterByName('page', nexturi);
             } else if (direction == 'prev') { npg = util.getParameterByName('page', prevuri); }
 
-            console.log("dat: ", direction);
-            console.log("param: ", npg);
             if (npg) {
                 getAnnos(npg, ps);
             };
@@ -71,7 +68,6 @@
                 let annotationId = value.annotationId;
                 postservice.deleteAnnotation(annotationId, function (serverResponse) {
                     let status = serverResponse.status;
-                    console.log("Server response: ", serverResponse);
                     if (status === 200) {
                         getAnnos(p, ps);
                         updateAnnotationValue("");
@@ -88,7 +84,6 @@
         //get all annos
         function getAnnos(npg, ps) {
             as.getAllAnnos(npg, ps, function (data) {
-                console.log("Data from api call search : ", data);
                 if (data) {
                     p = npg;
                     pshow(p);
@@ -147,9 +142,6 @@
         let storedPreviousView;
         restoreStuff();
         saveStuff();
-
-        //include buttons
-     //   mess.actions.selectMenu("hisbuttcomp");
 
         //grab data for initial view
         getAnnos(p, ps);

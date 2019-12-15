@@ -51,7 +51,6 @@ define(["knockout", "historyService", 'messaging', 'util'], function (ko, ds, me
         };
 
         let selectPostItem = function (item) {
-            console.log("Item is: ", item);
             mess.dispatch(mess.actions.selectPost(item));
             mess.dispatch(mess.actions.selectMenu("postdetails"));
         };
@@ -87,7 +86,6 @@ define(["knockout", "historyService", 'messaging', 'util'], function (ko, ds, me
             //restore fields
             let storedMaxPages = mess.getState().selectedMaxPages;
             let storedCurrentPage = mess.getState().selectedCurrentPage;
-            console.log("storedCurrentPage sdfffffff ", storedCurrentPage);
             if (storedPreviousView == "History" && (storedCurrentPage)) { currentPage(storedCurrentPage); }
             if (storedMaxPages) {
                 pgSize(storedMaxPages);
@@ -95,7 +93,6 @@ define(["knockout", "historyService", 'messaging', 'util'], function (ko, ds, me
         };
 
         //run initially
-       // mess.actions.selectMenu("hisbuttcomp");
         let storedPreviousView;
         restoreStuff();
         saveStuff();

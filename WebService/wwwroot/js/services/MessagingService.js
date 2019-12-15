@@ -29,25 +29,18 @@
     var reducer = function (state, action) {
         switch (action.type) {
             case selectPost:
-                console.log("in reducer: ", action.selectedPost);
                 return Object.assign({}, state, { selectedPost: action.selectedPost });
             case selectMaxPages:
-                console.log("in reducer: ", action.selectedMaxPages);
                 return Object.assign({}, state, { selectedMaxPages: action.selectedMaxPages });
             case selectCurrentPage:
-                console.log("in reducer: ", action.selectedCurrentPage);
                 return Object.assign({}, state, { selectedCurrentPage: action.selectedCurrentPage });
             case selectSearchTerms:
-                console.log("in reducer: ", action.selectedSearchTerms);
                 return Object.assign({}, state, { selectedSearchTerms: action.selectedSearchTerms });
             case selectSearchOptions:
-                console.log("in reducer: ", action.selectedSearchOptions);
                 return Object.assign({}, state, { selectedSearchOptions: action.selectedSearchOptions });
             case selectMaxWords:
-                console.log("in reducer: ", action.selectedMaxWords);
                 return Object.assign({}, state, { selectedMaxWords: action.selectedMaxWords });
             case selectPreviousView:
-                console.log("in reducer: ", action.selectedPreviousView);
                 return Object.assign({}, state, { selectedPreviousView: action.selectedPreviousView });
             case selectMenu:
                 return Object.assign({}, state, { selectedMenu: action.selectedMenu });
@@ -57,10 +50,7 @@
     };
 
     var dispatch = function (action) {
-        console.log("Subs in action: ", action);
         currentState = reducer(currentState, action);
-        console.log("Subs in messaging: ", subscribers);
-        console.log(" subscribers.filter(x => x.action === action): ", subscribers.filter(x => x.action === action));
         subscribers.filter(x => x.action === action.type).forEach(subscriber => subscriber.callback());
     };
 

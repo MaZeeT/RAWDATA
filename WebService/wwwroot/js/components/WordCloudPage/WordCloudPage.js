@@ -16,45 +16,45 @@
 
         let searchResult = ko.observableArray([]);
 
-
-
-
         //clearing searchfield when clicked
-        let clrsearchfield = function upd() {
+        let clrsearchfield = function () {
             if (searchTerms() === placeholderStr) {
                 searchTerms('');
             }
         };
 
 
-
-
         //for geting new data and updating wordcloud
-        let cloudupdate = function upd() {
+        let cloudupdate = function () {
 
             saveStuff();
 
             max = selectedValue();
             if (stypebtn() == 'tfidf') { stype = 4; } else stype = 5;
 
-            wc.getWCItems(searchTerms(), stype, max, function (data) {
-                //console.log("Data from api call search : ", data);
+            doWordRankSearch(searchTerms(), stype, max);
 
+        };
+
+
+        let doWordRankSearch = function (terms, stype, max) {
+            wc.getWCItems(terms, stype, max, function (data) {
                 if (data) {
-
-                    //console.log("data status : ", data.status);
-
                     if (data.status == 400) {
                         //bad request
                         searchResult([]);
                         searchTerms('Try searching for something!');
                         return;
-                    } else if (data.status == 666) {
+                    }
+
+                    if (data.status == 666) {
                         //incomplete json/weird response
                         searchResult([]);
                         searchTerms('Try again!');
                         return;
-                    } else if (data.status == 401) {
+                    }
+
+                    if (data.status == 401) {
                         //unauthorized, goto login page
                         changeComp('unauth');
                         //mess.dispatch(mess.actions.selectMenu("authentication"));
@@ -63,21 +63,22 @@
                         //ok so far
                         loaded(true);
                         searchResult(data);
-
-                        data1 = data.map(function (a) {
-                            return { text: a.term, weight: a.rank };
-                        });
-
-                        $('#cloud').jQCloud('destroy');
-                        $('#cloud').jQCloud(data1,
-                            {
-                                autoResize: true
-                            });
+                        doCloudUpdate(searchResult());
                     }
                 }
             });
+        }
 
-        };
+        let doCloudUpdate = function (wordList) {
+            data1 = wordList.map(function (a) { //map data to what jqcloud wants
+                return { text: a.term, weight: a.rank };
+            });
+            $('#cloud').jQCloud('destroy'); /// cant figure out how to update lol! so am destroying it..
+            $('#cloud').jQCloud(data1,
+                {
+                    autoResize: true
+                });
+        }
 
         searchTerms.subscribe(function (searchStr) {
             if (searchStr.length === 0) {
@@ -87,22 +88,7 @@
             max = selectedValue();
             if (stypebtn() == 'tfidf') { stype = 4; } else stype = 5;
 
-            wc.getWCItems(searchStr, stype, max, function (data) {
-                searchTerms(searchStr);
-                if (data) {
-                    loaded(true);
-                    searchResult(data);
-
-                    data1 = data.map(function (a) { //map data to what jqcloud wants
-                        return { text: a.term, weight: a.rank };
-                    });
-                    $('#cloud').jQCloud('destroy'); /// cant figure out how to update lol! so am destroying it..
-                    $('#cloud').jQCloud(data1,
-                        {
-                            autoResize: true
-                        });
-                }
-            });
+            doWordRankSearch(searchTerms(), stype, max);
         });
 
         //comp change requested
@@ -157,7 +143,6 @@
         let storedSearchOptions;
         restoreStuff();
         saveStuff();
-       // mess.actions.selectMenu("searchbuttcomp");
 
 
         return {
