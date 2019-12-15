@@ -54,14 +54,11 @@
         });
 
         selectedPageSize.subscribe(function () {
-
-            console.log("selectedPageSize: ", getPageSize());
             callService(searchstring(), searchTypeValue(), getPageSize(), currentPage());
         });
 
         selectedSearchType.subscribe(function () {
 
-            console.log("selectedSearchType: ", searchTypeValue());
             callService(searchstring(), searchTypeValue(), getPageSize(), currentPage());
 
         });
@@ -73,8 +70,6 @@
                 npg = util.getParameterByName('page', nexturi);
             } else if (direction === 'prev') { npg = util.getParameterByName('page', prevuri); }
 
-            console.log("dat: ", direction);
-            console.log("param: ", npg);
             if (npg) {
 
                 callService(searchstring(), searchTypeValue(), getPageSize(), npg);
@@ -86,11 +81,9 @@
 
                 let givenSearchType = util.searchTypeSelectorMapping(srcTypeVal);
                 let object = util.conputeUrlStringWithPagination(searchString, givenSearchType, pageSize, currPage);
-                console.log("Computed object is now: ", object);
 
                 homeserv.getSearchItems(object, function (responseData) {
                     if (responseData) {
-                        console.log("Responsedata from homeage is: ", responseData);
 
                         currentPage(currPage);
                         totalResults(responseData.totalResults);
@@ -98,7 +91,6 @@
                         numberOfPages(responseData.numberOfPages)
                         nexturi = responseData.next;
                         prevuri = responseData.prev;
-                        console.log(searchResult());
                         showTable(true);
                         saveStuff();
                     }
@@ -152,7 +144,6 @@
                 if (storedSearchOptions == "tfidf") { storedSearchOptions = "TFIDF" }
                 else if (storedSearchOptions == "best") { storedSearchOptions = "Best Match" }
 
-                console.log("retrieved search options xxxxxxxxxxxxxxx :", storedSearchOptions);
                 searchTypeValue(storedSearchOptions);
             };
             if (storedSearchTerms) { searchTerms(storedSearchTerms) };

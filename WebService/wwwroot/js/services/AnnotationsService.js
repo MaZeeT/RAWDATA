@@ -5,7 +5,6 @@
     //GetAllAnnotationsOfUser([FromQuery] PagingAttributes pagingAttributes)
     var getAllAnnos = async function (p, ps, callback) {
         let toekn = window.localStorage.getItem('userToken');
-        console.log(' token ' + toekn);
         var response = await fetch(
             buildUrl("api/annotations/user", {
                 page: p,

@@ -37,8 +37,7 @@
         //register a new user
         function signupUser(userCredentials) {
             authservice.signUpUser(userCredentials, function (authenticationResponse) {
-                console.log("response from server: ", authenticationResponse)
-                // fyi: registering a new user doesn't come with a token by default ;) 
+                // registering a new user doesn't come with a token by default ;) 
                 if (authenticationResponse.status === 201) {
                     loginUser(userCredentials);
                     return;

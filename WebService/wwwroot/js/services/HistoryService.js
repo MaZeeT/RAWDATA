@@ -8,7 +8,6 @@ define([""], function () {
     };
 
     var getHistory = async function (token, url, callback) {
-        console.log(url);
         try {
             const response = await fetch(url, {
                 method: 'GET', // or 'PUT'
@@ -31,7 +30,6 @@ define([""], function () {
 
     var deleteHistory = async function (token, callback) {
         try {
-            console.log("token: " + token);
             const response = await fetch("api/history/delete/all", {
                 method: 'DELETE', // or 'PUT'
                 headers: new Headers({

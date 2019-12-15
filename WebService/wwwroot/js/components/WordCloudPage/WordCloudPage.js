@@ -39,20 +39,22 @@
 
         let doWordRankSearch = function (terms, stype, max) {
             wc.getWCItems(terms, stype, max, function (data) {
-                //console.log("Data from api call search : ", data);
                 if (data) {
-                    //console.log("data status : ", data.status);
                     if (data.status == 400) {
                         //bad request
                         searchResult([]);
                         searchTerms('Try searching for something!');
                         return;
-                    } else if (data.status == 666) {
+                    }
+
+                    if (data.status == 666) {
                         //incomplete json/weird response
                         searchResult([]);
                         searchTerms('Try again!');
                         return;
-                    } else if (data.status == 401) {
+                    }
+
+                    if (data.status == 401) {
                         //unauthorized, goto login page
                         changeComp('unauth');
                         //mess.dispatch(mess.actions.selectMenu("authentication"));

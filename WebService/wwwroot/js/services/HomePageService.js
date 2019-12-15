@@ -5,9 +5,7 @@
     var getSearchItems = async function (objectValues, callback) {
         const baseUrl = "http://localhost:5001/";
         const path = "api/search/"
-        console.log("ObjectValue ", objectValues);
         const searchUrl = baseUrl + path + objectValues.searchString + objectValues.searchType + objectValues.pageNumber + objectValues.pageSize;
-        console.log("URL: ", searchUrl);
         try {
             const response = await fetch(searchUrl, {
                 method: 'GET', // or 'PUT'

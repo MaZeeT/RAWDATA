@@ -9,7 +9,6 @@ require.config({
         messaging: "services/MessagingService",
         historyService: "services/HistoryService",
         searchHistoryService: "services/SearchHistoryService",
-        //historyService: "services/HistoryServiceMock",    //Mock of historyService
         authservice: "services/AuthenticationService",
         bookmarksService: "services/BookmarksService",
         browseService: "services/BrowseService",
@@ -75,6 +74,5 @@ require(["knockout"], function (ko) {
 
 require(["knockout", "messaging", "navbar"], function (ko, messaging, app) {
     messaging.subscribe(() => console.log(messaging.getState()));
-    // enable validation
     ko.applyBindings(app);
 });

@@ -52,8 +52,6 @@ define(['knockout', 'browseService', 'messaging', 'util'], function (ko, bs, mes
                 npg = util.getParameterByName('page', nexturi);
             } else if (direction === 'prev') { npg = util.getParameterByName('page', prevuri); }
 
-            console.log("dat: ", direction);
-            console.log("param: ", npg);
             if (npg) {
                 getBrowsing(npg, ps);
             };
@@ -62,7 +60,6 @@ define(['knockout', 'browseService', 'messaging', 'util'], function (ko, bs, mes
         //get all of browsepage
         function getBrowsing(npg, ps) {
             bs.getBrowseItems(npg, ps, function (data) {
-                console.log("Data from api call search : ", data);
                 if (data) {
                     p = npg;
                     pshow(p);

@@ -63,7 +63,6 @@
         };
 
         let selectPostItem = function (item) {
-            console.log("Item is: ", item);
             mess.dispatch(mess.actions.selectPost(item));
             mess.dispatch(mess.actions.selectMenu("postdetails"));
         };

@@ -2,9 +2,7 @@ define([], function () {
 
     var getWCItems = async function (s, st, max, callback) {
         let toekn = window.localStorage.getItem('userToken');
-        console.log(' token ' + toekn);
         if (max == 0) {
-            console.log(' equal ' + max);
             var response = await fetch(
                 buildUrl("api/search/wordrank", {
                     s: s,
@@ -19,7 +17,6 @@ define([], function () {
             );
         }
         else {
-            console.log(' notequal ' + max);
             var response = await fetch(
                 buildUrl("api/search/wordrank", {
                     s: s,
@@ -69,7 +66,6 @@ define([], function () {
             qs = qs.substring(0, qs.length - 1); //chop off last "&"
             url = url + "?" + qs;
         }
-        console.log("built url is :::::::::::::::: ", url);
         return url;
     }
 

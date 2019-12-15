@@ -6,7 +6,6 @@
     //GetAllAnnotationsOfUser([FromQuery] PagingAttributes pagingAttributes)
     var getSearchHist = async function (p, ps, callback) {
         let toekn = window.localStorage.getItem('userToken');
-        console.log(' token ' + toekn);
         var response = await fetch(
             buildUrl("api/history/searches", {
                 page: p,
@@ -61,7 +60,6 @@
     //DELETE http://localhost:5001/api/history/searches/delete/all
     //del specific anno
     let deleteSearchHistory = async function (callback) {
-        //console.log("Annotation to be deleted id is: ", annotationId);
         const url = "api/history/searches/delete/all"
         try {
             const response = await fetch(url, {
