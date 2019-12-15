@@ -77,7 +77,7 @@ define(["knockout", "historyService", 'messaging', 'util'], function (ko, ds, me
                 saveStuff();
                 mess.dispatch(mess.actions.selectMenu(storedPreviousView));
             }
-        };
+        }
 
         //restore stuff to this view
         let restoreStuff = function () {

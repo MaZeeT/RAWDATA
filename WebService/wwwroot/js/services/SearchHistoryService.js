@@ -1,7 +1,5 @@
 ﻿define([""], function () {
 
-
-
     //GET http://localhost:5001/api/hisory/searches
     //GetAllAnnotationsOfUser([FromQuery] PagingAttributes pagingAttributes)
     let getSearchHist = async function (p, ps, callback) {
@@ -23,8 +21,7 @@
         {
             try {
                 data = await response.json();    //try to parse
-            }
-            catch (error) {         //json was incomplete
+            } catch (error) {         //json was incomplete
                 let errorresponse = new Object();
                 errorresponse.status = 666; //custom status code
                 data = errorresponse;
@@ -54,16 +51,13 @@
         return url;
     }
 
-
-
-
     //DELETE http://localhost:5001/api/history/searches/delete/all
     //del specific anno
     let deleteSearchHistory = async function (callback) {
         const url = "api/history/searches/delete/all";
         try {
             const response = await fetch(url, {
-                method: 'DELETE', 
+                method: 'DELETE',
 
                 headers: new Headers({
                     'Authorization': 'Bearer ' + window.localStorage.getItem("userToken"),
@@ -78,7 +72,6 @@
             console.log('Error:', error);
         }
     };
-
 
     return {
         getSearchHist,

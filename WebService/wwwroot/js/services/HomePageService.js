@@ -1,7 +1,5 @@
 ﻿define([""], function () {
-
-
-
+    
     let getSearchItems = async function (objectValues, callback) {
         const baseUrl = "http://localhost:5001/";
         const path = "api/search/";
