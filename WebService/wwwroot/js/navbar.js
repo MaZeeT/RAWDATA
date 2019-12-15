@@ -1,7 +1,7 @@
 ﻿define(["knockout", "messaging"], function (ko, messaging) {
 
     /////////////////Menu elements
-    var menuElements = [
+    let menuElements = [
         {
             name: "Search",
             component: "homepage"
@@ -32,7 +32,7 @@
         }
     ];
     /////////////////Other components elements
-    var otherElements = [
+    let otherElements = [
         {
             component: "authentication"
         },
@@ -48,10 +48,10 @@
         {
             component: "hisbuttcomp"
         }
-    ]
+    ];
 
-    var currentMenu = ko.observable(menuElements[0]);
-    var currentComponent = ko.observable();
+    let currentMenu = ko.observable(menuElements[0]);
+    let currentComponent = ko.observable();
     let isTokenSet = ko.observable(false);
     if (window.localStorage.getItem('userToken')) {
         currentComponent = ko.observable(currentMenu().component);
@@ -59,15 +59,15 @@
     } else {
         currentComponent = ko.observable(otherElements[0].component);
     }
-   
 
-    var changeContent = function (menu) {
+
+    let changeContent = function (menu) {
         messaging.dispatch(messaging.actions.selectMenu(menu.name));
     };
 
     messaging.subscribe("SELECT_MENU", () => {
-        var menuName = messaging.getState().selectedMenu;
-        var menu = menuElements.find(x => x.name === menuName);
+        let menuName = messaging.getState().selectedMenu;
+        let menu = menuElements.find(x => x.name === menuName);
         if (menu) {
             currentMenu(menu);
             currentComponent(menu.component);
@@ -77,16 +77,16 @@
         }
     });
 
-    var isSelected = function (menu) {
+    let isSelected = function (menu) {
         return menu === currentMenu() ? "active" : "";
     };
 
-    var signOutUser = function () {
+    let signOutUser = function () {
         console.log("sign out clicked");
         localStorage.removeItem('userToken');
         //window.localStorage.clear();
         window.location.reload();
-    }
+    };
 
     return {
         currentComponent,

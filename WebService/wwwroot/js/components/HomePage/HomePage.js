@@ -17,10 +17,9 @@
         let searchTypeValSelector = ko.observableArray(["TFIDF", "Exact Match", "Simple Match", "Best Match"]); //selection of searchtypes
         let searchTypeValue = ko.observable("Best Match");
         let selectedSearchType = ko.observable();
-
         
         //Search
-        const placeholderStr = "Input search terms here..."
+        const placeholderStr = "Input search terms here...";
         let searchTerms = ko.observable(placeholderStr);
         let searchstring = ko.observable("");
 
@@ -41,7 +40,7 @@
             if (searchTerms() === placeholderStr) {
                 searchTerms('');
             }
-        }
+        };
 
         searchTerms.subscribe(function (searchStr) {
             if (searchStr.length === 0) {
@@ -50,7 +49,6 @@
             }
             searchstring(searchStr);
             callService(searchstring(), searchTypeValue(), getPageSize(), currentPage());
-
         });
 
         selectedPageSize.subscribe(function () {
@@ -58,7 +56,6 @@
         });
 
         selectedSearchType.subscribe(function () {
-
             callService(searchstring(), searchTypeValue(), getPageSize(), currentPage());
 
         });
@@ -68,13 +65,15 @@
             let npg = null;
             if (direction === 'next') {
                 npg = util.getParameterByName('page', nexturi);
-            } else if (direction === 'prev') { npg = util.getParameterByName('page', prevuri); }
+            } else if (direction === 'prev') {
+                npg = util.getParameterByName('page', prevuri);
+            }
 
             if (npg) {
 
                 callService(searchstring(), searchTypeValue(), getPageSize(), npg);
-            };
-        };
+            }
+        }
 
         function callService(searchString, srcTypeVal, pageSize, currPage) {
             if (searchString) {
@@ -88,7 +87,7 @@
                         currentPage(currPage);
                         totalResults(responseData.totalResults);
                         searchResult(responseData.items);
-                        numberOfPages(responseData.numberOfPages)
+                        numberOfPages(responseData.numberOfPages);
                         nexturi = responseData.next;
                         prevuri = responseData.prev;
                         showTable(true);
@@ -99,7 +98,6 @@
             }
         }
 
-
         //store stuff from this view
         function saveStuff() {
             messaging.dispatch(messaging.actions.selectSearchTerms(searchTerms()));
@@ -107,7 +105,7 @@
             messaging.dispatch(messaging.actions.selectCurrentPage(currentPage()));
             messaging.dispatch(messaging.actions.selectMaxPages(getPageSize()));
             messaging.dispatch(messaging.actions.selectPreviousView("Search"));
-        };
+        }
 
         //comp change requested
         function changeComp(component) {
@@ -121,8 +119,7 @@
                 saveStuff();
                 messaging.dispatch(messaging.actions.selectMenu(storedPreviousView));
             }
-        };
-
+        }
 
         //restore stuff to this view
         let restoreStuff = function () {
@@ -134,19 +131,26 @@
             let storedMaxPages = messaging.getState().selectedMaxPages;
             let storedCurrentPage = messaging.getState().selectedCurrentPage;
 
-            if (storedPreviousView == "Search" && (storedCurrentPage)) { currentPage(storedCurrentPage) };
-            
-            if (storedMaxPages) {
-           
-                getPageSize(storedMaxPages);
-            };
-            if (storedSearchOptions) {
-                if (storedSearchOptions == "tfidf") { storedSearchOptions = "TFIDF" }
-                else if (storedSearchOptions == "best") { storedSearchOptions = "Best Match" }
+            if (storedPreviousView == "Search" && (storedCurrentPage)) {
+                currentPage(storedCurrentPage)
+            }
 
+            if (storedMaxPages) {
+                getPageSize(storedMaxPages);
+            }
+
+            if (storedSearchOptions) {
+                if (storedSearchOptions == "tfidf") {
+                    storedSearchOptions = "TFIDF"
+                } else if (storedSearchOptions == "best") {
+                    storedSearchOptions = "Best Match"
+                }
                 searchTypeValue(storedSearchOptions);
-            };
-            if (storedSearchTerms) { searchTerms(storedSearchTerms) };
+            }
+
+            if (storedSearchTerms) {
+                searchTerms(storedSearchTerms)
+            }
         };
 
         //run when changing to this view

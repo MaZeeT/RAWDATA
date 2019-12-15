@@ -17,7 +17,7 @@ define(["knockout", "historyService", 'messaging', 'util'], function (ko, ds, me
             ds.getHistory(token, url, function (response) {
                 if (util.getParameterByName('page', url)) {
                     currentPage(util.getParameterByName('page', url));
-                };
+                }
                 totalPages(response.numberOfPages);
                 totalResults(response.totalResults);
                 prevUrl(response.prev);
@@ -29,7 +29,7 @@ define(["knockout", "historyService", 'messaging', 'util'], function (ko, ds, me
 
         let pageSize = function (size) {
             pgSize(size);
-            currentPage(1)
+            currentPage(1);
             let url = ds.buildUrl(currentPage(), pgSize());
             getData(url);
         };
@@ -43,7 +43,7 @@ define(["knockout", "historyService", 'messaging', 'util'], function (ko, ds, me
         let deletions = function () {
             ds.deleteHistory(token, function (response) {
                 //return response;
-                currentPage(1)
+                currentPage(1);
                 let url = ds.buildUrl(currentPage(), pgSize());
                 getData(url);
             })
@@ -68,10 +68,10 @@ define(["knockout", "historyService", 'messaging', 'util'], function (ko, ds, me
                 saveStuff();
                 mess.dispatch(mess.actions.selectMenu("Annotations"));
             } else if (component === 'book') {
-                saveStuff()
+                saveStuff();
                 mess.dispatch(mess.actions.selectMenu("Bookmarks"));
             } else if (component === 'searchhistory') {
-                saveStuff()
+                saveStuff();
                 mess.dispatch(mess.actions.selectMenu("Search History"));
             } else if (component === 'previous' && storedPreviousView) {
                 saveStuff();

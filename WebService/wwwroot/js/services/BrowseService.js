@@ -1,8 +1,8 @@
 define([], function () {
 
-    var getBrowseItems = async function (p, ps, callback) {
+    let getBrowseItems = async function (p, ps, callback) {
         let toekn = window.localStorage.getItem('userToken');
-                var response = await fetch(
+        let response = await fetch(
             buildUrl("api/questions", {
                 page: p,
                 pageSize: ps
@@ -14,19 +14,19 @@ define([], function () {
                 }
             }
         );
-        var data = await response;
+        let data = await response;
         if (response.status != 401) //we are not unauthorized
         {
             try {
                 data = await response.json();    //try to parse
             }
             catch (error) {         //json was incomplete
-                var errorresponse = new Object();
+                let errorresponse = new Object();
                 errorresponse.status = 666; //custom status code
                 data = errorresponse;
             }
         } else if (response.status == 401) { //we are unauthorized!
-            var errorresponse = new Object();
+            let errorresponse = new Object();
             errorresponse.status = response.status;  //send back status 401
             data = errorresponse;
         }

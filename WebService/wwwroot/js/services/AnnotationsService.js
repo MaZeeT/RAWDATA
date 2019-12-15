@@ -3,9 +3,9 @@
 
     //GET http://localhost:5001/api/annotations
     //GetAllAnnotationsOfUser([FromQuery] PagingAttributes pagingAttributes)
-    var getAllAnnos = async function (p, ps, callback) {
+    let getAllAnnos = async function (p, ps, callback) {
         let toekn = window.localStorage.getItem('userToken');
-        var response = await fetch(
+        let response = await fetch(
             buildUrl("api/annotations/user", {
                 page: p,
                 pageSize: ps
@@ -17,7 +17,7 @@
                 }
             }
         );
-        var data = await response.json();
+        let data = await response.json();
         callback(data);
     };
 
@@ -37,7 +37,6 @@
 
         return url;
     }
-
 
 
     return {

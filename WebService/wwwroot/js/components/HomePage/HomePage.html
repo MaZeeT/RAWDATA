@@ -1,7 +1,5 @@
 ﻿<div class="home-page-container">
 
-
-
     <searchbuttcomp></searchbuttcomp>
 
     <!--<div class="container text-center">
@@ -34,7 +32,6 @@
             <input type="text" class="form-control form-control-lg" aria-label="Large" aria-describedby="inputGroup-sizing-sm" data-bind="value: searchTerms, click: clearInputField">
         </div>
 
-
         <div class="pagination-container">
             <button type="button" class="btn btn-info" data-bind="click: getPg.bind($data, 'prev')">
                 prev
@@ -49,9 +46,7 @@
                 <p class="label">Search type:</p>
                 <select class="selector-dropdown" data-bind="options: searchTypeValSelector, value: searchTypeValue, event: {change: selectedSearchType}"></select>
             </div>
-
         </div>
-
 
         <div data-bind="if: showTable" class="container">
             <h2>Total results:  <span data-bind="text: totalResults"></span></h2>
@@ -88,4 +83,3 @@
 </div>
 
         <!--<postdetails></postdetails>-->
-

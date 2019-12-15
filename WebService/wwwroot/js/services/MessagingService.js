@@ -8,17 +8,17 @@
     const selectMaxPages = "SELECT_MAXPU";
     const selectCurrentPage = "SELECT_CURRP";
 
-    var subscribers = [];
+    let subscribers = [];
 
-    var currentState = {};
+    let currentState = {};
 
-    var getState = () => currentState;
+    let getState = () => currentState;
 
-    var subscribe = function (action, callback) {
+    let subscribe = function (action, callback) {
         let obj = {
             action,
             callback
-        }
+        };
         subscribers.push(obj);
 
         return function () {
@@ -26,7 +26,7 @@
         };
     };
 
-    var reducer = function (state, action) {
+    let reducer = function (state, action) {
         switch (action.type) {
             case selectPost:
                 return Object.assign({}, state, { selectedPost: action.selectedPost });
@@ -49,12 +49,12 @@
         }
     };
 
-    var dispatch = function (action) {
+    let dispatch = function (action) {
         currentState = reducer(currentState, action);
         subscribers.filter(x => x.action === action.type).forEach(subscriber => subscriber.callback());
     };
 
-    var actions = {
+    let actions = {
         selectSearchTerms: function (post) {
             return {
                 type: selectSearchTerms,

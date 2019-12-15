@@ -23,7 +23,7 @@
                 p = 1;
                 pshow(p);
                 getSearchHistory(p, ps);
-            };
+            }
         };
 
         //thread requested, switch to thread view
@@ -51,8 +51,8 @@
 
             if (npg) {
                 getSearchHistory(npg, ps);
-            };
-        };
+            }
+        }
 
         //delete all search history
         let deleteSearchHistory = function () {
@@ -95,7 +95,7 @@
                     }
                 }
             });
-        };
+        }
 
         let resolveHelper = function (item) {
             let stype = item.searchMethod;
@@ -145,10 +145,10 @@
                 saveStuff();
                 mess.dispatch(mess.actions.selectMenu("History"));
             } else if (component === 'book') {
-                saveStuff()
+                saveStuff();
                 mess.dispatch(mess.actions.selectMenu("Annotations"));
             } else if (component === 'anno') {
-                saveStuff()
+                saveStuff();
                 mess.dispatch(mess.actions.selectMenu("Bookmarks"));
             } else if (component === 'unauth') {
                 saveStuff();
@@ -157,7 +157,7 @@
                 saveStuff();
                 mess.dispatch(mess.actions.selectMenu(storedPreviousView));
             }
-        };
+        }
 
         //store stuff from this view
         let saveStuff = function () {

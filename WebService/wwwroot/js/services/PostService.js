@@ -1,6 +1,6 @@
 ﻿define([""], function () {
 
-    var getAllChildDataOfPostUrl = async function (url, callback) {
+    let getAllChildDataOfPostUrl = async function (url, callback) {
         if (url) {
             try {
                 const response = await fetch(url, {
@@ -23,7 +23,7 @@
         }
     };
 
-    var savePostAsBookmark = async function (url, callback) {
+    let savePostAsBookmark = async function (url, callback) {
         try {
             const response = await fetch(url, {
                 method: 'POST', // or 'PUT'
@@ -67,7 +67,7 @@
         } catch (error) {
             console.error('Error:', error);
         }
-    }
+    };
 
     let updateAnnotation = async function (annotationId, newAnnotationBody, callback) {
         const requestBody = { Body: newAnnotationBody };
@@ -89,7 +89,7 @@
         } catch (error) {
             console.log('Error:', error);
         }
-    }
+    };
 
     let deleteAnnotation = async function (annotationId, callback) {
         const url = "http://localhost:5001/api/annotations/" + annotationId;
@@ -109,9 +109,8 @@
         } catch (error) {
             console.log('Error:', error);
         }
-    }
-
-
+    };
+    
     return {
         getAllChildDataOfPostUrl,
         savePostAsBookmark,
@@ -119,6 +118,5 @@
         updateAnnotation,
         deleteAnnotation
     }
-
 
 });
