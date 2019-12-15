@@ -47,24 +47,6 @@
                                             </div>
                                             <div> Date and time of search: <span data-bind="text: date"> </span></div>
                                         </div>
-                                        <!--  <div class="card-bottom-link-buttons">
-                    <a data-bind="attr: { href: '#collapseUpdate-'+ annotationId }, click: $parents[1].updateAnnotation" class="badge badge-pill badge-info" data-toggle="collapse" aria-expanded="false" aria-controls="collapseExample">Update</a>
-                    <a href="#" data-bind="attr: { href: '#collapseUpdate-'+ annotationId }, click: $parents[1].deleteAnnotation" class="badge badge-pill badge-info" data-toggle="modal" data-target=".bd-example-modal-sm">Delete</a>
-                </div>
-                <div class="collapse" data-bind="attr: { id: 'collapseUpdate-'+ annotationId }">
-                    <textarea class="form-control form-control-lg" data-bind="value: $parents[1].updateAnnotationValue"></textarea>
-                </div>
-                                                    </div>
-                                                    <div class="col card-text">
-                                                        <h6 class="card-subtitle mb-2 text-muted">Annotated post</h6>
-                                                        <div style="cursor: pointer" data-bind="click: $parents[1].selectPostItem">
-                                                            <div> Thread ID: <span data-bind="text: postId"> </span></div>
-                                                            <div>                <span data-bind="text: questionId"> </span>            </div>
-                                                    <div>    Thread Title:            <span data-bind="text: title"> </span>            </div>
-                                                </div>
-                                                <div class="card-deck">     Post Body:           <span data-bind="html: postBody"> </span>            </div>
-                                                 <div>  <span data-bind="text: postUrl"> </span></div>-->
-
                                     </div>
                                 </div>
                             </div>
@@ -73,6 +55,7 @@
                         <button data-bind="click:$parent.deleteSearchHistory" type="button" class="btn btn-danger">
                             Delete Search History
                         </button>
+
                     </div>
                 </div>
             </div>
@@ -81,10 +64,6 @@
         <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
              aria-hidden="true">
             <div class="modal-dialog modal-sm">
-                <!--  <div data-bind="visible: responseData() == true" class="modal-content success">
-                <p>Your bookmark has been saved.</p>
-                <p>You can access all your bookmarks from the menu.</p>
-            </div>-->
                 <div data-bind="visible: deletedAnnotStatus() == true" class="modal-content success">
                     <p>Your search history has been deleted successfully!</p>
                     <p>Page will refresh.</p>
