@@ -1,9 +1,6 @@
 define(['knockout', 'browseService', 'messaging', 'util'], function (ko, bs, mess, util) {
 
     return function () {
-        //detect device size
-        //let onSmallDevice = ko.observable(true); // not implemented yet but something
-        // like window.onload that is not working should do the trick .... 
 
         let questionlist = ko.observableArray([]);
         let p = 1; //initial page
@@ -104,8 +101,6 @@ define(['knockout', 'browseService', 'messaging', 'util'], function (ko, bs, mes
         let storedPreviousView;
         restoreStuff();
         saveStuff();
-        //include buttons
-       // mess.actions.selectMenu("searchbuttcomp");
         //grab data for initial view
         getBrowsing(p, ps);
 

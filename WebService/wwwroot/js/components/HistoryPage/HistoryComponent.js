@@ -95,7 +95,6 @@ define(["knockout", "historyService", 'messaging', 'util'], function (ko, ds, me
         };
 
         //run initially
-       // mess.actions.selectMenu("hisbuttcomp");
         let storedPreviousView;
         restoreStuff();
         saveStuff();

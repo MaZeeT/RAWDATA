@@ -69,7 +69,7 @@ define([], function () {
             qs = qs.substring(0, qs.length - 1); //chop off last "&"
             url = url + "?" + qs;
         }
-
+        console.log("built url is :::::::::::::::: ", url);
         return url;
     }
 

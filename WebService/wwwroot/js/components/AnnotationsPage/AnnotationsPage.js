@@ -148,9 +148,6 @@
         restoreStuff();
         saveStuff();
 
-        //include buttons
-     //   mess.actions.selectMenu("hisbuttcomp");
-
         //grab data for initial view
         getAnnos(p, ps);
 

@@ -56,16 +56,12 @@
         selectedPageSize.subscribe(function () {
 
             console.log("selectedPageSize: ", getPageSize());
-           // getPageSize();
-        /*  getPageSize(value[0]);*/
             callService(searchstring(), searchTypeValue(), getPageSize(), currentPage());
         });
 
         selectedSearchType.subscribe(function () {
 
             console.log("selectedSearchType: ", searchTypeValue());
-           // searchTypeValue();
-        /* searchTypeValue(value[0]);*/
             callService(searchstring(), searchTypeValue(), getPageSize(), currentPage());
 
         });
@@ -80,28 +76,10 @@
             console.log("dat: ", direction);
             console.log("param: ", npg);
             if (npg) {
-                //getBrowsing(npg, ps);
 
                 callService(searchstring(), searchTypeValue(), getPageSize(), npg);
             };
         };
-
-
-   /*     let next = function () {
-            console.log("currentPage page on next", currentPage());
-            currentPage(currentPage() + 1);
-            console.log("currentPage page oafter change next", currentPage());
-
-            callService(searchstring(), searchTypeValue(), getPageSize(), currentPage());
-        }
-        let prev = function () {
-            const pageValueUpdated = currentPage();
-            if (pageValueUpdated > 1) {
-                currentPage(pageValueUpdated - 1);
-            }
-            callService(searchstring(), searchTypeValue(), getPageSize(), currentPage());
-        }*/
-
 
         function callService(searchString, srcTypeVal, pageSize, currPage) {
             if (searchString) {
@@ -163,10 +141,9 @@
             let storedSearchOptions = messaging.getState().selectedSearchOptions;
             let storedMaxPages = messaging.getState().selectedMaxPages;
             let storedCurrentPage = messaging.getState().selectedCurrentPage;
-            //console.log("storedSearchOptions: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", storedSearchOptions);
 
             if (storedPreviousView == "Search" && (storedCurrentPage)) { currentPage(storedCurrentPage) };
-            if (storedSearchTerms) { searchTerms(storedSearchTerms) };
+            
             if (storedMaxPages) {
            
                 getPageSize(storedMaxPages);
@@ -178,13 +155,13 @@
                 console.log("retrieved search options xxxxxxxxxxxxxxx :", storedSearchOptions);
                 searchTypeValue(storedSearchOptions);
             };
+            if (storedSearchTerms) { searchTerms(storedSearchTerms) };
         };
 
         //run when changing to this view
         let storedPreviousView;
         restoreStuff();
         saveStuff();
-      //  messaging.actions.selectMenu("searchbuttcomp");
 
         return {
             getPg,
@@ -196,8 +173,6 @@
             selectSearchResultItem,
             currentPage,
             numberOfPages,
-            //next,
-            //prev,
             pageSizeSelection,
             getPageSize,
             selectedPageSize,
@@ -205,7 +180,6 @@
             searchTypeValue,
             selectedSearchType,
             clearInputField
-
         }
     }
 

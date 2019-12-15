@@ -27,8 +27,6 @@
             });
         };
 
-
-
         let pageSize = function (size) {
             pgSize(size);
             currentPage(1);
@@ -108,11 +106,9 @@
         };
 
         //run initially
-      //  mess.actions.selectMenu("hisbuttcomp");
         let storedPreviousView;
         restoreStuff();
         saveStuff();
-        //let page = 1;
         let url = bs.buildUrl(currentPage(), pgSize());
         getData(url);
 

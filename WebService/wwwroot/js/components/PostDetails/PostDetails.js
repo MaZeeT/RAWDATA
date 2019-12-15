@@ -131,8 +131,8 @@
         let storedPreviousView = messaging.getState().selectedPreviousView;
 
         //store current component name
+        //or not, to have previous page restore currentpage also, ifusing 'back' button
         //messaging.dispatch(messaging.actions.selectPreviousView("postdetails"));
-      //  messaging.actions.selectMenu("prebuttcomp");
 
         return {
             changeComp,
