@@ -1,9 +1,10 @@
 define([], function () {
 
     let getWCItems = async function (s, st, max, callback) {
+        let response = null;
         let toekn = window.localStorage.getItem('userToken');
         if (max == 0) {
-            let response = await fetch(
+            response = await fetch(
                 buildUrl("api/search/wordrank", {
                     s: s,
                     stype: st
@@ -17,7 +18,7 @@ define([], function () {
             );
         }
         else {
-            let response = await fetch(
+            response = await fetch(
                 buildUrl("api/search/wordrank", {
                     s: s,
                     stype: st,
