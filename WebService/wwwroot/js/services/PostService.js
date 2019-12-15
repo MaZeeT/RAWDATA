@@ -49,7 +49,7 @@
     let saveAnnotationOnPost = async function (incomingData, callback) {
         const requestBody = { PostId: incomingData.postid, Body: incomingData.annotBody };
         try {
-            const response = await fetch('http://localhost:5001/api/annotations', {
+            const response = await fetch('api/annotations', {
                 method: 'POST', // or 'PUT'
                 body: JSON.stringify(requestBody), // data can be `string` or {object}!
 
@@ -71,7 +71,7 @@
 
     let updateAnnotation = async function (annotationId, newAnnotationBody, callback) {
         const requestBody = { Body: newAnnotationBody };
-        const url = "http://localhost:5001/api/annotations/" + annotationId;
+        const url = "api/annotations/" + annotationId;
         try {
             const response = await fetch(url, {
                 method: 'PUT', // or 'PUT'
@@ -92,7 +92,7 @@
     };
 
     let deleteAnnotation = async function (annotationId, callback) {
-        const url = "http://localhost:5001/api/annotations/" + annotationId;
+        const url = "api/annotations/" + annotationId;
         try {
             const response = await fetch(url, {
                 method: 'DELETE', // or 'PUT'

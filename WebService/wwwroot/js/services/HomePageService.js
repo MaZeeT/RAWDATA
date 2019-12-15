@@ -1,9 +1,8 @@
 ﻿define([""], function () {
     
     let getSearchItems = async function (objectValues, callback) {
-        const baseUrl = "http://localhost:5001/";
         const path = "api/search/";
-        const searchUrl = baseUrl + path + objectValues.searchString + objectValues.searchType + objectValues.pageNumber + objectValues.pageSize;
+        const searchUrl =  path + objectValues.searchString + objectValues.searchType + objectValues.pageNumber + objectValues.pageSize;
         try {
             const response = await fetch(searchUrl, {
                 method: 'GET', // or 'PUT'
