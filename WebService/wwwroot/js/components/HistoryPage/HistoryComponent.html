@@ -1,4 +1,4 @@
-
+<div class="home-page-container">
     <hisbuttcomp></hisbuttcomp>
 
     <div class="container">
@@ -39,11 +39,11 @@
                 </tr>
             </thead>
             <tbody data-bind="foreach: items">
-                <tr  data-bind="click: $parent.selectPostItem.bind($data, threadUrl)">
+                <tr data-bind="click: $parent.selectPostItem.bind($data, threadUrl)">
                     <td data-bind="text:title"></td>
                     <td data-bind="html:body"></td>
                     <td data-bind="text:date"></td>
-                   
+
                 </tr>
             </tbody>
         </table>
@@ -51,3 +51,4 @@
         <button data-bind="click:deletions" type="button" class="btn btn-danger">Delete History</button>
 
     </div>
+</div>
