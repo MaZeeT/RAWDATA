@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Security.Claims;
 using DatabaseService.Modules;
+using System.Text.RegularExpressions;
 
 namespace WebService.Controllers.Authentication
 {
@@ -29,8 +30,13 @@ namespace WebService.Controllers.Authentication
 
         [HttpPost("users")]
         public ActionResult CreateUser([FromBody] SignupUserDto dto)
-            //changed to FromForm just because i cant be bothered to look up what to send in postman
         {
+
+            if (!isValidUserCredential(dto))
+            {
+                return BadRequest();
+            }
+
             if (_service.GetAppUser(dto.Username) != null)
             {
                 return BadRequest();
@@ -57,8 +63,12 @@ namespace WebService.Controllers.Authentication
 
         [HttpPost("tokens")]
         public ActionResult Login([FromBody] SignupUserDto dto)
-        //changed to FromForm just because i cant be bothered to look up what to send in postman
         {
+            if (!isValidUserCredential(dto))
+            {
+                return BadRequest();
+            }
+
             var user = _service.GetAppUser(dto.Username);
 
             if (user == null)
@@ -66,7 +76,7 @@ namespace WebService.Controllers.Authentication
                 return BadRequest();
             }
 
-            if(IsInvalidPassword(dto, user))
+            if (IsInvalidPassword(dto, user))
             {
                 return BadRequest();
             }
@@ -117,6 +127,34 @@ namespace WebService.Controllers.Authentication
             var token = tokenHandler.WriteToken(securityToken);
             return token;
 
+        }
+
+        private bool isValidUserCredential(SignupUserDto dto)
+        {
+
+            if (string.IsNullOrEmpty(dto.Username) || string.IsNullOrEmpty(dto.Password))
+            {
+                return false;
+            }
+
+            if (dto.Username.Length < 2 || dto.Password.Length < 6)
+            {
+                return false;
+            }
+
+            string regExUsernameInvalidValue = @"[^a-zA-Z\d]";
+            string regExPasswordInvalidValue = @"[^a-zA-Z\d]";
+            var regExMatchInvalidUser = Regex.Match(dto.Username, regExUsernameInvalidValue, RegexOptions.IgnoreCase);
+            var regExMatchInvalidPassword = Regex.Match(dto.Password, regExPasswordInvalidValue, RegexOptions.IgnoreCase);
+
+            if (regExMatchInvalidUser.Success || regExMatchInvalidPassword.Success)
+            {
+                Console.WriteLine("Am entering successfully :D ");
+
+                return false;
+            }
+
+            return true; 
         }
 
     }
