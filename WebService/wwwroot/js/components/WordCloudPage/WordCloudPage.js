@@ -8,10 +8,9 @@
         let stype = 4;
 
         let stypebtn = ko.observable("tfidf");
-
         let selectedValue = ko.observable(15);
 
-        const placeholderStr = "Input search terms here..."
+        const placeholderStr = "Input search terms here...";
         let searchTerms = ko.observable(placeholderStr);
 
         let searchResult = ko.observableArray([]);
@@ -23,19 +22,17 @@
             }
         };
 
-
         //for geting new data and updating wordcloud
         let cloudupdate = function () {
-
             saveStuff();
-
             max = selectedValue();
-            if (stypebtn() == 'tfidf') { stype = 4; } else stype = 5;
-
+            if (stypebtn() == 'tfidf') {
+                stype = 4;
+            } else {
+                stype = 5;
+            }
             doWordRankSearch(searchTerms(), stype, max);
-
         };
-
 
         let doWordRankSearch = function (terms, stype, max) {
             wc.getWCItems(terms, stype, max, function (data) {
@@ -67,26 +64,30 @@
                     }
                 }
             });
-        }
+        };
 
         let doCloudUpdate = function (wordList) {
             data1 = wordList.map(function (a) { //map data to what jqcloud wants
-                return { text: a.term, weight: a.rank };
+                return {text: a.term, weight: a.rank};
             });
             $('#cloud').jQCloud('destroy'); /// cant figure out how to update lol! so am destroying it..
             $('#cloud').jQCloud(data1,
                 {
                     autoResize: true
                 });
-        }
+        };
 
         searchTerms.subscribe(function (searchStr) {
             if (searchStr.length === 0) {
                 searchResult([]);
                 return;
-            };
+            }
             max = selectedValue();
-            if (stypebtn() == 'tfidf') { stype = 4; } else stype = 5;
+            if (stypebtn() == 'tfidf') {
+                stype = 4;
+            } else {
+                stype = 5;
+            }
 
             doWordRankSearch(searchTerms(), stype, max);
         });
@@ -106,7 +107,7 @@
                 saveStuff();
                 mess.dispatch(mess.actions.selectMenu(storedPreviousView));
             }
-        };
+        }
 
         //store stuff from this view
         let saveStuff = function () {
@@ -129,8 +130,12 @@
             storedSearchOptions = mess.getState().selectedSearchOptions;
             let storedMaxWords = mess.getState().selectedMaxWords;
 
-            if (storedMaxWords) { selectedValue(storedMaxWords) }
-            if (storedSearchTerms) { searchTerms(storedSearchTerms) }
+            if (storedMaxWords) {
+                selectedValue(storedMaxWords)
+            }
+            if (storedSearchTerms) {
+                searchTerms(storedSearchTerms)
+            }
             if (storedSearchOptions == "tfidf" || storedSearchOptions == "TFIDF") {
                 stypebtn("tfidf")
             } else {
@@ -143,7 +148,6 @@
         let storedSearchOptions;
         restoreStuff();
         saveStuff();
-
 
         return {
             searchTerms,

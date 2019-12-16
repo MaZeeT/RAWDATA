@@ -1,4 +1,4 @@
-﻿define(['knockout', 'postservice', 'messaging'], function (ko, postservice ,messaging) {
+﻿define(['knockout', 'postservice', 'messaging'], function (ko, postservice, messaging) {
     return function () {
         let postUrl = ko.observable(messaging.getState().selectedPost);
         let annotationBodyText = ko.observable("");
@@ -13,12 +13,10 @@
         let deletedAnnotStatus = ko.observable(false);
         let newAnnotation = ko.observable({});
 
-        
-
         postservice.getAllChildDataOfPostUrl(postUrl(), function (responseFromServer) {
             if (responseFromServer) {
                 postDetails(responseFromServer);
-                postAnnotationsArray(responseFromServer)
+                postAnnotationsArray(responseFromServer);
                 showspinner(false);
             }
         });
@@ -27,14 +25,12 @@
             showAnnotTextArea(true);
         };
 
-        
         let addBookmark = function (value) {
             const createBookmarkUrl = value.createBookmarkLink;
             postservice.savePostAsBookmark(createBookmarkUrl, function (responseFromServer) {
                 responseData(responseFromServer);
             });
         };
-
 
         let updateAnnotation = function (value) {
             if (updateAnnotationValue() && value.annotationId) {
@@ -48,10 +44,9 @@
                     }
                 });
             }
-        }
+        };
 
         let deleteAnnotation = function (value) {
-
             if (value.annotationId) {
                 let annotationId = value.annotationId;
                 postservice.deleteAnnotation(annotationId, function (serverResponse) {
@@ -64,19 +59,16 @@
                         deletedAnnotStatus(false);
                     }
                 });
-
             } else {
                 deletedAnnotStatus(false);
             }
-
         };
-       
 
 
-        annotationBodyText.subscribe(function (annotBody) {            
-            if (annotBody.length === 0 ) {
+        annotationBodyText.subscribe(function (annotBody) {
+            if (annotBody.length === 0) {
                 return;
-            } 
+            }
             const createAnnotObject = {
                 postid: annotatedPostValues().id,
                 annotBody
@@ -85,19 +77,17 @@
             postservice.saveAnnotationOnPost(createAnnotObject, function (responseFromServer) {
                 if (responseFromServer) {
                     annotationBodyText("");
-                    newAnnotation(responseFromServer)
+                    newAnnotation(responseFromServer);
                     callServiceGetThread(postUrl());
                 }
-
             });
         });
- 
 
         function callServiceGetThread(postUrl) {
             postservice.getAllChildDataOfPostUrl(postUrl, function (responseFromServer) {
                 if (responseFromServer) {
                     postDetails(responseFromServer);
-                    postAnnotationsArray(responseFromServer)
+                    postAnnotationsArray(responseFromServer);
                     showspinner(false);
                 }
             });
@@ -106,10 +96,10 @@
         //comp change requested
         function changeComp(component) {
             if (component === 'previous' && storedPreviousView) {
-               // saveStuff();
+                // saveStuff();
                 messaging.dispatch(messaging.actions.selectMenu(storedPreviousView));
             }
-        };
+        }
 
         //get previous component/view
         let storedPreviousView = messaging.getState().selectedPreviousView;

@@ -3,11 +3,11 @@ define([""], function () {
         "historyItems": []
     };
 
-    var buildUrl = function (page, maxPages) {
+    let buildUrl = function (page, maxPages) {
         return `api/history?Page=${page}&PageSize=${maxPages}`;
     };
 
-    var getHistory = async function (token, url, callback) {
+    let getHistory = async function (token, url, callback) {
         try {
             const response = await fetch(url, {
                 method: 'GET', // or 'PUT'
@@ -28,7 +28,7 @@ define([""], function () {
 
     };
 
-    var deleteHistory = async function (token, callback) {
+    let deleteHistory = async function (token, callback) {
         try {
             const response = await fetch("api/history/delete/all", {
                 method: 'DELETE', // or 'PUT'

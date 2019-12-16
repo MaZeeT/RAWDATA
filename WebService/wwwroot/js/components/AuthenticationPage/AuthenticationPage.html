@@ -1,41 +1,4 @@
-﻿<!--<div class="login-form-container">
-     Default form login
-    <div class="text-center border border-light p-5">
-        <p class="h4 mb-4">Sign in</p>
-         Username
-        <input data-bind="value: loginUsername, click: clearInputFields.bind($data, 'user')" type="email" id="inputEmail" class="form-control" placeholder="Username" required autofocus>
-         Password
-        <input type="password" class="form-control mb-4" placeholder="Password" required data-bind="validationOptions: decorateInputElement, value: loginPassword, click: clearInputFields.bind($data, 'pass')">
-         Sign in button
-        <button class="btn btn-info btn-block my-4" data-bind="click: loginUser">Sign in</button>
-         Register
-        <p>
-            Not a member?
-            <a data-bind="click: newUserSignup">Register</a>
-        </p>
-    </div>
-     Default form login
-</div>-->
-<!--<div class="login-form-container">
-    <div class="text-center border border-light p-5">
-        <p class="h4 mb-4">Sign in</p>
-        <form class="form-signin justify-content-center" data-bind="submit: doSomething">
-            <div class="form-label-group mb-4 align-middle mw-50 col-6">
-                <input data-bind="value: loginUsername, click: clearInputFields.bind($data, 'user')" type="text" id="inputUsername" class="form-control" placeholder="Email address" required autofocus>
-            </div>
-            <div class="form-label-group mb-4 align-middle mw-50 col-6">
-                <input data-bind="validationOptions: decorateInputElement, value: loginPassword, click: clearInputFields.bind($data, 'pass')" type="password" id="inputPassword" class="form-control" placeholder="Password" required>
-            </div>
-            <button class="btn btn-info btn-block mb-4 align-middle mw-50 col-6" type="submit">Sign in</button>
-        </form>
-        <p>
-            Not a member?
-            <a class="btn btn-link" data-bind="click: newUserSignup">Register</a>
-        </p>
-    </div>
-</div>-->
-
-<section data-bind="visible: showlogInUserForm() == true" id="cover" class="min-vh-100">
+﻿<section data-bind="visible: showlogInUserForm() == true" class="cover min-vh-100">
     <div class="cover-caption">
         <div class="container">
             <div class="row text-info">
@@ -59,16 +22,16 @@
                         </form>
                     </div>
                     <p>
-                        <a class="btn btn-link" data-bind="click: signupUserActionButton">Not a member?&nbsp Register</a>
+                        <a class="btn btn-link" data-bind="click: signupUserActionButton">Not a member?&nbsp
+                            Register</a>
                     </p>
                 </div>
-
             </div>
         </div>
     </div>
 </section>
 
-<section data-bind="visible: showlogInUserForm() == false" id="cover" class="min-vh-100">
+<section data-bind="visible: showlogInUserForm() == false" class="cover min-vh-100">
     <div class="cover-caption">
         <div class="container">
             <div class="row text-info">
@@ -93,10 +56,10 @@
                         </form>
                     </div>
                     <p>
-                        <a class="btn btn-link" data-bind="click: alreadyExistingUser">Having an active account?&nbsp Go to login</a>
+                        <a class="btn btn-link" data-bind="click: alreadyExistingUser">Having an active account?&nbsp Go
+                            to login</a>
                     </p>
                 </div>
-
             </div>
         </div>
     </div>

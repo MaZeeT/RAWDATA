@@ -1,5 +1,4 @@
-﻿
-<link rel="stylesheet" href="../lib/jqcloud2/dist/jqcloud.min.css">
+﻿<link rel="stylesheet" href="../lib/jqcloud2/dist/jqcloud.min.css">
 
 <div class="home-page-container">
 
@@ -8,13 +7,16 @@
     <h3>Word Cloud</h3>
 
     <div class="card">
-        <div class="card-body"><p> On this page you can conduct a word2word search with posts from Stackoverflow. The list of words returned by the search will be displayed as a word cloud. (Set max. results to 0 to get the most words returned.)</p></div>
+        <div class="card-body"><p> On this page you can conduct a word2word search with posts from Stackoverflow. The
+            list of words returned by the search will be displayed as a word cloud. (Set max. results to 0 to get the
+            most words returned.)</p></div>
         <div class="input-group input-group-lg">
             <div class="input-group-prepend">
 
                 <span class="input-group-text" id="inputGroup-sizing-lg">Search:</span>
             </div>
-            <input type="text" class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm" data-bind="value: searchTerms, click: clrsearchfield">
+            <input type="text" class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm"
+                   data-bind="value: searchTerms, click: clrsearchfield">
         </div>
 
         <!-- <input class="form-control form-control-lg" data-bind="value: searchTerms, click: clrsearchfield"> -->
@@ -30,16 +32,21 @@
                         </div>
                         <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" data-bind="value: selectedValue">
                     </div>-->
-
                     <input type="text" class="form-control form-control-sm w-25 h-25" data-bind="value: selectedValue">
-
-                    <<input type="range" min="0" max="200" class="slider" data-bind="value: selectedValue, valueUpdate: 'input'">
+                    <<input type="range" min="0" max="200" class="slider"
+                            data-bind="value: selectedValue, valueUpdate: 'input'">
                 </div>
+
                 <div class="card-body col-xs-4 text-center">
                     <h6 class="card-link">Searchtype:</h6>
-                    <label class="card-link" data-bind="css: { active: stypebtn()=='best'}"><input type="radio" value="best" data-bind="checked: stypebtn" /> BESTMATCH</label>
-                    <label class="card-link" data-bind="css: { active: stypebtn()=='tfidf'}"><input type="radio" value="tfidf" data-bind="checked: stypebtn" /> TFIDF</label>
-
+                    <label class="card-link" data-bind="css: { active: stypebtn()=='best'}"><input type="radio"
+                                                                                                   value="best"
+                                                                                                   data-bind="checked: stypebtn"/>
+                        BESTMATCH</label>
+                    <label class="card-link" data-bind="css: { active: stypebtn()=='tfidf'}"><input type="radio"
+                                                                                                    value="tfidf"
+                                                                                                    data-bind="checked: stypebtn"/>
+                        TFIDF</label>
                 </div>
 
                 <!-- <select data-bind="options: noofresults, value: getnoofresults,
@@ -52,30 +59,23 @@
             </div>
         </div>
 
-
         <div data-bind="if: loaded">
             <div class="card-body">
-
-
                 <div id="cloud" class="embed-responsive embed-responsive-4by3 rounded-lg">
-
                 </div>
             </div>
+
             <div class="card-body card-text">
                 <h6 class="card-link">Word List:</h6>
                 <div class="container" data-bind="foreach: searchResult">
                     <div class="row">
                         <div class="col" data-bind="text: rank"></div>
                         <div class="col" data-bind="text: term"></div>
-
-
-
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
 </div>
 
 

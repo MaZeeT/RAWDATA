@@ -25,7 +25,7 @@
                 p = 1;
                 pshow(p);
                 getAnnos(p, ps);
-            };
+            }
         };
 
         //thread requested, switch to thread view
@@ -44,8 +44,8 @@
 
             if (npg) {
                 getAnnos(npg, ps);
-            };
-        };
+            }
+        }
 
         //update anno
         let updateAnnotation = function (value) {
@@ -94,7 +94,7 @@
                     saveStuff();
                 }
             });
-        };
+        }
 
         //comp change requested
         function changeComp(component) {
@@ -102,16 +102,16 @@
                 saveStuff();
                 mess.dispatch(mess.actions.selectMenu("History"));
             } else if (component === 'book') {
-                saveStuff()
+                saveStuff();
                 mess.dispatch(mess.actions.selectMenu("Bookmarks"));
             } else if (component === 'searchhistory') {
-                saveStuff()
+                saveStuff();
                 mess.dispatch(mess.actions.selectMenu("Search History"));
             } else if (component === 'previous' && storedPreviousView) {
                 saveStuff();
                 mess.dispatch(mess.actions.selectMenu(storedPreviousView));
             }
-        };
+        }
 
 
         //store stuff from this view

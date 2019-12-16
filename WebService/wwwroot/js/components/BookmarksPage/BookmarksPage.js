@@ -17,7 +17,7 @@
             bs.getBookmarks(token, url, function (response) {
                 if (util.getParameterByName('page', url)) {
                     currentPage(util.getParameterByName('page', url));
-                };
+                }
                 totalPages(response.numberOfPages);
                 totalResults(response.totalResults);
                 prevUrl(response.prev);
@@ -80,10 +80,10 @@
                 saveStuff();
                 mess.dispatch(mess.actions.selectMenu("Annotations"));
             } else if (component === 'history') {
-                saveStuff()
+                saveStuff();
                 mess.dispatch(mess.actions.selectMenu("History"));
             } else if (component === 'searchhistory') {
-                saveStuff()
+                saveStuff();
                 mess.dispatch(mess.actions.selectMenu("Search History"));
             } else if (component === 'previous' && storedPreviousView) {
                 saveStuff();

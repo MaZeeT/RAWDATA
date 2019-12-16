@@ -1,9 +1,10 @@
 define([], function () {
 
-    var getWCItems = async function (s, st, max, callback) {
+    let getWCItems = async function (s, st, max, callback) {
+        let response = null;
         let toekn = window.localStorage.getItem('userToken');
         if (max == 0) {
-            var response = await fetch(
+            response = await fetch(
                 buildUrl("api/search/wordrank", {
                     s: s,
                     stype: st
@@ -17,7 +18,7 @@ define([], function () {
             );
         }
         else {
-            var response = await fetch(
+            response = await fetch(
                 buildUrl("api/search/wordrank", {
                     s: s,
                     stype: st,
@@ -33,19 +34,19 @@ define([], function () {
         }
 
 
-        var data = await response;
+        let data = await response;
         if (response.status != 401) //we are not unauthorized
         {
             try {
                 data = await response.json();    //try to parse
             }
             catch (error) {         //json was incomplete
-                var errorresponse = new Object();
+                let errorresponse = new Object();
                 errorresponse.status = 666; //custom status code
                 data = errorresponse;
             }
         } else if (response.status == 401) { //we are unauthorized!
-            var errorresponse = new Object();
+            let errorresponse = new Object();
             errorresponse.status = response.status;  //send back status 401
             data = errorresponse;
         }

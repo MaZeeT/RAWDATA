@@ -26,7 +26,7 @@ define(['knockout', 'browseService', 'messaging', 'util'], function (ko, bs, mes
                 saveStuff();
                 mess.dispatch(mess.actions.selectMenu(storedPreviousView));
             }
-        };
+        }
 
         //thread requested; switch to thread view
         let selectPostItem = function (item) {
@@ -42,7 +42,7 @@ define(['knockout', 'browseService', 'messaging', 'util'], function (ko, bs, mes
                 p = 1;
                 pshow(p);
                 getBrowsing(p, ps);
-            };
+            }
         };
 
         //grab/refresh data when page change
@@ -54,8 +54,8 @@ define(['knockout', 'browseService', 'messaging', 'util'], function (ko, bs, mes
 
             if (npg) {
                 getBrowsing(npg, ps);
-            };
-        };
+            }
+        }
 
         //get all of browsepage
         function getBrowsing(npg, ps) {
@@ -70,7 +70,7 @@ define(['knockout', 'browseService', 'messaging', 'util'], function (ko, bs, mes
                     saveStuff();
                 }
             })
-        };
+        }
 
         //store stuff from this view
         let saveStuff = function () {

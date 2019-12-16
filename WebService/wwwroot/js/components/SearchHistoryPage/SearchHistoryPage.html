@@ -1,109 +1,85 @@
-﻿
-    <div class="home-page-container">
+﻿<div class="home-page-container">
 
-        <hisbuttcomp></hisbuttcomp>
+    <hisbuttcomp></hisbuttcomp>
 
-        <h3>Search History</h3>
+    <h3>Search History</h3>
 
-        <div data-bind="ifnot: loaded" class="d-flex justify-content-center">
-            <div class="spinner-border" role="status">
-                <span class="sr-only">Loading...</span>
-            </div>
+    <div data-bind="ifnot: loaded" class="d-flex justify-content-center">
+        <div class="spinner-border" role="status">
+            <span class="sr-only">Loading...</span>
         </div>
+    </div>
 
-        <div data-bind="if: loaded" class="card post-details-card-container">
-            <div class="card-body">
-                <button data-bind="click: getPg.bind($data, 'prev')">
-                    prev
-                </button>
-                <button data-bind="click: getPg.bind($data, 'next')">
-                    next
-                </button>
+    <div data-bind="if: loaded" class="card post-details-card-container">
+        <div class="card-body">
+            <button data-bind="click: getPg.bind($data, 'prev')">
+                prev
+            </button>
+            <button data-bind="click: getPg.bind($data, 'next')">
+                next
+            </button>
 
-
-                Results/page:
-                <select data-bind="options: pgsizepreset, value: getpgsize,
+            Results/page:
+            <select data-bind="options: pgsizepreset, value: getpgsize,
                event: {change: pgsizechanged}"></select>
 
-
-
-                <div data-bind="with: annolist">
-                    <div class="post-card-details-container">
-                        <p>
-                            On this page you can browse all the searches you have made.
-                            Click on an entry to go to the specified search page and repeat the search.
-                        </p>
-                        <div class="card-body">
-
-
-                            <div>Total Search History: <span data-bind="text: totalResults"></span></div>
-                            <div>Total Pages: <span data-bind="text: numberOfPages"></span></div>
-                            <div>Current Page: <span data-bind="text: $parent.pshow"></span></div>
-
-
-                            <div data-bind="foreach: items" class="card-body">
-                                <div class="container">
-                                    <div class="row">
-                                        <div class="col card-text">
-                                            <div style="cursor: pointer" data-bind="click: $parents[1].selectSearchHistoryItem">
-                                                <!-- <div>                <span data-bind="text: annotationId"> </span>            </div>-->
-                                                <div>     Search method and type used:           <span data-bind="text: $parents[1].resolveSearchMethod($data)"> </span>            </div>
-                                                <div>   Terms searched for:             <span data-bind="text: searchString"> </span>            </div>
-                                                <div>  Date and time of search:              <span data-bind="text: date"> </span>            </div>
+            <div data-bind="with: annolist">
+                <div class="post-card-details-container">
+                    <p>
+                        On this page you can browse all the searches you have made.
+                        Click on an entry to go to the specified search page and repeat the search.
+                    </p>
+                    <div class="card-body">
+                        <div>Total Search History: <span data-bind="text: totalResults"></span></div>
+                        <div>Total Pages: <span data-bind="text: numberOfPages"></span></div>
+                        <div>Current Page: <span data-bind="text: $parent.pshow"></span></div>
+                        <div data-bind="foreach: items" class="card-body">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col card-text">
+                                        <div style="cursor: pointer"
+                                             data-bind="click: $parents[1].selectSearchHistoryItem">
+                                            <!-- <div>                <span data-bind="text: annotationId"> </span>            </div>-->
+                                            <div> Search method and type used: <span
+                                                    data-bind="text: $parents[1].resolveSearchMethod($data)"> </span>
                                             </div>
-                                            <!--  <div class="card-bottom-link-buttons">
-                        <a data-bind="attr: { href: '#collapseUpdate-'+ annotationId }, click: $parents[1].updateAnnotation" class="badge badge-pill badge-info" data-toggle="collapse" aria-expanded="false" aria-controls="collapseExample">Update</a>
-                        <a href="#" data-bind="attr: { href: '#collapseUpdate-'+ annotationId }, click: $parents[1].deleteAnnotation" class="badge badge-pill badge-info" data-toggle="modal" data-target=".bd-example-modal-sm">Delete</a>
-                    </div>
-                    <div class="collapse" data-bind="attr: { id: 'collapseUpdate-'+ annotationId }">
-                        <textarea class="form-control form-control-lg" data-bind="value: $parents[1].updateAnnotationValue"></textarea>
-                    </div>
-                                                        </div>
-                                                        <div class="col card-text">
-                                                            <h6 class="card-subtitle mb-2 text-muted">Annotated post</h6>
-                                                            <div style="cursor: pointer" data-bind="click: $parents[1].selectPostItem">
-                                                                <div> Thread ID: <span data-bind="text: postId"> </span></div>
-                                                                <div>                <span data-bind="text: questionId"> </span>            </div>
-                                                        <div>    Thread Title:            <span data-bind="text: title"> </span>            </div>
-                                                    </div>
-                                                    <div class="card-deck">     Post Body:           <span data-bind="html: postBody"> </span>            </div>
-                                                     <div>  <span data-bind="text: postUrl"> </span></div>-->
-
+                                            <div> Terms searched for: <span data-bind="text: searchString"> </span>
+                                            </div>
+                                            <div> Date and time of search: <span data-bind="text: date"> </span></div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
-                            <button data-bind="click:$parent.deleteSearchHistory" type="button" class="btn btn-danger">Delete Search History</button>
-
                         </div>
-                    </div>
 
-                </div>
-            </div>
-            <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-sm">
-                    <!--  <div data-bind="visible: responseData() == true" class="modal-content success">
-                    <p>Your bookmark has been saved.</p>
-                    <p>You can access all your bookmarks from the menu.</p>
-                </div>-->
-                    <div data-bind="visible: deletedAnnotStatus() == true" class="modal-content success">
-                        <p>Your search history has been deleted successfully!</p>
-                        <p>Page will refresh.</p>
-                    </div>
-                    <div data-bind="visible: deletedAnnotStatus() == false" class="modal-content fail">
-                        <p>Oops!!!</p>
-                        <p>We could not complete your request.</p>
-                        <p>Please try again later :P</p>
+                        <button data-bind="click:$parent.deleteSearchHistory" type="button" class="btn btn-danger">
+                            Delete Search History
+                        </button>
+
                     </div>
                 </div>
             </div>
-
-
         </div>
+
+        <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-sm">
+                <div data-bind="visible: deletedAnnotStatus() == true" class="modal-content success">
+                    <p>Your search history has been deleted successfully!</p>
+                    <p>Page will refresh.</p>
+                </div>
+                <div data-bind="visible: deletedAnnotStatus() == false" class="modal-content fail">
+                    <p>Oops!!!</p>
+                    <p>We could not complete your request.</p>
+                    <p>Please try again later :P</p>
+                </div>
+            </div>
+        </div>
+
     </div>
-        <script>
-        $(document).ready(function () {
-            $('[data-toggle="popover"]').popover();
-        });
-        </script>
+</div>
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="popover"]').popover();
+    });
+</script>

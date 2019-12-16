@@ -1,10 +1,8 @@
 ﻿define([""], function () {
 
-
-
     //GET http://localhost:5001/api/hisory/searches
     //GetAllAnnotationsOfUser([FromQuery] PagingAttributes pagingAttributes)
-    var getSearchHist = async function (p, ps, callback) {
+    let getSearchHist = async function (p, ps, callback) {
         let toekn = window.localStorage.getItem('userToken');
         var response = await fetch(
             buildUrl("api/history/searches", {
@@ -18,19 +16,18 @@
                 }
             }
         );
-        var data = await response;
+        let data = await response;
         if (response.status != 401) //we are not unauthorized
         {
             try {
                 data = await response.json();    //try to parse
-            }
-            catch (error) {         //json was incomplete
-                var errorresponse = new Object();
+            } catch (error) {         //json was incomplete
+                let errorresponse = new Object();
                 errorresponse.status = 666; //custom status code
                 data = errorresponse;
             }
         } else if (response.status == 401) { //we are unauthorized!
-            var errorresponse = new Object();
+            let errorresponse = new Object();
             errorresponse.status = response.status;  //send back status 401
             data = errorresponse;
         }
@@ -54,16 +51,13 @@
         return url;
     }
 
-
-
-
     //DELETE http://localhost:5001/api/history/searches/delete/all
     //del specific anno
     let deleteSearchHistory = async function (callback) {
-        const url = "api/history/searches/delete/all"
+        const url = "api/history/searches/delete/all";
         try {
             const response = await fetch(url, {
-                method: 'DELETE', 
+                method: 'DELETE',
 
                 headers: new Headers({
                     'Authorization': 'Bearer ' + window.localStorage.getItem("userToken"),
@@ -77,8 +71,7 @@
         } catch (error) {
             console.log('Error:', error);
         }
-    }
-
+    };
 
     return {
         getSearchHist,

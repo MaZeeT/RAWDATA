@@ -11,12 +11,12 @@
         let signupUserActionButton = function () {
             //hide the previous form and show new one
             showlogInUserForm(false);
-
-        }
+        };
+        
         let alreadyExistingUser = function () {
             //hide signup form and show login form
             showlogInUserForm(true);
-        }
+        };
 
         // this function does the validation and depending on which form the request is coming from, it does login or signup
         let formSubmitAction = function () {
@@ -32,7 +32,7 @@
             } else {
                 signupUser(userCredentials);
             }
-        }
+        };
 
         //register a new user
         function signupUser(userCredentials) {

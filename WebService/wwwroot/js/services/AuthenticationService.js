@@ -1,6 +1,6 @@
 ﻿define([""], function () {
 
-    var getLoginUser = async function (incomingUserCredentials, callback) {
+    let getLoginUser = async function (incomingUserCredentials, callback) {
         try {
             const response = await fetch("api/auth/tokens", {
                 method: 'POST', // or 'PUT'
@@ -14,7 +14,7 @@
                 return responseBody;
             });
             callback(response);
-            
+
         } catch (error) {
             console.error('Error:', error);
         }

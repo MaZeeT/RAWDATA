@@ -32,19 +32,19 @@
 
         <table class="table-responsive table-striped table-hover col-sm">
             <thead class="header-table-style bp">
-                <tr>
-                    <th scope="col">Title</th>
-                    <th scope="col">Body</th>
-                    <th scope="col">Date</th>
-                </tr>
+            <tr>
+                <th scope="col">Title</th>
+                <th scope="col">Body</th>
+                <th scope="col">Date</th>
+            </tr>
             </thead>
             <tbody data-bind="foreach: items">
-                <tr data-bind="click: $parent.selectPostItem.bind($data, threadUrl)">
-                    <td data-bind="text:title"></td>
-                    <td data-bind="html:body"></td>
-                    <td data-bind="text:date"></td>
+            <tr data-bind="click: $parent.selectPostItem.bind($data, threadUrl)">
+                <td data-bind="text:title"></td>
+                <td data-bind="html:body"></td>
+                <td data-bind="text:date"></td>
 
-                </tr>
+            </tr>
             </tbody>
         </table>
 
