@@ -6,23 +6,25 @@ namespace UnitTests.DatabaseService
 {
     public class AppUserServiceTests
     {
-        private string Password = "55";
-        private string Salt = "salty";
+        private const int userId = 12;
+        private const string userName = "in";
+        private const string Password = "55";
+        private const string Salt = "salty";
 
         [Fact]
         public void AppUserExistByIdFalse()
         {
             IAppUserService service = new AppUserService();
-            const int userId = -1; //Hardcoded user in DB //todo replace with a mock
+            const int nonUserId = -1; //Hardcoded user in DB //todo replace with a mock
 
-            Assert.False(service.AppUserExist(userId));
+            Assert.False(service.AppUserExist(nonUserId));
         }
 
         [Fact]
         public void AppUserExistByIdTrue()
         {
             IAppUserService service = new AppUserService();
-            const int userId = 0; //Hardcoded user in DB //todo replace with a mock
+            //const int userId = 12; //Hardcoded user in DB //todo replace with a mock
 
             Assert.True(service.AppUserExist(userId));
         }
@@ -31,16 +33,16 @@ namespace UnitTests.DatabaseService
         public void AppUserExistByNameFalse()
         {
             IAppUserService service = new AppUserService();
-            const string userName = "£@£@£@€$£$£{£$£@$€$£€€£$€"; //Hardcoded user in DB //todo replace with a mock
+            const string nonUserName = "£@£@£@€$£$£{£$£@$€$£€€£$€"; //Hardcoded user in DB //todo replace with a mock
 
-            Assert.False(service.AppUserExist(userName));
+            Assert.False(service.AppUserExist(nonUserName));
         }
 
         [Fact]
         public void AppUserExistByNameTrue()
         {
             IAppUserService service = new AppUserService();
-            const string userName = "in"; //Hardcoded user in DB //todo replace with a mock
+            //const string userName = "in"; //Hardcoded user in DB //todo replace with a mock
 
             Assert.True(service.AppUserExist(userName));
         }
@@ -49,8 +51,8 @@ namespace UnitTests.DatabaseService
         public void GetAppUserById()
         {
             IAppUserService service = new AppUserService();
-            const int userId = 0;
-            const string userName = "in"; //Hardcoded user in DB //todo replace with a mock
+            //const int userId = 12;
+            //const string userName = "in"; //Hardcoded user in DB //todo replace with a mock
 
             Assert.Equal(userName, service.GetAppUserName(userId));
         }
@@ -59,8 +61,8 @@ namespace UnitTests.DatabaseService
         public void GetAppUserByName()
         {
             IAppUserService service = new AppUserService();
-            const int userId = 0;
-            const string userName = "in"; //Hardcoded user in DB //todo replace with a mock
+            //const int userId = 12;
+            //const string userName = "in"; //Hardcoded user in DB //todo replace with a mock
 
             Assert.Equal(userId, service.GetAppUserId(userName));
         }
@@ -69,45 +71,45 @@ namespace UnitTests.DatabaseService
         public void CreateAppUser()
         {
             IAppUserService service = new AppUserService();
-            const string userName = "Mr. Tester von testons";
+            const string newUserName = "Mr. Tester von testons1";
 
-            bool creationBool = service.CreateAppUser(userName, Password, Salt);
-            int userId = service.GetAppUserId(userName);
+            bool creationBool = service.CreateAppUser(newUserName, Password, Salt);
+            int newUserId = service.GetAppUserId(newUserName);
 
             Assert.True(creationBool);
-            Assert.Equal(userName, service.GetAppUserName(userId));
+            Assert.Equal(newUserName, service.GetAppUserName(newUserId));
 
             //clean up todo delete when mock is working
-            service.DeleteAppUser(userId);
+            service.DeleteAppUser(newUserId);
         }
 
         [Fact]
         public void CreateAppUserTwice()
         {
             IAppUserService service = new AppUserService();
-            const string userName = "Mr. Tester von testons";
+            const string newUserName = "Mr. Tester von testons";
 
-            bool creationBoolOne = service.CreateAppUser(userName, Password, Salt);
-            bool creationBoolTwo = service.CreateAppUser(userName, Password, Salt);
-            int userId = service.GetAppUserId(userName);
+            bool creationBoolOne = service.CreateAppUser(newUserName, Password, Salt);
+            bool creationBoolTwo = service.CreateAppUser(newUserName, Password, Salt);
+            int newUserId = service.GetAppUserId(newUserName);
 
             Assert.True(creationBoolOne);
             Assert.False(creationBoolTwo);
-            Assert.Equal(userName, service.GetAppUserName(userId));
+            Assert.Equal(newUserName, service.GetAppUserName(newUserId));
 
             //clean up todo delete when mock is working
-            service.DeleteAppUser(userId);
+            service.DeleteAppUser(newUserId);
         }
 
         [Fact]
         public void CreateUserGetObject()
         {
             IAppUserService service = new AppUserService();
-            const string userName = "Mr. Tester von testonsen";
+            const string newUserName = "Mr. Tester von testonsen";
 
-            AppUser user = service.CreateUser(userName, Password, Salt);
+            AppUser user = service.CreateUser(newUserName, Password, Salt);
 
-            Assert.Equal(userName, user.Username);
+            Assert.Equal(newUserName, user.Username);
 
             //clean up todo delete when mock is working
             service.DeleteAppUser(user.Id);
@@ -117,7 +119,6 @@ namespace UnitTests.DatabaseService
         public void CreateUserGetObjectNull()
         {
             IAppUserService service = new AppUserService();
-            const string userName = "in";
 
             AppUser user = service.CreateUser(userName, Password, Salt);
 
@@ -165,76 +166,76 @@ namespace UnitTests.DatabaseService
         public void DeleteAppUserByNameTrue()
         {
             IAppUserService service = new AppUserService();
-            const string userName = "dock";
+            const string newUserName = "dock";
 
-            bool creationBool = service.CreateAppUser(userName, Password, Salt);
-            bool existBeforeDeletion = service.AppUserExist(userName);
-            bool deletionBool = service.DeleteAppUser(userName);
+            bool creationBool = service.CreateAppUser(newUserName, Password, Salt);
+            bool existBeforeDeletion = service.AppUserExist(newUserName);
+            bool deletionBool = service.DeleteAppUser(newUserName);
 
             Assert.True(creationBool);
             Assert.True(existBeforeDeletion);
             Assert.True(deletionBool);
-            Assert.False(service.AppUserExist(userName));
+            Assert.False(service.AppUserExist(newUserName));
         }
 
         [Fact]
         public void DeleteAppUserByNameFalse()
         {
             IAppUserService service = new AppUserService();
-            const string userName = "docker";
+            const string newUserName = "docker";
             const string falseName = "not docker";
 
-            bool creationBool = service.CreateAppUser(userName, Password, Salt);
-            bool existBeforeDeletion = service.AppUserExist(userName);
+            bool creationBool = service.CreateAppUser(newUserName, Password, Salt);
+            bool existBeforeDeletion = service.AppUserExist(newUserName);
             bool deletionBool = service.DeleteAppUser(falseName);
 
             Assert.True(creationBool);
             Assert.True(existBeforeDeletion);
             Assert.False(deletionBool);
-            Assert.True(service.AppUserExist(userName));
+            Assert.True(service.AppUserExist(newUserName));
 
             //clean up todo delete when mock is working
-            service.DeleteAppUser(userName);
+            service.DeleteAppUser(newUserName);
         }
 
         [Fact]
         public void DeleteAppUserByIdTrue()
         {
             IAppUserService service = new AppUserService();
-            const string userName = "donald";
+            const string newUserName = "donald";
 
-            bool creationBool = service.CreateAppUser(userName, Password, Salt);
-            int userId = service.GetAppUserId(userName);
-            bool existBeforeDeletion = service.AppUserExist(userId);
-            bool deletionBool = service.DeleteAppUser(userId);
+            bool creationBool = service.CreateAppUser(newUserName, Password, Salt);
+            int newUserId = service.GetAppUserId(newUserName);
+            bool existBeforeDeletion = service.AppUserExist(newUserId);
+            bool deletionBool = service.DeleteAppUser(newUserId);
 
             Assert.True(creationBool);
             Assert.True(existBeforeDeletion);
             Assert.True(deletionBool);
-            Assert.False(service.AppUserExist(userName));
-            Assert.False(service.AppUserExist(userId));
+            Assert.False(service.AppUserExist(newUserName));
+            Assert.False(service.AppUserExist(newUserId));
         }
 
         [Fact]
         public void DeleteAppUserByIdFalse()
         {
             IAppUserService service = new AppUserService();
-            const string userName = "niels";
+            const string newUserName = "niels";
             const int falseId = -2;
 
-            bool creationBool = service.CreateAppUser(userName, Password, Salt);
-            int userId = service.GetAppUserId(userName);
-            bool existBeforeDeletion = service.AppUserExist(userId);
+            bool creationBool = service.CreateAppUser(newUserName, Password, Salt);
+            int newUserId = service.GetAppUserId(newUserName);
+            bool existBeforeDeletion = service.AppUserExist(newUserId);
             bool deletionBool = service.DeleteAppUser(falseId);
 
             Assert.True(creationBool);
             Assert.True(existBeforeDeletion);
             Assert.False(deletionBool);
-            Assert.True(service.AppUserExist(userName));
-            Assert.True(service.AppUserExist(userId));
+            Assert.True(service.AppUserExist(newUserName));
+            Assert.True(service.AppUserExist(newUserId));
 
             //clean up todo delete when mock is working
-            service.DeleteAppUser(userName);
+            service.DeleteAppUser(newUserName);
         }
     }
 }

@@ -6,13 +6,15 @@ namespace UnitTests.DatabaseService
 {
     public class HistoryServiceTest
     {
+        private const int testUserId = 12;
+
         [Fact]
         public void HistoryAddInvalid()
         {
             IHistoryService service = new HistoryService();
             var history = new History
             {
-                Userid = 15,
+                Userid = testUserId,
                 Postid = 110,
                 isBookmark = false
             };
@@ -26,7 +28,7 @@ namespace UnitTests.DatabaseService
             IHistoryService service = new HistoryService();
             var history = new History
             {
-                Userid = 0,
+                Userid = testUserId,
                 Postid = 1760,
                 isBookmark = false
             };
@@ -36,7 +38,7 @@ namespace UnitTests.DatabaseService
             Assert.True(result);
 
             //clean up todo delete when mock is working
-            service.DeleteHistory(service.Get(0, 1760).Id);
+            service.DeleteHistory(service.Get(testUserId, 1760).Id);
         }
 
         [Fact]
@@ -45,7 +47,7 @@ namespace UnitTests.DatabaseService
             IHistoryService service = new HistoryService();
 
             const int invalidModifier = -1;
-            const int userid = 290;
+            const int userid = testUserId;
             const int postId = 1760;
 
             bool resultAdd = service.Add(userid, postId, true);
@@ -63,7 +65,7 @@ namespace UnitTests.DatabaseService
             IHistoryService service = new HistoryService();
 
             const int invalidModifier = -1;
-            const int userid = 290;
+            const int userid = testUserId;
             const int postId = 709;
 
             var resultAdd = service.Add(userid, postId, true);
@@ -81,7 +83,7 @@ namespace UnitTests.DatabaseService
             IHistoryService service = new HistoryService();
 
             const int invalidModifier = -1;
-            const int userid = 290;
+            const int userid = testUserId;
             const int postId = 1711;
 
             bool resultAdd = service.Add(userid, postId, true);
@@ -98,7 +100,7 @@ namespace UnitTests.DatabaseService
         {
             IHistoryService service = new HistoryService();
 
-            const int userid = 290;
+            const int userid = testUserId;
             const int postId = 1760;
 
             bool resultAdd = service.Add(userid, postId, true);
@@ -114,7 +116,7 @@ namespace UnitTests.DatabaseService
         public void HistoryDeleteUserEmptyHistory()
         {
             IHistoryService service = new HistoryService();
-            const int userid = 290;
+            const int userid = testUserId;
 
             var historyPre = service.GetHistoryList(userid);
             bool historyDeletion = service.DeleteUserHistory(userid);
@@ -130,7 +132,7 @@ namespace UnitTests.DatabaseService
         public void HistoryDeleteUserHistory()
         {
             IHistoryService service = new HistoryService();
-            const int userid = 290;
+            const int userid = testUserId;
 
             const int postId1 = 19;
             const int postId2 = 709;
@@ -174,7 +176,7 @@ namespace UnitTests.DatabaseService
         public void HistoryDeleteValid()
         {
             IHistoryService service = new HistoryService();
-            const int userId = 0;
+            const int userId = testUserId;
             const int postId = 709;
             const bool isBookmark = true;
             var historyToAdd = new History {Userid = userId, Postid = postId, isBookmark = isBookmark};
@@ -234,7 +236,7 @@ namespace UnitTests.DatabaseService
         public void GetHistoryList()
         {
             IHistoryService service = new HistoryService();
-            const int userId = 290;
+            const int userId = testUserId;
 
             const int postId1 = 19;
             const int postId2 = 709;
@@ -265,7 +267,7 @@ namespace UnitTests.DatabaseService
         public void GetBookmarks()
         {
             IHistoryService service = new HistoryService();
-            const int userId = 290;
+            const int userId = testUserId;
 
             const int postId1 = 19;
             const int postId2 = 709;
@@ -301,7 +303,7 @@ namespace UnitTests.DatabaseService
         {
             IHistoryService service = new HistoryService();
 
-            const int userId = 0;
+            const int userId = testUserId;
             const int postId = 709;
             const bool isBookmark = true;
             var history = new History {Userid = userId, Postid = postId, isBookmark = isBookmark};
