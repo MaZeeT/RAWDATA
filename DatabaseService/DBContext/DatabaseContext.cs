@@ -26,7 +26,7 @@ namespace DatabaseService
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            string database = HostDatabase.address;
+            string database = "host=localhost;port=49153;db=stackoverflow;uid=postgres;pwd=postgrespw";
             
             optionsBuilder
                 .UseLoggerFactory(MyLoggerFactory)
