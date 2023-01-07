@@ -16,33 +16,19 @@ namespace UnitTests.WebServiceUnitTests
     public class AnnotationsTests
     {
 
-        private string ApiPathAnnotations = "http://localhost:5001/api/annotations";
-        private string AuthenticateUserUrl = "http://localhost:5001/api/auth";
+        private const string ApiPathAnnotations = "http://localhost:5001/api/annotations";
+        private const string AuthenticateUserUrl = "http://localhost:5001/api/auth";
+        private const string DbUserName = "testuser";
+        private const string DbUserPassword = "12345678";
         public string UserToken { get; set; }
-
-        private string UserName
-        {
-            get
-            {
-                return "Fun";
-            }
-        }
-        private string UserPassword
-        {
-            get
-            {
-                return "Birds";
-            }
-        }
-
-       
+        
         [Fact]
         public void User_Signup_Bad_Request_AlreadySignedUp()
         {
             var signupUser = new SignupUserDto
             {
-                Username = UserName,
-                Password = UserPassword
+                Username = DbUserName,
+                Password = DbUserPassword
             };
 
             var (_, statusCode) = PostData(AuthenticateUserUrl+"/users", signupUser, string.Empty);
@@ -54,8 +40,8 @@ namespace UnitTests.WebServiceUnitTests
         {
             var user = new LoginUserDto
             {
-                Username = UserName,
-                Password = UserPassword
+                Username = DbUserName,
+                Password = DbUserPassword
             };
 
             var (loggedInUser, statusCode) = PostData(AuthenticateUserUrl+"/tokens", user, string.Empty);
@@ -178,8 +164,8 @@ namespace UnitTests.WebServiceUnitTests
         {
             var user = new LoginUserDto
             {
-                Username = UserName,
-                Password = UserPassword
+                Username = DbUserName,
+                Password = DbUserPassword
             };
 
             var (loggedInUser, statusCode) = PostData(AuthenticateUserUrl + "/tokens", user, string.Empty);
