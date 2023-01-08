@@ -18,7 +18,7 @@ namespace UnitTests.WebServiceUnitTests
 
         private const string ApiPathAnnotations = "http://localhost:5001/api/annotations";
         private const string AuthenticateUserUrl = "http://localhost:5001/api/auth";
-        private const string DbUserName = "testuser";
+        private const string DbUserName = "testanno";
         private const string DbUserPassword = "12345678";
         public string UserToken { get; set; }
         

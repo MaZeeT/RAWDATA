@@ -6,7 +6,7 @@ namespace UnitTests.DatabaseService
 {
     public class HistoryServiceTest
     {
-        private const int testUserId = 12;
+        private const int testUserId = 111;
 
         [Fact]
         public void HistoryAddInvalid()
