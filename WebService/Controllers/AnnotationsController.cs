@@ -36,21 +36,25 @@ namespace WebService.Controllers
         /// <param name="postId"></param>
         /// <returns>List of annotationsDto</returns>
         [HttpGet("post/{postId}")]
-        public ActionResult GetAllUserAnnotationsMadeOnPostId(int postId, [FromQuery] PagingAttributes pagingAttributes) //needs-pagination
+        public ActionResult
+            GetAllUserAnnotationsMadeOnPostId(int postId,
+                [FromQuery] PagingAttributes pagingAttributes) //needs-pagination
         {
             (int userId, bool useridok) = GetAuthUserId();
             if (!useridok)
             {
                 return Unauthorized();
             }
+
             var listOfAnnotations = _annotationService.GetUserAnnotationsMadeOnAPost(userId, postId, pagingAttributes);
             if (listOfAnnotations.Count == 0)
             {
                 return NotFound();
             }
-            
+
             return Ok(listOfAnnotations);
         }
+
         /// <summary>
         /// Get all annotations on a post that belong to the logged in user : http://localhost:5001/api/annotations plus Authorization Bearer <valid_tokenvalue> in Headers
         /// </summary>
@@ -70,18 +74,18 @@ namespace WebService.Controllers
             {
                 return NotFound();
             }
+
             foreach (PostAnnotationsDto item in listOfAnnotations)
             {
                 var postDataForAnnot = _sharedService.GetPost(item.PostId);
                 item.PostId = postDataForAnnot.Id;
-                item.QuestionId = postDataForAnnot.QuestionId; 
+                item.QuestionId = postDataForAnnot.QuestionId;
                 item.Title = postDataForAnnot.Title;
                 item.PostBody = postDataForAnnot.Body;
                 item.PostUrl = SetPostUrl(postDataForAnnot.Id, postDataForAnnot.QuestionId);
             }
 
             return Ok(CreateResult(listOfAnnotations, pagingAttributes, count));
-
         }
 
         /// <summary>
@@ -89,7 +93,8 @@ namespace WebService.Controllers
         /// </summary>
         /// <param name="annotationId"></param>
         /// <returns>AnnotationDto</returns>
-        [HttpGet("{annotationId}", Name = nameof(GetAnyAnnotationById))] // fancy way to have strings checked by the compiler
+        [HttpGet("{annotationId}",
+            Name = nameof(GetAnyAnnotationById))] // fancy way to have strings checked by the compiler
         public ActionResult GetAnyAnnotationById(int annotationId)
         {
             var returnedAnnotation = _annotationService.GetAnnotation(annotationId);
@@ -97,30 +102,12 @@ namespace WebService.Controllers
             {
                 return NotFound();
             }
+
             //with the helper class and the mapper we are setting the annotation type result (in returnAnnotation)
             //to AnnotationDto class type
             //so the magic is not much as it still requires some manual work for mapping. 
             return Ok(CreateLink(returnedAnnotation));
         }
-
-        //[HttpGet("{annotationId}", Name = nameof(SimpleGetAnyAnnotationOfUserById))] // fancy way to have strings checked by the compiler
-        //public ActionResult SimpleGetAnyAnnotationOfUserById(int annotationId)
-        //{
-        //    (int userId, bool useridok) = GetAuthUserId();
-        //    if (!useridok)
-        //    {
-        //        return Unauthorized();
-        //    }
-        //    var returnedAnnotation = _annotationService.GetAnnotationByUserId(annotationId, userId);
-        //    if (returnedAnnotation == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    //with the helper class and the mapper we are setting the annotation type result (in returnAnnotation)
-        //    //to AnnotationDto class type
-        //    //so the magic is not much as it still requires some manual work for mapping. 
-        //    return Ok(CreateLink(returnedAnnotation));
-        //}
 
         /// <summary>
         /// This function calls the create anew annotation from db function
@@ -134,7 +121,7 @@ namespace WebService.Controllers
         /// </summary>
         /// <param name="annotationObj"></param>
         /// <returns>Returns the </returns>
-        [HttpPost (Name = nameof(AddAnnotation))]
+        [HttpPost(Name = nameof(AddAnnotation))]
         public ActionResult AddAnnotation(AnnotationsDto annotationObj)
         {
             (int userId, bool useridok) = GetAuthUserId();
@@ -142,6 +129,7 @@ namespace WebService.Controllers
             {
                 return Unauthorized();
             }
+
             var newAnnotation = new AnnotationsDto
             {
                 UserId = userId,
@@ -154,8 +142,8 @@ namespace WebService.Controllers
                 var createdAnnotation = _annotationService.GetAnnotation(newId);
                 return Ok(CreateLink(createdAnnotation));
             }
-            return BadRequest();
 
+            return BadRequest();
         }
 
         /// <summary>
@@ -174,13 +162,14 @@ namespace WebService.Controllers
         ///         Fail: 404 BadRequest
         /// </returns>
         [HttpPut("{annotationId}")]
-        public ActionResult UpdateAnnotation(int annotationId,[FromBody] AnnotationsDto annotation)
+        public ActionResult UpdateAnnotation(int annotationId, [FromBody] AnnotationsDto annotation)
         {
             //need to encode body before sending to db - this can also be done inside the UpdateAnnotation function.
             if (_annotationService.UpdateAnnotation(annotationId, annotation.Body))
             {
                 return NoContent();
             }
+
             return BadRequest();
         }
 
@@ -198,10 +187,12 @@ namespace WebService.Controllers
             {
                 return Unauthorized();
             }
+
             if (_annotationService.DeleteAnnotation(annotationId, userId))
             {
                 return Ok();
             }
+
             return NotFound();
         }
 
@@ -215,8 +206,8 @@ namespace WebService.Controllers
             var annotationDto = _mapper.Map<AnnotationsDto>(annotation);
             annotationDto.AnnotationId = annotation.Id;
             annotationDto.URL = Url.Link(
-                    nameof(GetAnyAnnotationById),
-                    new { AnnotationId = annotation.Id });
+                nameof(GetAnyAnnotationById),
+                new { AnnotationId = annotation.Id });
             annotationDto.AddAnnotationUrl = Url.ActionLink(nameof(AddAnnotation));
             return annotationDto;
         }
@@ -227,9 +218,8 @@ namespace WebService.Controllers
             return urlString;
         }
 
-        private object CreateResult( List<PostAnnotationsDto>itemList, PagingAttributes attr, int totalItems)
+        private object CreateResult(List<PostAnnotationsDto> itemList, PagingAttributes attr, int totalItems)
         {
-
             var numberOfPages = Math.Ceiling((double)totalItems / attr.PageSize);
 
             var prev = attr.Page > 1
@@ -248,6 +238,5 @@ namespace WebService.Controllers
                 items = itemList
             };
         }
-
     }
 }

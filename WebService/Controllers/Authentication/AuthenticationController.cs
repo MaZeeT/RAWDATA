@@ -18,7 +18,6 @@ namespace WebService.Controllers.Authentication
     [Route("api/auth")]
     public class AuthenticationController : ControllerBase
     {
-
         private readonly IAppUserService _service;
         private readonly IConfiguration _configuration;
 
@@ -31,7 +30,6 @@ namespace WebService.Controllers.Authentication
         [HttpPost("users")]
         public ActionResult CreateUser([FromBody] SignupUserDto dto)
         {
-
             if (!isValidUserCredential(dto))
             {
                 return BadRequest();
@@ -87,25 +85,25 @@ namespace WebService.Controllers.Authentication
             result.Username = user.Username;
             result.Token = userToken;
             return Ok(result);
-
         }
 
         private bool IsInvalidPassword(SignupUserDto dto, AppUser user)
         {
             int.TryParse(
-               _configuration.GetSection("Auth:PwdSize").Value,
-               out var size);
+                _configuration.GetSection("Auth:PwdSize").Value,
+                out var size);
             var pwd = PasswordService.HashPassword(dto.Password, user.Salt, size);
 
             if (user.Password != pwd)
             {
                 return true;
             }
+
             return false;
         }
+
         private string GenerateToken(AppUser user)
         {
-
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.UTF8.GetBytes(_configuration["Auth:Key"]);
 
@@ -126,12 +124,10 @@ namespace WebService.Controllers.Authentication
             var securityToken = tokenHandler.CreateToken(tokenDescription);
             var token = tokenHandler.WriteToken(securityToken);
             return token;
-
         }
 
         private bool isValidUserCredential(SignupUserDto dto)
         {
-
             if (string.IsNullOrEmpty(dto.Username) || string.IsNullOrEmpty(dto.Password))
             {
                 return false;
@@ -145,7 +141,8 @@ namespace WebService.Controllers.Authentication
             string regExUsernameInvalidValue = @"[^a-zA-Z\d]";
             string regExPasswordInvalidValue = @"[^a-zA-Z\d]";
             var regExMatchInvalidUser = Regex.Match(dto.Username, regExUsernameInvalidValue, RegexOptions.IgnoreCase);
-            var regExMatchInvalidPassword = Regex.Match(dto.Password, regExPasswordInvalidValue, RegexOptions.IgnoreCase);
+            var regExMatchInvalidPassword =
+                Regex.Match(dto.Password, regExPasswordInvalidValue, RegexOptions.IgnoreCase);
 
             if (regExMatchInvalidUser.Success || regExMatchInvalidPassword.Success)
             {
@@ -154,8 +151,7 @@ namespace WebService.Controllers.Authentication
                 return false;
             }
 
-            return true; 
+            return true;
         }
-
     }
 }

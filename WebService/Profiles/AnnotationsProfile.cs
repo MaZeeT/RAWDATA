@@ -5,11 +5,9 @@ namespace WebService.Profiles
 {
     public class AnnotationsProfile : Profile
     {
-        
-            public AnnotationsProfile()
-            {
-                CreateMap<Annotations, AnnotationsDto>();
-            }
-        
+        public AnnotationsProfile()
+        {
+            CreateMap<Annotations, AnnotationsDto>();
+        }
     }
 }

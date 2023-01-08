@@ -100,7 +100,7 @@ namespace WebService.Controllers
             if (list.FirstOrDefault() != null)
             {
                 var totalResults = count;
-                var numberOfPages = Math.Ceiling((double) totalResults / attr.PageSize);
+                var numberOfPages = Math.Ceiling((double)totalResults / attr.PageSize);
 
                 var prev = attr.Page > 1
                     ? CreatePagingLink(nameof(GetBookmarkList), attr.Page - 1, attr.PageSize)
@@ -134,7 +134,7 @@ namespace WebService.Controllers
                 Date = hist.Date,
                 ThreadUrl = Url.Link(
                     nameof(QuestionsController.GetThread),
-                    new {questionId = hist.Postid}
+                    new { questionId = hist.Postid }
                 ),
                 PostId = hist.Postid
             };
@@ -145,7 +145,7 @@ namespace WebService.Controllers
 
         public string CreatePagingLink(string nameof, int page, int pageSize)
         {
-            return Url.Link(nameof, new {page, pageSize});
+            return Url.Link(nameof, new { page, pageSize });
         }
     }
 }

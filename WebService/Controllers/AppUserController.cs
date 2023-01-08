@@ -21,7 +21,6 @@ namespace WebService.Controllers
 
         [HttpGet, Route("{id=}")]
         // http://localhost:5001/api/appuser?id=2
-        //routing stuff is annoying to debug
         public ActionResult GetAppUser([FromQuery] int id)
         {
             //todo Need to query db to check if user exist instead of this hack
@@ -37,22 +36,5 @@ namespace WebService.Controllers
                 return NotFound();
             }
         }
-
-        /*
-        [HttpGet("{appUserName}", Name = nameof(GetAppUser))]
-        public ActionResult GetAppUser(string appUserName)
-        {
-            var appUser = _appUsersService.GetAppUser(appUserName);
-            if (appUser == null)
-            {
-                return NotFound();
-            }
-            else
-            {
-                return Ok(appUser);    
-            }
-            
-        }
-*/
     }
 }

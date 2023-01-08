@@ -122,6 +122,5 @@ namespace DatabaseService.Services
         {
             return AppUserExist(GetAppUserId(username));
         }
-
     }
 }

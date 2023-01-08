@@ -10,6 +10,7 @@ namespace DatabaseService
     public class SearchDataService : ISearchDataService
     {
         private readonly ISharedService _sharedService; //shared stuff by injection
+
         public SearchDataService(
             ISharedService sharedService)
         {
@@ -31,7 +32,8 @@ namespace DatabaseService
                 .ToList();
         }
 
-        public IList<Posts> Search(int userid, string searchstring, int? searchtypecode, PagingAttributes pagingAttributes)
+        public IList<Posts> Search(int userid, string searchstring, int? searchtypecode,
+            PagingAttributes pagingAttributes)
         {
             ////// for performing searches with appsearch on the db
             ///
@@ -71,7 +73,8 @@ namespace DatabaseService
 
             //count all matches
             var matchcount = db.Search
-                .FromSqlRaw("select appsearch(@appuserid, @searchtype, @search, @internalcall)", appuserid, searchtype, search, internalcall)
+                .FromSqlRaw("select appsearch(@appuserid, @searchtype, @search, @internalcall)", appuserid, searchtype,
+                    search, internalcall)
                 .Count();
             System.Console.WriteLine($"{matchcount} results.");
 
@@ -99,7 +102,10 @@ namespace DatabaseService
                 p.Id = sp.Id;
                 var endpos = 100;
                 if (sp.Body.Length < 100)
-                { endpos = sp.Body.Length; }
+                {
+                    endpos = sp.Body.Length;
+                }
+
                 p.Body = sp.Body.Substring(0, endpos);
 
                 p.Title = _sharedService.GetQuestion(p.Parentid).Title;
@@ -107,6 +113,7 @@ namespace DatabaseService
                 p.Rank = s.rank;
                 resultposts.Add(p);
             }
+
             return resultposts;
         }
 
@@ -151,7 +158,8 @@ namespace DatabaseService
 
             //count all matches
             var matchcount = db.Search
-                .FromSqlRaw("select appsearch(@appuserid, @searchtype, @search, @internalcall)", appuserid, searchtype, search, internalcall)
+                .FromSqlRaw("select appsearch(@appuserid, @searchtype, @search, @internalcall)", appuserid, searchtype,
+                    search, internalcall)
                 .Count();
             System.Console.WriteLine($"{matchcount} results.");
 
@@ -166,7 +174,8 @@ namespace DatabaseService
 
             //call db.func wordrank
             return db.WordRank
-                .FromSqlRaw("SELECT * from wordrank(@appuserid, @searchtype, @search) limit @limit", appuserid, searchtype, search, limit)
+                .FromSqlRaw("SELECT * from wordrank(@appuserid, @searchtype, @search) limit @limit", appuserid,
+                    searchtype, search, limit)
                 .ToList();
         }
 
@@ -185,8 +194,8 @@ namespace DatabaseService
             {
                 char[] filterarray = s.ToCharArray();
                 filterarray = Array.FindAll<char>(filterarray, (c => (char.IsLetterOrDigit(c)
-                                                  || char.IsWhiteSpace(c)
-                                                  || c == '-')));
+                                                                      || char.IsWhiteSpace(c)
+                                                                      || c == '-')));
                 var filteredtoken = new string(filterarray);
                 filteredtokens.Add(filteredtoken);
             }
@@ -205,6 +214,7 @@ namespace DatabaseService
             System.Console.WriteLine("Built search string: " + finalstring);
             return finalstring;
         }
+
         public int SearchTypeLookup(string searchmethod)
         {
             //get stype from string methodname

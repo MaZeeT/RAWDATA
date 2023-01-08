@@ -6,6 +6,7 @@ namespace DatabaseService
     public class SearchHistoryService : ISearchHistoryService
     {
         private readonly ISharedService _sharedService; //shared stuff by injection
+
         public SearchHistoryService(
             ISharedService sharedService)
         {

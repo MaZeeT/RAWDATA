@@ -6,7 +6,7 @@ namespace WebService.Controllers
 {
     public abstract class SharedController : ControllerBase
     {
-        protected (int,bool) GetAuthUserId()
+        protected (int, bool) GetAuthUserId()
         {
             bool useridok = false;
             var claimsIdentity = this.User.Identity as ClaimsIdentity;
@@ -14,8 +14,8 @@ namespace WebService.Controllers
             {
                 useridok = true; //becomes true when we get an int in userId
             }
-            return (userId,useridok);
-        }
 
+            return (userId, useridok);
+        }
     }
 }

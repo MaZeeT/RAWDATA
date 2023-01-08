@@ -10,14 +10,13 @@ namespace WebService.Controllers
     [ApiController]
     [Route("api/search")]
     [Authorize]
-
     ///
     /// when accessing with tokens, the header needs a key Authorization with a value of Bearer [space] and then the token (no quotes)
     ///
-
     public class SearchController : SharedController
     {
         private readonly ISearchDataService _dataService;
+
         public SearchController(
             ISearchDataService dataService)
         {
@@ -26,11 +25,11 @@ namespace WebService.Controllers
 
         [HttpGet("wordrank", Name = nameof(WordRank))]
         public ActionResult WordRank([FromQuery] SearchQuery searchparams, [FromQuery] int? maxresults) //
-        // http://localhost:5001/api/search/wordrank?s=code&stype=5&maxresults=5
-        // http://localhost:5001/api/search/wordrank?s=code,app,program
+            // http://localhost:5001/api/search/wordrank?s=code&stype=5&maxresults=5
+            // http://localhost:5001/api/search/wordrank?s=code,app,program
         {
             (int userId, bool useridok) = GetAuthUserId();
-            
+
             Console.WriteLine("Got user: " + userId);
 
             if (searchparams.s != null && useridok)
@@ -48,12 +47,14 @@ namespace WebService.Controllers
                 {
                     var search = _dataService.WordRank(userId, searchparams.s, searchparams.stype, maxresults);
                     return Ok(search);
-                } else
+                }
+                else
                 {
                     var search = _dataService.WordRank(userId, searchparams.s, 5, maxresults);
                     return Ok(search);
                 }
             }
+
             return BadRequest();
         }
 
@@ -78,7 +79,7 @@ namespace WebService.Controllers
                     var search = _dataService.Search(userId, searchparams.s, searchparams.stype, pagingAttributes);
 
                     // try to fix searchsting for link generation if it seems useable but ugly
-                    searchparams.s = _dataService.BuildSearchString(searchparams.s, true); 
+                    searchparams.s = _dataService.BuildSearchString(searchparams.s, true);
 
                     var result = CreateResult(search, searchparams, pagingAttributes);
                     if (result != null)
@@ -93,6 +94,7 @@ namespace WebService.Controllers
                     return RedirectToAction("WordRank", new { searchparams.s, searchparams.stype });
                 }
             }
+
             return BadRequest();
         }
 
@@ -110,8 +112,8 @@ namespace WebService.Controllers
             {
                 dto.ThreadLink = Url.Link(
                     nameof(QuestionsController.GetThread),
-                    new 
-                    { 
+                    new
+                    {
                         questionId = posts.Parentid,
                         postId = posts.Id
                     });
@@ -120,9 +122,9 @@ namespace WebService.Controllers
             {
                 dto.ThreadLink = Url.Link(
                     nameof(QuestionsController.GetThread),
-                    new 
-                    { 
-                        questionId = posts.Id 
+                    new
+                    {
+                        questionId = posts.Id
                     });
             }
 
@@ -142,10 +144,10 @@ namespace WebService.Controllers
                 var numberOfPages = Math.Ceiling((double)totalResults / attr.PageSize);
 
                 var prev = attr.Page > 1
-                    ? CreatePagingLink(searchparams.s, searchparams.stype, attr.Page-1, attr.PageSize)
+                    ? CreatePagingLink(searchparams.s, searchparams.stype, attr.Page - 1, attr.PageSize)
                     : null;
                 var next = attr.Page < numberOfPages
-                    ? CreatePagingLink(searchparams.s, searchparams.stype, attr.Page+1, attr.PageSize)
+                    ? CreatePagingLink(searchparams.s, searchparams.stype, attr.Page + 1, attr.PageSize)
                     : null;
 
                 return new
@@ -157,7 +159,8 @@ namespace WebService.Controllers
                     items = posts.Select(CreateSearchResultDto)
                 };
             }
-            else {
+            else
+            {
                 return null;
             }
         }
@@ -166,6 +169,5 @@ namespace WebService.Controllers
         {
             return Url.Link(nameof(Search), new { s, stype, page, pageSize });
         }
-
     }
 }

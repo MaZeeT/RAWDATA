@@ -58,9 +58,9 @@ namespace WebService.Controllers
                     postId = questionId;
                 }
             }
-            else if (checkthatpost == null) 
-            { 
-                return NotFound(); 
+            else if (checkthatpost == null)
+            {
+                return NotFound();
             }
 
             var t = _sharedService.GetThread(questionId);
@@ -76,6 +76,7 @@ namespace WebService.Controllers
                     browsehist.Postid = (int)postId;
                 }
                 else browsehist.Postid = questionId;
+
                 _historyService.Add(browsehist);
 
                 //createthreaddto
@@ -91,9 +92,9 @@ namespace WebService.Controllers
                     };
                     PagingAttributes pagingAttributes = new PagingAttributes();
                     List<SimpleAnnotationDto> tempanno = new List<SimpleAnnotationDto>();
-                        tempanno = _annotationService.GetUserAnnotationsMadeOnAPost(userId, p.Id, pagingAttributes);
+                    tempanno = _annotationService.GetUserAnnotationsMadeOnAPost(userId, p.Id, pagingAttributes);
                     pt.Annotations = tempanno;
-                    pt.createBookmarkLink = Url.Link(  nameof(BookmarkController.AddBookmark),  new { postId = p.Id });
+                    pt.createBookmarkLink = Url.Link(nameof(BookmarkController.AddBookmark), new { postId = p.Id });
                     AnnotationsDto anno = new AnnotationsDto
                     {
                         Body = "form_or_similar_would_be_here_to_POST_a_new_annotation",
@@ -103,6 +104,7 @@ namespace WebService.Controllers
                     // i know its supposed to be a form/post. just thought it'd be neat to have a link mockup. 
                     thread.Add(pt);
                 }
+
                 return Ok(thread);
             }
             else return NotFound();
@@ -136,7 +138,7 @@ namespace WebService.Controllers
             var prev = attr.Page > 1
                 ? CreatePagingLink(attr.Page - 1, attr.PageSize)
                 : null;
-            var next = attr.Page < numberOfPages 
+            var next = attr.Page < numberOfPages
                 ? CreatePagingLink(attr.Page + 1, attr.PageSize)
                 : null;
 

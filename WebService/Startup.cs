@@ -53,7 +53,6 @@ namespace WebService
                     ClockSkew = TimeSpan.Zero
                 };
             });
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -63,7 +62,7 @@ namespace WebService
             {
                 app.UseDeveloperExceptionPage();
             }
-            
+
             //Needed for serving wwwroot files frontend
             app.UseFileServer();
 
@@ -74,12 +73,7 @@ namespace WebService
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
-
-
     }
 }
