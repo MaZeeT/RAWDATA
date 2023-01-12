@@ -116,7 +116,7 @@ namespace UnitTests.DatabaseService
         public void HistoryDeleteUserEmptyHistory()
         {
             IHistoryService service = new HistoryService();
-            const int userid = testUserId;
+            const int userid = 12;
 
             var historyPre = service.GetHistoryList(userid);
             bool historyDeletion = service.DeleteUserHistory(userid);
@@ -204,7 +204,7 @@ namespace UnitTests.DatabaseService
         {
             IHistoryService service = new HistoryService();
 
-            const int historyId = 4; //Hardcoded user in DB //todo replace with a mock
+            const int historyId = 306; //Hardcoded user in DB //todo replace with a mock
 
             Assert.True(service.HistoryExist(historyId));
         }
