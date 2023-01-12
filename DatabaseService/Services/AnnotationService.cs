@@ -154,7 +154,7 @@ namespace DatabaseService.Services
                 DB.SaveChanges();
                 return true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }
@@ -183,7 +183,7 @@ namespace DatabaseService.Services
                 //if the returned id is somehow weird and the annotation is not found, then annotationFromDb gets null here
                 return true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 newId = -1;
                 return false;
@@ -200,7 +200,7 @@ namespace DatabaseService.Services
                 DB.SaveChanges();
                 return true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }

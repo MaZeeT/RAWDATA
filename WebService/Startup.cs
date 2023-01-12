@@ -1,4 +1,3 @@
-using AutoMapper;
 using DatabaseService;
 using DatabaseService.Services;
 using Microsoft.AspNetCore.Builder;
