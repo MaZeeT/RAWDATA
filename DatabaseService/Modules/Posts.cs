@@ -1,7 +1,4 @@
-﻿using DatabaseService.Modules;
-using System.Collections.Generic;
-
-namespace DatabaseService
+﻿namespace DatabaseService
 {
     public class Posts
     {

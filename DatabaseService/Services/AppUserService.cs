@@ -1,10 +1,10 @@
 using System.Linq;
 using DatabaseService.Modules;
-using NLog.LayoutRenderers;
+using DatabaseService.Interfaces.Repositories;
 
 namespace DatabaseService.Services
 {
-    public class AppUserService : IAppUserService
+    public class AppUserService : IUser, IAppUserService
     {
         DatabaseContext database;
 

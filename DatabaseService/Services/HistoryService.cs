@@ -1,13 +1,13 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using DatabaseService.Modules;
+using DatabaseService.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 
 namespace DatabaseService.Services
 {
-    public class HistoryService : IHistoryService
+    public class HistoryService : IHistory, IHistoryService
     {
         private readonly DatabaseContext _database;
 

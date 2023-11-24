@@ -3,11 +3,12 @@ using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DatabaseService.Interfaces.Repositories;
 
 
 namespace DatabaseService
 {
-    public class SearchDataService : ISearchDataService
+    public class SearchDataService : ISearch, ISearchDataService
     {
         private readonly ISharedService _sharedService; //shared stuff by injection
 

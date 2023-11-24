@@ -31,7 +31,7 @@ namespace WebService.Controllers
                 Console.WriteLine("ds: " + appUser);
                 return Ok(appUser);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return NotFound();
             }

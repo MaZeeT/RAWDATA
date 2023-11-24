@@ -1,6 +1,3 @@
-using System;
-using System.Net.Sockets;
-
 namespace DatabaseService.Modules
 {
     public class AppUser

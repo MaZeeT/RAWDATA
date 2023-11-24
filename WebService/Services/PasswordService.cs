@@ -7,12 +7,10 @@ namespace WebService.Services
 {
     public class PasswordService
     {
-        private static RNGCryptoServiceProvider _rng = new RNGCryptoServiceProvider();
-
+        
         public static string GenerateSalt(int size)
         {
-            var buffer = new byte[size];
-            _rng.GetBytes(buffer);
+            var buffer = RandomNumberGenerator.GetBytes(size);
             return Convert.ToBase64String(buffer);
         }
 

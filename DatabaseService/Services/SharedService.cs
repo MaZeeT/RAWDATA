@@ -3,10 +3,11 @@ using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DatabaseService.Interfaces.Repositories;
 
 namespace DatabaseService
 {
-    public class SharedService : ISharedService
+    public class SharedService : IShared, ISharedService
     {
         public string GetPostType(int postId)
             // try to get the tablename of post -- answers or questions

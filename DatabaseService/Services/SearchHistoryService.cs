@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
+using DatabaseService.Interfaces.Repositories;
 
 namespace DatabaseService
 {
-    public class SearchHistoryService : ISearchHistoryService
+    public class SearchHistoryService : ISearchHistory, ISearchHistoryService
     {
         private readonly ISharedService _sharedService; //shared stuff by injection
 

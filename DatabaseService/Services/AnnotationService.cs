@@ -1,4 +1,5 @@
 ﻿using DatabaseService.Modules;
+using DatabaseService.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using System;
@@ -7,7 +8,7 @@ using System.Linq;
 
 namespace DatabaseService.Services
 {
-    public class AnnotationService : IAnnotationService
+    public class AnnotationService : IAnnotation,  IAnnotationService
     {
         /// <summary>
         /// Create annotation without function, simple, raw, need to know HistoryId
