@@ -31,7 +31,7 @@ namespace DatabaseService
             optionsBuilder
                 .UseLoggerFactory(MyLoggerFactory)
                 .UseNpgsql(database);
-}       
+        }       
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
