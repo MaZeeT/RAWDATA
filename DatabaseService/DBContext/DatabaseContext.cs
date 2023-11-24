@@ -26,12 +26,12 @@ namespace DatabaseService
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            string database = "host=localhost;port=49153;db=stackoverflow;uid=postgres;pwd=postgrespw";
-            
+            string database = "host=localhost;port=5432;db=stackoverflow;uid=postgres;pwd=Password123";
+
             optionsBuilder
                 .UseLoggerFactory(MyLoggerFactory)
                 .UseNpgsql(database);
-        }
+}       
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -42,12 +42,14 @@ namespace DatabaseService
             modelBuilder.Entity<WordRank>().HasNoKey();
             modelBuilder.Entity<PostsTable>().HasNoKey();
             modelBuilder.Entity<AnnotateFunctionDto>().HasNoKey();
-            
-            //todo : rename appuser to appusers and remove the 2 lines below
             modelBuilder.Entity<AppUser>().ToTable("appusers");
             modelBuilder.Entity<AppUser>().Property(x => x.Id).HasColumnName("id");
 
+            modelBuilder.Entity<AppUser>(appUser =>
+            {
+                appUser.ToTable("appusers");
+                appUser.Property(x => x.Id).HasColumnName("id");
+            });
         }
-        
     }
 }
