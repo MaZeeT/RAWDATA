@@ -11,12 +11,10 @@ namespace WebService.Controllers
     public class AppUserController : ControllerBase
     {
         private IAppUserService _appUserService;
-        private IMapper _mapper;
 
-        public AppUserController(IAppUserService appUserService, IMapper mapper)
+        public AppUserController(IAppUserService appUserService)
         {
             _appUserService = appUserService;
-            _mapper = mapper;
         }
 
         [HttpGet, Route("{id=}")]
