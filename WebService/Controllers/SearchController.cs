@@ -6,169 +6,168 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace WebService.Controllers
+namespace WebService.Controllers;
+
+[ApiController]
+[Route("api/search")]
+[Authorize]
+///
+/// when accessing with tokens, the header needs a key Authorization with a value of Bearer [space] and then the token (no quotes)
+///
+public class SearchController : SharedController
 {
-    [ApiController]
-    [Route("api/search")]
-    [Authorize]
-    ///
-    /// when accessing with tokens, the header needs a key Authorization with a value of Bearer [space] and then the token (no quotes)
-    ///
-    public class SearchController : SharedController
+    private readonly ISearch _dataService;
+
+    public SearchController(
+        ISearch dataService)
     {
-        private readonly ISearch _dataService;
+        _dataService = dataService;
+    }
 
-        public SearchController(
-            ISearch dataService)
+    [HttpGet("wordrank", Name = nameof(WordRank))]
+    public ActionResult WordRank([FromQuery] SearchQuery searchparams, [FromQuery] int? maxresults) //
+        // http://localhost:5001/api/search/wordrank?s=code&stype=5&maxresults=5
+        // http://localhost:5001/api/search/wordrank?s=code,app,program
+    {
+        (int userId, bool useridok) = GetAuthUserId();
+
+        Console.WriteLine("Got user: " + userId);
+
+        if (searchparams.s != null && useridok)
         {
-            _dataService = dataService;
-        }
+            Console.WriteLine("Got searchparams: " + searchparams.s);
+            Console.WriteLine("Got maxresults: " + maxresults);
 
-        [HttpGet("wordrank", Name = nameof(WordRank))]
-        public ActionResult WordRank([FromQuery] SearchQuery searchparams, [FromQuery] int? maxresults) //
-            // http://localhost:5001/api/search/wordrank?s=code&stype=5&maxresults=5
-            // http://localhost:5001/api/search/wordrank?s=code,app,program
-        {
-            (int userId, bool useridok) = GetAuthUserId();
-
-            Console.WriteLine("Got user: " + userId);
-
-            if (searchparams.s != null && useridok)
+            //checking of params
+            if (searchparams.stype >= 0 && searchparams.stype <= 3)
             {
-                Console.WriteLine("Got searchparams: " + searchparams.s);
-                Console.WriteLine("Got maxresults: " + maxresults);
-
-                //checking of params
-                if (searchparams.stype >= 0 && searchparams.stype <= 3)
-                {
-                    //wrong search type, redirect
-                    return RedirectToAction("Search", new { searchparams.s, searchparams.stype });
-                }
-                else if (searchparams.stype >= 4 && searchparams.stype <= 5)
-                {
-                    var search = _dataService.WordRank(userId, searchparams.s, searchparams.stype, maxresults);
-                    return Ok(search);
-                }
-                else
-                {
-                    var search = _dataService.WordRank(userId, searchparams.s, 5, maxresults);
-                    return Ok(search);
-                }
+                //wrong search type, redirect
+                return RedirectToAction("Search", new { searchparams.s, searchparams.stype });
             }
-
-            return BadRequest();
-        }
-
-        [HttpGet(Name = nameof(Search))]
-        //examples
-        // http://localhost:5001/api/search?s=code&stype=0&page=10&pageSize=5
-        // http://localhost:5001/api/search?s=code,app,program
-        public ActionResult Search([FromQuery] SearchQuery searchparams, [FromQuery] PagingAttributes pagingAttributes)
-        {
-            (int userId, bool useridok) = GetAuthUserId();
-
-            Console.WriteLine("Got user: " + userId);
-
-            if (searchparams.s != null && useridok)
+            else if (searchparams.stype >= 4 && searchparams.stype <= 5)
             {
-                Console.WriteLine("Got searchparams: " + searchparams.s);
-
-                //checking of params
-                if (searchparams.stype >= 0 && searchparams.stype <= 3)
-                {
-                    //do search, fix page also if needed as a bonus
-                    var search = _dataService.Search(userId, searchparams.s, searchparams.stype, pagingAttributes);
-
-                    // try to fix searchsting for link generation if it seems useable but ugly
-                    searchparams.s = _dataService.BuildSearchString(searchparams.s, true);
-
-                    var result = CreateResult(search, searchparams, pagingAttributes);
-                    if (result != null)
-                    {
-                        return Ok(result);
-                    }
-                    else return NoContent();
-                }
-                else if (searchparams.stype >= 4 && searchparams.stype <= 5)
-                {
-                    //wrong search type, redirect
-                    return RedirectToAction("WordRank", new { searchparams.s, searchparams.stype });
-                }
-            }
-
-            return BadRequest();
-        }
-
-
-        ///////////////////
-        //
-        // Helpers
-        //
-        //////////////////////
-
-        private PostsSearchListDto CreateSearchResultDto(Posts posts)
-        {
-            var dto = new PostsSearchListDto();
-            if (posts.Parentid != 0) //then we have an answer
-            {
-                dto.ThreadLink = Url.Link(
-                    nameof(QuestionsController.GetThread),
-                    new
-                    {
-                        questionId = posts.Parentid,
-                        postId = posts.Id
-                    });
-            }
-            else //we have a question
-            {
-                dto.ThreadLink = Url.Link(
-                    nameof(QuestionsController.GetThread),
-                    new
-                    {
-                        questionId = posts.Id
-                    });
-            }
-
-            dto.Rank = posts.Rank;
-            dto.QuestionTitle = posts.Title;
-            dto.PostBody = posts.Body;
-            dto.PostId = posts.Id;
-
-            return dto;
-        }
-
-        private object CreateResult(IEnumerable<Posts> posts, SearchQuery searchparams, PagingAttributes attr)
-        {
-            if (posts.FirstOrDefault() != null)
-            {
-                var totalResults = posts.First().Totalresults;
-                var numberOfPages = Math.Ceiling((double)totalResults / attr.PageSize);
-
-                var prev = attr.Page > 1
-                    ? CreatePagingLink(searchparams.s, searchparams.stype, attr.Page - 1, attr.PageSize)
-                    : null;
-                var next = attr.Page < numberOfPages
-                    ? CreatePagingLink(searchparams.s, searchparams.stype, attr.Page + 1, attr.PageSize)
-                    : null;
-
-                return new
-                {
-                    totalResults,
-                    numberOfPages,
-                    prev,
-                    next,
-                    items = posts.Select(CreateSearchResultDto)
-                };
+                var search = _dataService.WordRank(userId, searchparams.s, searchparams.stype, maxresults);
+                return Ok(search);
             }
             else
             {
-                return null;
+                var search = _dataService.WordRank(userId, searchparams.s, 5, maxresults);
+                return Ok(search);
             }
         }
 
-        private string CreatePagingLink(string s, int stype, int page, int pageSize)
+        return BadRequest();
+    }
+
+    [HttpGet(Name = nameof(Search))]
+    //examples
+    // http://localhost:5001/api/search?s=code&stype=0&page=10&pageSize=5
+    // http://localhost:5001/api/search?s=code,app,program
+    public ActionResult Search([FromQuery] SearchQuery searchparams, [FromQuery] PagingAttributes pagingAttributes)
+    {
+        (int userId, bool useridok) = GetAuthUserId();
+
+        Console.WriteLine("Got user: " + userId);
+
+        if (searchparams.s != null && useridok)
         {
-            return Url.Link(nameof(Search), new { s, stype, page, pageSize });
+            Console.WriteLine("Got searchparams: " + searchparams.s);
+
+            //checking of params
+            if (searchparams.stype >= 0 && searchparams.stype <= 3)
+            {
+                //do search, fix page also if needed as a bonus
+                var search = _dataService.Search(userId, searchparams.s, searchparams.stype, pagingAttributes);
+
+                // try to fix searchsting for link generation if it seems useable but ugly
+                searchparams.s = _dataService.BuildSearchString(searchparams.s, true);
+
+                var result = CreateResult(search, searchparams, pagingAttributes);
+                if (result != null)
+                {
+                    return Ok(result);
+                }
+                else return NoContent();
+            }
+            else if (searchparams.stype >= 4 && searchparams.stype <= 5)
+            {
+                //wrong search type, redirect
+                return RedirectToAction("WordRank", new { searchparams.s, searchparams.stype });
+            }
         }
+
+        return BadRequest();
+    }
+
+
+    ///////////////////
+    //
+    // Helpers
+    //
+    //////////////////////
+
+    private PostsSearchListDto CreateSearchResultDto(Posts posts)
+    {
+        var dto = new PostsSearchListDto();
+        if (posts.Parentid != 0) //then we have an answer
+        {
+            dto.ThreadLink = Url.Link(
+                nameof(QuestionsController.GetThread),
+                new
+                {
+                    questionId = posts.Parentid,
+                    postId = posts.Id
+                });
+        }
+        else //we have a question
+        {
+            dto.ThreadLink = Url.Link(
+                nameof(QuestionsController.GetThread),
+                new
+                {
+                    questionId = posts.Id
+                });
+        }
+
+        dto.Rank = posts.Rank;
+        dto.QuestionTitle = posts.Title;
+        dto.PostBody = posts.Body;
+        dto.PostId = posts.Id;
+
+        return dto;
+    }
+
+    private object CreateResult(IEnumerable<Posts> posts, SearchQuery searchparams, PagingAttributes attr)
+    {
+        if (posts.FirstOrDefault() != null)
+        {
+            var totalResults = posts.First().Totalresults;
+            var numberOfPages = Math.Ceiling((double)totalResults / attr.PageSize);
+
+            var prev = attr.Page > 1
+                ? CreatePagingLink(searchparams.s, searchparams.stype, attr.Page - 1, attr.PageSize)
+                : null;
+            var next = attr.Page < numberOfPages
+                ? CreatePagingLink(searchparams.s, searchparams.stype, attr.Page + 1, attr.PageSize)
+                : null;
+
+            return new
+            {
+                totalResults,
+                numberOfPages,
+                prev,
+                next,
+                items = posts.Select(CreateSearchResultDto)
+            };
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    private string CreatePagingLink(string s, int stype, int page, int pageSize)
+    {
+        return Url.Link(nameof(Search), new { s, stype, page, pageSize });
     }
 }

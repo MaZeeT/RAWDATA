@@ -1,15 +1,13 @@
 ﻿using System;
 
-namespace WebService
+namespace WebService;
+
+public class SearchHistoryListDto
 {
-    public class SearchHistoryListDto
-    {
-        public string SearchLink { get; set; }
+    public string SearchLink { get; set; }
 
-        public string SearchMethod { get; set; }
-        public string SearchString { get; set; }
-        public DateTime Date { set; get; }
-
-    }
+    public string SearchMethod { get; set; }
+    public string SearchString { get; set; }
+    public DateTime Date { set; get; }
 
 }

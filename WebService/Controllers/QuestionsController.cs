@@ -7,154 +7,153 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace WebService.Controllers
+namespace WebService.Controllers;
+
+[ApiController]
+[Route("api/questions")]
+[Authorize]
+public class QuestionsController : SharedController
 {
-    [ApiController]
-    [Route("api/questions")]
-    [Authorize]
-    public class QuestionsController : SharedController
+    private readonly ISearch _dataService;
+    private readonly IShared _sharedService;
+    private readonly IAnnotation _annotationService;
+    private readonly IHistory _historyService;
+
+    public QuestionsController(
+        ISearch dataService,
+        IShared sharedService,
+        IAnnotation annotationService,
+        IHistory historyService)
     {
-        private readonly ISearch _dataService;
-        private readonly IShared _sharedService;
-        private readonly IAnnotation _annotationService;
-        private readonly IHistory _historyService;
+        _dataService = dataService;
+        _sharedService = sharedService;
+        _historyService = historyService;
+        _annotationService = annotationService;
+    }
 
-        public QuestionsController(
-            ISearch dataService,
-            IShared sharedService,
-            IAnnotation annotationService,
-            IHistory historyService)
+    [HttpGet(Name = nameof(BrowseQuestions))]
+    //examples http://localhost:5001/api/questions
+    // http://localhost:5001/api/questions?page=10&pageSize=5
+    // for browsing all the questions; with links to the thread
+    public ActionResult BrowseQuestions([FromQuery] PagingAttributes pagingAttributes)
+    {
+        var categories = _dataService.GetQuestions(pagingAttributes);
+        var result = CreateResult(categories, pagingAttributes);
+        return Ok(result);
+    }
+
+    [HttpGet("thread/{questionId}/{postId?}", Name = nameof(GetThread))]
+    //example http://localhost:5001/api/questions/thread/19
+    //get the whole thread of question+asnswers
+    public ActionResult GetThread(int questionId, int? postId)
+    {
+        (int userId, bool useridok) = GetAuthUserId();
+
+        var checkthatpost = _sharedService.GetPostType(questionId);
+        if (checkthatpost == "answers")
         {
-            _dataService = dataService;
-            _sharedService = sharedService;
-            _historyService = historyService;
-            _annotationService = annotationService;
+            questionId = _sharedService.GetPost(questionId).QuestionId;
+            if (postId != null)
+            {
+                postId = questionId;
+            }
+        }
+        else if (checkthatpost == null)
+        {
+            return NotFound();
         }
 
-        [HttpGet(Name = nameof(BrowseQuestions))]
-        //examples http://localhost:5001/api/questions
-        // http://localhost:5001/api/questions?page=10&pageSize=5
-        // for browsing all the questions; with links to the thread
-        public ActionResult BrowseQuestions([FromQuery] PagingAttributes pagingAttributes)
+        var t = _sharedService.GetThread(questionId);
+        if (t != null && useridok) // then we got a thread!
         {
-            var categories = _dataService.GetQuestions(pagingAttributes);
-            var result = CreateResult(categories, pagingAttributes);
-            return Ok(result);
-        }
-
-        [HttpGet("thread/{questionId}/{postId?}", Name = nameof(GetThread))]
-        //example http://localhost:5001/api/questions/thread/19
-        //get the whole thread of question+asnswers
-        public ActionResult GetThread(int questionId, int? postId)
-        {
-            (int userId, bool useridok) = GetAuthUserId();
-
-            var checkthatpost = _sharedService.GetPostType(questionId);
-            if (checkthatpost == "answers")
+            ///call to add browse history here
+            History browsehist = new History
             {
-                questionId = _sharedService.GetPost(questionId).QuestionId;
-                if (postId != null)
-                {
-                    postId = questionId;
-                }
+                Userid = userId
+            };
+            if (postId != null)
+            {
+                browsehist.Postid = (int)postId;
             }
-            else if (checkthatpost == null)
-            {
-                return NotFound();
-            }
+            else browsehist.Postid = questionId;
 
-            var t = _sharedService.GetThread(questionId);
-            if (t != null && useridok) // then we got a thread!
+            _historyService.Add(browsehist);
+
+            //createthreaddto
+            List<PostsThreadDto> thread = new List<PostsThreadDto>();
+            foreach (Posts p in t)
             {
-                ///call to add browse history here
-                History browsehist = new History
+                PostsThreadDto pt = new PostsThreadDto
                 {
-                    Userid = userId
+                    Id = p.Id,
+                    Parentid = p.Parentid,
+                    Title = p.Title,
+                    Body = p.Body
                 };
-                if (postId != null)
+                PagingAttributes pagingAttributes = new PagingAttributes();
+                List<SimpleAnnotationDto> tempanno = new List<SimpleAnnotationDto>();
+                tempanno = _annotationService.GetUserAnnotationsMadeOnAPost(userId, p.Id, pagingAttributes);
+                pt.Annotations = tempanno;
+                pt.createBookmarkLink = Url.Link(nameof(BookmarkController.AddBookmark), new { postId = p.Id });
+                AnnotationsDto anno = new AnnotationsDto
                 {
-                    browsehist.Postid = (int)postId;
-                }
-                else browsehist.Postid = questionId;
-
-                _historyService.Add(browsehist);
-
-                //createthreaddto
-                List<PostsThreadDto> thread = new List<PostsThreadDto>();
-                foreach (Posts p in t)
-                {
-                    PostsThreadDto pt = new PostsThreadDto
-                    {
-                        Id = p.Id,
-                        Parentid = p.Parentid,
-                        Title = p.Title,
-                        Body = p.Body
-                    };
-                    PagingAttributes pagingAttributes = new PagingAttributes();
-                    List<SimpleAnnotationDto> tempanno = new List<SimpleAnnotationDto>();
-                    tempanno = _annotationService.GetUserAnnotationsMadeOnAPost(userId, p.Id, pagingAttributes);
-                    pt.Annotations = tempanno;
-                    pt.createBookmarkLink = Url.Link(nameof(BookmarkController.AddBookmark), new { postId = p.Id });
-                    AnnotationsDto anno = new AnnotationsDto
-                    {
-                        Body = "form_or_similar_would_be_here_to_POST_a_new_annotation",
-                        PostId = p.Id
-                    };
-                    pt.createAnnotationLink = Url.Link(nameof(AnnotationsController.AddAnnotation), anno);
-                    // i know its supposed to be a form/post. just thought it'd be neat to have a link mockup. 
-                    thread.Add(pt);
-                }
-
-                return Ok(thread);
+                    Body = "form_or_similar_would_be_here_to_POST_a_new_annotation",
+                    PostId = p.Id
+                };
+                pt.createAnnotationLink = Url.Link(nameof(AnnotationsController.AddAnnotation), anno);
+                // i know its supposed to be a form/post. just thought it'd be neat to have a link mockup. 
+                thread.Add(pt);
             }
-            else return NotFound();
+
+            return Ok(thread);
         }
+        else return NotFound();
+    }
 
-        ///////////////////
-        //
-        // Helpers
-        //
-        //////////////////////
+    ///////////////////
+    //
+    // Helpers
+    //
+    //////////////////////
 
-        private QuestionDto CreateQuestionDto(Questions question)
+    private QuestionDto CreateQuestionDto(Questions question)
+    {
+        var dto = new QuestionDto
         {
-            var dto = new QuestionDto
-            {
-                Link = Url.Link(
-                    nameof(GetThread),
-                    new { questionId = question.Id }),
-                Id = question.Id,
-                Title = question.Title,
-                Body = question.Body
-            };
-            return dto;
-        }
+            Link = Url.Link(
+                nameof(GetThread),
+                new { questionId = question.Id }),
+            Id = question.Id,
+            Title = question.Title,
+            Body = question.Body
+        };
+        return dto;
+    }
 
-        private object CreateResult(IEnumerable<Questions> questions, PagingAttributes attr)
+    private object CreateResult(IEnumerable<Questions> questions, PagingAttributes attr)
+    {
+        var totalItems = _sharedService.NumberOfQuestions();
+        var numberOfPages = Math.Ceiling((double)totalItems / attr.PageSize);
+
+        var prev = attr.Page > 1
+            ? CreatePagingLink(attr.Page - 1, attr.PageSize)
+            : null;
+        var next = attr.Page < numberOfPages
+            ? CreatePagingLink(attr.Page + 1, attr.PageSize)
+            : null;
+
+        return new
         {
-            var totalItems = _sharedService.NumberOfQuestions();
-            var numberOfPages = Math.Ceiling((double)totalItems / attr.PageSize);
+            totalItems,
+            numberOfPages,
+            prev,
+            next,
+            items = questions.Select(CreateQuestionDto)
+        };
+    }
 
-            var prev = attr.Page > 1
-                ? CreatePagingLink(attr.Page - 1, attr.PageSize)
-                : null;
-            var next = attr.Page < numberOfPages
-                ? CreatePagingLink(attr.Page + 1, attr.PageSize)
-                : null;
-
-            return new
-            {
-                totalItems,
-                numberOfPages,
-                prev,
-                next,
-                items = questions.Select(CreateQuestionDto)
-            };
-        }
-
-        private string CreatePagingLink(int page, int pageSize)
-        {
-            return Url.Link(nameof(BrowseQuestions), new { page, pageSize });
-        }
+    private string CreatePagingLink(int page, int pageSize)
+    {
+        return Url.Link(nameof(BrowseQuestions), new { page, pageSize });
     }
 }

@@ -2,35 +2,34 @@ using DatabaseService.Interfaces.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using System;
 
-namespace WebService.Controllers
+namespace WebService.Controllers;
+
+[ApiController]
+[Route("api/appuser")]
+public class AppUserController : ControllerBase
 {
-    [ApiController]
-    [Route("api/appuser")]
-    public class AppUserController : ControllerBase
+    private IUser _appUserService;
+
+    public AppUserController(IUser appUserService)
     {
-        private IUser _appUserService;
+        _appUserService = appUserService;
+    }
 
-        public AppUserController(IUser appUserService)
+    [HttpGet, Route("{id=}")]
+    // http://localhost:5001/api/appuser?id=2
+    public ActionResult GetAppUser([FromQuery] int id)
+    {
+        //todo Need to query db to check if user exist instead of this hack
+        Console.WriteLine("input: " + id);
+        try
         {
-            _appUserService = appUserService;
+            var appUser = _appUserService.GetAppUserName(id);
+            Console.WriteLine("ds: " + appUser);
+            return Ok(appUser);
         }
-
-        [HttpGet, Route("{id=}")]
-        // http://localhost:5001/api/appuser?id=2
-        public ActionResult GetAppUser([FromQuery] int id)
+        catch (Exception)
         {
-            //todo Need to query db to check if user exist instead of this hack
-            Console.WriteLine("input: " + id);
-            try
-            {
-                var appUser = _appUserService.GetAppUserName(id);
-                Console.WriteLine("ds: " + appUser);
-                return Ok(appUser);
-            }
-            catch (Exception)
-            {
-                return NotFound();
-            }
+            return NotFound();
         }
     }
 }
