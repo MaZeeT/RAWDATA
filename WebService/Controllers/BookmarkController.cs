@@ -1,4 +1,3 @@
-using AutoMapper;
 using DatabaseService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,13 +17,11 @@ namespace WebService.Controllers
     {
         private IHistoryService _historyService;
         private ISharedService _sharedService;
-        private IMapper _mapper;
 
-        public BookmarkController(IHistoryService historyService, ISharedService sharedService, IMapper mapper)
+        public BookmarkController(IHistoryService historyService, ISharedService sharedService)
         {
             _historyService = historyService;
             _sharedService = sharedService;
-            _mapper = mapper;
         }
 
         [HttpGet(Name = nameof(GetBookmarkList))]

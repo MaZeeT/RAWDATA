@@ -1,5 +1,3 @@
-using AutoMapper;
-using DatabaseService.Modules;
 using DatabaseService.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;

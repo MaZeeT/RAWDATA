@@ -11,7 +11,6 @@ using Microsoft.IdentityModel.Tokens;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddSingleton<ISharedService, SharedService>();
 builder.Services.AddSingleton<ISearchDataService, SearchDataService>();
 builder.Services.AddSingleton<IAnnotationService, AnnotationService>();

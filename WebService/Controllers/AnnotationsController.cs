@@ -1,12 +1,10 @@
-﻿using AutoMapper;
-using DatabaseService;
+﻿using DatabaseService;
 using DatabaseService.Modules;
 using DatabaseService.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace WebService.Controllers
 {
@@ -16,14 +14,12 @@ namespace WebService.Controllers
     public class AnnotationsController : SharedController
     {
         private IAnnotationService _annotationService;
-        private IMapper _mapper;
         private ISharedService _sharedService;
 
-        public AnnotationsController(IAnnotationService annotationService, ISharedService sharedService, IMapper mapper)
+        public AnnotationsController(IAnnotationService annotationService, ISharedService sharedService)
         {
             _annotationService = annotationService;
             _sharedService = sharedService;
-            _mapper = mapper;
         }
 
 
@@ -203,7 +199,7 @@ namespace WebService.Controllers
         /// <returns>AnnotationsDto</returns>
         private AnnotationsDto CreateLink(Annotations annotation)
         {
-            var annotationDto = _mapper.Map<AnnotationsDto>(annotation);
+            var annotationDto = AnnotationsDto.MapFrom(annotation);
             annotationDto.AnnotationId = annotation.Id;
             annotationDto.URL = Url.Link(
                 nameof(GetAnyAnnotationById),

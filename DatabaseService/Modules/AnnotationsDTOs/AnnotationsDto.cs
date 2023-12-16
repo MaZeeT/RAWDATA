@@ -12,5 +12,17 @@ namespace DatabaseService.Modules
         public string Body { get; set; }
         public DateTime Date { get; set; } 
         public string AddAnnotationUrl { get; set; }
+
+        public static AnnotationsDto MapFrom(Annotations annotations)
+        {
+            return new AnnotationsDto
+            {
+                AnnotationId = annotations.Id,
+                UserId = annotations.UserId,
+                HistoryId = annotations.HistoryId,
+                Body = annotations.Body,
+                Date = annotations.Date
+            };
+        }
     }
 }
