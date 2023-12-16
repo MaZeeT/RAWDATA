@@ -61,22 +61,10 @@ public class AuthenticationController : ControllerBase
     [HttpPost("tokens")]
     public ActionResult Login([FromBody] SignupUserDto dto)
     {
-        if (!isValidUserCredential(dto))
-        {
-            return BadRequest();
-        }
+        if (!isValidUserCredential(dto)) { return BadRequest(); }
 
         var user = _service.GetAppUser(dto.Username);
-
-        if (user == null)
-        {
-            return BadRequest();
-        }
-
-        if (IsInvalidPassword(dto, user))
-        {
-            return BadRequest();
-        }
+        if (user is null || IsInvalidPassword(dto, user)) { return BadRequest(); }
 
         var userToken = GenerateToken(user);
 
@@ -93,12 +81,7 @@ public class AuthenticationController : ControllerBase
             out var size);
         var pwd = PasswordService.HashPassword(dto.Password, user.Salt, size);
 
-        if (user.Password != pwd)
-        {
-            return true;
-        }
-
-        return false;
+        return user.Password != pwd;
     }
 
     private string GenerateToken(AppUser user)
@@ -127,12 +110,14 @@ public class AuthenticationController : ControllerBase
 
     private bool isValidUserCredential(SignupUserDto dto)
     {
-        if (string.IsNullOrEmpty(dto.Username) || string.IsNullOrEmpty(dto.Password))
+        var isUsernameOrPasswordEmpty = string.IsNullOrEmpty(dto.Username) || string.IsNullOrEmpty(dto.Password);
+        if (isUsernameOrPasswordEmpty)
         {
             return false;
         }
 
-        if (dto.Username.Length < 2 || dto.Password.Length < 6)
+        var isUsernameOrPasswordToShort = dto.Username.Length < 2 || dto.Password.Length < 6;
+        if (isUsernameOrPasswordToShort)
         {
             return false;
         }
@@ -140,8 +125,7 @@ public class AuthenticationController : ControllerBase
         string regExUsernameInvalidValue = @"[^a-zA-Z\d]";
         string regExPasswordInvalidValue = @"[^a-zA-Z\d]";
         var regExMatchInvalidUser = Regex.Match(dto.Username, regExUsernameInvalidValue, RegexOptions.IgnoreCase);
-        var regExMatchInvalidPassword =
-            Regex.Match(dto.Password, regExPasswordInvalidValue, RegexOptions.IgnoreCase);
+        var regExMatchInvalidPassword = Regex.Match(dto.Password, regExPasswordInvalidValue, RegexOptions.IgnoreCase);
 
         if (regExMatchInvalidUser.Success || regExMatchInvalidPassword.Success)
         {
