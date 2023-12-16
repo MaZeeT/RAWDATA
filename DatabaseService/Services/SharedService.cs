@@ -7,7 +7,7 @@ using DatabaseService.Interfaces.Repositories;
 
 namespace DatabaseService
 {
-    public class SharedService : IShared, ISharedService
+    public class SharedService : IShared
     {
         public string GetPostType(int postId)
             // try to get the tablename of post -- answers or questions

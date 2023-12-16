@@ -1,6 +1,6 @@
 ﻿using DatabaseService;
 using DatabaseService.Modules;
-using DatabaseService.Services;
+using DatabaseService.Interfaces.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -14,16 +14,16 @@ namespace WebService.Controllers
     [Authorize]
     public class QuestionsController : SharedController
     {
-        private readonly ISearchDataService _dataService;
-        private readonly ISharedService _sharedService;
-        private readonly IAnnotationService _annotationService;
-        private readonly IHistoryService _historyService;
+        private readonly ISearch _dataService;
+        private readonly IShared _sharedService;
+        private readonly IAnnotation _annotationService;
+        private readonly IHistory _historyService;
 
         public QuestionsController(
-            ISearchDataService dataService,
-            ISharedService sharedService,
-            IAnnotationService annotationService,
-            IHistoryService historyService)
+            ISearch dataService,
+            IShared sharedService,
+            IAnnotation annotationService,
+            IHistory historyService)
         {
             _dataService = dataService;
             _sharedService = sharedService;

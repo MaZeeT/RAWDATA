@@ -8,12 +8,12 @@ using DatabaseService.Interfaces.Repositories;
 
 namespace DatabaseService
 {
-    public class SearchDataService : ISearch, ISearchDataService
+    public class SearchDataService : ISearch
     {
-        private readonly ISharedService _sharedService; //shared stuff by injection
+        private readonly IShared _sharedService; //shared stuff by injection
 
         public SearchDataService(
-            ISharedService sharedService)
+            IShared sharedService)
         {
             _sharedService = sharedService;
         }

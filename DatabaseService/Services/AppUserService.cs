@@ -4,7 +4,7 @@ using DatabaseService.Interfaces.Repositories;
 
 namespace DatabaseService.Services
 {
-    public class AppUserService : IUser, IAppUserService
+    public class AppUserService : IUser
     {
         DatabaseContext database;
 

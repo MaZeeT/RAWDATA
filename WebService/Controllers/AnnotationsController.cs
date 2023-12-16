@@ -1,6 +1,6 @@
 ﻿using DatabaseService;
 using DatabaseService.Modules;
-using DatabaseService.Services;
+using DatabaseService.Interfaces.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -13,10 +13,10 @@ namespace WebService.Controllers
     [Authorize]
     public class AnnotationsController : SharedController
     {
-        private IAnnotationService _annotationService;
-        private ISharedService _sharedService;
+        private IAnnotation _annotationService;
+        private IShared _sharedService;
 
-        public AnnotationsController(IAnnotationService annotationService, ISharedService sharedService)
+        public AnnotationsController(IAnnotation annotationService, IShared sharedService)
         {
             _annotationService = annotationService;
             _sharedService = sharedService;

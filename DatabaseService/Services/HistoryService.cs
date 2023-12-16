@@ -7,7 +7,7 @@ using Npgsql;
 
 namespace DatabaseService.Services
 {
-    public class HistoryService : IHistory, IHistoryService
+    public class HistoryService : IHistory
     {
         private readonly DatabaseContext _database;
 

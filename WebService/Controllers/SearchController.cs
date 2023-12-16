@@ -1,4 +1,5 @@
 ﻿using DatabaseService;
+using DatabaseService.Interfaces.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -15,10 +16,10 @@ namespace WebService.Controllers
     ///
     public class SearchController : SharedController
     {
-        private readonly ISearchDataService _dataService;
+        private readonly ISearch _dataService;
 
         public SearchController(
-            ISearchDataService dataService)
+            ISearch dataService)
         {
             _dataService = dataService;
         }

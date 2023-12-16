@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using DatabaseService;
+using DatabaseService.Interfaces.Repositories;
 using System.Collections.Generic;
 using System.Linq;
 using System;
@@ -12,12 +13,12 @@ namespace WebService.Controllers
     [Authorize]
     public class SearchHistoryController : SharedController
     {
-        private readonly ISearchHistoryService _searchHistoryService;
-        private readonly ISearchDataService _dataService;
+        private readonly ISearchHistory _searchHistoryService;
+        private readonly ISearch _dataService;
 
         public SearchHistoryController(
-            ISearchHistoryService searchHistoryService,
-            ISearchDataService dataService)
+            ISearchHistory searchHistoryService,
+            ISearch dataService)
         {
             _searchHistoryService = searchHistoryService;
             _dataService = dataService;

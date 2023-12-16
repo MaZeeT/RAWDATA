@@ -1,5 +1,4 @@
-﻿using DatabaseService;
-using DatabaseService.Services;
+﻿using DatabaseService.Interfaces.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -18,10 +17,10 @@ namespace WebService.Controllers.Authentication
     [Route("api/auth")]
     public class AuthenticationController : ControllerBase
     {
-        private readonly IAppUserService _service;
+        private readonly IUser _service;
         private readonly IConfiguration _configuration;
 
-        public AuthenticationController(IAppUserService service, IConfiguration configuration)
+        public AuthenticationController(IUser service, IConfiguration configuration)
         {
             _service = service;
             _configuration = configuration;

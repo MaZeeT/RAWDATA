@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace DatabaseService.Services
 {
-    public class AnnotationService : IAnnotation,  IAnnotationService
+    public class AnnotationService : IAnnotation
     {
         /// <summary>
         /// Create annotation without function, simple, raw, need to know HistoryId

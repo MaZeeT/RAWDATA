@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DatabaseService.Modules;
-using DatabaseService.Services;
+using DatabaseService.Interfaces.Repositories;
 using WebService.DTOs;
 
 namespace WebService.Controllers
@@ -15,10 +15,10 @@ namespace WebService.Controllers
     [Authorize]
     public class BookmarkController : SharedController
     {
-        private IHistoryService _historyService;
-        private ISharedService _sharedService;
+        private IHistory _historyService;
+        private IShared _sharedService;
 
-        public BookmarkController(IHistoryService historyService, ISharedService sharedService)
+        public BookmarkController(IHistory historyService, IShared sharedService)
         {
             _historyService = historyService;
             _sharedService = sharedService;

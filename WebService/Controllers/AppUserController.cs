@@ -1,4 +1,4 @@
-using DatabaseService.Services;
+using DatabaseService.Interfaces.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using System;
 
@@ -8,9 +8,9 @@ namespace WebService.Controllers
     [Route("api/appuser")]
     public class AppUserController : ControllerBase
     {
-        private IAppUserService _appUserService;
+        private IUser _appUserService;
 
-        public AppUserController(IAppUserService appUserService)
+        public AppUserController(IUser appUserService)
         {
             _appUserService = appUserService;
         }

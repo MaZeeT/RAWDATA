@@ -4,12 +4,12 @@ using DatabaseService.Interfaces.Repositories;
 
 namespace DatabaseService
 {
-    public class SearchHistoryService : ISearchHistory, ISearchHistoryService
+    public class SearchHistoryService : ISearchHistory
     {
-        private readonly ISharedService _sharedService; //shared stuff by injection
+        private readonly IShared _sharedService; //shared stuff by injection
 
         public SearchHistoryService(
-            ISharedService sharedService)
+            IShared sharedService)
         {
             _sharedService = sharedService;
         }

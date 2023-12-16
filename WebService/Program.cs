@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using DatabaseService;
 using DatabaseService.Services;
+using DatabaseService.Interfaces.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,12 +12,12 @@ using Microsoft.IdentityModel.Tokens;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
-builder.Services.AddSingleton<ISharedService, SharedService>();
-builder.Services.AddSingleton<ISearchDataService, SearchDataService>();
-builder.Services.AddSingleton<IAnnotationService, AnnotationService>();
-builder.Services.AddSingleton<IAppUserService, AppUserService>();
-builder.Services.AddSingleton<IHistoryService, HistoryService>();
-builder.Services.AddSingleton<ISearchHistoryService, SearchHistoryService>();
+builder.Services.AddSingleton<IShared, SharedService>();
+builder.Services.AddSingleton<ISearch, SearchDataService>();
+builder.Services.AddSingleton<IAnnotation, AnnotationService>();
+builder.Services.AddSingleton<IUser, AppUserService>();
+builder.Services.AddSingleton<IHistory, HistoryService>();
+builder.Services.AddSingleton<ISearchHistory, SearchHistoryService>();
 
 var key = Encoding.UTF8.GetBytes(builder.Configuration.GetSection("Auth:Key").Value);
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
