@@ -29,10 +29,7 @@ public class SearchHistoryController : SharedController
     public ActionResult GetSearchHistory([FromQuery] PagingAttributes pagingAttributes)
     {
         (int userId, bool useridok) = GetAuthUserId();
-        if (!useridok)
-        {
-            return Unauthorized();
-        }
+        if (!useridok){ return Unauthorized(); }
 
         (var shistory, int count) = _searchHistoryService.GetSearchesList(userId, pagingAttributes);
         if (shistory == null || count == 0)
@@ -89,48 +86,45 @@ public class SearchHistoryController : SharedController
 
         var stype = _dataService.SearchTypeLookup(searches.SearchType);
 
-        dto.SearchLink = Url.Link(
+        var url = Url.Link(
             nameof(SearchController.Search),
-            new
-            {
+            new{
                 s,
                 stype
             });
 
-        dto.SearchMethod = searches.SearchType;
-        dto.SearchString = searches.SearchString;
-        dto.Date = searches.Date;
-
-        return dto;
+        return new SearchHistoryListDto{
+            SearchLink = url,
+            SearchMethod = searches.SearchType,
+            SearchString = searches.SearchString,
+            Date = searches.Date
+        };
     }
 
     private object CreateResult(IEnumerable<Searches> searches, int count, PagingAttributes attr)
     {
-        if (searches.FirstOrDefault() != null)
-        {
-            var totalResults = count;
-            var numberOfPages = Math.Ceiling((double)totalResults / attr.PageSize);
-
-            var prev = attr.Page > 1
-                ? CreatePagingLink(attr.Page - 1, attr.PageSize)
-                : null;
-            var next = attr.Page < numberOfPages
-                ? CreatePagingLink(attr.Page + 1, attr.PageSize)
-                : null;
-
-            return new
-            {
-                totalResults,
-                numberOfPages,
-                prev,
-                next,
-                items = searches.Select(CreateSearchHistoryResultDto)
-            };
-        }
-        else
-        {
+        if (searches.FirstOrDefault() is null)
             return null;
-        }
+        
+        var totalResults = count;
+        var numberOfPages = Math.Ceiling((double)totalResults / attr.PageSize);
+
+        var prev = attr.Page > 1
+            ? CreatePagingLink(attr.Page - 1, attr.PageSize)
+            : null;
+        var next = attr.Page < numberOfPages
+            ? CreatePagingLink(attr.Page + 1, attr.PageSize)
+            : null;
+
+        return new
+        {
+            totalResults,
+            numberOfPages,
+            prev,
+            next,
+            items = searches.Select(CreateSearchHistoryResultDto)
+        };
+    
     }
 
     private string CreatePagingLink(int page, int pageSize)

@@ -60,31 +60,26 @@ public class HistoryController : SharedController
 
     private object CreateResult(IEnumerable<History> list, int count, PagingAttributes attr)
     {
-        if (list.FirstOrDefault() != null)
-        {
-            var totalResults = count;
-            var numberOfPages = Math.Ceiling((double)totalResults / attr.PageSize);
+        if (list.FirstOrDefault() is null){ return null; }
+            
+        var totalResults = count;
+        var numberOfPages = Math.Ceiling((double)totalResults / attr.PageSize);
 
-            var prev = attr.Page > 1
-                ? CreatePagingLink(nameof(GetHistory), attr.Page - 1, attr.PageSize)
-                : null;
-            var next = attr.Page < numberOfPages
-                ? CreatePagingLink(nameof(GetHistory), attr.Page + 1, attr.PageSize)
-                : null;
+        var prev = attr.Page > 1
+            ? CreatePagingLink(nameof(GetHistory), attr.Page - 1, attr.PageSize)
+            : null;
+        var next = attr.Page < numberOfPages
+            ? CreatePagingLink(nameof(GetHistory), attr.Page + 1, attr.PageSize)
+            : null;
 
-            return new
-            {
-                totalResults,
-                numberOfPages,
-                prev,
-                next,
-                items = list.Select(CreateHistoryResultDto) //Select() is like a foreach loop
-            };
-        }
-        else
+        return new
         {
-            return null;
-        }
+            totalResults,
+            numberOfPages,
+            prev,
+            next,
+            items = list.Select(CreateHistoryResultDto) //Select() is like a foreach loop
+        };
     }
 
     private HistoryDTO CreateHistoryResultDto(History hist)

@@ -15,8 +15,8 @@ public class AppUserController : ControllerBase
         _appUserService = appUserService;
     }
 
-    [HttpGet, Route("{id=}")]
     // http://localhost:5001/api/appuser?id=2
+    [HttpGet, Route("{id=}")]
     public ActionResult GetAppUser([FromQuery] int id)
     {
         //todo Need to query db to check if user exist instead of this hack
