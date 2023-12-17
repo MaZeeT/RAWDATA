@@ -20,7 +20,6 @@ public class SearchHistoryService : ISearchHistory
 
         var count = db.Searches
             .Where(x => x.UserId == userId)
-            .OrderByDescending(x => x.Date)
             .Count();
 
         //try to convert back from 1-based pages

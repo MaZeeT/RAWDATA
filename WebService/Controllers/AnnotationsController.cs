@@ -37,16 +37,10 @@ public class AnnotationsController : SharedController
             [FromQuery] PagingAttributes pagingAttributes) //needs-pagination
     {
         (int userId, bool useridok) = GetAuthUserId();
-        if (!useridok)
-        {
-            return Unauthorized();
-        }
+        if (!useridok){ return Unauthorized(); }
 
         var listOfAnnotations = _annotationService.GetUserAnnotationsMadeOnAPost(userId, postId, pagingAttributes);
-        if (listOfAnnotations.Count == 0)
-        {
-            return NotFound();
-        }
+        if (listOfAnnotations.Count == 0){ return NotFound(); }
 
         return Ok(listOfAnnotations);
     }
