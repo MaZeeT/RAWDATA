@@ -85,7 +85,7 @@ public class SharedService : IShared
         if (q != null)
         {
             //find answers to the specified question
-            var ans = db.Answers
+            var answers = db.Answers
                 .Where(e => e.Parentid == questionId)
                 .ToList();
             //manual mapping
@@ -98,22 +98,14 @@ public class SharedService : IShared
                     Body = q.Body
                 }
             };
-            foreach (Answers a in ans)
+            foreach (Answers a in answers)
             {
-                //below is for limiting body size, disabled rn
-                // var endpos = 100;
-                // if (a.Body.Length<100)
-                //  { 
-                //      endpos = a.Body.Length; //limit body size for now
-                //  }
                 posts.Add(
                     new Posts
                     {
                         Id = a.Id,
                         Parentid = a.Parentid,
                         Body = a.Body
-
-                        // Body = a.Body.Substring(0, endpos) 
                     });
             }
 

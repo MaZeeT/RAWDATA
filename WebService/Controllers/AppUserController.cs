@@ -1,4 +1,4 @@
-using DatabaseService.Interfaces.Repositories;
+using BusinessLogic.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
 
@@ -8,11 +8,11 @@ namespace WebService.Controllers;
 [Route("api/appuser")]
 public class AppUserController : ControllerBase
 {
-    private IUser _appUserService;
+    private IUserHandler _userHandler;
 
-    public AppUserController(IUser appUserService)
+    public AppUserController(IUserHandler userHandler)
     {
-        _appUserService = appUserService;
+        _userHandler = userHandler;
     }
 
     // http://localhost:5001/api/appuser?id=2
@@ -20,16 +20,14 @@ public class AppUserController : ControllerBase
     public ActionResult GetAppUser([FromQuery] int id)
     {
         //todo Need to query db to check if user exist instead of this hack
-        Console.WriteLine("input: " + id);
         try
         {
-            var appUser = _appUserService.GetAppUserName(id);
-            Console.WriteLine("ds: " + appUser);
+            var appUser = _userHandler.UserName(id);
             return Ok(appUser);
         }
         catch (Exception)
         {
-            return NotFound();
+            return NotFound("User not found");
         }
     }
 }

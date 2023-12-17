@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DatabaseService\DatabaseService.csproj" />
+    <ProjectReference Include="..\BusinessLogic\BusinessLogic.csproj" />
   </ItemGroup>
 
 </Project>

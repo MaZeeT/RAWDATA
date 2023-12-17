@@ -108,62 +108,65 @@ public class SearchController : SharedController
 
     private PostsSearchListDto CreateSearchResultDto(Posts posts)
     {
-        var dto = new PostsSearchListDto();
-        if (posts.Parentid != 0) //then we have an answer
-        {
-            dto.ThreadLink = Url.Link(
+        return posts.Parentid == 0
+            ? GetPostQuestionDto(posts)
+            : GetPostAnswerDto(posts);
+    }
+
+    private PostsSearchListDto GetPostQuestionDto(Posts posts){
+        return new PostsSearchListDto{
+            Rank = posts.Rank,
+            QuestionTitle = posts.Title,
+            PostBody = posts.Body,
+            PostId = posts.Id,
+            ThreadLink = Url.Link(
+                nameof(QuestionsController.GetThread),
+                new
+                {
+                    questionId = posts.Id
+                })
+        };
+    }
+
+    private PostsSearchListDto GetPostAnswerDto(Posts posts){
+        return new PostsSearchListDto{
+            Rank = posts.Rank,
+            QuestionTitle = posts.Title,
+            PostBody = posts.Body,
+            PostId = posts.Id,
+            ThreadLink = Url.Link(
                 nameof(QuestionsController.GetThread),
                 new
                 {
                     questionId = posts.Parentid,
                     postId = posts.Id
-                });
-        }
-        else //we have a question
-        {
-            dto.ThreadLink = Url.Link(
-                nameof(QuestionsController.GetThread),
-                new
-                {
-                    questionId = posts.Id
-                });
-        }
-
-        dto.Rank = posts.Rank;
-        dto.QuestionTitle = posts.Title;
-        dto.PostBody = posts.Body;
-        dto.PostId = posts.Id;
-
-        return dto;
+                })
+        };
     }
+
 
     private object CreateResult(IEnumerable<Posts> posts, SearchQuery searchparams, PagingAttributes attr)
     {
-        if (posts.FirstOrDefault() != null)
-        {
-            var totalResults = posts.First().Totalresults;
-            var numberOfPages = Math.Ceiling((double)totalResults / attr.PageSize);
+        if (posts.FirstOrDefault() != null){ return null; }
+         
+        var totalResults = posts.First().Totalresults;
+        var numberOfPages = Math.Ceiling((double)totalResults / attr.PageSize);
 
-            var prev = attr.Page > 1
-                ? CreatePagingLink(searchparams.s, searchparams.stype, attr.Page - 1, attr.PageSize)
-                : null;
-            var next = attr.Page < numberOfPages
-                ? CreatePagingLink(searchparams.s, searchparams.stype, attr.Page + 1, attr.PageSize)
-                : null;
+        var prev = attr.Page > 1
+            ? CreatePagingLink(searchparams.s, searchparams.stype, attr.Page - 1, attr.PageSize)
+            : null;
+        var next = attr.Page < numberOfPages
+            ? CreatePagingLink(searchparams.s, searchparams.stype, attr.Page + 1, attr.PageSize)
+            : null;
 
-            return new
-            {
-                totalResults,
-                numberOfPages,
-                prev,
-                next,
-                items = posts.Select(CreateSearchResultDto)
-            };
-        }
-        else
+        return new
         {
-            return null;
-        }
+            totalResults,
+            numberOfPages,
+            prev,
+            next,
+            items = posts.Select(CreateSearchResultDto)
+        };
     }
 
     private string CreatePagingLink(string s, int stype, int page, int pageSize)
