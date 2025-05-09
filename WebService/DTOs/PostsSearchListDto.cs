@@ -1,4 +1,4 @@
-﻿namespace WebService;
+﻿namespace WebService.DTOs;
 
 public class PostsSearchListDto
 {

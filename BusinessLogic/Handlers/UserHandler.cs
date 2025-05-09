@@ -1,5 +1,5 @@
 ﻿using BusinessLogic.Interfaces;
-using DatabaseService.Interfaces.Repositories;
+using Repositories.Interfaces;
 
 namespace BusinessLogic.Handlers;
 

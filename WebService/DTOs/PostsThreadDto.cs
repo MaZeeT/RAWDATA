@@ -1,7 +1,7 @@
-﻿using DatabaseService.Modules;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Domain.AnnotationsDTOs;
 
-namespace WebService;
+namespace WebService.DTOs;
 
 public class PostsThreadDto
 {

@@ -1,23 +1,22 @@
 using System;
 using System.Text;
-using DatabaseService;
-using DatabaseService.Services;
-using DatabaseService.Interfaces.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Repositories.Implementation;
+using Repositories.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
-builder.Services.AddSingleton<IShared, SharedService>();
-builder.Services.AddSingleton<ISearch, SearchDataService>();
-builder.Services.AddSingleton<IAnnotation, AnnotationService>();
-builder.Services.AddSingleton<IUser, AppUserService>();
-builder.Services.AddSingleton<IHistory, HistoryService>();
-builder.Services.AddSingleton<ISearchHistory, SearchHistoryService>();
+builder.Services.AddSingleton<IShared, SharedRepository>();
+builder.Services.AddSingleton<ISearch, SearchDataRepository>();
+builder.Services.AddSingleton<IAnnotation, AnnotationRepository>();
+builder.Services.AddSingleton<IUser, AppUserRepository>();
+builder.Services.AddSingleton<IHistory, HistoryRepository>();
+builder.Services.AddSingleton<ISearchHistory, SearchHistoryRepository>();
 
 var key = Encoding.UTF8.GetBytes(builder.Configuration.GetSection("Auth:Key").Value);
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>

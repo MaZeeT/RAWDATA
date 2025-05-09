@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WebService;
+namespace WebService.DTOs;
 
 public class SearchHistoryListDto
 {

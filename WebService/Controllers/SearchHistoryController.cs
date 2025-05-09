@@ -1,10 +1,14 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using DatabaseService;
-using DatabaseService.Interfaces.Repositories;
+using Infrastructure;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using Domain;
+using Domain.Entities;
+using Domain.Services;
+using Repositories.Interfaces;
+using WebService.DTOs;
 
 namespace WebService.Controllers;
 

@@ -1,5 +1,4 @@
-﻿using DatabaseService.Interfaces.Repositories;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
 using WebService.DTOs;
@@ -8,8 +7,10 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Security.Claims;
-using DatabaseService.Modules;
 using System.Text.RegularExpressions;
+using Domain;
+using Domain.Entities;
+using Repositories.Interfaces;
 
 namespace WebService.Controllers.Authentication;
 

@@ -1,4 +1,4 @@
-﻿namespace DatabaseService;
+﻿namespace WebService.DTOs;
 
 public class SearchQuery
 {
