@@ -11,11 +11,13 @@ namespace Repositories.Implementation;
 
 public class HistoryRepository : IHistory
 {
-    private readonly DatabaseContext _database;
+    private readonly IDbContextFactory<DatabaseContext2> _dbContextFactory;
+    private readonly DatabaseContext2 _database;
 
-    public HistoryRepository()
+    public HistoryRepository(IDbContextFactory<DatabaseContext2> factory)
     {
-        _database = new DatabaseContext();
+        _dbContextFactory = factory;
+        _database = factory.CreateDbContext();
     }
 
 
@@ -30,7 +32,7 @@ public class HistoryRepository : IHistory
         appUserId.Value = userId;
         iPostId.Value = postId;
         addBookmark.Value = isBookmark;
-
+        
         _database.Database.ExecuteSqlRaw(
             "SELECT * from add_history(@appuserid, @ipostid, @addbookmark)",
             appUserId, iPostId, addBookmark);
@@ -112,15 +114,15 @@ public class HistoryRepository : IHistory
 
     public bool DeleteBookmark(int userId, int postId)
     {
-        var history = _database.History.Where(x =>
+        var histories = _database.History.Where(x =>
             x.Userid == userId &&
             x.Postid == postId &&
             x.isBookmark == true);
-
-        foreach (History h in history)
+        
+        foreach (var history in histories)
         {
-            _database.History.Update(h);
-            h.isBookmark = false;
+            _database.History.Update(history);
+            history.isBookmark = false;
         }
 
         return _database.SaveChanges() > 0;
@@ -144,8 +146,8 @@ public class HistoryRepository : IHistory
 
     private List<History> GetListFromQuery(int userId, bool isBookmark, PagingAttributes pageAtt)
     {
-        // This enforces the page upper and lower limits
-        var sharedService = new SharedRepository();
+        // This enforces the page upper and lower limits 
+        var sharedService = new SharedRepository(_dbContextFactory); //todo fix the SharedRepo creation at this line.
         sharedService.GetPagination(GetCount(userId, isBookmark), pageAtt);
 
         return _database.History

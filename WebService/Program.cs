@@ -1,13 +1,16 @@
 using System;
 using System.Text;
+using Infrastructure.Database;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Repositories.Implementation;
 using Repositories.Interfaces;
 
+string database = "host=localhost;port=5432;db=stackoverflow;uid=postgres;pwd=Password123";
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
@@ -17,6 +20,12 @@ builder.Services.AddSingleton<IAnnotation, AnnotationRepository>();
 builder.Services.AddSingleton<IUser, AppUserRepository>();
 builder.Services.AddSingleton<IHistory, HistoryRepository>();
 builder.Services.AddSingleton<ISearchHistory, SearchHistoryRepository>();
+builder.Services.AddPooledDbContextFactory<DatabaseContext2>(options =>
+{
+    options
+        .UseLoggerFactory(DatabaseContext2.MyLoggerFactory)
+        .UseNpgsql(database);
+});
 
 var key = Encoding.UTF8.GetBytes(builder.Configuration.GetSection("Auth:Key").Value);
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>

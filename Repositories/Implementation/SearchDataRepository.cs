@@ -10,18 +10,20 @@ namespace Repositories.Implementation;
 
 public class SearchDataRepository : ISearch
 {
+    private readonly IDbContextFactory<DatabaseContext2> _dbContextFactory;
     private readonly IShared _sharedService; //shared stuff by injection
 
-    public SearchDataRepository(
+    public SearchDataRepository(IDbContextFactory<DatabaseContext2> factory,
         IShared sharedService)
     {
+        _dbContextFactory = factory;
         _sharedService = sharedService;
     }
 
     public IList<Questions> GetQuestions(PagingAttributes pagingAttributes)
     {
         //// for browsing the full list of questions
-        using var db = new DatabaseContext();
+        using var db = _dbContextFactory.CreateDbContext();
 
         //convert back from 1-based pages + check/fix page
         int page = _sharedService.GetPagination(_sharedService.NumberOfQuestions(), pagingAttributes);
@@ -41,7 +43,7 @@ public class SearchDataRepository : ISearch
         // do actual search using appsearch in db and build results
 
         //need db context and searchtype lookuptable
-        using var db = new DatabaseContext();
+        using var db = _dbContextFactory.CreateDbContext();
         SearchTypeLookupTable st = new SearchTypeLookupTable();
 
         ////get params for db.func
@@ -126,7 +128,7 @@ public class SearchDataRepository : ISearch
         // do actual search using appsearch in db and build results
 
         //need db context and searchtype lookuptable
-        using var db = new DatabaseContext();
+        using var db = _dbContextFactory.CreateDbContext();
         SearchTypeLookupTable st = new SearchTypeLookupTable();
 
         ////get params for db.func

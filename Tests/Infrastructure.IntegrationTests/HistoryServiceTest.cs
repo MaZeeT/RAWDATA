@@ -1,19 +1,40 @@
-using Domain;
 using Domain.Entities;
+using Infrastructure.Database;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.Extensions.DependencyInjection;
 using Repositories.Implementation;
 using Repositories.Interfaces;
 using Xunit;
 
-namespace Tests.DatabaseService
+namespace Tests.Infrastructure.IntegrationTests
 {
     public class HistoryRepositoryTest
     {
-        private const int testUserId = 111;
+        private readonly IDbContextFactory<DatabaseContext2> _dbContextFactory;
+        private readonly ServiceProvider _serviceProvider;
+        private const int testUserId = 40;
+        
+        public HistoryRepositoryTest()
+        {
+            string database = "host=localhost;port=5432;db=stackoverflow;uid=postgres;pwd=Password123";
+            var services = new ServiceCollection();
+            services.AddSingleton<IHistory, HistoryRepository>();
+            services.AddPooledDbContextFactory<DatabaseContext2>(options =>
+            {
+                options
+                    .UseLoggerFactory(DatabaseContext2.MyLoggerFactory)
+                    .UseNpgsql(database);
+            });
+
+            _serviceProvider = services.BuildServiceProvider();
+            _dbContextFactory =  _serviceProvider.GetRequiredService<IDbContextFactory<DatabaseContext2>>();
+        }
 
         [Fact]
         public void HistoryAddInvalid()
         {
-            IHistory service = new HistoryRepository();
+            IHistory service = _serviceProvider.GetRequiredService<IHistory>();
             var history = new History
             {
                 Userid = testUserId,
@@ -27,7 +48,7 @@ namespace Tests.DatabaseService
         [Fact]
         public void HistoryAddValid()
         {
-            IHistory service = new HistoryRepository();
+            IHistory service = _serviceProvider.GetRequiredService<IHistory>();
             var history = new History
             {
                 Userid = testUserId,
@@ -46,7 +67,7 @@ namespace Tests.DatabaseService
         [Fact]
         public void HistoryDeleteBookmarkInvalidPost()
         {
-            IHistory service = new HistoryRepository();
+            IHistory service = _serviceProvider.GetRequiredService<IHistory>();
 
             const int invalidModifier = -1;
             const int userid = testUserId;
@@ -64,7 +85,7 @@ namespace Tests.DatabaseService
         [Fact]
         public void HistoryDeleteBookmarkInvalidUser()
         {
-            IHistory service = new HistoryRepository();
+            IHistory service = _serviceProvider.GetRequiredService<IHistory>();
 
             const int invalidModifier = -1;
             const int userid = testUserId;
@@ -82,7 +103,7 @@ namespace Tests.DatabaseService
         [Fact]
         public void HistoryDeleteBookmarkInvalidUserAndPost()
         {
-            IHistory service = new HistoryRepository();
+            IHistory service = _serviceProvider.GetRequiredService<IHistory>();
 
             const int invalidModifier = -1;
             const int userid = testUserId;
@@ -100,7 +121,7 @@ namespace Tests.DatabaseService
         [Fact]
         public void HistoryDeleteBookmarkValid()
         {
-            IHistory service = new HistoryRepository();
+            IHistory service = _serviceProvider.GetRequiredService<IHistory>();
 
             const int userid = testUserId;
             const int postId = 1760;
@@ -108,7 +129,9 @@ namespace Tests.DatabaseService
             bool resultAdd = service.Add(userid, postId, true);
 
             Assert.True(resultAdd);
-            Assert.True(service.DeleteBookmark(userid, postId));
+            
+            bool resultDelete = service.DeleteBookmark(userid, postId);
+            Assert.True(resultDelete);
 
             //clean up todo delete when mock is working
             service.DeleteHistory(service.Get(userid, postId).Id);
@@ -117,7 +140,7 @@ namespace Tests.DatabaseService
         [Fact]
         public void HistoryDeleteUserEmptyHistory()
         {
-            IHistory service = new HistoryRepository();
+            IHistory service = _serviceProvider.GetRequiredService<IHistory>();
             const int userid = 12;
 
             var historyPre = service.GetHistoryList(userid);
@@ -133,7 +156,7 @@ namespace Tests.DatabaseService
         [Fact]
         public void HistoryDeleteUserHistory()
         {
-            IHistory service = new HistoryRepository();
+            IHistory service = _serviceProvider.GetRequiredService<IHistory>();
             const int userid = testUserId;
 
             const int postId1 = 19;
@@ -167,7 +190,7 @@ namespace Tests.DatabaseService
         [Fact]
         public void HistoryDeleteInvalid()
         {
-            IHistory service = new HistoryRepository();
+            IHistory service = _serviceProvider.GetRequiredService<IHistory>();
 
             const int userId = -5;
 
@@ -177,7 +200,7 @@ namespace Tests.DatabaseService
         [Fact]
         public void HistoryDeleteValid()
         {
-            IHistory service = new HistoryRepository();
+            IHistory service = _serviceProvider.GetRequiredService<IHistory>();
             const int userId = testUserId;
             const int postId = 709;
             const bool isBookmark = true;
@@ -195,7 +218,7 @@ namespace Tests.DatabaseService
         [Fact]
         public void HistoryExistFalse()
         {
-            IHistory service = new HistoryRepository();
+            IHistory service = _serviceProvider.GetRequiredService<IHistory>();
             const int historyId = -8; //Hardcoded user in DB //todo replace with a mock
 
             Assert.False(service.HistoryExist(historyId));
@@ -204,9 +227,9 @@ namespace Tests.DatabaseService
         [Fact]
         public void HistoryExistTrue()
         {
-            IHistory service = new HistoryRepository();
+            IHistory service = _serviceProvider.GetRequiredService<IHistory>();
 
-            const int historyId = 306; //Hardcoded user in DB //todo replace with a mock
+            const int historyId = 11; //Hardcoded user in DB //todo replace with a mock
 
             Assert.True(service.HistoryExist(historyId));
         }
@@ -214,7 +237,7 @@ namespace Tests.DatabaseService
         [Fact]
         public void HistoryGetInvalid()
         {
-            IHistory service = new HistoryRepository();
+            IHistory service = _serviceProvider.GetRequiredService<IHistory>();
             const int id = -31;
 
             History history = service.Get(id);
@@ -225,7 +248,7 @@ namespace Tests.DatabaseService
         [Fact]
         public void HistoryGetInvalid2()
         {
-            IHistory service = new HistoryRepository();
+            IHistory service = _serviceProvider.GetRequiredService<IHistory>();
             const int userId = -31;
             const int postId = -123;
 
@@ -237,7 +260,7 @@ namespace Tests.DatabaseService
         [Fact]
         public void GetHistoryList()
         {
-            IHistory service = new HistoryRepository();
+            IHistory service = _serviceProvider.GetRequiredService<IHistory>();
             const int userId = testUserId;
 
             const int postId1 = 19;
@@ -268,7 +291,7 @@ namespace Tests.DatabaseService
         [Fact]
         public void GetBookmarks()
         {
-            IHistory service = new HistoryRepository();
+            IHistory service = _serviceProvider.GetRequiredService<IHistory>();
             const int userId = testUserId;
 
             const int postId1 = 19;
@@ -303,7 +326,7 @@ namespace Tests.DatabaseService
         [Fact]
         public void HistoryGetValid()
         {
-            IHistory service = new HistoryRepository();
+            IHistory service = _serviceProvider.GetRequiredService<IHistory>();
 
             const int userId = testUserId;
             const int postId = 709;

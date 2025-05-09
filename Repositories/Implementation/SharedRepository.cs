@@ -11,6 +11,13 @@ namespace Repositories.Implementation;
 
 public class SharedRepository : IShared
 {
+    private readonly IDbContextFactory<DatabaseContext2> _dbContextFactory;
+    
+    public SharedRepository(IDbContextFactory<DatabaseContext2> factory)
+    {
+        _dbContextFactory = factory;
+    }
+    
     public string GetPostType(int postId)
         // try to get the tablename of post -- answers or questions
         //using varchar resolveid(postid int) in db
@@ -20,7 +27,7 @@ public class SharedRepository : IShared
         {
             Value = postId
         };
-        using var db = new DatabaseContext();
+        using var db = _dbContextFactory.CreateDbContext();
         string tablename = db.PostsTable
             .FromSqlRaw("SELECT * from resolveid(@postid)", postid).First().resolveid;
 
@@ -31,20 +38,20 @@ public class SharedRepository : IShared
 
     public int NumberOfQuestions()
     {
-        using var db = new DatabaseContext();
+        using var db = _dbContextFactory.CreateDbContext();
         return db.Questions
             .Count();
     }
 
     public Questions GetQuestion(int questionId)
     {
-        using var db = new DatabaseContext();
+        using var db = _dbContextFactory.CreateDbContext();
         return db.Questions.Find(questionId);
     }
 
     public Answers GetAnswer(int answerId)
     {
-        using var db = new DatabaseContext();
+        using var db = _dbContextFactory.CreateDbContext();
         return db.Answers.Find(answerId);
     }
 
@@ -81,7 +88,7 @@ public class SharedRepository : IShared
     public IList<Posts> GetThread(int questionId)
         //returns question and all child answers
     {
-        using var db = new DatabaseContext();
+        using var db = _dbContextFactory.CreateDbContext();
         //get the question
         var q = GetQuestion(questionId);
         if (q != null)

@@ -24,6 +24,7 @@ public class DatabaseContext : DbContext
     public DbSet<PostsTable> PostsTable { get; set; }
     public DbSet<WordRank> WordRank { get; set; }
 
+    public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options){ }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

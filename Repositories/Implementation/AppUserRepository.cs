@@ -2,17 +2,19 @@ using Infrastructure;
 using Infrastructure.Database;
 using Domain;
 using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Repositories.Interfaces;
 
 namespace Repositories.Implementation;
 
 public class AppUserRepository : IUser
 {
-    DatabaseContext database;
+    DatabaseContext2 database;
 
-    public AppUserRepository()
+    public AppUserRepository(IDbContextFactory<DatabaseContext2> factory)
     {
-        database = new DatabaseContext();
+        database = factory.CreateDbContext();
     }
 
     public string GetAppUserName(int id)

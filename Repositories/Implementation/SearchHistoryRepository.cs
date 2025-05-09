@@ -3,23 +3,26 @@ using Infrastructure.Database;
 using Domain;
 using Domain.Entities;
 using Domain.Services;
+using Microsoft.EntityFrameworkCore;
 using Repositories.Interfaces;
 
 namespace Repositories.Implementation;
 
 public class SearchHistoryRepository : ISearchHistory
 {
+    private readonly IDbContextFactory<DatabaseContext2> _dbContextFactory;
     private readonly IShared _sharedService; //shared stuff by injection
 
-    public SearchHistoryRepository(
+    public SearchHistoryRepository(IDbContextFactory<DatabaseContext2> factory,
         IShared sharedService)
     {
+        _dbContextFactory = factory;
         _sharedService = sharedService;
     }
 
     public (List<Searches>, int) GetSearchesList(int userId, PagingAttributes pagingAttributes)
     {
-        using var db = new DatabaseContext();
+        using var db = _dbContextFactory.CreateDbContext();
 
         var count = db.Searches
             .Where(x => x.UserId == userId)
@@ -40,7 +43,7 @@ public class SearchHistoryRepository : ISearchHistory
 
     public bool DeleteUserSearchHistory(int userId)
     {
-        using var db = new DatabaseContext();
+        using var db = _dbContextFactory.CreateDbContext();
         var history = db.Searches.Where(x =>
             x.UserId == userId);
 
@@ -54,7 +57,7 @@ public class SearchHistoryRepository : ISearchHistory
 
     public bool DeleteSearchHistory(int searchId)
     {
-        using var db = new DatabaseContext();
+        using var db = _dbContextFactory.CreateDbContext();
         if (SearchExist(searchId))
         {
             var history = db.History.Find(searchId);
@@ -68,7 +71,7 @@ public class SearchHistoryRepository : ISearchHistory
 
     public bool SearchExist(int searchId)
     {
-        using var db = new DatabaseContext();
+        using var db = _dbContextFactory.CreateDbContext();
         var result = db.Searches.Find(searchId);
         return result != null;
     }

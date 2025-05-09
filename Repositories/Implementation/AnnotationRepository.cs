@@ -11,6 +11,12 @@ namespace Repositories.Implementation;
 
 public class AnnotationRepository : IAnnotation
 {
+    private readonly IDbContextFactory<DatabaseContext2> _dbContextFactory;
+    public AnnotationRepository(IDbContextFactory<DatabaseContext2> factory)
+    {
+        _dbContextFactory = factory;
+    }
+    
     /// <summary>
     /// Create annotation without function, simple, raw, need to know HistoryId
     /// </summary>
@@ -18,7 +24,7 @@ public class AnnotationRepository : IAnnotation
     /// <returns></returns>
     public Annotations CreateAnnotations(AnnotationsDto obj)
     {
-        using var DB = new DatabaseContext();
+        using var DB = _dbContextFactory.CreateDbContext();
         var annotation = new Annotations
         {
             UserId = obj.UserId,
@@ -38,7 +44,7 @@ public class AnnotationRepository : IAnnotation
     /// <returns>Annotations Type Object</returns>
     public Annotations GetAnnotation(int value)
     {
-        using var DB = new DatabaseContext();
+        using var DB = _dbContextFactory.CreateDbContext();
         var result = DB.Annotations.Find(value);
 
         return result;
@@ -52,7 +58,7 @@ public class AnnotationRepository : IAnnotation
     /// <returns>Annotations Type Object</returns>
     public Annotations GetAnnotationByUserId(int id, int userId)
     {
-        using var DB = new DatabaseContext();
+        using var DB = _dbContextFactory.CreateDbContext();
         var result = DB.Annotations
             .Where(a => a.UserId == userId)
             .Where(a => a.Id == id).FirstOrDefault();
@@ -69,8 +75,8 @@ public class AnnotationRepository : IAnnotation
     public List<SimpleAnnotationDto> GetUserAnnotationsMadeOnAPost(int userId, int postId,
         PagingAttributes pagingAttributes)
     {
-        using var DB = new DatabaseContext();
-        var sharedService = new SharedRepository();
+        using var DB = _dbContextFactory.CreateDbContext();
+        var sharedService = new SharedRepository(_dbContextFactory);  //todo fix the SharedRepo creation at this line.
         var page = sharedService.GetPagination(UserAnnotOnPostListCount(userId, postId), pagingAttributes);
         var annotationsOfPostList = (from annot in DB.Annotations
                 join hist in DB.History on annot.HistoryId equals hist.Id
@@ -88,7 +94,7 @@ public class AnnotationRepository : IAnnotation
 
     public int UserAnnotOnPostListCount(int userId, int postId)
     {
-        using var DB = new DatabaseContext();
+        using var DB = _dbContextFactory.CreateDbContext();
         var annotationsCount = from annot in DB.Annotations
             join hist in DB.History on annot.HistoryId equals hist.Id
             where annot.UserId == userId && hist.Postid == postId
@@ -108,8 +114,8 @@ public class AnnotationRepository : IAnnotation
     public List<PostAnnotationsDto> GetAllAnnotationsOfUser(int userId, PagingAttributes pagingAttributes,
         out int count)
     {
-        using var DB = new DatabaseContext();
-        var sharedService = new SharedRepository();
+        using var DB = _dbContextFactory.CreateDbContext();
+        var sharedService = new SharedRepository(_dbContextFactory);  //todo fix the SharedRepo creation at this line.
         count = GetAllAnnotationsOfUserCount(userId);
         var page = sharedService.GetPagination(count, pagingAttributes);
 
@@ -130,7 +136,7 @@ public class AnnotationRepository : IAnnotation
 
     public int GetAllAnnotationsOfUserCount(int userId)
     {
-        using var DB = new DatabaseContext();
+        using var DB = _dbContextFactory.CreateDbContext();
         var listCount = (from annot in DB.Annotations
             join hist in DB.History on annot.HistoryId equals hist.Id
             where annot.UserId == userId
@@ -148,7 +154,7 @@ public class AnnotationRepository : IAnnotation
     /// <returns>boolean</returns>
     public bool DeleteAnnotation(int id, int userId)
     {
-        using var DB = new DatabaseContext();
+        using var DB = _dbContextFactory.CreateDbContext();
         try
         {
             var itemToDelete = GetAnnotationByUserId(id, userId);
@@ -166,7 +172,7 @@ public class AnnotationRepository : IAnnotation
     {
         try
         {
-            using var DB = new DatabaseContext();
+            using var DB = _dbContextFactory.CreateDbContext();
 
             var userId = new NpgsqlParameter("userid", NpgsqlTypes.NpgsqlDbType.Integer);
             userId.Value = obj.UserId;
@@ -194,7 +200,7 @@ public class AnnotationRepository : IAnnotation
 
     public bool UpdateAnnotation(int annotationId, string annotationBody)
     {
-        using var DB = new DatabaseContext();
+        using var DB = _dbContextFactory.CreateDbContext();
         try
         {
             var annotationToUpdate = DB.Annotations.Find(annotationId);
