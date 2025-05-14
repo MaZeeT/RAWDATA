@@ -1,6 +1,6 @@
 namespace BusinessLogic.Interfaces;
 
-public interface IAnnotationHandler
+public interface IAnnotationService
 {
     
 }

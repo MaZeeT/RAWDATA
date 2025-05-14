@@ -1,4 +1,4 @@
-﻿namespace WebService.DTOs;
+﻿namespace WebDTOs;
 
 public class QuestionDto
 {

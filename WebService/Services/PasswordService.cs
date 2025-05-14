@@ -5,7 +5,7 @@ using System.Text;
 
 namespace WebService.Services;
 
-public class PasswordService
+public static class PasswordService
 {
     
     public static string GenerateSalt(int size)

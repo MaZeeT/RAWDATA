@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace WebService.DTOs;
+﻿namespace WebDTOs;
 
 public class SearchHistoryListDto
 {

@@ -8,11 +8,11 @@ namespace WebService.Controllers;
 [Route("api/appuser")]
 public class AppUserController : ControllerBase
 {
-    private IUserHandler _userHandler;
+    private IUserService _userService;
 
-    public AppUserController(IUserHandler userHandler)
+    public AppUserController(IUserService userService)
     {
-        _userHandler = userHandler;
+        _userService = userService;
     }
 
     // http://localhost:5001/api/appuser?id=2
@@ -22,7 +22,7 @@ public class AppUserController : ControllerBase
         //todo Need to query db to check if user exist instead of this hack
         try
         {
-            var appUser = _userHandler.UserName(id);
+            var appUser = _userService.GetUserName(id);
             return Ok(appUser);
         }
         catch (Exception)

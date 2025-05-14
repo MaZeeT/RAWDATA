@@ -8,7 +8,7 @@ using Domain;
 using Domain.Entities;
 using Domain.Services;
 using Repositories.Interfaces;
-using WebService.DTOs;
+using WebDTOs;
 
 namespace WebService.Controllers;
 

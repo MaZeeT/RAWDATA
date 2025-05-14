@@ -1,18 +1,18 @@
 ﻿using BusinessLogic.Interfaces;
 using Repositories.Interfaces;
 
-namespace BusinessLogic.Handlers;
+namespace BusinessLogic.Implementations;
 
-class UserHandler : IUserHandler
+class UserService : IUserService
 {
     readonly IUser _userService;
 
-    public UserHandler(IUser userService)
+    public UserService(IUser userService)
     {
         _userService = userService;
     }
 
-    public string UserName(int id)
+    public string GetUserName(int id)
     {
         return _userService.GetAppUserName(id);
     }
