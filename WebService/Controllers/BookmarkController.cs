@@ -1,10 +1,9 @@
-using Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Domain;
+using BusinessLogic.Interfaces;
 using Domain.Entities;
 using Domain.Services;
 using Repositories.Interfaces;
@@ -17,12 +16,12 @@ namespace WebService.Controllers;
 [Authorize]
 public class BookmarkController : SharedController
 {
-    private IHistoryRepository _historyRepositoryService;
-    private ISharedRepository _sharedRepositoryService;
+    private readonly IBookmarkService _bookmarkService;
+    private readonly ISharedRepository _sharedRepositoryService;
 
-    public BookmarkController(IHistoryRepository historyRepositoryService, ISharedRepository sharedRepositoryService)
+    public BookmarkController(IBookmarkService bookmarkService, ISharedRepository sharedRepositoryService)
     {
-        _historyRepositoryService = historyRepositoryService;
+        _bookmarkService = bookmarkService;
         _sharedRepositoryService = sharedRepositoryService;
     }
 
@@ -33,14 +32,14 @@ public class BookmarkController : SharedController
     {
         if (pagingAttributes.Page < 1 || pagingAttributes.PageSize < 1) return NotFound();
         var userId = GetAuthUserId().Item1;
-        var bookmarks = _historyRepositoryService.GetBookmarkList(userId, pagingAttributes);
+        var bookmarks = _bookmarkService.GetBookmarkList(userId, pagingAttributes);
 
         if (bookmarks == null)
         {
             return NotFound();
         }
 
-        var count = _historyRepositoryService.GetCount(userId, true);
+        var count = _bookmarkService.GetCount(userId);
         return Ok(CreateResult(bookmarks, count, pagingAttributes));
     }
 
@@ -49,7 +48,7 @@ public class BookmarkController : SharedController
     public ActionResult AddBookmark(int postId)
     {
         var userId = GetAuthUserId().Item1;
-        var result = _historyRepositoryService.Add(userId, postId, true);
+        var result = _bookmarkService.Add(userId, postId);
         if (!result)
         {
             return NotFound();
@@ -63,7 +62,7 @@ public class BookmarkController : SharedController
     public ActionResult DeleteBookmark(int postId)
     {
         var userId = GetAuthUserId().Item1;
-        var result = _historyRepositoryService.DeleteBookmark(userId, postId);
+        var result = _bookmarkService.DeleteBookmark(userId, postId);
         if (!result)
         {
             return NotFound();
@@ -77,14 +76,14 @@ public class BookmarkController : SharedController
     public ActionResult DeleteAllBookmarks()
     {
         var userId = GetAuthUserId().Item1;
-        var bookmarks = _historyRepositoryService.GetBookmarkList(userId);
+        var bookmarks = _bookmarkService.GetBookmarkList(userId);
 
         foreach (var bookmark in bookmarks)
         {
-            _historyRepositoryService.DeleteBookmark(bookmark.Userid, bookmark.Postid);
+            _bookmarkService.DeleteBookmark(bookmark.Userid, bookmark.Postid);
         }
 
-        var result = _historyRepositoryService.GetBookmarkList(userId).Count == 0;
+        var result = _bookmarkService.GetBookmarkList(userId).Count == 0;
         if (!result)
         {
             return NotFound();
