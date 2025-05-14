@@ -1,13 +1,11 @@
-﻿using Infrastructure;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Domain;
+using BusinessLogic.Interfaces;
 using Domain.Entities;
 using Domain.Services;
-using Repositories.Interfaces;
 using WebDTOs;
 
 namespace WebService.Controllers;
@@ -20,12 +18,11 @@ namespace WebService.Controllers;
 ///
 public class SearchController : SharedController
 {
-    private readonly ISearchRepository _dataService;
+    private readonly ISearchService _searchService;
 
-    public SearchController(
-        ISearchRepository dataService)
+    public SearchController(ISearchService searchService)
     {
-        _dataService = dataService;
+        _searchService = searchService;
     }
 
     [HttpGet("wordrank", Name = nameof(WordRank))]
@@ -50,12 +47,12 @@ public class SearchController : SharedController
             }
             else if (searchparams.stype >= 4 && searchparams.stype <= 5)
             {
-                var search = _dataService.WordRank(userId, searchparams.s, searchparams.stype, maxresults);
+                var search = _searchService.WordRank(userId, searchparams.s, searchparams.stype, maxresults);
                 return Ok(search);
             }
             else
             {
-                var search = _dataService.WordRank(userId, searchparams.s, 5, maxresults);
+                var search = _searchService.WordRank(userId, searchparams.s, 5, maxresults);
                 return Ok(search);
             }
         }
@@ -81,10 +78,10 @@ public class SearchController : SharedController
             if (searchparams.stype >= 0 && searchparams.stype <= 3)
             {
                 //do search, fix page also if needed as a bonus
-                var search = _dataService.Search(userId, searchparams.s, searchparams.stype, pagingAttributes);
+                var search = _searchService.Search(userId, searchparams.s, searchparams.stype, pagingAttributes);
 
                 // try to fix searchsting for link generation if it seems useable but ugly
-                searchparams.s = _dataService.BuildSearchString(searchparams.s, true);
+                searchparams.s = _searchService.BuildSearchString(searchparams.s, true);
 
                 var result = CreateResult(search, searchparams, pagingAttributes);
                 if (result != null)
