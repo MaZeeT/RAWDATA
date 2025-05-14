@@ -1,9 +1,8 @@
-﻿using Infrastructure;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using Domain;
+using BusinessLogic.Interfaces;
 using Domain.AnnotationsDTOs;
 using Domain.Services;
 using Repositories.Interfaces;
@@ -15,24 +14,25 @@ namespace WebService.Controllers;
 [Authorize]
 public class AnnotationsController : SharedController
 {
-    private IAnnotationRepository _annotationRepositoryService;
-    private ISharedRepository _sharedRepositoryService;
+    private readonly IAnnotationService _annotationService;
+    private readonly ISharedRepository _sharedRepositoryService;
 
-    public AnnotationsController(IAnnotationRepository annotationRepositoryService, ISharedRepository sharedRepositoryService)
+    public AnnotationsController(IAnnotationService annotationService, ISharedRepository sharedRepositoryService)
     {
-        _annotationRepositoryService = annotationRepositoryService;
+        _annotationService = annotationService;
         _sharedRepositoryService = sharedRepositoryService;
     }
 
     [HttpGet("post/{postId}")]
-    public ActionResult
-        GetAllUserAnnotationsMadeOnPostId(int postId,
-            [FromQuery] PagingAttributes pagingAttributes) //needs-pagination
+    public ActionResult GetAllUserAnnotationsMadeOnPostId(int postId, [FromQuery] PagingAttributes pagingAttributes) //needs-pagination
     {
         (int userId, bool useridok) = GetAuthUserId();
-        if (!useridok){ return Unauthorized(); }
+        if (!useridok)
+        {
+            return Unauthorized();
+        }
 
-        var listOfAnnotations = _annotationRepositoryService.GetUserAnnotationsMadeOnAPost(userId, postId, pagingAttributes);
+        var listOfAnnotations = _annotationService.GetUserAnnotationsMadeOnAPost(userId, postId, pagingAttributes);
         if (listOfAnnotations.Count == 0){ return NotFound(); }
 
         return Ok(listOfAnnotations);
@@ -48,7 +48,7 @@ public class AnnotationsController : SharedController
         }
 
         int count;
-        var listOfAnnotations = _annotationRepositoryService.GetAllAnnotationsOfUser(userId, pagingAttributes, out count);
+        var listOfAnnotations = _annotationService.GetAllAnnotationsOfUser(userId, pagingAttributes, out count);
         if (count == 0)
         {
             return NotFound();
@@ -71,7 +71,7 @@ public class AnnotationsController : SharedController
         Name = nameof(GetAnyAnnotationById))] // fancy way to have strings checked by the compiler
     public ActionResult GetAnyAnnotationById(int annotationId)
     {
-        var returnedAnnotation = _annotationRepositoryService.GetAnnotation(annotationId);
+        var returnedAnnotation = _annotationService.GetAnnotation(annotationId);
         if (returnedAnnotation == null)
         {
             return NotFound();
@@ -99,9 +99,9 @@ public class AnnotationsController : SharedController
             Body = annotationObj.Body
         };
         int newId;
-        if (_annotationRepositoryService.CreateAnnotation_withFunction(newAnnotation, out newId))
+        if (_annotationService.CreateAnnotation_withFunction(newAnnotation, out newId))
         {
-            var createdAnnotation = _annotationRepositoryService.GetAnnotation(newId);
+            var createdAnnotation = _annotationService.GetAnnotation(newId);
             return Ok(CreateLink(createdAnnotation));
         }
 
@@ -112,7 +112,7 @@ public class AnnotationsController : SharedController
     public ActionResult UpdateAnnotation(int annotationId, [FromBody] AnnotationsDto annotation)
     {
         //need to encode body before sending to db - this can also be done inside the UpdateAnnotation function.
-        if (_annotationRepositoryService.UpdateAnnotation(annotationId, annotation.Body))
+        if (_annotationService.UpdateAnnotation(annotationId, annotation.Body))
         {
             return NoContent();
         }
@@ -129,7 +129,7 @@ public class AnnotationsController : SharedController
             return Unauthorized();
         }
 
-        if (_annotationRepositoryService.DeleteAnnotation(annotationId, userId))
+        if (_annotationService.DeleteAnnotation(annotationId, userId))
         {
             return Ok();
         }

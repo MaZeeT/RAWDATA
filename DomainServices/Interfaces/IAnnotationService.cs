@@ -1,6 +1,14 @@
+using Domain.AnnotationsDTOs;
+using Domain.Services;
+
 namespace BusinessLogic.Interfaces;
 
 public interface IAnnotationService
 {
-    
+    Annotations GetAnnotation(int annotationId);
+    List<SimpleAnnotationDto> GetUserAnnotationsMadeOnAPost(int userId, int postId, PagingAttributes pagingAttributes);
+    List<PostAnnotationsDto> GetAllAnnotationsOfUser(int userId, PagingAttributes pagingAttributes, out int count);
+    bool UpdateAnnotation(int annotationId, string annotationBody);
+    bool DeleteAnnotation(int id, int userId);
+    bool CreateAnnotation_withFunction(AnnotationsDto newAnnotation, out int newId);
 }

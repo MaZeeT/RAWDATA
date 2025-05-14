@@ -1,5 +1,7 @@
 using System;
 using System.Text;
+using BusinessLogic.Implementations;
+using BusinessLogic.Interfaces;
 using Infrastructure.Database;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -14,12 +16,17 @@ string database = "host=localhost;port=5432;db=stackoverflow;uid=postgres;pwd=Pa
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+
+builder.Services.AddSingleton<IAnnotationService, AnnotationService>();
+builder.Services.AddSingleton<IUserService, UserService>();
+
 builder.Services.AddSingleton<ISharedRepository, SharedRepositoryRepository>();
 builder.Services.AddSingleton<ISearchRepository, SearchRepositoryDataRepository>();
 builder.Services.AddSingleton<IAnnotationRepository, AnnotationRepositoryRepository>();
 builder.Services.AddSingleton<IUserRepository, AppUserRepositoryRepository>();
 builder.Services.AddSingleton<IHistoryRepository, HistoryRepositoryRepository>();
 builder.Services.AddSingleton<ISearchHistoryRepository, SearchHistoryRepositoryRepository>();
+
 builder.Services.AddPooledDbContextFactory<DatabaseContext2>(options =>
 {
     options

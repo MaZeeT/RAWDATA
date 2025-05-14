@@ -3,7 +3,7 @@ using Repositories.Interfaces;
 
 namespace BusinessLogic.Implementations;
 
-class UserService : IUserService
+public class UserService : IUserService
 {
     readonly IUserRepository _userRepositoryService;
 
