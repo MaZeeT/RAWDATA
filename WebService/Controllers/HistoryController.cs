@@ -1,10 +1,9 @@
-using Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Domain;
+using BusinessLogic.Interfaces;
 using Domain.Entities;
 using Domain.Services;
 using Repositories.Interfaces;
@@ -17,12 +16,12 @@ namespace WebService.Controllers;
 [Authorize]
 public class HistoryController : SharedController
 {
-    private IHistoryRepository _historyRepositoryService;
-    private ISharedRepository _sharedRepositoryService;
+    private readonly IHistoryService _historyService;
+    private readonly ISharedRepository _sharedRepositoryService;
 
-    public HistoryController(IHistoryRepository historyRepositoryService, ISharedRepository sharedRepositoryService)
+    public HistoryController(IHistoryService historyService, ISharedRepository sharedRepositoryService)
     {
-        _historyRepositoryService = historyRepositoryService;
+        _historyService = historyService;
         _sharedRepositoryService = sharedRepositoryService;
     }
 
@@ -34,14 +33,14 @@ public class HistoryController : SharedController
         if (pagingAttributes.Page < 1 || pagingAttributes.PageSize < 1) return NotFound();
         var userId = GetAuthUserId().Item1;
 
-        var history = _historyRepositoryService.GetHistoryList(userId, pagingAttributes);
+        var history = _historyService.GetHistoryList(userId, pagingAttributes);
 
         if (history == null)
         {
             return NotFound();
         }
 
-        var count = _historyRepositoryService.GetCount(userId, false);
+        var count = _historyService.GetCount(userId);
 
         return Ok(CreateResult(history, count, pagingAttributes));
     }
@@ -51,7 +50,7 @@ public class HistoryController : SharedController
     public ActionResult ClearHistory()
     {
         var userId = GetAuthUserId().Item1;
-        var result = _historyRepositoryService.DeleteUserHistory(userId);
+        var result = _historyService.DeleteUserHistory(userId);
         if (!result)
         {
             return NotFound();
