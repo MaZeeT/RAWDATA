@@ -7,35 +7,35 @@ namespace BusinessLogic.Implementations;
 
 public class BookmarkService : IBookmarkService
 {
-    private readonly IHistoryRepository _historyRepositoryService;
+    private readonly IHistoryRepository _historyRepository;
 
-    public BookmarkService(IHistoryRepository historyRepositoryService)
+    public BookmarkService(IHistoryRepository historyRepository)
     {
-        _historyRepositoryService = historyRepositoryService;
+        _historyRepository = historyRepository;
     }
 
     public bool Add(int userId, int postId)
     {
-        return _historyRepositoryService.Add(userId, postId, true);
+        return _historyRepository.Add(userId, postId, true);
     }
 
     public bool DeleteBookmark(int userId, int postId)
     {
-        return _historyRepositoryService.DeleteBookmark(userId, postId);
+        return _historyRepository.DeleteBookmark(userId, postId);
     }
 
     public List<History> GetBookmarkList(int userId)
     {
-        return _historyRepositoryService.GetBookmarkList(userId);
+        return _historyRepository.GetBookmarkList(userId);
     }
 
     public List<History> GetBookmarkList(int userId, PagingAttributes pagingAttributes)
     {
-        return _historyRepositoryService.GetBookmarkList(userId, pagingAttributes);
+        return _historyRepository.GetBookmarkList(userId, pagingAttributes);
     }
 
     public int GetCount(int userId)
     {
-        return _historyRepositoryService.GetCount(userId, true);
+        return _historyRepository.GetCount(userId, true);
     }
 }

@@ -7,30 +7,30 @@ namespace BusinessLogic.Implementations;
 
 public class HistoryService : IHistoryService
 {
-    private readonly IHistoryRepository _historyRepositoryService;
+    private readonly IHistoryRepository _historyRepository;
 
-    public HistoryService(IHistoryRepository historyRepositoryService)
+    public HistoryService(IHistoryRepository historyRepository)
     {
-        _historyRepositoryService = historyRepositoryService;
+        _historyRepository = historyRepository;
     }
 
     public bool Add(History history)
     {
-        return _historyRepositoryService.Add(history);
+        return _historyRepository.Add(history);
     }
 
     public List<History> GetHistoryList(int userId, PagingAttributes pagingAttributes)
     {
-        return _historyRepositoryService.GetHistoryList(userId, pagingAttributes);
+        return _historyRepository.GetHistoryList(userId, pagingAttributes);
     }
 
     public int GetCount(int userId)
     {
-        return _historyRepositoryService.GetCount(userId, false);
+        return _historyRepository.GetCount(userId, false);
     }
 
     public bool DeleteUserHistory(int userId)
     {
-        return _historyRepositoryService.DeleteUserHistory(userId);
+        return _historyRepository.DeleteUserHistory(userId);
     }
 }

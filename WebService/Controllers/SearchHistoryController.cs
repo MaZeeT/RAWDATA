@@ -1,13 +1,11 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Infrastructure;
 using System.Collections.Generic;
 using System.Linq;
 using System;
-using Domain;
+using BusinessLogic.Interfaces;
 using Domain.Entities;
 using Domain.Services;
-using Repositories.Interfaces;
 using WebDTOs;
 
 namespace WebService.Controllers;
@@ -17,15 +15,11 @@ namespace WebService.Controllers;
 [Authorize]
 public class SearchHistoryController : SharedController
 {
-    private readonly ISearchHistoryRepository _searchHistoryRepositoryService;
-    private readonly ISearchRepository _dataService;
+    private readonly ISearchService _searchService;
 
-    public SearchHistoryController(
-        ISearchHistoryRepository searchHistoryRepositoryService,
-        ISearchRepository dataService)
+    public SearchHistoryController(ISearchService searchService)
     {
-        _searchHistoryRepositoryService = searchHistoryRepositoryService;
-        _dataService = dataService;
+        _searchService = searchService;
     }
 
     [HttpGet(Name = nameof(GetSearchHistory))]
@@ -35,7 +29,7 @@ public class SearchHistoryController : SharedController
         (int userId, bool useridok) = GetAuthUserId();
         if (!useridok){ return Unauthorized(); }
 
-        (var shistory, int count) = _searchHistoryRepositoryService.GetSearchesList(userId, pagingAttributes);
+        (var shistory, int count) = _searchService.GetSearchesList(userId, pagingAttributes);
         if (shistory == null || count == 0)
         {
             //return NotFound();
@@ -63,7 +57,7 @@ public class SearchHistoryController : SharedController
             return Unauthorized();
         }
 
-        var result = _searchHistoryRepositoryService.DeleteUserSearchHistory(userId);
+        var result = _searchService.DeleteUserSearchHistory(userId);
         if (!result)
         {
             return NotFound();
@@ -85,10 +79,10 @@ public class SearchHistoryController : SharedController
         var s = "";
         if (searches.SearchString != null)
         {
-            s = _dataService.BuildSearchString(searches.SearchString, true);
+            s = _searchService.BuildSearchString(searches.SearchString, true);
         }
 
-        var stype = _dataService.SearchTypeLookup(searches.SearchType);
+        var stype = _searchService.SearchTypeLookup(searches.SearchType);
 
         var url = Url.Link(
             nameof(SearchController.Search),
