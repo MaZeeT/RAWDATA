@@ -20,6 +20,7 @@ builder.Services.AddControllers();
 builder.Services.AddSingleton<IAnnotationService, AnnotationService>();
 builder.Services.AddSingleton<IBookmarkService, BookmarkService>();
 builder.Services.AddSingleton<IHistoryService, HistoryService>();
+builder.Services.AddSingleton<IQuestionService, QuestionService>();
 builder.Services.AddSingleton<IUserService, UserService>();
 
 builder.Services.AddSingleton<ISharedRepository, SharedRepositoryRepository>();

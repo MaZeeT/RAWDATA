@@ -14,6 +14,11 @@ public class HistoryService : IHistoryService
         _historyRepositoryService = historyRepositoryService;
     }
 
+    public bool Add(History history)
+    {
+        return _historyRepositoryService.Add(history);
+    }
+
     public List<History> GetHistoryList(int userId, PagingAttributes pagingAttributes)
     {
         return _historyRepositoryService.GetHistoryList(userId, pagingAttributes);

@@ -1,10 +1,9 @@
-﻿using Infrastructure;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Domain;
+using BusinessLogic.Interfaces;
 using Domain.AnnotationsDTOs;
 using Domain.Entities;
 using Domain.Services;
@@ -18,21 +17,21 @@ namespace WebService.Controllers;
 [Authorize]
 public class QuestionsController : SharedController
 {
-    private readonly ISearchRepository _dataService;
+    private readonly IQuestionService _questionService;
     private readonly ISharedRepository _sharedRepositoryService;
-    private readonly IAnnotationRepository _annotationRepositoryService;
-    private readonly IHistoryRepository _historyRepositoryService;
+    private readonly IAnnotationService _annotationService;
+    private readonly IHistoryService _historyService;
 
     public QuestionsController(
-        ISearchRepository dataService,
+        IQuestionService questionService,
         ISharedRepository sharedRepositoryService,
-        IAnnotationRepository annotationRepositoryService,
-        IHistoryRepository historyRepositoryService)
+        IAnnotationService annotationService,
+        IHistoryService historyService)
     {
-        _dataService = dataService;
+        _questionService = questionService;
         _sharedRepositoryService = sharedRepositoryService;
-        _historyRepositoryService = historyRepositoryService;
-        _annotationRepositoryService = annotationRepositoryService;
+        _historyService = historyService;
+        _annotationService = annotationService;
     }
 
     [HttpGet(Name = nameof(BrowseQuestions))]
@@ -41,7 +40,7 @@ public class QuestionsController : SharedController
     // for browsing all the questions; with links to the thread
     public ActionResult BrowseQuestions([FromQuery] PagingAttributes pagingAttributes)
     {
-        var categories = _dataService.GetQuestions(pagingAttributes);
+        var categories = _questionService.GetQuestions(pagingAttributes);
         var result = CreateResult(categories, pagingAttributes);
         return Ok(result);
     }
@@ -81,7 +80,7 @@ public class QuestionsController : SharedController
             }
             else browsehist.Postid = questionId;
 
-            _historyRepositoryService.Add(browsehist);
+            _historyService.Add(browsehist);
 
             //createthreaddto
             List<PostsThreadDto> thread = new List<PostsThreadDto>();
@@ -96,7 +95,7 @@ public class QuestionsController : SharedController
                 };
                 PagingAttributes pagingAttributes = new PagingAttributes();
                 List<SimpleAnnotationDto> tempanno = new List<SimpleAnnotationDto>();
-                tempanno = _annotationRepositoryService.GetUserAnnotationsMadeOnAPost(userId, p.Id, pagingAttributes);
+                tempanno = _annotationService.GetUserAnnotationsMadeOnAPost(userId, p.Id, pagingAttributes);
                 pt.Annotations = tempanno;
                 pt.createBookmarkLink = Url.Link(nameof(BookmarkController.AddBookmark), new { postId = p.Id });
                 AnnotationsDto anno = new AnnotationsDto
