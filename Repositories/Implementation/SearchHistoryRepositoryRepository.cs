@@ -8,16 +8,16 @@ using Repositories.Interfaces;
 
 namespace Repositories.Implementation;
 
-public class SearchHistoryRepository : ISearchHistory
+public class SearchHistoryRepositoryRepository : ISearchHistoryRepository
 {
     private readonly IDbContextFactory<DatabaseContext2> _dbContextFactory;
-    private readonly IShared _sharedService; //shared stuff by injection
+    private readonly ISharedRepository _sharedRepositoryService; //shared stuff by injection
 
-    public SearchHistoryRepository(IDbContextFactory<DatabaseContext2> factory,
-        IShared sharedService)
+    public SearchHistoryRepositoryRepository(IDbContextFactory<DatabaseContext2> factory,
+        ISharedRepository sharedRepositoryService)
     {
         _dbContextFactory = factory;
-        _sharedService = sharedService;
+        _sharedRepositoryService = sharedRepositoryService;
     }
 
     public (List<Searches>, int) GetSearchesList(int userId, PagingAttributes pagingAttributes)
@@ -29,7 +29,7 @@ public class SearchHistoryRepository : ISearchHistory
             .Count();
 
         //try to convert back from 1-based pages
-        int page = _sharedService.GetPagination(count, pagingAttributes);
+        int page = _sharedRepositoryService.GetPagination(count, pagingAttributes);
 
         var list = db.Searches
             .Where(x => x.UserId == userId)

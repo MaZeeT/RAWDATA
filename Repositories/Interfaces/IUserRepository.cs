@@ -2,7 +2,7 @@ using Domain;
 using Domain.Entities;
 
 namespace Repositories.Interfaces;
-public interface IUser
+public interface IUserRepository
 {
     bool CreateAppUser(string username, string password, string salt);
     AppUser CreateUser(string name, string password, string salt);

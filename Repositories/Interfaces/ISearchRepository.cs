@@ -4,7 +4,7 @@ using Domain.Services;
 
 namespace Repositories.Interfaces;
 
-public interface ISearch
+public interface ISearchRepository
 {
     IList<Questions> GetQuestions(PagingAttributes pagingAttributes);
     IList<WordRank> WordRank(int userid, string searchstring, int searchtypecode, int? maxresults);

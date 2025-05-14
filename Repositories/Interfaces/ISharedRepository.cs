@@ -4,7 +4,7 @@ using Domain.Services;
 
 namespace Repositories.Interfaces;
 
-public interface IShared
+public interface ISharedRepository
 {
     string GetPostType(int postId);
     SinglePost GetPost(int postId);

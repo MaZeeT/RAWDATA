@@ -18,21 +18,21 @@ namespace WebService.Controllers;
 [Authorize]
 public class QuestionsController : SharedController
 {
-    private readonly ISearch _dataService;
-    private readonly IShared _sharedService;
-    private readonly IAnnotation _annotationService;
-    private readonly IHistory _historyService;
+    private readonly ISearchRepository _dataService;
+    private readonly ISharedRepository _sharedRepositoryService;
+    private readonly IAnnotationRepository _annotationRepositoryService;
+    private readonly IHistoryRepository _historyRepositoryService;
 
     public QuestionsController(
-        ISearch dataService,
-        IShared sharedService,
-        IAnnotation annotationService,
-        IHistory historyService)
+        ISearchRepository dataService,
+        ISharedRepository sharedRepositoryService,
+        IAnnotationRepository annotationRepositoryService,
+        IHistoryRepository historyRepositoryService)
     {
         _dataService = dataService;
-        _sharedService = sharedService;
-        _historyService = historyService;
-        _annotationService = annotationService;
+        _sharedRepositoryService = sharedRepositoryService;
+        _historyRepositoryService = historyRepositoryService;
+        _annotationRepositoryService = annotationRepositoryService;
     }
 
     [HttpGet(Name = nameof(BrowseQuestions))]
@@ -53,10 +53,10 @@ public class QuestionsController : SharedController
     {
         (int userId, bool useridok) = GetAuthUserId();
 
-        var checkthatpost = _sharedService.GetPostType(questionId);
+        var checkthatpost = _sharedRepositoryService.GetPostType(questionId);
         if (checkthatpost == "answers")
         {
-            questionId = _sharedService.GetPost(questionId).QuestionId;
+            questionId = _sharedRepositoryService.GetPost(questionId).QuestionId;
             if (postId != null)
             {
                 postId = questionId;
@@ -67,7 +67,7 @@ public class QuestionsController : SharedController
             return NotFound();
         }
 
-        var t = _sharedService.GetThread(questionId);
+        var t = _sharedRepositoryService.GetThread(questionId);
         if (t != null && useridok) // then we got a thread!
         {
             ///call to add browse history here
@@ -81,7 +81,7 @@ public class QuestionsController : SharedController
             }
             else browsehist.Postid = questionId;
 
-            _historyService.Add(browsehist);
+            _historyRepositoryService.Add(browsehist);
 
             //createthreaddto
             List<PostsThreadDto> thread = new List<PostsThreadDto>();
@@ -96,7 +96,7 @@ public class QuestionsController : SharedController
                 };
                 PagingAttributes pagingAttributes = new PagingAttributes();
                 List<SimpleAnnotationDto> tempanno = new List<SimpleAnnotationDto>();
-                tempanno = _annotationService.GetUserAnnotationsMadeOnAPost(userId, p.Id, pagingAttributes);
+                tempanno = _annotationRepositoryService.GetUserAnnotationsMadeOnAPost(userId, p.Id, pagingAttributes);
                 pt.Annotations = tempanno;
                 pt.createBookmarkLink = Url.Link(nameof(BookmarkController.AddBookmark), new { postId = p.Id });
                 AnnotationsDto anno = new AnnotationsDto
@@ -136,7 +136,7 @@ public class QuestionsController : SharedController
 
     private object CreateResult(IEnumerable<Questions> questions, PagingAttributes attr)
     {
-        var totalItems = _sharedService.NumberOfQuestions();
+        var totalItems = _sharedRepositoryService.NumberOfQuestions();
         var numberOfPages = Math.Ceiling((double)totalItems / attr.PageSize);
 
         var prev = attr.Page > 1

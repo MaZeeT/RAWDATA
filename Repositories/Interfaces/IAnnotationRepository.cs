@@ -4,7 +4,7 @@ using Domain.Services;
 
 namespace Repositories.Interfaces;
 
-public interface IAnnotation
+public interface IAnnotationRepository
 {
     Annotations CreateAnnotations(AnnotationsDto annotationObject);
     Annotations GetAnnotation(int annotationId);

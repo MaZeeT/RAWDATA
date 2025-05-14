@@ -17,13 +17,13 @@ namespace WebService.Controllers;
 [Authorize]
 public class HistoryController : SharedController
 {
-    private IHistory _historyService;
-    private IShared _sharedService;
+    private IHistoryRepository _historyRepositoryService;
+    private ISharedRepository _sharedRepositoryService;
 
-    public HistoryController(IHistory historyService, IShared sharedService)
+    public HistoryController(IHistoryRepository historyRepositoryService, ISharedRepository sharedRepositoryService)
     {
-        _historyService = historyService;
-        _sharedService = sharedService;
+        _historyRepositoryService = historyRepositoryService;
+        _sharedRepositoryService = sharedRepositoryService;
     }
 
     [HttpGet(Name = nameof(GetHistory))]
@@ -34,14 +34,14 @@ public class HistoryController : SharedController
         if (pagingAttributes.Page < 1 || pagingAttributes.PageSize < 1) return NotFound();
         var userId = GetAuthUserId().Item1;
 
-        var history = _historyService.GetHistoryList(userId, pagingAttributes);
+        var history = _historyRepositoryService.GetHistoryList(userId, pagingAttributes);
 
         if (history == null)
         {
             return NotFound();
         }
 
-        var count = _historyService.GetCount(userId, false);
+        var count = _historyRepositoryService.GetCount(userId, false);
 
         return Ok(CreateResult(history, count, pagingAttributes));
     }
@@ -51,7 +51,7 @@ public class HistoryController : SharedController
     public ActionResult ClearHistory()
     {
         var userId = GetAuthUserId().Item1;
-        var result = _historyService.DeleteUserHistory(userId);
+        var result = _historyRepositoryService.DeleteUserHistory(userId);
         if (!result)
         {
             return NotFound();
@@ -86,7 +86,7 @@ public class HistoryController : SharedController
 
     private HistoryDTO CreateHistoryResultDto(History hist)
     {
-        var post = _sharedService.GetPost(hist.Postid);
+        var post = _sharedRepositoryService.GetPost(hist.Postid);
         var dto = new HistoryDTO
         {
             Title = post.Title,

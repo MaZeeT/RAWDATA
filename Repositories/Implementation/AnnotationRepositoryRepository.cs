@@ -9,10 +9,10 @@ using Repositories.Interfaces;
 
 namespace Repositories.Implementation;
 
-public class AnnotationRepository : IAnnotation
+public class AnnotationRepositoryRepository : IAnnotationRepository
 {
     private readonly IDbContextFactory<DatabaseContext2> _dbContextFactory;
-    public AnnotationRepository(IDbContextFactory<DatabaseContext2> factory)
+    public AnnotationRepositoryRepository(IDbContextFactory<DatabaseContext2> factory)
     {
         _dbContextFactory = factory;
     }
@@ -76,7 +76,7 @@ public class AnnotationRepository : IAnnotation
         PagingAttributes pagingAttributes)
     {
         using var DB = _dbContextFactory.CreateDbContext();
-        var sharedService = new SharedRepository(_dbContextFactory);  //todo fix the SharedRepo creation at this line.
+        var sharedService = new SharedRepositoryRepository(_dbContextFactory);  //todo fix the SharedRepo creation at this line.
         var page = sharedService.GetPagination(UserAnnotOnPostListCount(userId, postId), pagingAttributes);
         var annotationsOfPostList = (from annot in DB.Annotations
                 join hist in DB.History on annot.HistoryId equals hist.Id
@@ -115,7 +115,7 @@ public class AnnotationRepository : IAnnotation
         out int count)
     {
         using var DB = _dbContextFactory.CreateDbContext();
-        var sharedService = new SharedRepository(_dbContextFactory);  //todo fix the SharedRepo creation at this line.
+        var sharedService = new SharedRepositoryRepository(_dbContextFactory);  //todo fix the SharedRepo creation at this line.
         count = GetAllAnnotationsOfUserCount(userId);
         var page = sharedService.GetPagination(count, pagingAttributes);
 

@@ -8,16 +8,16 @@ using Repositories.Interfaces;
 
 namespace Repositories.Implementation;
 
-public class SearchDataRepository : ISearch
+public class SearchRepositoryDataRepository : ISearchRepository
 {
     private readonly IDbContextFactory<DatabaseContext2> _dbContextFactory;
-    private readonly IShared _sharedService; //shared stuff by injection
+    private readonly ISharedRepository _sharedRepositoryService; //shared stuff by injection
 
-    public SearchDataRepository(IDbContextFactory<DatabaseContext2> factory,
-        IShared sharedService)
+    public SearchRepositoryDataRepository(IDbContextFactory<DatabaseContext2> factory,
+        ISharedRepository sharedRepositoryService)
     {
         _dbContextFactory = factory;
-        _sharedService = sharedService;
+        _sharedRepositoryService = sharedRepositoryService;
     }
 
     public IList<Questions> GetQuestions(PagingAttributes pagingAttributes)
@@ -26,7 +26,7 @@ public class SearchDataRepository : ISearch
         using var db = _dbContextFactory.CreateDbContext();
 
         //convert back from 1-based pages + check/fix page
-        int page = _sharedService.GetPagination(_sharedService.NumberOfQuestions(), pagingAttributes);
+        int page = _sharedRepositoryService.GetPagination(_sharedRepositoryService.NumberOfQuestions(), pagingAttributes);
 
         return db.Questions
             .OrderBy(u => u.Id)
@@ -81,7 +81,7 @@ public class SearchDataRepository : ISearch
             .Count();
         System.Console.WriteLine($"{matchcount} results.");
 
-        int page = _sharedService.GetPagination(matchcount, pagingAttributes);
+        int page = _sharedRepositoryService.GetPagination(matchcount, pagingAttributes);
 
         System.Console.WriteLine($"{page} page trying to get.");
 
@@ -99,7 +99,7 @@ public class SearchDataRepository : ISearch
         {
             Posts p = new Posts();
             SinglePost sp = new SinglePost();
-            sp = _sharedService.GetPost(s.postid);
+            sp = _sharedRepositoryService.GetPost(s.postid);
 
             p.Parentid = sp.QuestionId;
             p.Id = sp.Id;
@@ -111,7 +111,7 @@ public class SearchDataRepository : ISearch
 
             p.Body = sp.Body.Substring(0, endpos);
 
-            p.Title = _sharedService.GetQuestion(p.Parentid).Title;
+            p.Title = _sharedRepositoryService.GetQuestion(p.Parentid).Title;
             p.Totalresults = matchcount;
             p.Rank = s.rank;
             resultposts.Add(p);

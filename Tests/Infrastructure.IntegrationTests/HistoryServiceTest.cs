@@ -9,17 +9,17 @@ using Xunit;
 
 namespace Tests.Infrastructure.IntegrationTests
 {
-    public class HistoryRepositoryTest
+    public class HistoryRepositoryRepositoryTest
     {
         private readonly IDbContextFactory<DatabaseContext2> _dbContextFactory;
         private readonly ServiceProvider _serviceProvider;
         private const int testUserId = 40;
         
-        public HistoryRepositoryTest()
+        public HistoryRepositoryRepositoryTest()
         {
             string database = "host=localhost;port=5432;db=stackoverflow;uid=postgres;pwd=Password123";
             var services = new ServiceCollection();
-            services.AddSingleton<IHistory, HistoryRepository>();
+            services.AddSingleton<IHistoryRepository, HistoryRepositoryRepository>();
             services.AddPooledDbContextFactory<DatabaseContext2>(options =>
             {
                 options
@@ -34,7 +34,7 @@ namespace Tests.Infrastructure.IntegrationTests
         [Fact]
         public void HistoryAddInvalid()
         {
-            IHistory service = _serviceProvider.GetRequiredService<IHistory>();
+            IHistoryRepository service = _serviceProvider.GetRequiredService<IHistoryRepository>();
             var history = new History
             {
                 Userid = testUserId,
@@ -48,7 +48,7 @@ namespace Tests.Infrastructure.IntegrationTests
         [Fact]
         public void HistoryAddValid()
         {
-            IHistory service = _serviceProvider.GetRequiredService<IHistory>();
+            IHistoryRepository service = _serviceProvider.GetRequiredService<IHistoryRepository>();
             var history = new History
             {
                 Userid = testUserId,
@@ -67,7 +67,7 @@ namespace Tests.Infrastructure.IntegrationTests
         [Fact]
         public void HistoryDeleteBookmarkInvalidPost()
         {
-            IHistory service = _serviceProvider.GetRequiredService<IHistory>();
+            IHistoryRepository service = _serviceProvider.GetRequiredService<IHistoryRepository>();
 
             const int invalidModifier = -1;
             const int userid = testUserId;
@@ -85,7 +85,7 @@ namespace Tests.Infrastructure.IntegrationTests
         [Fact]
         public void HistoryDeleteBookmarkInvalidUser()
         {
-            IHistory service = _serviceProvider.GetRequiredService<IHistory>();
+            IHistoryRepository service = _serviceProvider.GetRequiredService<IHistoryRepository>();
 
             const int invalidModifier = -1;
             const int userid = testUserId;
@@ -103,7 +103,7 @@ namespace Tests.Infrastructure.IntegrationTests
         [Fact]
         public void HistoryDeleteBookmarkInvalidUserAndPost()
         {
-            IHistory service = _serviceProvider.GetRequiredService<IHistory>();
+            IHistoryRepository service = _serviceProvider.GetRequiredService<IHistoryRepository>();
 
             const int invalidModifier = -1;
             const int userid = testUserId;
@@ -121,7 +121,7 @@ namespace Tests.Infrastructure.IntegrationTests
         [Fact]
         public void HistoryDeleteBookmarkValid()
         {
-            IHistory service = _serviceProvider.GetRequiredService<IHistory>();
+            IHistoryRepository service = _serviceProvider.GetRequiredService<IHistoryRepository>();
 
             const int userid = testUserId;
             const int postId = 1760;
@@ -140,7 +140,7 @@ namespace Tests.Infrastructure.IntegrationTests
         [Fact]
         public void HistoryDeleteUserEmptyHistory()
         {
-            IHistory service = _serviceProvider.GetRequiredService<IHistory>();
+            IHistoryRepository service = _serviceProvider.GetRequiredService<IHistoryRepository>();
             const int userid = 12;
 
             var historyPre = service.GetHistoryList(userid);
@@ -156,7 +156,7 @@ namespace Tests.Infrastructure.IntegrationTests
         [Fact]
         public void HistoryDeleteUserHistory()
         {
-            IHistory service = _serviceProvider.GetRequiredService<IHistory>();
+            IHistoryRepository service = _serviceProvider.GetRequiredService<IHistoryRepository>();
             const int userid = testUserId;
 
             const int postId1 = 19;
@@ -190,7 +190,7 @@ namespace Tests.Infrastructure.IntegrationTests
         [Fact]
         public void HistoryDeleteInvalid()
         {
-            IHistory service = _serviceProvider.GetRequiredService<IHistory>();
+            IHistoryRepository service = _serviceProvider.GetRequiredService<IHistoryRepository>();
 
             const int userId = -5;
 
@@ -200,7 +200,7 @@ namespace Tests.Infrastructure.IntegrationTests
         [Fact]
         public void HistoryDeleteValid()
         {
-            IHistory service = _serviceProvider.GetRequiredService<IHistory>();
+            IHistoryRepository service = _serviceProvider.GetRequiredService<IHistoryRepository>();
             const int userId = testUserId;
             const int postId = 709;
             const bool isBookmark = true;
@@ -218,7 +218,7 @@ namespace Tests.Infrastructure.IntegrationTests
         [Fact]
         public void HistoryExistFalse()
         {
-            IHistory service = _serviceProvider.GetRequiredService<IHistory>();
+            IHistoryRepository service = _serviceProvider.GetRequiredService<IHistoryRepository>();
             const int historyId = -8; //Hardcoded user in DB //todo replace with a mock
 
             Assert.False(service.HistoryExist(historyId));
@@ -227,7 +227,7 @@ namespace Tests.Infrastructure.IntegrationTests
         [Fact]
         public void HistoryExistTrue()
         {
-            IHistory service = _serviceProvider.GetRequiredService<IHistory>();
+            IHistoryRepository service = _serviceProvider.GetRequiredService<IHistoryRepository>();
 
             const int historyId = 11; //Hardcoded user in DB //todo replace with a mock
 
@@ -237,7 +237,7 @@ namespace Tests.Infrastructure.IntegrationTests
         [Fact]
         public void HistoryGetInvalid()
         {
-            IHistory service = _serviceProvider.GetRequiredService<IHistory>();
+            IHistoryRepository service = _serviceProvider.GetRequiredService<IHistoryRepository>();
             const int id = -31;
 
             History history = service.Get(id);
@@ -248,7 +248,7 @@ namespace Tests.Infrastructure.IntegrationTests
         [Fact]
         public void HistoryGetInvalid2()
         {
-            IHistory service = _serviceProvider.GetRequiredService<IHistory>();
+            IHistoryRepository service = _serviceProvider.GetRequiredService<IHistoryRepository>();
             const int userId = -31;
             const int postId = -123;
 
@@ -260,7 +260,7 @@ namespace Tests.Infrastructure.IntegrationTests
         [Fact]
         public void GetHistoryList()
         {
-            IHistory service = _serviceProvider.GetRequiredService<IHistory>();
+            IHistoryRepository service = _serviceProvider.GetRequiredService<IHistoryRepository>();
             const int userId = testUserId;
 
             const int postId1 = 19;
@@ -291,7 +291,7 @@ namespace Tests.Infrastructure.IntegrationTests
         [Fact]
         public void GetBookmarks()
         {
-            IHistory service = _serviceProvider.GetRequiredService<IHistory>();
+            IHistoryRepository service = _serviceProvider.GetRequiredService<IHistoryRepository>();
             const int userId = testUserId;
 
             const int postId1 = 19;
@@ -326,7 +326,7 @@ namespace Tests.Infrastructure.IntegrationTests
         [Fact]
         public void HistoryGetValid()
         {
-            IHistory service = _serviceProvider.GetRequiredService<IHistory>();
+            IHistoryRepository service = _serviceProvider.GetRequiredService<IHistoryRepository>();
 
             const int userId = testUserId;
             const int postId = 709;

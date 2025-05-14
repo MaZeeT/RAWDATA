@@ -17,14 +17,14 @@ namespace WebService.Controllers;
 [Authorize]
 public class SearchHistoryController : SharedController
 {
-    private readonly ISearchHistory _searchHistoryService;
-    private readonly ISearch _dataService;
+    private readonly ISearchHistoryRepository _searchHistoryRepositoryService;
+    private readonly ISearchRepository _dataService;
 
     public SearchHistoryController(
-        ISearchHistory searchHistoryService,
-        ISearch dataService)
+        ISearchHistoryRepository searchHistoryRepositoryService,
+        ISearchRepository dataService)
     {
-        _searchHistoryService = searchHistoryService;
+        _searchHistoryRepositoryService = searchHistoryRepositoryService;
         _dataService = dataService;
     }
 
@@ -35,7 +35,7 @@ public class SearchHistoryController : SharedController
         (int userId, bool useridok) = GetAuthUserId();
         if (!useridok){ return Unauthorized(); }
 
-        (var shistory, int count) = _searchHistoryService.GetSearchesList(userId, pagingAttributes);
+        (var shistory, int count) = _searchHistoryRepositoryService.GetSearchesList(userId, pagingAttributes);
         if (shistory == null || count == 0)
         {
             //return NotFound();
@@ -63,7 +63,7 @@ public class SearchHistoryController : SharedController
             return Unauthorized();
         }
 
-        var result = _searchHistoryService.DeleteUserSearchHistory(userId);
+        var result = _searchHistoryRepositoryService.DeleteUserSearchHistory(userId);
         if (!result)
         {
             return NotFound();

@@ -20,10 +20,10 @@ namespace WebService.Controllers;
 ///
 public class SearchController : SharedController
 {
-    private readonly ISearch _dataService;
+    private readonly ISearchRepository _dataService;
 
     public SearchController(
-        ISearch dataService)
+        ISearchRepository dataService)
     {
         _dataService = dataService;
     }

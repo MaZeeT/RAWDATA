@@ -10,6 +10,7 @@ using System.Text.RegularExpressions;
 using Domain;
 using Domain.Entities;
 using Repositories.Interfaces;
+using WebDTOs;
 
 namespace WebService.Controllers.Authentication;
 
@@ -17,10 +18,10 @@ namespace WebService.Controllers.Authentication;
 [Route("api/auth")]
 public class AuthenticationController : ControllerBase
 {
-    private readonly IUser _service;
+    private readonly IUserRepository _service;
     private readonly IConfiguration _configuration;
 
-    public AuthenticationController(IUser service, IConfiguration configuration)
+    public AuthenticationController(IUserRepository service, IConfiguration configuration)
     {
         _service = service;
         _configuration = configuration;

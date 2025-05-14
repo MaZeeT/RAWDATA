@@ -14,12 +14,12 @@ string database = "host=localhost;port=5432;db=stackoverflow;uid=postgres;pwd=Pa
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
-builder.Services.AddSingleton<IShared, SharedRepository>();
-builder.Services.AddSingleton<ISearch, SearchDataRepository>();
-builder.Services.AddSingleton<IAnnotation, AnnotationRepository>();
-builder.Services.AddSingleton<IUser, AppUserRepository>();
-builder.Services.AddSingleton<IHistory, HistoryRepository>();
-builder.Services.AddSingleton<ISearchHistory, SearchHistoryRepository>();
+builder.Services.AddSingleton<ISharedRepository, SharedRepositoryRepository>();
+builder.Services.AddSingleton<ISearchRepository, SearchRepositoryDataRepository>();
+builder.Services.AddSingleton<IAnnotationRepository, AnnotationRepositoryRepository>();
+builder.Services.AddSingleton<IUserRepository, AppUserRepositoryRepository>();
+builder.Services.AddSingleton<IHistoryRepository, HistoryRepositoryRepository>();
+builder.Services.AddSingleton<ISearchHistoryRepository, SearchHistoryRepositoryRepository>();
 builder.Services.AddPooledDbContextFactory<DatabaseContext2>(options =>
 {
     options

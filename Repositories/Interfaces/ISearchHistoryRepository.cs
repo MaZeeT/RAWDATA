@@ -4,7 +4,7 @@ using Domain.Services;
 
 namespace Repositories.Interfaces;
 
-public interface ISearchHistory
+public interface ISearchHistoryRepository
 {
     bool DeleteSearchHistory(int searchId);
     bool DeleteUserSearchHistory(int userId);

@@ -3,7 +3,7 @@ using Domain.Entities;
 using Domain.Services;
 
 namespace Repositories.Interfaces;
-public interface IHistory
+public interface IHistoryRepository
 {
     bool Add(int UserId, int PostId, bool isBookmark);
     bool Add(History history);

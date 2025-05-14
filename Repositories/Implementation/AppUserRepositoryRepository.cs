@@ -8,11 +8,11 @@ using Repositories.Interfaces;
 
 namespace Repositories.Implementation;
 
-public class AppUserRepository : IUser
+public class AppUserRepositoryRepository : IUserRepository
 {
     DatabaseContext2 database;
 
-    public AppUserRepository(IDbContextFactory<DatabaseContext2> factory)
+    public AppUserRepositoryRepository(IDbContextFactory<DatabaseContext2> factory)
     {
         database = factory.CreateDbContext();
     }

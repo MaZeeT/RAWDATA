@@ -5,15 +5,15 @@ namespace BusinessLogic.Implementations;
 
 class UserService : IUserService
 {
-    readonly IUser _userService;
+    readonly IUserRepository _userRepositoryService;
 
-    public UserService(IUser userService)
+    public UserService(IUserRepository userRepositoryService)
     {
-        _userService = userService;
+        _userRepositoryService = userRepositoryService;
     }
 
     public string GetUserName(int id)
     {
-        return _userService.GetAppUserName(id);
+        return _userRepositoryService.GetAppUserName(id);
     }
 }
