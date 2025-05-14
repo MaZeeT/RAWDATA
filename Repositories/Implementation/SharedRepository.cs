@@ -9,11 +9,11 @@ using Repositories.Interfaces;
 
 namespace Repositories.Implementation;
 
-public class SharedRepositoryRepository : ISharedRepository
+public class SharedRepository : ISharedRepository
 {
     private readonly IDbContextFactory<DatabaseContext2> _dbContextFactory;
     
-    public SharedRepositoryRepository(IDbContextFactory<DatabaseContext2> factory)
+    public SharedRepository(IDbContextFactory<DatabaseContext2> factory)
     {
         _dbContextFactory = factory;
     }

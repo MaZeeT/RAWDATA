@@ -8,12 +8,12 @@ using Repositories.Interfaces;
 
 namespace Repositories.Implementation;
 
-public class SearchHistoryRepositoryRepository : ISearchHistoryRepository
+public class SearchHistoryRepository : ISearchHistoryRepository
 {
     private readonly IDbContextFactory<DatabaseContext2> _dbContextFactory;
     private readonly ISharedRepository _sharedRepositoryService; //shared stuff by injection
 
-    public SearchHistoryRepositoryRepository(IDbContextFactory<DatabaseContext2> factory,
+    public SearchHistoryRepository(IDbContextFactory<DatabaseContext2> factory,
         ISharedRepository sharedRepositoryService)
     {
         _dbContextFactory = factory;

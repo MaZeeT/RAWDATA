@@ -9,17 +9,17 @@ using Xunit;
 
 namespace Tests.Infrastructure.IntegrationTests
 {
-    public class HistoryRepositoryRepositoryTest
+    public class HistoryRepositoryTest
     {
         private readonly IDbContextFactory<DatabaseContext2> _dbContextFactory;
         private readonly ServiceProvider _serviceProvider;
         private const int testUserId = 40;
         
-        public HistoryRepositoryRepositoryTest()
+        public HistoryRepositoryTest()
         {
             string database = "host=localhost;port=5432;db=stackoverflow;uid=postgres;pwd=Password123";
             var services = new ServiceCollection();
-            services.AddSingleton<IHistoryRepository, HistoryRepositoryRepository>();
+            services.AddSingleton<IHistoryRepository, HistoryRepository>();
             services.AddPooledDbContextFactory<DatabaseContext2>(options =>
             {
                 options

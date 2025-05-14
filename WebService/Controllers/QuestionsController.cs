@@ -80,7 +80,11 @@ public class QuestionsController : SharedController
             }
             else browsehist.Postid = questionId;
 
-            _historyService.Add(browsehist);
+            var result = _historyService.Add(browsehist);
+            if (!result)
+            {
+                throw new Exception("Could not add question");
+            }
 
             //createthreaddto
             List<PostsThreadDto> thread = new List<PostsThreadDto>();

@@ -24,12 +24,12 @@ builder.Services.AddSingleton<IQuestionService, QuestionService>();
 builder.Services.AddSingleton<ISearchService, SearchService>();
 builder.Services.AddSingleton<IUserService, UserService>();
 
-builder.Services.AddSingleton<ISharedRepository, SharedRepositoryRepository>();
-builder.Services.AddSingleton<ISearchRepository, SearchRepositoryDataRepository>();
-builder.Services.AddSingleton<IAnnotationRepository, AnnotationRepositoryRepository>();
-builder.Services.AddSingleton<IUserRepository, AppUserRepositoryRepository>();
-builder.Services.AddSingleton<IHistoryRepository, HistoryRepositoryRepository>();
-builder.Services.AddSingleton<ISearchHistoryRepository, SearchHistoryRepositoryRepository>();
+builder.Services.AddSingleton<ISharedRepository, SharedRepository>();
+builder.Services.AddSingleton<ISearchRepository, SearchDataRepository>();
+builder.Services.AddSingleton<IAnnotationRepository, AnnotationRepository>();
+builder.Services.AddSingleton<IUserRepository, AppUserRepository>();
+builder.Services.AddSingleton<IHistoryRepository, HistoryRepository>();
+builder.Services.AddSingleton<ISearchHistoryRepository, SearchHistoryRepository>();
 
 builder.Services.AddPooledDbContextFactory<DatabaseContext2>(options =>
 {

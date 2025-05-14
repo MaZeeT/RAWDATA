@@ -9,12 +9,12 @@ using Repositories.Interfaces;
 
 namespace Repositories.Implementation;
 
-public class HistoryRepositoryRepository : IHistoryRepository
+public class HistoryRepository : IHistoryRepository
 {
     private readonly IDbContextFactory<DatabaseContext2> _dbContextFactory;
     private readonly DatabaseContext2 _database;
 
-    public HistoryRepositoryRepository(IDbContextFactory<DatabaseContext2> factory)
+    public HistoryRepository(IDbContextFactory<DatabaseContext2> factory)
     {
         _dbContextFactory = factory;
         _database = factory.CreateDbContext();
@@ -147,7 +147,7 @@ public class HistoryRepositoryRepository : IHistoryRepository
     private List<History> GetListFromQuery(int userId, bool isBookmark, PagingAttributes pageAtt)
     {
         // This enforces the page upper and lower limits 
-        var sharedService = new SharedRepositoryRepository(_dbContextFactory); //todo fix the SharedRepo creation at this line.
+        var sharedService = new SharedRepository(_dbContextFactory); //todo fix the SharedRepo creation at this line.
         sharedService.GetPagination(GetCount(userId, isBookmark), pageAtt);
 
         return _database.History
