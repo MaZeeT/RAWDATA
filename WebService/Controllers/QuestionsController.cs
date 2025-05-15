@@ -17,18 +17,18 @@ namespace WebService.Controllers;
 [Authorize]
 public class QuestionsController : SharedController
 {
-    private readonly IQuestionService _questionService;
+    private readonly IThreadService _threadService;
     private readonly ISharedRepository _sharedRepositoryService;
     private readonly IAnnotationService _annotationService;
     private readonly IHistoryService _historyService;
 
     public QuestionsController(
-        IQuestionService questionService,
+        IThreadService threadService,
         ISharedRepository sharedRepositoryService,
         IAnnotationService annotationService,
         IHistoryService historyService)
     {
-        _questionService = questionService;
+        _threadService = threadService;
         _sharedRepositoryService = sharedRepositoryService;
         _historyService = historyService;
         _annotationService = annotationService;
@@ -40,7 +40,7 @@ public class QuestionsController : SharedController
     // for browsing all the questions; with links to the thread
     public ActionResult BrowseQuestions([FromQuery] PagingAttributes pagingAttributes)
     {
-        var categories = _questionService.GetQuestions(pagingAttributes);
+        var categories = _threadService.GetQuestions(pagingAttributes);
         var result = CreateResult(categories, pagingAttributes);
         return Ok(result);
     }
@@ -139,7 +139,7 @@ public class QuestionsController : SharedController
 
     private object CreateResult(IEnumerable<Questions> questions, PagingAttributes attr)
     {
-        var totalItems = _sharedRepositoryService.NumberOfQuestions();
+        var totalItems = _threadService.NumberOfQuestions();
         var numberOfPages = Math.Ceiling((double)totalItems / attr.PageSize);
 
         var prev = attr.Page > 1

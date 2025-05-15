@@ -1,6 +1,4 @@
-﻿using Infrastructure;
-using Infrastructure.Database;
-using Domain;
+﻿using Infrastructure.Database;
 using Domain.Entities;
 using Domain.Services;
 using Microsoft.EntityFrameworkCore;
@@ -12,10 +10,12 @@ namespace Repositories.Implementation;
 public class SharedRepository : ISharedRepository
 {
     private readonly IDbContextFactory<DatabaseContext2> _dbContextFactory;
-    
-    public SharedRepository(IDbContextFactory<DatabaseContext2> factory)
+    private readonly IQuestionRepository _questionRepository;
+
+    public SharedRepository(IDbContextFactory<DatabaseContext2> factory, IQuestionRepository questionRepository)
     {
         _dbContextFactory = factory;
+        _questionRepository = questionRepository;
     }
     
     public string GetPostType(int postId)
@@ -36,19 +36,6 @@ public class SharedRepository : ISharedRepository
         return tablename;
     }
 
-    public int NumberOfQuestions()
-    {
-        using var db = _dbContextFactory.CreateDbContext();
-        return db.Questions
-            .Count();
-    }
-
-    public Questions GetQuestion(int questionId)
-    {
-        using var db = _dbContextFactory.CreateDbContext();
-        return db.Questions.Find(questionId);
-    }
-
     public Answers GetAnswer(int answerId)
     {
         using var db = _dbContextFactory.CreateDbContext();
@@ -66,7 +53,7 @@ public class SharedRepository : ISharedRepository
         var type = GetPostType(postId);
         if (type == "questions") //then its a question
         {
-            var q = GetQuestion(postId);
+            var q = _questionRepository.GetQuestion(postId);
             returnPost.Body = q.Body;
             returnPost.Id = postId;
             returnPost.QuestionId = q.Id;
@@ -79,7 +66,7 @@ public class SharedRepository : ISharedRepository
             returnPost.Body = a.Body;
             returnPost.Id = postId;
             returnPost.QuestionId = GetAnswer(postId).Parentid; //get parent q of answer
-            returnPost.Title = GetQuestion(returnPost.QuestionId).Title; //get title of parent q
+            returnPost.Title = _questionRepository.GetQuestion(returnPost.QuestionId).Title; //get title of parent q
             return returnPost;
         }
         else return null; //else its unknown!
@@ -90,7 +77,7 @@ public class SharedRepository : ISharedRepository
     {
         using var db = _dbContextFactory.CreateDbContext();
         //get the question
-        var q = GetQuestion(questionId);
+        var q = _questionRepository.GetQuestion(questionId);
         if (q != null)
         {
             //find answers to the specified question
@@ -124,23 +111,5 @@ public class SharedRepository : ISharedRepository
         else return null;
     }
 
-    public int GetPagination(int matchcount, PagingAttributes pagingAttributes)
-    {
-        //calc max pages and set requested page to last page if out of bounds
-        var maxPages = (int)Math.Ceiling((double)matchcount / pagingAttributes.PageSize);
-        var minPages = 1;
 
-        System.Console.WriteLine($"{maxPages} calculated pages.");
-
-        if (pagingAttributes.Page > maxPages)
-        {
-            pagingAttributes.Page = maxPages;
-        }
-        else if (pagingAttributes.Page < minPages)
-        {
-            pagingAttributes.Page = minPages;
-        }
-
-        return pagingAttributes.Page - 1; // return 0 indexed
-    }
 }

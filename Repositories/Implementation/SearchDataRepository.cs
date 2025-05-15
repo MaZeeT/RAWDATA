@@ -11,28 +11,15 @@ namespace Repositories.Implementation;
 public class SearchDataRepository : ISearchRepository
 {
     private readonly IDbContextFactory<DatabaseContext2> _dbContextFactory;
+    private readonly IQuestionRepository _questionRepository;
     private readonly ISharedRepository _sharedRepositoryService; //shared stuff by injection
 
-    public SearchDataRepository(IDbContextFactory<DatabaseContext2> factory,
+    public SearchDataRepository(IDbContextFactory<DatabaseContext2> factory, IQuestionRepository questionRepository,
         ISharedRepository sharedRepositoryService)
     {
         _dbContextFactory = factory;
+        _questionRepository = questionRepository;
         _sharedRepositoryService = sharedRepositoryService;
-    }
-
-    public IList<Questions> GetQuestions(PagingAttributes pagingAttributes)
-    {
-        //// for browsing the full list of questions
-        using var db = _dbContextFactory.CreateDbContext();
-
-        //convert back from 1-based pages + check/fix page
-        int page = _sharedRepositoryService.GetPagination(_sharedRepositoryService.NumberOfQuestions(), pagingAttributes);
-
-        return db.Questions
-            .OrderBy(u => u.Id)
-            .Skip(page * pagingAttributes.PageSize)
-            .Take(pagingAttributes.PageSize)
-            .ToList();
     }
 
     public IList<Posts> Search(int userid, string searchstring, int? searchtypecode,
@@ -81,7 +68,7 @@ public class SearchDataRepository : ISearchRepository
             .Count();
         System.Console.WriteLine($"{matchcount} results.");
 
-        int page = _sharedRepositoryService.GetPagination(matchcount, pagingAttributes);
+        int page = ISharedRepository.GetPagination(matchcount, pagingAttributes);
 
         System.Console.WriteLine($"{page} page trying to get.");
 
@@ -111,7 +98,7 @@ public class SearchDataRepository : ISearchRepository
 
             p.Body = sp.Body.Substring(0, endpos);
 
-            p.Title = _sharedRepositoryService.GetQuestion(p.Parentid).Title;
+            p.Title = _questionRepository.GetQuestion(p.Parentid).Title;
             p.Totalresults = matchcount;
             p.Rank = s.rank;
             resultposts.Add(p);

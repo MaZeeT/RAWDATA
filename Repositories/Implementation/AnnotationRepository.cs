@@ -1,6 +1,4 @@
-﻿using Infrastructure;
-using Infrastructure.Database;
-using Domain;
+﻿using Infrastructure.Database;
 using Domain.AnnotationsDTOs;
 using Domain.Services;
 using Microsoft.EntityFrameworkCore;
@@ -12,9 +10,12 @@ namespace Repositories.Implementation;
 public class AnnotationRepository : IAnnotationRepository
 {
     private readonly IDbContextFactory<DatabaseContext2> _dbContextFactory;
-    public AnnotationRepository(IDbContextFactory<DatabaseContext2> factory)
+    private readonly ISharedRepository _sharedRepository;
+
+    public AnnotationRepository(IDbContextFactory<DatabaseContext2> factory, ISharedRepository sharedRepository)
     {
         _dbContextFactory = factory;
+        _sharedRepository = sharedRepository;
     }
     
     /// <summary>
@@ -76,8 +77,7 @@ public class AnnotationRepository : IAnnotationRepository
         PagingAttributes pagingAttributes)
     {
         using var DB = _dbContextFactory.CreateDbContext();
-        var sharedService = new SharedRepository(_dbContextFactory);  //todo fix the SharedRepo creation at this line.
-        var page = sharedService.GetPagination(UserAnnotOnPostListCount(userId, postId), pagingAttributes);
+        var page = ISharedRepository.GetPagination(UserAnnotOnPostListCount(userId, postId), pagingAttributes);
         var annotationsOfPostList = (from annot in DB.Annotations
                 join hist in DB.History on annot.HistoryId equals hist.Id
                 where hist.Postid == postId && annot.UserId == userId
@@ -115,9 +115,8 @@ public class AnnotationRepository : IAnnotationRepository
         out int count)
     {
         using var DB = _dbContextFactory.CreateDbContext();
-        var sharedService = new SharedRepository(_dbContextFactory);  //todo fix the SharedRepo creation at this line.
         count = GetAllAnnotationsOfUserCount(userId);
-        var page = sharedService.GetPagination(count, pagingAttributes);
+        var page = ISharedRepository.GetPagination(count, pagingAttributes);
 
         var result = (from annot in DB.Annotations
                 join hist in DB.History on annot.HistoryId equals hist.Id

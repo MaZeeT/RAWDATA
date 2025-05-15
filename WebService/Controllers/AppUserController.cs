@@ -8,7 +8,7 @@ namespace WebService.Controllers;
 [Route("api/appuser")]
 public class AppUserController : ControllerBase
 {
-    private IUserService _userService;
+    private readonly IUserService _userService;
 
     public AppUserController(IUserService userService)
     {

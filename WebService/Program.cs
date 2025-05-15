@@ -20,16 +20,17 @@ builder.Services.AddControllers();
 builder.Services.AddSingleton<IAnnotationService, AnnotationService>();
 builder.Services.AddSingleton<IBookmarkService, BookmarkService>();
 builder.Services.AddSingleton<IHistoryService, HistoryService>();
-builder.Services.AddSingleton<IQuestionService, QuestionService>();
+builder.Services.AddSingleton<IThreadService, ThreadService>();
 builder.Services.AddSingleton<ISearchService, SearchService>();
 builder.Services.AddSingleton<IUserService, UserService>();
 
-builder.Services.AddSingleton<ISharedRepository, SharedRepository>();
-builder.Services.AddSingleton<ISearchRepository, SearchDataRepository>();
 builder.Services.AddSingleton<IAnnotationRepository, AnnotationRepository>();
-builder.Services.AddSingleton<IUserRepository, AppUserRepository>();
 builder.Services.AddSingleton<IHistoryRepository, HistoryRepository>();
+builder.Services.AddSingleton<IQuestionRepository, QuestionRepository>();
+builder.Services.AddSingleton<ISearchRepository, SearchDataRepository>();
+builder.Services.AddSingleton<IUserRepository, AppUserRepository>();
 builder.Services.AddSingleton<ISearchHistoryRepository, SearchHistoryRepository>();
+builder.Services.AddSingleton<ISharedRepository, SharedRepository>();
 
 builder.Services.AddPooledDbContextFactory<DatabaseContext2>(options =>
 {

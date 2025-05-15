@@ -6,6 +6,7 @@ using BusinessLogic.Interfaces;
 using Domain.AnnotationsDTOs;
 using Domain.Services;
 using Repositories.Interfaces;
+using WebService.Attributes;
 
 namespace WebService.Controllers;
 
@@ -23,6 +24,7 @@ public class AnnotationsController : SharedController
         _sharedRepositoryService = sharedRepositoryService;
     }
 
+    [RequireAuthentication]
     [HttpGet("post/{postId}")]
     public ActionResult GetAllUserAnnotationsMadeOnPostId(int postId, [FromQuery] PagingAttributes pagingAttributes) //needs-pagination
     {

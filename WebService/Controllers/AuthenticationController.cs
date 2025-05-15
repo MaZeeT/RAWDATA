@@ -1,29 +1,28 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using System;
-using WebService.Services;
+﻿using System;
 using System.IdentityModel.Tokens.Jwt;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using System.Security.Claims;
+using System.Text;
 using System.Text.RegularExpressions;
-using Domain;
+using BusinessLogic.Interfaces;
 using Domain.Entities;
-using Repositories.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using WebDTOs;
+using WebService.Services;
 
-namespace WebService.Controllers.Authentication;
+namespace WebService.Controllers;
 
 [ApiController]
 [Route("api/auth")]
 public class AuthenticationController : ControllerBase
 {
-    private readonly IUserRepository _service;
+    private readonly IUserService _userService;
     private readonly IConfiguration _configuration;
 
-    public AuthenticationController(IUserRepository service, IConfiguration configuration)
+    public AuthenticationController(IUserService userService, IConfiguration configuration)
     {
-        _service = service;
+        _userService = userService;
         _configuration = configuration;
     }
 
@@ -35,7 +34,7 @@ public class AuthenticationController : ControllerBase
             return BadRequest();
         }
 
-        if (_service.GetAppUser(dto.Username) != null)
+        if (_userService.GetAppUser(dto.Username) != null)
         {
             return BadRequest();
         }
@@ -53,7 +52,7 @@ public class AuthenticationController : ControllerBase
 
         var pwd = PasswordService.HashPassword(dto.Password, salt, size);
 
-        _service.CreateUser(dto.Username, pwd, salt);
+        _userService.CreateUser(dto.Username, pwd, salt);
 
         return CreatedAtRoute(null, dto.Username);
     }
@@ -64,7 +63,7 @@ public class AuthenticationController : ControllerBase
     {
         if (!isValidUserCredential(dto)) { return BadRequest(); }
 
-        var user = _service.GetAppUser(dto.Username);
+        var user = _userService.GetAppUser(dto.Username);
         if (user is null || IsInvalidPassword(dto, user)) { return BadRequest(); }
 
         var userToken = GenerateToken(user);

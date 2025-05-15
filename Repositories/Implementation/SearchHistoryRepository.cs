@@ -29,7 +29,7 @@ public class SearchHistoryRepository : ISearchHistoryRepository
             .Count();
 
         //try to convert back from 1-based pages
-        int page = _sharedRepositoryService.GetPagination(count, pagingAttributes);
+        int page = ISharedRepository.GetPagination(count, pagingAttributes);
 
         var list = db.Searches
             .Where(x => x.UserId == userId)
