@@ -35,7 +35,7 @@ public class SharedRepository : ISharedRepository
         return tablename;
     }
 
-    public Answers GetAnswer(int answerId)
+    private Answers GetAnswer(int answerId)
     {
         using var db = _dbContextFactory.CreateDbContext();
         return db.Answers.Find(answerId);

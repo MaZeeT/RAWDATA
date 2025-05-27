@@ -1,4 +1,3 @@
-using Domain;
 using Domain.Models;
 using Domain.Services;
 
@@ -17,6 +16,5 @@ public interface IHistoryRepository
     bool DeleteHistory(int historyId);
     bool DeleteBookmark(int userId, int postId);
     bool HistoryExist(int historyId);
-    bool HistoryExist(int userId, int postId);
     int GetCount(int userId, bool isBookmark);
 }

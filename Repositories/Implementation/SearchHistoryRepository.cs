@@ -49,21 +49,7 @@ public class SearchHistoryRepository : ISearchHistoryRepository
         return db.SaveChanges() > 0;
     }
 
-    public bool DeleteSearchHistory(int searchId)
-    {
-        using var db = _dbContextFactory.CreateDbContext();
-        if (!SearchExist(searchId))
-        {
-            return false;
-        }
-
-        var history = db.History.Find(searchId);
-        db.History.Remove(history);
-
-        return db.SaveChanges() > 0;
-    }
-
-    public bool SearchExist(int searchId)
+    private bool SearchExist(int searchId)
     {
         using var db = _dbContextFactory.CreateDbContext();
         var result = db.Searches.Find(searchId);

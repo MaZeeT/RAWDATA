@@ -1,4 +1,3 @@
-using Domain;
 using Domain.Models;
 
 namespace Repositories.Interfaces;

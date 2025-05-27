@@ -1,4 +1,3 @@
-using Domain;
 using Domain.Models;
 using Domain.Services;
 
@@ -10,15 +9,13 @@ public interface ISharedRepository
     SinglePost GetPost(int postId);
     IList<Posts> GetThread(int questionId);
 
-    Answers GetAnswer(int answerId);
-
     static int GetPagination(int matchcount, PagingAttributes pagingAttributes)
     {
         //calc max pages and set requested page to last page if out of bounds
         var maxPages = (int)Math.Ceiling((double)matchcount / pagingAttributes.PageSize);
-        var minPages = 1;
+        const int minPages = 1;
 
-        System.Console.WriteLine($"{maxPages} calculated pages.");
+        Console.WriteLine($"{maxPages} calculated pages.");
 
         if (pagingAttributes.Page > maxPages)
         {

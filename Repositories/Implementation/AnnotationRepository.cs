@@ -15,26 +15,6 @@ public class AnnotationRepository : IAnnotationRepository
     {
         _dbContextFactory = factory;
     }
-    
-    /// <summary>
-    /// Create annotation without function, simple, raw, need to know HistoryId
-    /// </summary>
-    /// <param name="annotationObject"></param>
-    /// <returns></returns>
-    public Annotations CreateAnnotations(AnnotationsDto annotationObject)
-    {
-        using var db = _dbContextFactory.CreateDbContext();
-        var annotation = new Annotations
-        {
-            UserId = annotationObject.UserId,
-            HistoryId = annotationObject.HistoryId,
-            Body = annotationObject.Body,
-            Date = annotationObject.Date
-        };
-        db.Annotations.Add(annotation);
-        db.SaveChanges();
-        return GetAnnotation(annotation.Id);
-    }
 
     /// <summary>
     /// Returns annotation found only by annotationId
@@ -55,7 +35,7 @@ public class AnnotationRepository : IAnnotationRepository
     /// <param name="annotationId"></param>
     /// <param name="userId"></param>
     /// <returns>Annotations Type Object</returns>
-    public Annotations GetAnnotationByUserId(int annotationId, int userId)
+    private Annotations GetAnnotationByUserId(int annotationId, int userId)
     {
         using var db = _dbContextFactory.CreateDbContext();
         var result = db.Annotations
@@ -90,7 +70,7 @@ public class AnnotationRepository : IAnnotationRepository
         return annotationsOfPostList;
     }
 
-    public int UserAnnotOnPostListCount(int userId, int postId)
+    private int UserAnnotOnPostListCount(int userId, int postId)
     {
         using var db = _dbContextFactory.CreateDbContext();
         var annotationsCount = from annot in db.Annotations
@@ -132,7 +112,7 @@ public class AnnotationRepository : IAnnotationRepository
         return result;
     }
 
-    public int GetAllAnnotationsOfUserCount(int userId)
+    private int GetAllAnnotationsOfUserCount(int userId)
     {
         using var db = _dbContextFactory.CreateDbContext();
         var listCount = (from annot in db.Annotations

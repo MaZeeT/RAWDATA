@@ -130,7 +130,7 @@ public class HistoryRepository : IHistoryRepository
         return result != null;
     }
 
-    public bool HistoryExist(int userId, int postId)
+    private bool HistoryExist(int userId, int postId)
     {
         var result = _database.History.Where(history =>
                 history.Userid == userId &&
