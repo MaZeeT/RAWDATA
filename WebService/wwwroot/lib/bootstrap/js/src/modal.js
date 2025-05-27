@@ -434,11 +434,6 @@ class Modal {
     }
   }
 
-  // ----------------------------------------------------------------------
-  // the following methods are used to handle overflowing modals
-  // todo (fat): these should probably be refactored out of modal.js
-  // ----------------------------------------------------------------------
-
   _adjustDialog() {
     const isModalOverflowing =
       this._element.scrollHeight > document.documentElement.clientHeight

@@ -68,12 +68,6 @@ public class SearchHistoryController : SharedController
         return Ok(result);
     }
 
-    ///////////////////
-    //
-    // Helpers
-    //
-    //////////////////////
-
     private SearchHistoryListDto CreateSearchHistoryResultDto(Searches searches)
     {
         var searchString = "";

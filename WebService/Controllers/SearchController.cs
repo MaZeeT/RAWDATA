@@ -26,34 +26,34 @@ public class SearchController : SharedController
     [HttpGet("wordrank", Name = nameof(WordRank))]
     // http://localhost:5001/api/search/wordrank?s=code&stype=5&maxresults=5
     // http://localhost:5001/api/search/wordrank?s=code,app,program
-    public ActionResult WordRank([FromQuery] SearchQuery searchparams, [FromQuery] int? maxresults)
+    public ActionResult WordRank([FromQuery] SearchQuery searchQuery, [FromQuery] int? maxResults)
     {
         var (userId, userIdOk) = GetAuthUserId();
 
         Console.WriteLine("Got user: " + userId);
 
-        if (searchparams.s == null || !userIdOk)
+        if (searchQuery.SearchTerms == null || !userIdOk)
         {
             return BadRequest();
         }
             
-        Console.WriteLine("Got searchparams: " + searchparams.s);
-        Console.WriteLine("Got maxresults: " + maxresults);
+        Console.WriteLine("Got searchparams: " + searchQuery.SearchTerms);
+        Console.WriteLine("Got maxresults: " + maxResults);
 
-        switch (searchparams.stype)
+        switch (searchQuery.SearchType)
         {
             //checking of params
             case >= 0 and <= 3:
                 //wrong search type, redirect
-                return RedirectToAction("Search", new { searchparams.s, searchparams.stype });
+                return RedirectToAction("Search", new { s = searchQuery.SearchTerms, stype = searchQuery.SearchType });
             case >= 4 and <= 5:
             {
-                var search = _searchService.WordRank(userId, searchparams.s, searchparams.stype, maxresults);
+                var search = _searchService.WordRank(userId, searchQuery.SearchTerms, searchQuery.SearchType, maxResults);
                 return Ok(search);
             }
             default:
             {
-                var search = _searchService.WordRank(userId, searchparams.s, 5, maxresults);
+                var search = _searchService.WordRank(userId, searchQuery.SearchTerms, 5, maxResults);
                 return Ok(search);
             }
         }
@@ -70,23 +70,23 @@ public class SearchController : SharedController
 
         Console.WriteLine("Got user: " + userId);
 
-        if (searchparams.s == null || !userIdOk)
+        if (searchparams.SearchTerms == null || !userIdOk)
         {
             return BadRequest();
         }
         
-        Console.WriteLine("Got searchparams: " + searchparams.s);
+        Console.WriteLine("Got searchparams: " + searchparams.SearchTerms);
 
-        switch (searchparams.stype)
+        switch (searchparams.SearchType)
         {
             //checking of params
             case >= 0 and <= 3:
             {
                 //do search, fix page also if needed as a bonus
-                var search = _searchService.Search(userId, searchparams.s, searchparams.stype, pagingAttributes);
+                var search = _searchService.Search(userId, searchparams.SearchTerms, searchparams.SearchType, pagingAttributes);
 
                 // try to fix searchsting for link generation if it seems useable but ugly
-                searchparams.s = _searchService.BuildSearchString(searchparams.s, true);
+                searchparams.SearchTerms = _searchService.BuildSearchString(searchparams.SearchTerms, true);
 
                 var result = CreateResult(search, searchparams, pagingAttributes);
                 
@@ -99,7 +99,7 @@ public class SearchController : SharedController
             }
             case >= 4 and <= 5:
                 //wrong search type, redirect
-                return RedirectToAction("WordRank", new { searchparams.s, searchparams.stype });
+                return RedirectToAction("WordRank", new { s = searchparams.SearchTerms, stype = searchparams.SearchType });
             default:
                 return BadRequest();
         }
@@ -162,10 +162,10 @@ public class SearchController : SharedController
         var numberOfPages = Math.Ceiling((double)totalResults / attr.PageSize);
 
         var prev = attr.Page > 1
-            ? CreatePagingLink(searchparams.s, searchparams.stype, attr.Page - 1, attr.PageSize)
+            ? CreatePagingLink(searchparams.SearchTerms, searchparams.SearchType, attr.Page - 1, attr.PageSize)
             : null;
         var next = attr.Page < numberOfPages
-            ? CreatePagingLink(searchparams.s, searchparams.stype, attr.Page + 1, attr.PageSize)
+            ? CreatePagingLink(searchparams.SearchTerms, searchparams.SearchType, attr.Page + 1, attr.PageSize)
             : null;
 
         return new

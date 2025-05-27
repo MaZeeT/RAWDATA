@@ -2,8 +2,6 @@
 
 public class SearchQuery
 {
-    //searchquery parameters contain 1 string with search terms, comma-delimited & search type
-    public string s { get; set; }
-    public int stype { get; set; } = 3; //this sets stype to 3 if there is no stype param
+    public string SearchTerms { get; set; } // comma-delimited
+    public int SearchType { get; set; } = 3; // this sets stype to 3 if there is no stype param
 }
-//todo fix property names
