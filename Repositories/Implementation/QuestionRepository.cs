@@ -27,7 +27,7 @@ public class QuestionRepository : IQuestionRepository
         using var db = _dbContextFactory.CreateDbContext();
 
         //convert back from 1-based pages + check/fix page
-        int page = ISharedRepository.GetPagination(NumberOfQuestions(), pagingAttributes);
+        var page = ISharedRepository.GetPagination(NumberOfQuestions(), pagingAttributes);
 
         return db.Questions
             .OrderBy(u => u.Id)

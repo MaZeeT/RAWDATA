@@ -20,11 +20,10 @@ public class SearchHistoryRepository : ISearchHistoryRepository
         using var db = _dbContextFactory.CreateDbContext();
 
         var count = db.Searches
-            .Where(x => x.UserId == userId)
-            .Count();
+            .Count(x => x.UserId == userId);
 
         //try to convert back from 1-based pages
-        int page = ISharedRepository.GetPagination(count, pagingAttributes);
+        var page = ISharedRepository.GetPagination(count, pagingAttributes);
 
         var list = db.Searches
             .Where(x => x.UserId == userId)
@@ -53,15 +52,15 @@ public class SearchHistoryRepository : ISearchHistoryRepository
     public bool DeleteSearchHistory(int searchId)
     {
         using var db = _dbContextFactory.CreateDbContext();
-        if (SearchExist(searchId))
+        if (!SearchExist(searchId))
         {
-            var history = db.History.Find(searchId);
-            db.History.Remove(history);
-
-            return db.SaveChanges() > 0;
+            return false;
         }
 
-        return false;
+        var history = db.History.Find(searchId);
+        db.History.Remove(history);
+
+        return db.SaveChanges() > 0;
     }
 
     public bool SearchExist(int searchId)

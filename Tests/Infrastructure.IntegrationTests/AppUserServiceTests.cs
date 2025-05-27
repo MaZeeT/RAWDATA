@@ -1,7 +1,6 @@
 using Domain.Models;
 using Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using Repositories.Implementation;
 using Repositories.Interfaces;

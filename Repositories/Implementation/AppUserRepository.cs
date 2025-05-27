@@ -10,16 +10,16 @@ namespace Repositories.Implementation;
 
 public class AppUserRepository : IUserRepository
 {
-    DatabaseContext2 database;
+    readonly DatabaseContext2 _database;
 
     public AppUserRepository(IDbContextFactory<DatabaseContext2> factory)
     {
-        database = factory.CreateDbContext();
+        _database = factory.CreateDbContext();
     }
 
     public string GetAppUserName(int id)
     {
-        var result = database.AppUser.Find(id);
+        var result = _database.AppUser.Find(id);
         return result.Username;
     }
 
@@ -44,10 +44,10 @@ public class AppUserRepository : IUserRepository
     /// <returns></returns>
     public AppUser GetAppUser(string username)
     {
-        var appUsers = database.AppUser.Where(user => user.Username == username).ToList();
+        var appUsers = _database.AppUser.Where(user => user.Username == username).ToList();
         if (appUsers.Count > 0)
         {
-            return appUsers.First();
+            return appUsers[0];
         }
 
         return null;
@@ -55,21 +55,21 @@ public class AppUserRepository : IUserRepository
 
     public bool CreateAppUser(string username, string password, string salt)
     {
-        if (!AppUserExist(username))
+        if (AppUserExist(username))
         {
-            database.AppUser.Add(
-                new AppUser()
-                {
-                    Username = username,
-                    Password = password,
-                    Salt = salt
-                });
-
-            var result = database.SaveChanges();
-            return result > 0;
+            return false;
         }
 
-        return false;
+        _database.AppUser.Add(
+            new AppUser()
+            {
+                Username = username,
+                Password = password,
+                Salt = salt
+            });
+
+        var result = _database.SaveChanges();
+        return result > 0;
     }
 
     public AppUser CreateUser(string name, string password, string salt)
@@ -84,31 +84,31 @@ public class AppUserRepository : IUserRepository
 
     public bool UpdateAppUserName(string oldName, string newName)
     {
-        if (AppUserExist(oldName))
+        if (!AppUserExist(oldName))
         {
-            int appUserId = GetAppUserId(oldName);
-            var appUser = database.AppUser.Find(appUserId);
-            database.AppUser.Update(appUser);
-            appUser.Username = newName;
-            var result = database.SaveChanges();
-            return result > 0;
+            return false;
         }
 
-        return false;
+        var appUserId = GetAppUserId(oldName);
+        var appUser = _database.AppUser.Find(appUserId);
+        _database.AppUser.Update(appUser);
+        appUser.Username = newName;
+        var result = _database.SaveChanges();
+        return result > 0;
     }
 
     public bool DeleteAppUser(int id)
     {
-        if (AppUserExist(id))
+        if (!AppUserExist(id))
         {
-            var appUser = database.AppUser.Find(id);
-            database.AppUser.Remove(appUser);
-
-            var result = database.SaveChanges();
-            return result > 0;
+            return false;
         }
 
-        return false;
+        var appUser = _database.AppUser.Find(id);
+        _database.AppUser.Remove(appUser);
+
+        var result = _database.SaveChanges();
+        return result > 0;
     }
 
     public bool DeleteAppUser(string username)
@@ -118,7 +118,7 @@ public class AppUserRepository : IUserRepository
 
     public bool AppUserExist(int id)
     {
-        var result = database.AppUser.Find(id);
+        var result = _database.AppUser.Find(id);
         return result != null;
     }
 

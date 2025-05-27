@@ -68,7 +68,7 @@ public class SearchDataRepository : ISearchRepository
             .Count();
         System.Console.WriteLine($"{matchcount} results.");
 
-        int page = ISharedRepository.GetPagination(matchcount, pagingAttributes);
+        var page = ISharedRepository.GetPagination(matchcount, pagingAttributes);
 
         System.Console.WriteLine($"{page} page trying to get.");
 
@@ -82,11 +82,10 @@ public class SearchDataRepository : ISearchRepository
         //build and map results to posts
         var resultposts = new List<Posts>();
 
-        foreach (Search s in resultlist)
+        foreach (var s in resultlist)
         {
-            Posts p = new Posts();
-            SinglePost sp = new SinglePost();
-            sp = _sharedRepositoryService.GetPost(s.postid);
+            var p = new Posts();
+            var sp = _sharedRepositoryService.GetPost(s.postid);
 
             p.Parentid = sp.QuestionId;
             p.Id = sp.Id;
@@ -208,8 +207,8 @@ public class SearchDataRepository : ISearchRepository
     public int SearchTypeLookup(string searchmethod)
     {
         //get stype from string methodname
-        SearchTypeLookupTable st = new SearchTypeLookupTable();
-        int stype = Array.FindIndex(st.searchType, s => s.Equals(searchmethod));
+        var st = new SearchTypeLookupTable();
+        var stype = Array.FindIndex(st.searchType, s => s.Equals(searchmethod));
         return stype;
     }
 }

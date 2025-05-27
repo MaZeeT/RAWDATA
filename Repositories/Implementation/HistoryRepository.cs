@@ -65,9 +65,9 @@ public class HistoryRepository : IHistoryRepository
         return GetHistoryList(userId, pagingAttributes);
     }
 
-    public List<History> GetHistoryList(int userId, PagingAttributes pageAtt)
+    public List<History> GetHistoryList(int userId, PagingAttributes pagingAttributes)
     {
-        return GetListFromQuery(userId, false, pageAtt);
+        return GetListFromQuery(userId, false, pagingAttributes);
     }
 
     public List<History> GetBookmarkList(int userId)
@@ -76,9 +76,9 @@ public class HistoryRepository : IHistoryRepository
         return GetBookmarkList(userId, pagingAttributes);
     }
 
-    public List<History> GetBookmarkList(int userId, PagingAttributes pageAtt)
+    public List<History> GetBookmarkList(int userId, PagingAttributes pagingAttributes)
     {
-        return GetListFromQuery(userId, true, pageAtt);
+        return GetListFromQuery(userId, true, pagingAttributes);
     }
 
     public bool DeleteUserHistory(int userId)
@@ -87,7 +87,7 @@ public class HistoryRepository : IHistoryRepository
             x.Userid == userId &&
             x.isBookmark == false);
 
-        foreach (History entry in history)
+        foreach (var entry in history)
         {
             _database.History.Remove(entry);
         }
@@ -97,15 +97,15 @@ public class HistoryRepository : IHistoryRepository
 
     public bool DeleteHistory(int historyId)
     {
-        if (HistoryExist(historyId))
+        if (!HistoryExist(historyId))
         {
-            History history = _database.History.Find(historyId);
-            _database.History.Remove(history);
-
-            return _database.SaveChanges() > 0;
+            return false;
         }
 
-        return false;
+        History history = _database.History.Find(historyId);
+        _database.History.Remove(history);
+
+        return _database.SaveChanges() > 0;
     }
 
     public bool DeleteBookmark(int userId, int postId)
