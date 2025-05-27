@@ -13,9 +13,7 @@ namespace WebService.Controllers;
 [ApiController]
 [Route("api/search")]
 [Authorize]
-///
-/// when accessing with tokens, the header needs a key Authorization with a value of Bearer [space] and then the token (no quotes)
-///
+// when accessing with tokens, the header needs a key Authorization with a value of Bearer [space] and then the token (no quotes)
 public class SearchController : SharedController
 {
     private readonly ISearchService _searchService;
@@ -26,38 +24,40 @@ public class SearchController : SharedController
     }
 
     [HttpGet("wordrank", Name = nameof(WordRank))]
-    public ActionResult WordRank([FromQuery] SearchQuery searchparams, [FromQuery] int? maxresults) //
-        // http://localhost:5001/api/search/wordrank?s=code&stype=5&maxresults=5
-        // http://localhost:5001/api/search/wordrank?s=code,app,program
+    // http://localhost:5001/api/search/wordrank?s=code&stype=5&maxresults=5
+    // http://localhost:5001/api/search/wordrank?s=code,app,program
+    public ActionResult WordRank([FromQuery] SearchQuery searchparams, [FromQuery] int? maxresults)
     {
-        (int userId, bool useridok) = GetAuthUserId();
+        var (userId, userIdOk) = GetAuthUserId();
 
         Console.WriteLine("Got user: " + userId);
 
-        if (searchparams.s != null && useridok)
+        if (searchparams.s == null || !userIdOk)
         {
-            Console.WriteLine("Got searchparams: " + searchparams.s);
-            Console.WriteLine("Got maxresults: " + maxresults);
+            return BadRequest();
+        }
+            
+        Console.WriteLine("Got searchparams: " + searchparams.s);
+        Console.WriteLine("Got maxresults: " + maxresults);
 
+        switch (searchparams.stype)
+        {
             //checking of params
-            if (searchparams.stype >= 0 && searchparams.stype <= 3)
-            {
+            case >= 0 and <= 3:
                 //wrong search type, redirect
                 return RedirectToAction("Search", new { searchparams.s, searchparams.stype });
-            }
-            else if (searchparams.stype >= 4 && searchparams.stype <= 5)
+            case >= 4 and <= 5:
             {
                 var search = _searchService.WordRank(userId, searchparams.s, searchparams.stype, maxresults);
                 return Ok(search);
             }
-            else
+            default:
             {
                 var search = _searchService.WordRank(userId, searchparams.s, 5, maxresults);
                 return Ok(search);
             }
         }
 
-        return BadRequest();
     }
 
     [HttpGet(Name = nameof(Search))]
@@ -66,16 +66,21 @@ public class SearchController : SharedController
     // http://localhost:5001/api/search?s=code,app,program
     public ActionResult Search([FromQuery] SearchQuery searchparams, [FromQuery] PagingAttributes pagingAttributes)
     {
-        (int userId, bool useridok) = GetAuthUserId();
+        var (userId, userIdOk) = GetAuthUserId();
 
         Console.WriteLine("Got user: " + userId);
 
-        if (searchparams.s != null && useridok)
+        if (searchparams.s == null || !userIdOk)
         {
-            Console.WriteLine("Got searchparams: " + searchparams.s);
+            return BadRequest();
+        }
+        
+        Console.WriteLine("Got searchparams: " + searchparams.s);
 
+        switch (searchparams.stype)
+        {
             //checking of params
-            if (searchparams.stype >= 0 && searchparams.stype <= 3)
+            case >= 0 and <= 3:
             {
                 //do search, fix page also if needed as a bonus
                 var search = _searchService.Search(userId, searchparams.s, searchparams.stype, pagingAttributes);
@@ -84,20 +89,20 @@ public class SearchController : SharedController
                 searchparams.s = _searchService.BuildSearchString(searchparams.s, true);
 
                 var result = CreateResult(search, searchparams, pagingAttributes);
-                if (result != null)
+                
+                if (result is null)
                 {
-                    return Ok(result);
+                    return NoContent();
                 }
-                else return NoContent();
+                
+                return Ok(result);
             }
-            else if (searchparams.stype >= 4 && searchparams.stype <= 5)
-            {
+            case >= 4 and <= 5:
                 //wrong search type, redirect
                 return RedirectToAction("WordRank", new { searchparams.s, searchparams.stype });
-            }
+            default:
+                return BadRequest();
         }
-
-        return BadRequest();
     }
 
 
@@ -146,11 +151,14 @@ public class SearchController : SharedController
     }
 
 
-    private object CreateResult(IEnumerable<Posts> posts, SearchQuery searchparams, PagingAttributes attr)
-    {
-        if (posts.FirstOrDefault() != null){ return null; }
+    private object CreateResult(IList<Posts> posts, SearchQuery searchparams, PagingAttributes attr)
+    { 
+        if (posts.FirstOrDefault() != null)
+        {
+            return null;
+        }
          
-        var totalResults = posts.First().TotalResults;
+        var totalResults = posts[0].TotalResults;
         var numberOfPages = Math.Ceiling((double)totalResults / attr.PageSize);
 
         var prev = attr.Page > 1

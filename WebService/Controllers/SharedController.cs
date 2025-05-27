@@ -9,7 +9,7 @@ public abstract class SharedController : ControllerBase
     {
         var claimsIdentity = User.Identity as ClaimsIdentity;
 
-        return int.TryParse(claimsIdentity.FindFirst(ClaimTypes.Name)?.Value, out int userId) 
+        return int.TryParse(claimsIdentity.FindFirst(ClaimTypes.Name)?.Value, out var userId) 
             ? (userId, true) 
             : (userId, false);
     }

@@ -58,7 +58,7 @@ public class HistoryController : SharedController
         return Ok(result);
     }
 
-    private object CreateResult(IEnumerable<History> list, int count, PagingAttributes attr)
+    private object CreateResult(IList<History> list, int count, PagingAttributes attr)
     {
         if (list.FirstOrDefault() is null){ return null; }
             

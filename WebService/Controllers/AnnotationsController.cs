@@ -22,17 +22,21 @@ public class AnnotationsController : SharedController
         _threadService = threadService;
     }
     
-    [HttpGet("post/{postId}")]
+    [HttpGet("post/{postId:int}")]
     public ActionResult GetAllUserAnnotationsMadeOnPostId(int postId, [FromQuery] PagingAttributes pagingAttributes) //needs-pagination
     {
-        (int userId, bool useridok) = GetAuthUserId();
-        if (!useridok)
+        var (userId, userIdOk) = GetAuthUserId();
+        if (!userIdOk)
         {
             return Unauthorized();
         }
 
         var listOfAnnotations = _annotationService.GetUserAnnotationsMadeOnAPost(userId, postId, pagingAttributes);
-        if (listOfAnnotations.Count == 0){ return NotFound(); }
+        
+        if (listOfAnnotations.Count == 0)
+        {
+            return NotFound();
+        }
 
         return Ok(listOfAnnotations);
     }
@@ -40,33 +44,33 @@ public class AnnotationsController : SharedController
     [HttpGet("user", Name = nameof(GetAllAnnotationsOfUser))]
     public ActionResult GetAllAnnotationsOfUser([FromQuery] PagingAttributes pagingAttributes)
     {
-        (int userId, bool useridok) = GetAuthUserId();
-        if (!useridok)
+        var (userId, userIdOk) = GetAuthUserId();
+        if (!userIdOk)
         {
             return Unauthorized();
         }
 
-        int count;
-        var listOfAnnotations = _annotationService.GetAllAnnotationsOfUser(userId, pagingAttributes, out count);
+        var listOfAnnotations = _annotationService.GetAllAnnotationsOfUser(userId, pagingAttributes, out var count);
         if (count == 0)
         {
             return NotFound();
         }
 
-        foreach (PostAnnotationsDto item in listOfAnnotations)
+        foreach (var annotation in listOfAnnotations)
         {
-            var postDataForAnnot = _threadService.GetPost(item.PostId);
-            item.PostId = postDataForAnnot.Id;
-            item.QuestionId = postDataForAnnot.QuestionId;
-            item.Title = postDataForAnnot.Title;
-            item.PostBody = postDataForAnnot.Body;
-            item.PostUrl = SetPostUrl(postDataForAnnot.Id, postDataForAnnot.QuestionId);
+            var postDataForAnnot = _threadService.GetPost(annotation.PostId);
+            annotation.PostId = postDataForAnnot.Id;
+            annotation.QuestionId = postDataForAnnot.QuestionId;
+            annotation.Title = postDataForAnnot.Title;
+            annotation.PostBody = postDataForAnnot.Body;
+            annotation.PostUrl = SetPostUrl(postDataForAnnot.Id, postDataForAnnot.QuestionId);
         }
 
-        return Ok(CreateResult(listOfAnnotations, pagingAttributes, count));
+        var result = CreateResult(listOfAnnotations, pagingAttributes, count); 
+        return Ok(result);
     }
 
-    [HttpGet("{annotationId}",
+    [HttpGet("{annotationId:int}",
         Name = nameof(GetAnyAnnotationById))] // fancy way to have strings checked by the compiler
     public ActionResult GetAnyAnnotationById(int annotationId)
     {
@@ -85,8 +89,8 @@ public class AnnotationsController : SharedController
     [HttpPost(Name = nameof(AddAnnotation))]
     public ActionResult AddAnnotation(AnnotationsDto annotationObj)
     {
-        (int userId, bool useridok) = GetAuthUserId();
-        if (!useridok)
+        var (userId, userIdOk) = GetAuthUserId();
+        if (!userIdOk)
         {
             return Unauthorized();
         }
@@ -97,8 +101,8 @@ public class AnnotationsController : SharedController
             PostId = annotationObj.PostId,
             Body = annotationObj.Body
         };
-        int newId;
-        if (_annotationService.CreateAnnotation_withFunction(newAnnotation, out newId))
+
+        if (_annotationService.CreateAnnotation_withFunction(newAnnotation, out var newId))
         {
             var createdAnnotation = _annotationService.GetAnnotation(newId);
             return Ok(CreateLink(createdAnnotation));
@@ -107,7 +111,7 @@ public class AnnotationsController : SharedController
         return BadRequest();
     }
 
-    [HttpPut("{annotationId}")]
+    [HttpPut("{annotationId:int}")]
     public ActionResult UpdateAnnotation(int annotationId, [FromBody] AnnotationsDto annotation)
     {
         //need to encode body before sending to db - this can also be done inside the UpdateAnnotation function.
@@ -119,11 +123,11 @@ public class AnnotationsController : SharedController
         return BadRequest();
     }
 
-    [HttpDelete("{annotationId}")]
+    [HttpDelete("{annotationId:int}")]
     public ActionResult DeleteAnnotation(int annotationId)
     {
-        (int userId, bool useridok) = GetAuthUserId();
-        if (!useridok)
+        var (userId, userIdOk) = GetAuthUserId();
+        if (!userIdOk)
         {
             return Unauthorized();
         }

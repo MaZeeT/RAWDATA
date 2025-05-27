@@ -29,7 +29,7 @@ public class AuthenticationController : ControllerBase
     [HttpPost("users")]
     public ActionResult CreateUser([FromBody] SignupUserDto dto)
     {
-        if (!isValidUserCredential(dto))
+        if (!IsValidUserCredential(dto))
         {
             return BadRequest();
         }
@@ -61,16 +61,21 @@ public class AuthenticationController : ControllerBase
     [HttpPost("tokens")]
     public ActionResult Login([FromBody] SignupUserDto dto)
     {
-        if (!isValidUserCredential(dto)) { return BadRequest(); }
+        if (!IsValidUserCredential(dto)) { return BadRequest(); }
 
         var user = _userService.GetAppUser(dto.Username);
-        if (user is null || IsInvalidPassword(dto, user)) { return BadRequest(); }
+        if (user is null || IsInvalidPassword(dto, user))
+        {
+            return BadRequest();
+        }
 
         var userToken = GenerateToken(user);
-
-        AuthenticatedUser result = new AuthenticatedUser();
-        result.Username = user.Username;
-        result.Token = userToken;
+        var result = new AuthenticatedUser
+        {
+            Username = user.Username,
+            Token = userToken
+        };
+        
         return Ok(result);
     }
 
@@ -108,7 +113,7 @@ public class AuthenticationController : ControllerBase
         return token;
     }
 
-    private bool isValidUserCredential(SignupUserDto dto)
+    private static bool IsValidUserCredential(SignupUserDto dto)
     {
         var isUsernameOrPasswordEmpty = string.IsNullOrEmpty(dto.Username) || string.IsNullOrEmpty(dto.Password);
         if (isUsernameOrPasswordEmpty)
@@ -122,18 +127,18 @@ public class AuthenticationController : ControllerBase
             return false;
         }
 
-        string regExUsernameInvalidValue = @"[^a-zA-Z\d]";
-        string regExPasswordInvalidValue = @"[^a-zA-Z\d]";
+        const string regExUsernameInvalidValue = @"[^a-zA-Z\d]";
+        const string regExPasswordInvalidValue = @"[^a-zA-Z\d]";
         var regExMatchInvalidUser = Regex.Match(dto.Username, regExUsernameInvalidValue, RegexOptions.IgnoreCase);
         var regExMatchInvalidPassword = Regex.Match(dto.Password, regExPasswordInvalidValue, RegexOptions.IgnoreCase);
 
-        if (regExMatchInvalidUser.Success || regExMatchInvalidPassword.Success)
+        if (!regExMatchInvalidUser.Success &&
+            !regExMatchInvalidPassword.Success)
         {
-            Console.WriteLine("Am entering successfully :D ");
-
-            return false;
+            return true;
         }
-
-        return true;
+        
+        Console.WriteLine("Am entering successfully :D ");
+        return false;
     }
 }

@@ -42,7 +42,7 @@ public class BookmarkController : SharedController
         return Ok(CreateResult(bookmarks, count, pagingAttributes));
     }
 
-    [HttpPost("add/{postId}", Name = nameof(AddBookmark))]
+    [HttpPost("add/{postId:int}", Name = nameof(AddBookmark))]
     //example http://localhost:5001/api/bookmark/add/1760
     public ActionResult AddBookmark(int postId)
     {
@@ -56,7 +56,7 @@ public class BookmarkController : SharedController
         return Ok(result);
     }
 
-    [HttpDelete("delete/{postId}", Name = nameof(DeleteBookmark))]
+    [HttpDelete("delete/{postId:int}", Name = nameof(DeleteBookmark))]
     //example http://localhost:5001/api/bookmark/delete/1760
     public ActionResult DeleteBookmark(int postId)
     {
@@ -92,33 +92,31 @@ public class BookmarkController : SharedController
     }
 
 
-    private object CreateResult(IEnumerable<History> list, int count, PagingAttributes attr)
+    private object CreateResult(IList<History> list, int count, PagingAttributes attr)
     {
-        if (list.FirstOrDefault() != null)
-        {
-            var totalResults = count;
-            var numberOfPages = Math.Ceiling((double)totalResults / attr.PageSize);
-
-            var prev = attr.Page > 1
-                ? CreatePagingLink(nameof(GetBookmarkList), attr.Page - 1, attr.PageSize)
-                : null;
-            var next = attr.Page < numberOfPages
-                ? CreatePagingLink(nameof(GetBookmarkList), attr.Page + 1, attr.PageSize)
-                : null;
-
-            return new
-            {
-                totalResults,
-                numberOfPages,
-                prev,
-                next,
-                items = list.Select(CreateBookmarkResultDto) //Select() is like a foreach loop
-            };
-        }
-        else
+        if (list.FirstOrDefault() == null)
         {
             return null;
         }
+    
+        var totalResults = count;
+        var numberOfPages = Math.Ceiling((double)totalResults / attr.PageSize);
+
+        var prev = attr.Page > 1
+            ? CreatePagingLink(nameof(GetBookmarkList), attr.Page - 1, attr.PageSize)
+            : null;
+        var next = attr.Page < numberOfPages
+            ? CreatePagingLink(nameof(GetBookmarkList), attr.Page + 1, attr.PageSize)
+            : null;
+
+        return new
+        {
+            totalResults,
+            numberOfPages,
+            prev,
+            next,
+            items = list.Select(CreateBookmarkResultDto) //Select() is like a foreach loop
+        };
     }
 
     private BookmarkDto CreateBookmarkResultDto(History hist)
@@ -140,7 +138,7 @@ public class BookmarkController : SharedController
     }
 
 
-    public string CreatePagingLink(string nameof, int page, int pageSize)
+    private string CreatePagingLink(string nameof, int page, int pageSize)
     {
         return Url.Link(nameof, new { page, pageSize });
     }

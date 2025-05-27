@@ -26,33 +26,36 @@ public class SearchHistoryController : SharedController
     //example http://localhost:5001/api/history/searches 
     public ActionResult GetSearchHistory([FromQuery] PagingAttributes pagingAttributes)
     {
-        (int userId, bool useridok) = GetAuthUserId();
-        if (!useridok){ return Unauthorized(); }
+        var (userId, userIdOk) = GetAuthUserId();
+        if (!userIdOk)
+        {
+            return Unauthorized();
+        }
 
-        (var shistory, int count) = _searchService.GetSearchesList(userId, pagingAttributes);
-        if (shistory == null || count == 0)
+        var (searchHistory, count) = _searchService.GetSearchesList(userId, pagingAttributes);
+        if (searchHistory == null || count == 0)
         {
             //return NotFound();
-            shistory = new List<Searches>();
-            var dummyitem = new Searches();
-            shistory.Add(dummyitem);
+            searchHistory = new List<Searches>();
+            var dummyitem = new Searches(); //TODO why a dummy item?
+            searchHistory.Add(dummyitem);
             count = 0;
         }
 
-        var result = CreateResult(shistory, count, pagingAttributes);
-        if (result != null)
+        var result = CreateResult(searchHistory, count, pagingAttributes);
+        if (result is null)
         {
-            return Ok(result);
+            return NoContent();
         }
-        else return NoContent();
+        return Ok(result);
     }
 
     [HttpDelete("delete/all", Name = nameof(ClearSearchHistory))]
     //example http://localhost:5001/api/history/searches/delete/all
     public ActionResult ClearSearchHistory()
     {
-        (int userId, bool useridok) = GetAuthUserId();
-        if (!useridok)
+        var (userId, userIdOk) = GetAuthUserId();
+        if (!userIdOk)
         {
             return Unauthorized();
         }
@@ -74,21 +77,18 @@ public class SearchHistoryController : SharedController
 
     private SearchHistoryListDto CreateSearchHistoryResultDto(Searches searches)
     {
-        var dto = new SearchHistoryListDto();
-
-        var s = "";
+        var searchString = "";
         if (searches.SearchString != null)
         {
-            s = _searchService.BuildSearchString(searches.SearchString, true);
+            searchString = _searchService.BuildSearchString(searches.SearchString, true);
         }
 
-        var stype = _searchService.SearchTypeLookup(searches.SearchType);
+        var searchType = _searchService.SearchTypeLookup(searches.SearchType);
 
         var url = Url.Link(
             nameof(SearchController.Search),
             new{
-                s,
-                stype
+                s = searchString, stype = searchType
             });
 
         return new SearchHistoryListDto{
