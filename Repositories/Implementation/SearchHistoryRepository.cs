@@ -48,11 +48,4 @@ public class SearchHistoryRepository : ISearchHistoryRepository
 
         return db.SaveChanges() > 0;
     }
-
-    private bool SearchExist(int searchId)
-    {
-        using var db = _dbContextFactory.CreateDbContext();
-        var result = db.Searches.Find(searchId);
-        return result != null;
-    }
 }

@@ -35,7 +35,6 @@ public class SearchHistoryController : SharedController
         var (searchHistory, count) = _searchService.GetSearchesList(userId, pagingAttributes);
         if (searchHistory == null || count == 0)
         {
-            //return NotFound();
             searchHistory = new List<Searches>();
             var dummyitem = new Searches(); //TODO why a dummy item?
             searchHistory.Add(dummyitem);

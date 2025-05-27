@@ -51,12 +51,10 @@ public class HistoryRepository : IHistoryRepository
         var histories = _database.History.Where(user => user.UserId == userId && user.PostId == postId).ToList();
         if (histories.Count > 0)
         {
-            return histories.First();
+            return histories[0];
         }
-        else
-        {
-            return null;
-        }
+        
+        return null;
     }
 
     public List<History> GetHistoryList(int userId)

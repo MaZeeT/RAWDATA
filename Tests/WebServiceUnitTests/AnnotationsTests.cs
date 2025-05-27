@@ -1,11 +1,9 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Text.Json;
 using Domain.AnnotationsDTOs;
 using WebService.DTOs;
 using Xunit;
@@ -93,7 +91,7 @@ namespace Tests.WebServiceUnitTests
             Assert.Null(nextPageUrl);
             Assert.Equal("1", noOfPages);
 
-            JObject firstItem = (JObject)itemsList[0];
+            var firstItem = (JObject)itemsList[0];
             var body = (string)firstItem["body"];
             var postId = (string)firstItem["postId"];
             var questionId = (string)firstItem["questionId"];
@@ -151,7 +149,6 @@ namespace Tests.WebServiceUnitTests
             };
 
             var (annotation, statusCodePost) = PostData(ApiPathAnnotations, newAnnotation, UserToken);
-            //var annotId = (string)annotation["annotationId"];
             var statusCode = DeleteData($"{ApiPathAnnotations}/{annotation["annotationId"]}", UserToken);
             Assert.Equal(HttpStatusCode.OK, statusCode);
         }
@@ -173,7 +170,7 @@ namespace Tests.WebServiceUnitTests
         }
 
 
-        (JArray, HttpStatusCode) GetArray(string url, string userToken)
+        private static (JArray, HttpStatusCode) GetArray(string url, string userToken)
         {
             var client = new HttpClient();
             if (!string.IsNullOrEmpty(userToken))
@@ -185,7 +182,7 @@ namespace Tests.WebServiceUnitTests
             return ((JArray)JsonConvert.DeserializeObject(data), response.StatusCode);
         }
 
-        (JObject, HttpStatusCode) GetObject(string url, string userToken)
+        private static (JObject, HttpStatusCode) GetObject(string url, string userToken)
         {
             var client = new HttpClient();
             if (!string.IsNullOrEmpty(userToken))
@@ -197,7 +194,7 @@ namespace Tests.WebServiceUnitTests
             return ((JObject)JsonConvert.DeserializeObject(data), response.StatusCode);
         }
 
-        (JObject, HttpStatusCode) PostData(string url, object content, string userToken)
+        private static (JObject, HttpStatusCode) PostData(string url, object content, string userToken)
         {
             var client = new HttpClient();
             if (!string.IsNullOrEmpty(userToken))
@@ -213,7 +210,7 @@ namespace Tests.WebServiceUnitTests
             return ((JObject)JsonConvert.DeserializeObject(data), response.StatusCode);
         }
 
-        HttpStatusCode PutData(string url, object content, string userToken)
+        private static HttpStatusCode PutData(string url, object content, string userToken)
         {
             var client = new HttpClient();
             if (!string.IsNullOrEmpty(userToken))
@@ -229,7 +226,7 @@ namespace Tests.WebServiceUnitTests
             return response.StatusCode;
         }
 
-        HttpStatusCode DeleteData(string url, string userToken)
+        private static HttpStatusCode DeleteData(string url, string userToken)
         {
             var client = new HttpClient();
             if (!string.IsNullOrEmpty(userToken))

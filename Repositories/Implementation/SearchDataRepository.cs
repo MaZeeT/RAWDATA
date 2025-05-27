@@ -109,48 +109,46 @@ public class SearchDataRepository : ISearchRepository
 
     public IList<WordRank> WordRank(int userid, string searchstring, int searchtypecode, int? maxresults)
     {
-        ////// for performing searches with wordrank on the db
-        ///
+        // for performing searches with wordrank on the db
         // do actual search using appsearch in db and build results
 
-        //need db context and searchtype lookuptable
+        // need db context and searchtype lookuptable
         using var db = _dbContextFactory.CreateDbContext();
-        SearchTypeLookupTable st = new SearchTypeLookupTable();
+        var st = new SearchTypeLookupTable();
 
-        ////get params for db.func
-        ///
-        //build searchstring
+        // get params for db.func
+        // build searchstring
         var search = new NpgsqlParameter("search", NpgsqlTypes.NpgsqlDbType.Text)
         {
             Value = BuildSearchString(searchstring, false)
         };
 
-        //lookup searchtype string
-        var searchtype = new NpgsqlParameter("searchtype", NpgsqlTypes.NpgsqlDbType.Text);
+        // lookup searchtype string
+        var searchType = new NpgsqlParameter("searchtype", NpgsqlTypes.NpgsqlDbType.Text);
         if (searchtypecode >= 4 && searchtypecode <= 5)
         {
-            searchtype.Value = st.searchType[searchtypecode];
+            searchType.Value = st.searchType[searchtypecode];
         }
-        else searchtype.Value = st.searchType[5];
+        else searchType.Value = st.searchType[5];
 
-        //userid 
-        var appuserid = new NpgsqlParameter("appuserid", NpgsqlTypes.NpgsqlDbType.Integer)
+        // userid 
+        var appUserId = new NpgsqlParameter("appuserid", NpgsqlTypes.NpgsqlDbType.Integer)
         {
             Value = userid
         };
 
-        //if internal call is specified, stored function appsearch won't add to searches/searchhistory
-        var internalcall = new NpgsqlParameter("internalcall", NpgsqlTypes.NpgsqlDbType.Boolean)
+        // if internal call is specified, stored function appsearch won't add to searches/searchhistory
+        var internalCall = new NpgsqlParameter("internalcall", NpgsqlTypes.NpgsqlDbType.Boolean)
         {
             Value = true
         };
 
-        //count all matches
-        var matchcount = db.Search
-            .FromSqlRaw("select appsearch(@appuserid, @searchtype, @search, @internalcall)", appuserid, searchtype,
-                search, internalcall)
+        // count all matches
+        var matchCount = db.Search
+            .FromSqlRaw("select appsearch(@appuserid, @searchtype, @search, @internalcall)", appUserId, searchType,
+                search, internalCall)
             .Count();
-        System.Console.WriteLine($"{matchcount} results.");
+        Console.WriteLine($"{matchCount} results.");
 
         var limit = new NpgsqlParameter("limit", NpgsqlTypes.NpgsqlDbType.Integer)
         {
@@ -161,47 +159,38 @@ public class SearchDataRepository : ISearchRepository
             limit.Value = maxresults;
         }
 
-        //call db.func wordrank
+        // call db.func wordrank
         return db.WordRank
-            .FromSqlRaw("SELECT * from wordrank(@appuserid, @searchtype, @search) limit @limit", appuserid,
-                searchtype, search, limit)
+            .FromSqlRaw("SELECT * from wordrank(@appuserid, @searchtype, @search) limit @limit", appUserId,
+                searchType, search, limit)
             .ToList();
     }
 
     public string BuildSearchString(string searchstring, bool reverse)
     {
-        //convert query search string to appsearch db func search string or the reverse
+        // convert query search string to appsearch db func search string or the reverse
         string[] separators = { ",", ".", "...", " " };
 
-        string[] words = searchstring.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+        var words = searchstring.Split(separators, StringSplitOptions.RemoveEmptyEntries);
         System.Console.WriteLine($"{words.Length} tokens in search");
 
         //added to filter non-aplhanumeric chars
         //better to have it at backend if some1 sends weird request :)
-        List<string> filteredtokens = new List<string>();
-        foreach (string s in words)
+        var filteredTokens = new List<string>();
+        foreach (var s in words)
         {
-            char[] filterarray = s.ToCharArray();
-            filterarray = Array.FindAll<char>(filterarray, (c => (char.IsLetterOrDigit(c)
+            var filterArray = s.ToCharArray();
+            filterArray = Array.FindAll<char>(filterArray, (c => (char.IsLetterOrDigit(c)
                                                                   || char.IsWhiteSpace(c)
                                                                   || c == '-')));
-            var filteredtoken = new string(filterarray);
-            filteredtokens.Add(filteredtoken);
-        }
-        //
-
-        string finalstring;
-        if (reverse == true)
-        {
-            finalstring = string.Join(",", filteredtokens);
-        }
-        else
-        {
-            finalstring = string.Join(" ", filteredtokens);
+            var filteredToken = new string(filterArray);
+            filteredTokens.Add(filteredToken);
         }
 
-        System.Console.WriteLine("Built search string: " + finalstring);
-        return finalstring;
+        var finalString = string.Join(reverse ? "," : " ", filteredTokens);
+
+        Console.WriteLine("Built search string: " + finalString);
+        return finalString;
     }
 
     public int SearchTypeLookup(string searchmethod)
