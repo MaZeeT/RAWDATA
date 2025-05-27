@@ -82,10 +82,10 @@ public class HistoryController : SharedController
         };
     }
 
-    private HistoryDTO CreateHistoryResultDto(History hist)
+    private HistoryDto CreateHistoryResultDto(History hist)
     {
         var post = _threadService.GetPost(hist.PostId);
-        var dto = new HistoryDTO
+        var dto = new HistoryDto
         {
             Title = post.Title,
             Body = post.Body,

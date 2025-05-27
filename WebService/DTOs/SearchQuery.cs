@@ -6,3 +6,4 @@ public class SearchQuery
     public string s { get; set; }
     public int stype { get; set; } = 3; //this sets stype to 3 if there is no stype param
 }
+//todo fix property names

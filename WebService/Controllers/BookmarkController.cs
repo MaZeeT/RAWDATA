@@ -121,10 +121,10 @@ public class BookmarkController : SharedController
         }
     }
 
-    private BookmarkDTO CreateBookmarkResultDto(History hist)
+    private BookmarkDto CreateBookmarkResultDto(History hist)
     {
         var post = _threadService.GetPost(hist.PostId);
-        var dto = new BookmarkDTO
+        var dto = new BookmarkDto
         {
             Title = post.Title,
             Body = post.Body,

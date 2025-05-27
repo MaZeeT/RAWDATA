@@ -9,7 +9,6 @@ static class ModelBuilderExtensions
     /// Needed for automapper and making life easier
     /// </summary>
     /// <param name="modelBuilder"></param>
-    /// <param name="names"></param>
     //public static void CreateMap(this ModelBuilder modelBuilder, params string[] names)
     public static void CreateMap(this ModelBuilder modelBuilder)
     {

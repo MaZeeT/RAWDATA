@@ -12,7 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using Repositories.Implementation;
 using Repositories.Interfaces;
 
-string database = "host=localhost;port=5432;db=stackoverflow;uid=postgres;pwd=Password123";
+const string database = "host=localhost;port=5432;db=stackoverflow;uid=postgres;pwd=Password123";
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();

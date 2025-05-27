@@ -89,7 +89,7 @@ public class QuestionsController : SharedController
                 PostsThreadDto pt = new PostsThreadDto
                 {
                     Id = p.Id,
-                    Parentid = p.ParentId,
+                    ParentId = p.ParentId,
                     Title = p.Title,
                     Body = p.Body
                 };
@@ -97,13 +97,13 @@ public class QuestionsController : SharedController
                 List<SimpleAnnotationDto> tempanno = new List<SimpleAnnotationDto>();
                 tempanno = _annotationService.GetUserAnnotationsMadeOnAPost(userId, p.Id, pagingAttributes);
                 pt.Annotations = tempanno;
-                pt.createBookmarkLink = Url.Link(nameof(BookmarkController.AddBookmark), new { postId = p.Id });
+                pt.CreateBookmarkLink = Url.Link(nameof(BookmarkController.AddBookmark), new { postId = p.Id });
                 AnnotationsDto anno = new AnnotationsDto
                 {
                     Body = "form_or_similar_would_be_here_to_POST_a_new_annotation",
                     PostId = p.Id
                 };
-                pt.createAnnotationLink = Url.Link(nameof(AnnotationsController.AddAnnotation), anno);
+                pt.CreateAnnotationLink = Url.Link(nameof(AnnotationsController.AddAnnotation), anno);
                 // i know its supposed to be a form/post. just thought it'd be neat to have a link mockup. 
                 thread.Add(pt);
             }
