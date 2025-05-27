@@ -85,9 +85,9 @@ public class SearchDataRepository : ISearchRepository
         foreach (var s in resultlist)
         {
             var p = new Posts();
-            var sp = _sharedRepositoryService.GetPost(s.postid);
+            var sp = _sharedRepositoryService.GetPost(s.PostId);
 
-            p.Parentid = sp.QuestionId;
+            p.ParentId = sp.QuestionId;
             p.Id = sp.Id;
             var endpos = 100;
             if (sp.Body.Length < 100)
@@ -97,9 +97,9 @@ public class SearchDataRepository : ISearchRepository
 
             p.Body = sp.Body.Substring(0, endpos);
 
-            p.Title = _questionRepository.GetQuestion(p.Parentid).Title;
-            p.Totalresults = matchcount;
-            p.Rank = s.rank;
+            p.Title = _questionRepository.GetQuestion(p.ParentId).Title;
+            p.TotalResults = matchcount;
+            p.Rank = s.Rank;
             resultposts.Add(p);
         }
 

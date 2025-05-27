@@ -6,8 +6,8 @@
         public decimal Rank { get; set; }
         public string Title { get; set; }
         public string Body { get; set; }
-        public int Parentid { get; set; }
-        public int Totalresults { get; set; }
+        public int ParentId { get; set; }
+        public int TotalResults { get; set; }
         
 }
 

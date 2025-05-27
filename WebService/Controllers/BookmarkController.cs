@@ -79,7 +79,7 @@ public class BookmarkController : SharedController
 
         foreach (var bookmark in bookmarks)
         {
-            _bookmarkService.DeleteBookmark(bookmark.Userid, bookmark.Postid);
+            _bookmarkService.DeleteBookmark(bookmark.UserId, bookmark.PostId);
         }
 
         var result = _bookmarkService.GetBookmarkList(userId).Count == 0;
@@ -123,7 +123,7 @@ public class BookmarkController : SharedController
 
     private BookmarkDTO CreateBookmarkResultDto(History hist)
     {
-        var post = _threadService.GetPost(hist.Postid);
+        var post = _threadService.GetPost(hist.PostId);
         var dto = new BookmarkDTO
         {
             Title = post.Title,
@@ -131,9 +131,9 @@ public class BookmarkController : SharedController
             Date = hist.Date,
             ThreadUrl = Url.Link(
                 nameof(QuestionsController.GetThread),
-                new { questionId = hist.Postid }
+                new { questionId = hist.PostId }
             ),
-            PostId = hist.Postid
+            PostId = hist.PostId
         };
 
         return dto;

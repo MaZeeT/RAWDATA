@@ -2,10 +2,10 @@
 {
     public class PagingAttributes
     {
-        public const int MaxPageSize = 100;
-        public const int DefPageSize = 10;
+        private const int MaxPageSize = 100;
+        private const int DefPageSize = 10;
         private int _pageSize = DefPageSize;
-        public const int FirstPage = 1; // first page is page one, not page zero
+        private const int FirstPage = 1; // first page is page one, not page zero
         private int _page = FirstPage;
         public int Page
         {

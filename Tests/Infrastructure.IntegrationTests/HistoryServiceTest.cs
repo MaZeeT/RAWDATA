@@ -37,9 +37,9 @@ namespace Tests.Infrastructure.IntegrationTests
             IHistoryRepository service = _serviceProvider.GetRequiredService<IHistoryRepository>();
             var history = new History
             {
-                Userid = testUserId,
-                Postid = 110,
-                isBookmark = false
+                UserId = testUserId,
+                PostId = 110,
+                IsBookmark = false
             };
 
             Assert.False(service.Add(history));
@@ -51,9 +51,9 @@ namespace Tests.Infrastructure.IntegrationTests
             IHistoryRepository service = _serviceProvider.GetRequiredService<IHistoryRepository>();
             var history = new History
             {
-                Userid = testUserId,
-                Postid = 1760,
-                isBookmark = false
+                UserId = testUserId,
+                PostId = 1760,
+                IsBookmark = false
             };
 
             bool result = service.Add(history);
@@ -204,7 +204,7 @@ namespace Tests.Infrastructure.IntegrationTests
             const int userId = testUserId;
             const int postId = 709;
             const bool isBookmark = true;
-            var historyToAdd = new History {Userid = userId, Postid = postId, isBookmark = isBookmark};
+            var historyToAdd = new History {UserId = userId, PostId = postId, IsBookmark = isBookmark};
 
             bool resultAdd = service.Add(historyToAdd);
             History history = service.Get(userId, postId);
@@ -284,8 +284,8 @@ namespace Tests.Infrastructure.IntegrationTests
             Assert.True(addResult3);
 
             Assert.Equal(2, history.Count);
-            Assert.Equal(postId3, history[1].Postid);
-            Assert.Equal(postId1, history[0].Postid);
+            Assert.Equal(postId3, history[1].PostId);
+            Assert.Equal(postId1, history[0].PostId);
         }
 
         [Fact]
@@ -319,8 +319,8 @@ namespace Tests.Infrastructure.IntegrationTests
             Assert.True(addResult4);
 
             Assert.Equal(2, history.Count);
-            Assert.Equal(postId3, history[1].Postid);
-            Assert.Equal(postId2, history[0].Postid);
+            Assert.Equal(postId3, history[1].PostId);
+            Assert.Equal(postId2, history[0].PostId);
         }
 
         [Fact]
@@ -331,16 +331,16 @@ namespace Tests.Infrastructure.IntegrationTests
             const int userId = testUserId;
             const int postId = 709;
             const bool isBookmark = true;
-            var history = new History {Userid = userId, Postid = postId, isBookmark = isBookmark};
+            var history = new History {UserId = userId, PostId = postId, IsBookmark = isBookmark};
 
             bool historyAdd = service.Add(history);
             History historyGet = service.Get(userId, postId);
 
             //todo fix this
             Assert.True(historyAdd);
-            Assert.Equal(userId, historyGet.Userid);
-            Assert.Equal(postId, historyGet.Postid);
-            Assert.Equal(isBookmark, historyGet.isBookmark);
+            Assert.Equal(userId, historyGet.UserId);
+            Assert.Equal(postId, historyGet.PostId);
+            Assert.Equal(isBookmark, historyGet.IsBookmark);
 
             //clean up todo delete when mock is working
             service.DeleteHistory(history.Id);

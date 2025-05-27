@@ -2,7 +2,7 @@
 {
     public class WordRank
     {
-        public string term { get; set; }
-        public decimal rank { get; set; }
+        public string Term { get; set; }
+        public decimal Rank { get; set; }
     }
 }

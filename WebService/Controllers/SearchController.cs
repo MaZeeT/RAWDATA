@@ -109,7 +109,7 @@ public class SearchController : SharedController
 
     private PostsSearchListDto CreateSearchResultDto(Posts posts)
     {
-        return posts.Parentid == 0
+        return posts.ParentId == 0
             ? GetPostQuestionDto(posts)
             : GetPostAnswerDto(posts);
     }
@@ -139,7 +139,7 @@ public class SearchController : SharedController
                 nameof(QuestionsController.GetThread),
                 new
                 {
-                    questionId = posts.Parentid,
+                    questionId = posts.ParentId,
                     postId = posts.Id
                 })
         };
@@ -150,7 +150,7 @@ public class SearchController : SharedController
     {
         if (posts.FirstOrDefault() != null){ return null; }
          
-        var totalResults = posts.First().Totalresults;
+        var totalResults = posts.First().TotalResults;
         var numberOfPages = Math.Ceiling((double)totalResults / attr.PageSize);
 
         var prev = attr.Page > 1

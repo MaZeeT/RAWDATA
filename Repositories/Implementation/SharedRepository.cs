@@ -28,7 +28,7 @@ public class SharedRepository : ISharedRepository
         };
         using var db = _dbContextFactory.CreateDbContext();
         var tablename = db.PostsTable
-            .FromSqlRaw("SELECT * from resolveid(@postid)", postid).First().resolveid;
+            .FromSqlRaw("SELECT * from resolveid(@postid)", postid).First().ResolveId;
 
         System.Console.WriteLine($"Post is part of -- {tablename}");
 
@@ -68,7 +68,7 @@ public class SharedRepository : ISharedRepository
                 var a = GetAnswer(postId);
                 returnPost.Body = a.Body;
                 returnPost.Id = postId;
-                returnPost.QuestionId = GetAnswer(postId).Parentid; //get parent q of answer
+                returnPost.QuestionId = GetAnswer(postId).ParentId; //get parent q of answer
                 returnPost.Title = _questionRepository.GetQuestion(returnPost.QuestionId).Title; //get title of parent q
                 return returnPost;
             }
@@ -90,7 +90,7 @@ public class SharedRepository : ISharedRepository
         
         //find answers to the specified question
         var answers = db.Answers
-            .Where(e => e.Parentid == questionId)
+            .Where(e => e.ParentId == questionId)
             .ToList();
         //manual mapping
         var posts = new List<Posts>
@@ -108,7 +108,7 @@ public class SharedRepository : ISharedRepository
                 new Posts
                 {
                     Id = answer.Id,
-                    Parentid = answer.Parentid,
+                    ParentId = answer.ParentId,
                     Body = answer.Body
                 });
         }

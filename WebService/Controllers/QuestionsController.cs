@@ -68,13 +68,13 @@ public class QuestionsController : SharedController
             ///call to add browse history here
             History browsehist = new History
             {
-                Userid = userId
+                UserId = userId
             };
             if (postId != null)
             {
-                browsehist.Postid = (int)postId;
+                browsehist.PostId = (int)postId;
             }
-            else browsehist.Postid = questionId;
+            else browsehist.PostId = questionId;
 
             var result = _historyService.Add(browsehist);
             if (!result)
@@ -89,7 +89,7 @@ public class QuestionsController : SharedController
                 PostsThreadDto pt = new PostsThreadDto
                 {
                     Id = p.Id,
-                    Parentid = p.Parentid,
+                    Parentid = p.ParentId,
                     Title = p.Title,
                     Body = p.Body
                 };

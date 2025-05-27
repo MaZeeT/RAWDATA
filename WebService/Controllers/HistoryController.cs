@@ -84,7 +84,7 @@ public class HistoryController : SharedController
 
     private HistoryDTO CreateHistoryResultDto(History hist)
     {
-        var post = _threadService.GetPost(hist.Postid);
+        var post = _threadService.GetPost(hist.PostId);
         var dto = new HistoryDTO
         {
             Title = post.Title,
@@ -92,7 +92,7 @@ public class HistoryController : SharedController
             Date = hist.Date,
             ThreadUrl = Url.Link(
                 nameof(QuestionsController.GetThread),
-                new { questionId = hist.Postid }
+                new { questionId = hist.PostId }
             )
         };
 

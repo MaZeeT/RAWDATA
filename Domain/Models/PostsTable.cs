@@ -2,6 +2,6 @@
 {
     public class PostsTable
     {
-        public string resolveid { get; set; }
+        public string ResolveId { get; set; }
     }
 }

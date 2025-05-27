@@ -38,7 +38,7 @@ public class HistoryRepository : IHistoryRepository
 
     public bool Add(History history)
     {
-        return Add(history.Userid, history.Postid, history.isBookmark);
+        return Add(history.UserId, history.PostId, history.IsBookmark);
     }
 
     public History Get(int historyId)
@@ -48,7 +48,7 @@ public class HistoryRepository : IHistoryRepository
 
     public History Get(int userId, int postId)
     {
-        var histories = _database.History.Where(user => user.Userid == userId && user.Postid == postId).ToList();
+        var histories = _database.History.Where(user => user.UserId == userId && user.PostId == postId).ToList();
         if (histories.Count > 0)
         {
             return histories.First();
@@ -84,8 +84,8 @@ public class HistoryRepository : IHistoryRepository
     public bool DeleteUserHistory(int userId)
     {
         var history = _database.History.Where(x =>
-            x.Userid == userId &&
-            x.isBookmark == false);
+            x.UserId == userId &&
+            x.IsBookmark == false);
 
         foreach (var entry in history)
         {
@@ -111,14 +111,14 @@ public class HistoryRepository : IHistoryRepository
     public bool DeleteBookmark(int userId, int postId)
     {
         var histories = _database.History.Where(x =>
-            x.Userid == userId &&
-            x.Postid == postId &&
-            x.isBookmark == true);
+            x.UserId == userId &&
+            x.PostId == postId &&
+            x.IsBookmark == true);
         
         foreach (var history in histories)
         {
             _database.History.Update(history);
-            history.isBookmark = false;
+            history.IsBookmark = false;
         }
 
         return _database.SaveChanges() > 0;
@@ -133,8 +133,8 @@ public class HistoryRepository : IHistoryRepository
     private bool HistoryExist(int userId, int postId)
     {
         var result = _database.History.Where(history =>
-                history.Userid == userId &&
-                history.Postid == postId)
+                history.UserId == userId &&
+                history.PostId == postId)
             .ToList();
 
         return result.Count > 0;
@@ -147,8 +147,8 @@ public class HistoryRepository : IHistoryRepository
 
         return _database.History
             .Where(x =>
-                x.Userid == userId &&
-                x.isBookmark == isBookmark)
+                x.UserId == userId &&
+                x.IsBookmark == isBookmark)
             .OrderBy(x => x.Date)
             .Skip((pageAtt.Page - 1) * pageAtt.PageSize)
             .Take(pageAtt.PageSize)
@@ -158,7 +158,7 @@ public class HistoryRepository : IHistoryRepository
     public int GetCount(int userId, bool isBookmark)
     {
         return _database.History.Count(x =>
-            x.Userid == userId &&
-            x.isBookmark == isBookmark);
+            x.UserId == userId &&
+            x.IsBookmark == isBookmark);
     }
 }
