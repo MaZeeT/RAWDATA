@@ -3,11 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using BusinessLogic.Interfaces;
-using Domain.Entities;
+using Domain.Models;
 using Domain.Services;
-using Repositories.Interfaces;
-using WebDTOs;
+using DomainServices.Interfaces;
+using WebService.DTOs;
 
 namespace WebService.Controllers;
 
@@ -17,12 +16,12 @@ namespace WebService.Controllers;
 public class BookmarkController : SharedController
 {
     private readonly IBookmarkService _bookmarkService;
-    private readonly ISharedRepository _sharedRepositoryService;
+    private readonly IThreadService _threadService;
 
-    public BookmarkController(IBookmarkService bookmarkService, ISharedRepository sharedRepositoryService)
+    public BookmarkController(IBookmarkService bookmarkService, IThreadService threadService)
     {
         _bookmarkService = bookmarkService;
-        _sharedRepositoryService = sharedRepositoryService;
+        _threadService = threadService;
     }
 
     [HttpGet(Name = nameof(GetBookmarkList))]
@@ -124,7 +123,7 @@ public class BookmarkController : SharedController
 
     private BookmarkDTO CreateBookmarkResultDto(History hist)
     {
-        var post = _sharedRepositoryService.GetPost(hist.Postid);
+        var post = _threadService.GetPost(hist.Postid);
         var dto = new BookmarkDTO
         {
             Title = post.Title,

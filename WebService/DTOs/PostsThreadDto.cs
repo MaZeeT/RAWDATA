@@ -1,6 +1,7 @@
-﻿using Domain.AnnotationsDTOs;
+﻿using System.Collections.Generic;
+using Domain.AnnotationsDTOs;
 
-namespace WebDTOs;
+namespace WebService.DTOs;
 
 public class PostsThreadDto
 {

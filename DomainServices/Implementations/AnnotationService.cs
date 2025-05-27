@@ -1,9 +1,9 @@
-using BusinessLogic.Interfaces;
 using Domain.AnnotationsDTOs;
 using Domain.Services;
+using DomainServices.Interfaces;
 using Repositories.Interfaces;
 
-namespace BusinessLogic.Implementations;
+namespace DomainServices.Implementations;
 
 public class AnnotationService : IAnnotationService
 {

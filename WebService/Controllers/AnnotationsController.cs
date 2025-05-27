@@ -2,11 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using BusinessLogic.Interfaces;
 using Domain.AnnotationsDTOs;
 using Domain.Services;
-using Repositories.Interfaces;
-using WebService.Attributes;
+using DomainServices.Interfaces;
 
 namespace WebService.Controllers;
 
@@ -16,15 +14,14 @@ namespace WebService.Controllers;
 public class AnnotationsController : SharedController
 {
     private readonly IAnnotationService _annotationService;
-    private readonly ISharedRepository _sharedRepositoryService;
+    private readonly IThreadService _threadService;
 
-    public AnnotationsController(IAnnotationService annotationService, ISharedRepository sharedRepositoryService)
+    public AnnotationsController(IAnnotationService annotationService, IThreadService threadService)
     {
         _annotationService = annotationService;
-        _sharedRepositoryService = sharedRepositoryService;
+        _threadService = threadService;
     }
-
-    [RequireAuthentication]
+    
     [HttpGet("post/{postId}")]
     public ActionResult GetAllUserAnnotationsMadeOnPostId(int postId, [FromQuery] PagingAttributes pagingAttributes) //needs-pagination
     {
@@ -58,7 +55,7 @@ public class AnnotationsController : SharedController
 
         foreach (PostAnnotationsDto item in listOfAnnotations)
         {
-            var postDataForAnnot = _sharedRepositoryService.GetPost(item.PostId);
+            var postDataForAnnot = _threadService.GetPost(item.PostId);
             item.PostId = postDataForAnnot.Id;
             item.QuestionId = postDataForAnnot.QuestionId;
             item.Title = postDataForAnnot.Title;

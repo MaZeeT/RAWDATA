@@ -1,10 +1,11 @@
-namespace WebDTOs;
+using System;
 
-public class BookmarkDTO
+namespace WebService.DTOs;
+
+public class HistoryDTO
 {
     public string Title { get; set; }
     public string Body { get; set; }
     public string ThreadUrl { get; set; }
     public DateTime Date { get; set; }
-    public int PostId { get; set; }
 }

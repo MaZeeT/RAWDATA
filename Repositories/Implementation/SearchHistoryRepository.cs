@@ -1,7 +1,5 @@
-using Infrastructure;
 using Infrastructure.Database;
-using Domain;
-using Domain.Entities;
+using Domain.Models;
 using Domain.Services;
 using Microsoft.EntityFrameworkCore;
 using Repositories.Interfaces;
@@ -11,13 +9,10 @@ namespace Repositories.Implementation;
 public class SearchHistoryRepository : ISearchHistoryRepository
 {
     private readonly IDbContextFactory<DatabaseContext2> _dbContextFactory;
-    private readonly ISharedRepository _sharedRepositoryService; //shared stuff by injection
 
-    public SearchHistoryRepository(IDbContextFactory<DatabaseContext2> factory,
-        ISharedRepository sharedRepositoryService)
+    public SearchHistoryRepository(IDbContextFactory<DatabaseContext2> factory)
     {
         _dbContextFactory = factory;
-        _sharedRepositoryService = sharedRepositoryService;
     }
 
     public (List<Searches>, int) GetSearchesList(int userId, PagingAttributes pagingAttributes)

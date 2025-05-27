@@ -1,4 +1,4 @@
-﻿namespace WebDTOs;
+﻿namespace WebService.DTOs;
 
 public class AuthenticatedUser
 {

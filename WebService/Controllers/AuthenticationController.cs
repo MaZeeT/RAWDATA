@@ -3,12 +3,12 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Text.RegularExpressions;
-using BusinessLogic.Interfaces;
-using Domain.Entities;
+using Domain.Models;
+using DomainServices.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using WebDTOs;
+using WebService.DTOs;
 using WebService.Services;
 
 namespace WebService.Controllers;

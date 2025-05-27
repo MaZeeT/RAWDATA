@@ -1,6 +1,6 @@
-using BusinessLogic.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using DomainServices.Interfaces;
 
 namespace WebService.Controllers;
 

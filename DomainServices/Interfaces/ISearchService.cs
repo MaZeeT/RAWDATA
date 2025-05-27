@@ -1,7 +1,7 @@
-﻿using Domain.Entities;
+﻿using Domain.Models;
 using Domain.Services;
 
-namespace BusinessLogic.Interfaces;
+namespace DomainServices.Interfaces;
 
 public interface ISearchService
 {

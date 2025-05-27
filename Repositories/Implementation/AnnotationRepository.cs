@@ -10,12 +10,10 @@ namespace Repositories.Implementation;
 public class AnnotationRepository : IAnnotationRepository
 {
     private readonly IDbContextFactory<DatabaseContext2> _dbContextFactory;
-    private readonly ISharedRepository _sharedRepository;
 
-    public AnnotationRepository(IDbContextFactory<DatabaseContext2> factory, ISharedRepository sharedRepository)
+    public AnnotationRepository(IDbContextFactory<DatabaseContext2> factory)
     {
         _dbContextFactory = factory;
-        _sharedRepository = sharedRepository;
     }
     
     /// <summary>

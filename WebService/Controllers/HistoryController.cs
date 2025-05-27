@@ -3,11 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using BusinessLogic.Interfaces;
-using Domain.Entities;
+using Domain.Models;
 using Domain.Services;
-using Repositories.Interfaces;
-using WebDTOs;
+using DomainServices.Interfaces;
+using WebService.DTOs;
 
 namespace WebService.Controllers;
 
@@ -17,12 +16,12 @@ namespace WebService.Controllers;
 public class HistoryController : SharedController
 {
     private readonly IHistoryService _historyService;
-    private readonly ISharedRepository _sharedRepositoryService;
+    private readonly IThreadService _threadService;
 
-    public HistoryController(IHistoryService historyService, ISharedRepository sharedRepositoryService)
+    public HistoryController(IHistoryService historyService, IThreadService threadService)
     {
         _historyService = historyService;
-        _sharedRepositoryService = sharedRepositoryService;
+        _threadService = threadService;
     }
 
     [HttpGet(Name = nameof(GetHistory))]
@@ -85,7 +84,7 @@ public class HistoryController : SharedController
 
     private HistoryDTO CreateHistoryResultDto(History hist)
     {
-        var post = _sharedRepositoryService.GetPost(hist.Postid);
+        var post = _threadService.GetPost(hist.Postid);
         var dto = new HistoryDTO
         {
             Title = post.Title,

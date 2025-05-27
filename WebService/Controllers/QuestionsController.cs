@@ -3,12 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using BusinessLogic.Interfaces;
 using Domain.AnnotationsDTOs;
-using Domain.Entities;
+using Domain.Models;
 using Domain.Services;
-using Repositories.Interfaces;
-using WebDTOs;
+using DomainServices.Interfaces;
+using WebService.DTOs;
 
 namespace WebService.Controllers;
 
@@ -18,18 +17,15 @@ namespace WebService.Controllers;
 public class QuestionsController : SharedController
 {
     private readonly IThreadService _threadService;
-    private readonly ISharedRepository _sharedRepositoryService;
     private readonly IAnnotationService _annotationService;
     private readonly IHistoryService _historyService;
 
     public QuestionsController(
         IThreadService threadService,
-        ISharedRepository sharedRepositoryService,
         IAnnotationService annotationService,
         IHistoryService historyService)
     {
         _threadService = threadService;
-        _sharedRepositoryService = sharedRepositoryService;
         _historyService = historyService;
         _annotationService = annotationService;
     }
@@ -52,10 +48,10 @@ public class QuestionsController : SharedController
     {
         (int userId, bool useridok) = GetAuthUserId();
 
-        var checkthatpost = _sharedRepositoryService.GetPostType(questionId);
+        var checkthatpost = _threadService.GetPostType(questionId);
         if (checkthatpost == "answers")
         {
-            questionId = _sharedRepositoryService.GetPost(questionId).QuestionId;
+            questionId = _threadService.GetPost(questionId).QuestionId;
             if (postId != null)
             {
                 postId = questionId;
@@ -66,7 +62,7 @@ public class QuestionsController : SharedController
             return NotFound();
         }
 
-        var t = _sharedRepositoryService.GetThread(questionId);
+        var t = _threadService.GetThread(questionId);
         if (t != null && useridok) // then we got a thread!
         {
             ///call to add browse history here

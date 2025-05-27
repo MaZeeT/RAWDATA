@@ -1,9 +1,9 @@
-﻿using BusinessLogic.Interfaces;
-using Domain.Entities;
+﻿using Domain.Models;
 using Domain.Services;
+using DomainServices.Interfaces;
 using Repositories.Interfaces;
 
-namespace BusinessLogic.Implementations;
+namespace DomainServices.Implementations;
 
 public class BookmarkService : IBookmarkService
 {

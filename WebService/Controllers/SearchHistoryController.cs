@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System;
-using BusinessLogic.Interfaces;
-using Domain.Entities;
+using Domain.Models;
 using Domain.Services;
-using WebDTOs;
+using DomainServices.Interfaces;
+using WebService.DTOs;
 
 namespace WebService.Controllers;
 

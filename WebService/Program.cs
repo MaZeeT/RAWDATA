@@ -1,7 +1,7 @@
 using System;
 using System.Text;
-using BusinessLogic.Implementations;
-using BusinessLogic.Interfaces;
+using DomainServices.Implementations;
+using DomainServices.Interfaces;
 using Infrastructure.Database;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;

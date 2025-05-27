@@ -1,4 +1,6 @@
-﻿namespace WebDTOs;
+﻿using System;
+
+namespace WebService.DTOs;
 
 public class AnnotationsMinimalDto
 {

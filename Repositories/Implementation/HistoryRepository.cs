@@ -1,7 +1,5 @@
-using Infrastructure;
 using Infrastructure.Database;
-using Domain;
-using Domain.Entities;
+using Domain.Models;
 using Domain.Services;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
@@ -11,12 +9,10 @@ namespace Repositories.Implementation;
 
 public class HistoryRepository : IHistoryRepository
 {
-    private readonly ISharedRepository _sharedRepository;
     private readonly DatabaseContext2 _database;
 
-    public HistoryRepository(IDbContextFactory<DatabaseContext2> factory, ISharedRepository sharedRepository)
+    public HistoryRepository(IDbContextFactory<DatabaseContext2> factory)
     {
-        _sharedRepository = sharedRepository;
         _database = factory.CreateDbContext();
     }
 

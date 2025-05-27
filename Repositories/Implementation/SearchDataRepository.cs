@@ -1,6 +1,6 @@
-﻿using Domain.Entities;
-using Domain.Services;
+﻿using Domain.Services;
 using Domain.Enums;
+using Domain.Models;
 using Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;

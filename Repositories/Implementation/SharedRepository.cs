@@ -1,6 +1,5 @@
-﻿using Infrastructure.Database;
-using Domain.Entities;
-using Domain.Services;
+﻿using Domain.Models;
+using Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using Repositories.Interfaces;

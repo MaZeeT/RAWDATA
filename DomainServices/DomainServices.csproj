@@ -4,13 +4,10 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <RootNamespace>BusinessLogic</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
     <ProjectReference Include="..\Repositories\Repositories.csproj" />
-    <ProjectReference Include="..\WebDTOs\WebDTOs.csproj" />
   </ItemGroup>
 
   <ItemGroup>

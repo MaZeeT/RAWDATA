@@ -1,8 +1,8 @@
-﻿using BusinessLogic.Interfaces;
-using Domain.Entities;
+﻿using Domain.Models;
+using DomainServices.Interfaces;
 using Repositories.Interfaces;
 
-namespace BusinessLogic.Implementations;
+namespace DomainServices.Implementations;
 
 public class UserService : IUserService
 {

@@ -1,5 +1,5 @@
 using Domain;
-using Domain.Entities;
+using Domain.Models;
 
 namespace Repositories.Interfaces;
 public interface IUserRepository

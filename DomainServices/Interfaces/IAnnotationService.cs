@@ -1,7 +1,7 @@
 using Domain.AnnotationsDTOs;
 using Domain.Services;
 
-namespace BusinessLogic.Interfaces;
+namespace DomainServices.Interfaces;
 
 public interface IAnnotationService
 {

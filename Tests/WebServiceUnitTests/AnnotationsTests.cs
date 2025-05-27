@@ -7,7 +7,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using Domain.AnnotationsDTOs;
-using WebDTOs;
+using WebService.DTOs;
 using Xunit;
 
 namespace Tests.WebServiceUnitTests

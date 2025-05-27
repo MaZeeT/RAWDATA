@@ -1,6 +1,6 @@
-﻿using Domain.Entities;
+﻿using Domain.Models;
 
-namespace BusinessLogic.Interfaces;
+namespace DomainServices.Interfaces;
 
 public interface IUserService
 {

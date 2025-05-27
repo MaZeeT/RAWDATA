@@ -1,5 +1,5 @@
 ﻿using Domain.AnnotationsDTOs;
-using Domain.Entities;
+using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 

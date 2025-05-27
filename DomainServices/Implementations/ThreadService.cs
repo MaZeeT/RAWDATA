@@ -1,9 +1,9 @@
-﻿using BusinessLogic.Interfaces;
-using Domain.Entities;
+﻿using Domain.Models;
 using Domain.Services;
+using DomainServices.Interfaces;
 using Repositories.Interfaces;
 
-namespace BusinessLogic.Implementations;
+namespace DomainServices.Implementations;
 
 public class ThreadService : IThreadService
 {
@@ -28,7 +28,7 @@ public class ThreadService : IThreadService
 
     public IList<Posts> GetThread(int questionId)
     {
-        throw new NotImplementedException();
+        return _sharedRepository.GetThread(questionId);
     }
 
     public IList<Questions> GetQuestions(PagingAttributes pagingAttributes)
