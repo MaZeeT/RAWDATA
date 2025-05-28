@@ -1,9 +1,4 @@
 ﻿define([], function () {
-
-
     return {
-
-
     };
-
 });

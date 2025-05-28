@@ -11,4 +11,5 @@ public interface IAnnotationService
     bool UpdateAnnotation(int annotationId, string annotationBody);
     bool DeleteAnnotation(int id, int userId);
     bool CreateAnnotation_withFunction(AnnotationsDto newAnnotation, out int newId);
+    bool CreateAnnotation(AnnotationsDto newAnnotation, out int newId);
 }

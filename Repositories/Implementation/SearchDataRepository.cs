@@ -25,61 +25,59 @@ public class SearchDataRepository : ISearchRepository
     public IList<Posts> Search(int userid, string searchstring, int? searchtypecode,
         PagingAttributes pagingAttributes)
     {
-        ////// for performing searches with appsearch on the db
-        ///
+        // for performing searches with appsearch on the db
         // do actual search using appsearch in db and build results
 
-        //need db context and searchtype lookuptable
+        // need db context and searchtype lookuptable
         using var db = _dbContextFactory.CreateDbContext();
-        SearchTypeLookupTable st = new SearchTypeLookupTable();
+        var searchTypeLookupTable = new SearchTypeLookupTable();
 
-        ////get params for db.func
-        ///
-        //build searchstring
+        // get params for db.func
+        // build searchstring
         var search = new NpgsqlParameter("search", NpgsqlTypes.NpgsqlDbType.Text)
         {
             Value = BuildSearchString(searchstring, false)
         };
 
-        //lookup searchtype string
+        // lookup searchtype string
         var searchtype = new NpgsqlParameter("searchtype", NpgsqlTypes.NpgsqlDbType.Text);
         if (searchtypecode >= 0 && searchtypecode <= 3)
         {
-            searchtype.Value = st.searchType[searchtypecode.Value];
+            searchtype.Value = searchTypeLookupTable.searchType[searchtypecode.Value];
         }
-        else searchtype.Value = st.searchType[3];
+        else searchtype.Value = searchTypeLookupTable.searchType[3];
 
-        //userid 
+        // userid 
         var appuserid = new NpgsqlParameter("appuserid", NpgsqlTypes.NpgsqlDbType.Integer)
         {
             Value = userid
         };
 
-        //if internal call is specified, stored function appsearch won't add to searches/searchhistory
+        // if internal call is specified, stored function appsearch won't add to searches/searchhistory
         var internalcall = new NpgsqlParameter("internalcall", NpgsqlTypes.NpgsqlDbType.Boolean)
         {
             Value = true
         };
 
-        //count all matches
+        // count all matches
         var matchcount = db.Search
             .FromSqlRaw("select appsearch(@appuserid, @searchtype, @search, @internalcall)", appuserid, searchtype,
                 search, internalcall)
             .Count();
-        System.Console.WriteLine($"{matchcount} results.");
+        Console.WriteLine($"{matchcount} results.");
 
         var page = ISharedRepository.GetPagination(matchcount, pagingAttributes);
 
-        System.Console.WriteLine($"{page} page trying to get.");
+        Console.WriteLine($"{page} page trying to get.");
 
-        //get subset of results according to pagesize etc
+        // get subset of results according to pagesize etc
         var resultlist = db.Search
             .FromSqlRaw("SELECT * from appsearch(@appuserid, @searchtype, @search)", appuserid, searchtype, search)
             .Skip(page * pagingAttributes.PageSize)
             .Take(pagingAttributes.PageSize)
             .ToList();
 
-        //build and map results to posts
+        // build and map results to posts
         var resultposts = new List<Posts>();
 
         foreach (var s in resultlist)
@@ -172,10 +170,10 @@ public class SearchDataRepository : ISearchRepository
         string[] separators = { ",", ".", "...", " " };
 
         var words = searchstring.Split(separators, StringSplitOptions.RemoveEmptyEntries);
-        System.Console.WriteLine($"{words.Length} tokens in search");
+        Console.WriteLine($"{words.Length} tokens in search");
 
-        //added to filter non-aplhanumeric chars
-        //better to have it at backend if some1 sends weird request :)
+        // added to filter non-aplhanumeric chars
+        // better to have it at backend if some1 sends weird request :)
         var filteredTokens = new List<string>();
         foreach (var s in words)
         {
@@ -195,7 +193,7 @@ public class SearchDataRepository : ISearchRepository
 
     public int SearchTypeLookup(string searchmethod)
     {
-        //get stype from string methodname
+        // get stype from string methodname
         var st = new SearchTypeLookupTable();
         var stype = Array.FindIndex(st.searchType, s => s.Equals(searchmethod));
         return stype;

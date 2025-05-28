@@ -8,10 +8,12 @@ namespace DomainServices.Implementations;
 public class AnnotationService : IAnnotationService
 {
     private readonly IAnnotationRepository _annotationRepository;
+    private readonly IUserRepository _userRepository;
 
-    public AnnotationService(IAnnotationRepository annotationRepository)
+    public AnnotationService(IAnnotationRepository annotationRepository, IUserRepository userRepository)
     {
         _annotationRepository = annotationRepository;
+        _userRepository = userRepository;
     }
 
     public Annotations GetAnnotation(int annotationId)
@@ -42,5 +44,17 @@ public class AnnotationService : IAnnotationService
     public bool CreateAnnotation_withFunction(AnnotationsDto newAnnotation, out int newId)
     {
         return _annotationRepository.CreateAnnotation_withFunction(newAnnotation, out newId);
+    }
+
+    public bool CreateAnnotation(AnnotationsDto newAnnotation, out int newId)
+    {
+        var userExist = _userRepository.AppUserExist(newAnnotation.UserId);
+        if (!userExist)
+        {
+            newId = -1;
+            return false;
+        }
+        
+        return _annotationRepository.AddAnnotation(newAnnotation, out newId);
     }
 }

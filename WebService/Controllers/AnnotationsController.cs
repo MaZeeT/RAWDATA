@@ -87,7 +87,7 @@ public class AnnotationsController : SharedController
     }
 
     [HttpPost(Name = nameof(AddAnnotation))]
-    public ActionResult AddAnnotation(AnnotationsDto annotationObj)
+    public ActionResult AddAnnotation([FromBody] AnnotationsDto annotationObj)
     {
         var (userId, userIdOk) = GetAuthUserId();
         if (!userIdOk)
@@ -102,7 +102,7 @@ public class AnnotationsController : SharedController
             Body = annotationObj.Body
         };
 
-        if (_annotationService.CreateAnnotation_withFunction(newAnnotation, out var newId))
+        if (_annotationService.CreateAnnotation(newAnnotation, out var newId))
         {
             var createdAnnotation = _annotationService.GetAnnotation(newId);
             return Ok(CreateLink(createdAnnotation));
