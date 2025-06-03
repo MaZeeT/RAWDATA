@@ -2,6 +2,7 @@
 using Domain.AnnotationsDTOs;
 using Domain.Services;
 using Microsoft.EntityFrameworkCore;
+using System.Data.Common;
 using Npgsql;
 using Repositories.Interfaces;
 
@@ -187,28 +188,36 @@ public class AnnotationRepository : IAnnotationRepository
         {
             using var db = _dbContextFactory.CreateDbContext();
             
-            var userId = new NpgsqlParameter("userid", NpgsqlTypes.NpgsqlDbType.Integer)
-            {
-                Value = newAnnotation.UserId
-            };
-            var postId = new NpgsqlParameter("postid", NpgsqlTypes.NpgsqlDbType.Integer)
-            {
-                Value = newAnnotation.PostId
-            };
-            var annotationBody = new NpgsqlParameter("body", NpgsqlTypes.NpgsqlDbType.Text)
-            {
-                Value = newAnnotation.Body
-            };
+            var conn = db.Database.GetDbConnection();
+            db.Database.OpenConnection();
+            
+            using var cmd = conn.CreateCommand();
+            cmd.CommandText = @"
+            INSERT INTO annotations (userid, historyid, body, date)
+            VALUES (@userid, @postid, @body, CURRENT_TIMESTAMP)
+            RETURNING id;";
 
-            // since this select annotate function runs with select as Id and is attached to the AnnotateFunction Dto and returns only 1 result
-            // it is ok to .FirstOrDefult() and then .Id to get the value directly. 
-            newId = db.AnnotateFunction
-                .FromSqlRaw("insert into annotations (userid, historyid, body, date) values ('@userid','@postid','@body',CURRENT_TIMESTAMP) RETURNING id;")
-                .First()
-                .Id;
-            db.SaveChanges();
-            //if the returned id is somehow weird and the annotation is not found, then annotationFromDb gets null here
-            return true;
+            // Create and add parameters
+            var userIdParam = cmd.CreateParameter();
+            userIdParam.ParameterName = "userid";
+            userIdParam.Value = newAnnotation.UserId;
+            cmd.Parameters.Add(userIdParam);
+
+            var postIdParam = cmd.CreateParameter();
+            postIdParam.ParameterName = "postid";
+            postIdParam.Value = newAnnotation.PostId;
+            cmd.Parameters.Add(postIdParam);
+
+            var bodyParam = cmd.CreateParameter();
+            bodyParam.ParameterName = "body";
+            bodyParam.Value = newAnnotation.Body;
+            cmd.Parameters.Add(bodyParam);
+
+            // Execute and read the ID
+            var result = cmd.ExecuteScalar();
+            newId = result != null ? Convert.ToInt32(result) : -1;
+
+            return newId != -1;
         }
         catch (Exception)
         {
