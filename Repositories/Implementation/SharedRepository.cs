@@ -18,20 +18,19 @@ public class SharedRepository : ISharedRepository
     }
     
     public string GetPostType(int postId)
-        // try to get the tablename of post -- answers or questions
-        //using varchar resolveid(postid int) in db
     {
-        System.Console.WriteLine($"Postid -- {postId}");
-        var postid = new NpgsqlParameter("postid", NpgsqlTypes.NpgsqlDbType.Integer)
-        {
-            Value = postId
-        };
+        Console.WriteLine($"Postid -- {postId}");
+
         using var db = _dbContextFactory.CreateDbContext();
-        var tablename = db.PostsTable
-            .FromSqlRaw("SELECT * from resolveid(@postid)", postid).First().ResolveId;
-
-        System.Console.WriteLine($"Post is part of -- {tablename}");
-
+        var postTypeId = db.QAndA.Find(postId);
+        var tablename = postTypeId?.PostTypeId switch
+        {
+            1 => "questions",
+            2 => "answers",
+            _ => "unknown"  //catches postTypeId when null
+        };
+        
+        Console.WriteLine($"Post is part of -- {tablename}");
         return tablename;
     }
 

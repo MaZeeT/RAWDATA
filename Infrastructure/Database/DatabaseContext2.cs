@@ -27,6 +27,7 @@ namespace Infrastructure.Database;
         public DbSet<Search> Search { get; set; }
         public DbSet<PostsTable> PostsTable { get; set; }
         public DbSet<WordRank> WordRank { get; set; }
+        public DbSet<QAndA> QAndA { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -39,6 +40,9 @@ namespace Infrastructure.Database;
 
             modelBuilder.Entity<AppUser>().ToTable("appusers");
             modelBuilder.Entity<AppUser>().Property(x => x.Id).HasColumnName("id");
+            
+            modelBuilder.Entity<QAndA>().Property(x => x.Id).HasColumnName("id");
+            modelBuilder.Entity<QAndA>().ToView("q_and_a");
         }
     
         protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
