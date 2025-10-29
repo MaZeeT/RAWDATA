@@ -25,7 +25,6 @@ drop function if exists search_simple;
 drop function if exists appsearch;
 drop function if exists wordrank;
 drop function if exists resolveid(integer);
-drop function if exists resolveid(integer, varchar);
 drop function if exists add_history(integer, integer);
 drop function if exists add_history(integer, integer, boolean);
 drop function if exists exists_bookmark;
@@ -69,34 +68,6 @@ begin
 end;
 $$ 
 language plpgsql;
-
-create or replace function resolveid(postid int, what varchar)
-returns varchar as 
-$$
-declare
-   kind varchar;
-   didcall boolean=false;
-   idcheck integer;
-begin
-	if what='text'
-	then 
-		select id from comments where id=postid into idcheck;
-		if idcheck is not null -- check id actually exists
-			then kind='comments';
-		else kind='unknown';
-		end if;
-	else
-		select resolveid(postid) into kind;
-		didcall=true;
-	end if;
-	if didcall=false --suppress repeat notice
-		then RAISE NOTICE 'Looking up id, id is part of -- %', kind;
-	end if;
-	return kind;
-end;
-$$ 
-language plpgsql;
-
 
 
 -- added: function that takes appuserid, postid and adds an entry into history as 1) history and 2) a bookmark
