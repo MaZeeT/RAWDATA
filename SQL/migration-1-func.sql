@@ -25,7 +25,6 @@ drop function if exists search_simple;
 drop function if exists appsearch;
 drop function if exists wordrank;
 drop function if exists resolveid(integer);
-drop function if exists add_history(integer, integer);
 drop function if exists add_history(integer, integer, boolean);
 drop function if exists exists_bookmark;
 drop function if exists exists_appuser;
@@ -106,15 +105,6 @@ begin
 		RAISE NOTICE 'Unable to add browse history, unknown post -- %', ipostid;	
 		return false;
 	end if;
-end;
-$$ 
-language plpgsql;
-
-create or replace function add_history(appuserid integer, postid integer)
-returns void as 
-$$
-begin
-	perform add_history(appuserid, postid, false);
 end;
 $$ 
 language plpgsql;

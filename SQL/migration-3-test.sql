@@ -163,10 +163,10 @@ select * from history;
 -- Note: Only existing appusers allowed.
 -- Note: Only existing posts allowed.
 
-select add_history(1, 71);
-select add_history(2, 19);
-select add_history(1, 120);
-select add_history(6, 19);
+select add_history(1, 71, false);
+select add_history(2, 19, false);
+select add_history(1, 120, false);
+select add_history(6, 19, false);
 
 --   _   _   _   _   _   _   _   _   _  
 --  / \ / \ / \ / \ / \ / \ / \ / \ / \ 
