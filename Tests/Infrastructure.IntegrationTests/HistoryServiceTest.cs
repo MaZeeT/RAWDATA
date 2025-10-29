@@ -1,4 +1,7 @@
+using System;
+using System.Runtime.InteropServices.JavaScript;
 using Domain.Models;
+using Humanizer;
 using Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
@@ -14,6 +17,7 @@ namespace Tests.Infrastructure.IntegrationTests
         private readonly IDbContextFactory<DatabaseContext2> _dbContextFactory;
         private readonly ServiceProvider _serviceProvider;
         private const int testUserId = 40;
+        private DateTime dateTime = new DateTime(2023,11,24,22,12,44);
         
         public HistoryRepositoryTest()
         {
@@ -31,7 +35,7 @@ namespace Tests.Infrastructure.IntegrationTests
             _dbContextFactory =  _serviceProvider.GetRequiredService<IDbContextFactory<DatabaseContext2>>();
         }
 
-        [Fact]
+        [Fact (Skip = "checking for valid user is moved to service layer")] //Todo move test to service layer
         public void HistoryAddInvalid()
         {
             var service = _serviceProvider.GetRequiredService<IHistoryRepository>();
@@ -73,7 +77,16 @@ namespace Tests.Infrastructure.IntegrationTests
             const int userid = testUserId;
             const int postId = 1760;
 
-            var resultAdd = service.Add(userid, postId, true);
+            var history = new History
+            {
+                UserId = userid,
+                PostId = postId,
+                PostTableName = "questions",
+                Date = dateTime,
+                IsBookmark = true
+            };
+
+            var resultAdd = service.Add(history);
 
             Assert.True(resultAdd);
             Assert.False(service.DeleteBookmark(userid, postId * invalidModifier));
@@ -90,8 +103,17 @@ namespace Tests.Infrastructure.IntegrationTests
             const int invalidModifier = -1;
             const int userid = testUserId;
             const int postId = 709;
+            
+            var history = new History
+            {
+                UserId = userid,
+                PostId = postId,
+                PostTableName = "questions",
+                Date = dateTime,
+                IsBookmark = true
+            };
 
-            var resultAdd = service.Add(userid, postId, true);
+            var resultAdd = service.Add(history);
 
             Assert.True(resultAdd);
             Assert.False(service.DeleteBookmark(userid * invalidModifier, postId));
@@ -109,7 +131,16 @@ namespace Tests.Infrastructure.IntegrationTests
             const int userid = testUserId;
             const int postId = 1711;
 
-            var resultAdd = service.Add(userid, postId, true);
+            var history = new History
+            {
+                UserId = userid,
+                PostId = postId,
+                PostTableName = "questions",
+                Date = dateTime,
+                IsBookmark = true
+            };
+
+            var resultAdd = service.Add(history);
 
             Assert.True(resultAdd);
             Assert.False(service.DeleteBookmark(userid * invalidModifier, postId * invalidModifier));
@@ -126,7 +157,16 @@ namespace Tests.Infrastructure.IntegrationTests
             const int userid = testUserId;
             const int postId = 1760;
 
-            var resultAdd = service.Add(userid, postId, true);
+            var history = new History
+            {
+                UserId = userid,
+                PostId = postId,
+                PostTableName = "questions",
+                Date = dateTime,
+                IsBookmark = true
+            };
+
+            var resultAdd = service.Add(history);
 
             Assert.True(resultAdd);
             
@@ -163,11 +203,47 @@ namespace Tests.Infrastructure.IntegrationTests
             const int postId2 = 709;
             const int postId3 = 1760;
             const int postId4 = 1711;
+            
+            var history1 = new History
+            {
+                UserId = userid,
+                PostId = postId1,
+                PostTableName = "questions",
+                Date = dateTime,
+                IsBookmark = false
+            };
+            
+            var history2 = new History
+            {
+                UserId = userid,
+                PostId = postId2,
+                PostTableName = "questions",
+                Date = dateTime,
+                IsBookmark = false
+            };
+            
+            var history3 = new History
+            {
+                UserId = userid,
+                PostId = postId3,
+                PostTableName = "questions",
+                Date = dateTime,
+                IsBookmark = true
+            };
+            
+            var history4 = new History
+            {
+                UserId = userid,
+                PostId = postId4,
+                PostTableName = "questions",
+                Date = dateTime,
+                IsBookmark = false
+            };
 
-            var addResult1 = service.Add(userid, postId1, false);
-            var addResult2 = service.Add(userid, postId2, false);
-            var addResult3 = service.Add(userid, postId3, true);
-            var addResult4 = service.Add(userid, postId4, false);
+            var addResult1 = service.Add(history1);
+            var addResult2 = service.Add(history2);
+            var addResult3 = service.Add(history3);
+            var addResult4 = service.Add(history4);
 
             var historyPre = service.GetHistoryList(userid);
             var historyDeletion = service.DeleteUserHistory(userid);
@@ -266,10 +342,38 @@ namespace Tests.Infrastructure.IntegrationTests
             const int postId1 = 19;
             const int postId2 = 709;
             const int postId3 = 1760;
+            
+            var history1 = new History
+            {
+                UserId = userId,
+                PostId = postId1,
+                PostTableName = "questions",
+                Date = dateTime,
+                IsBookmark = false
+            };
+            
+            var history2 = new History
+            {
+                UserId = userId,
+                PostId = postId2,
+                PostTableName = "questions",
+                Date = dateTime,
+                IsBookmark = true
+            };
+            
+            var history3 = new History
+            {
+                UserId = userId,
+                PostId = postId3,
+                PostTableName = "questions",
+                Date = dateTime,
+                IsBookmark = false
+            };
+            
 
-            var addResult1 = service.Add(userId, postId1, false);
-            var addResult2 = service.Add(userId, postId2, true);
-            var addResult3 = service.Add(userId, postId3, false);
+            var addResult1 = service.Add(history1);
+            var addResult2 = service.Add(history2);
+            var addResult3 = service.Add(history3);
             var history = service.GetHistoryList(userId);
 
 
@@ -299,10 +403,46 @@ namespace Tests.Infrastructure.IntegrationTests
             const int postId3 = 1760;
             const int postId4 = 1711;
 
-            var addResult1 = service.Add(userId, postId1, false);
-            var addResult2 = service.Add(userId, postId2, true);
-            var addResult3 = service.Add(userId, postId3, true);
-            var addResult4 = service.Add(userId, postId4, false);
+            var history1 = new History
+            {
+                UserId = userId,
+                PostId = postId1,
+                PostTableName = "questions",
+                Date = dateTime,
+                IsBookmark = false
+            };
+            
+            var history2 = new History
+            {
+                UserId = userId,
+                PostId = postId2,
+                PostTableName = "questions",
+                Date = dateTime,
+                IsBookmark = true
+            };
+            
+            var history3 = new History
+            {
+                UserId = userId,
+                PostId = postId3,
+                PostTableName = "questions",
+                Date = dateTime,
+                IsBookmark = true
+            };
+            
+            var history4 = new History
+            {
+                UserId = userId,
+                PostId = postId4,
+                PostTableName = "questions",
+                Date = dateTime,
+                IsBookmark = false
+            };
+
+            var addResult1 = service.Add(history1);
+            var addResult2 = service.Add(history2);
+            var addResult3 = service.Add(history3);
+            var addResult4 = service.Add(history4);
             var history = service.GetBookmarkList(userId);
 
 

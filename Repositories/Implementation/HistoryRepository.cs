@@ -2,7 +2,6 @@ using Infrastructure.Database;
 using Domain.Models;
 using Domain.Services;
 using Microsoft.EntityFrameworkCore;
-using Npgsql;
 using Repositories.Interfaces;
 
 namespace Repositories.Implementation;
@@ -15,30 +14,13 @@ public class HistoryRepository : IHistoryRepository
     {
         _database = factory.CreateDbContext();
     }
-
-
-    public bool Add(int userId, int postId, bool isBookmark)
-    {
-        // ReSharper disable StringLiteralTypo
-        var appUserId = new NpgsqlParameter("appuserid", NpgsqlTypes.NpgsqlDbType.Integer);
-        var iPostId = new NpgsqlParameter("ipostid", NpgsqlTypes.NpgsqlDbType.Integer);
-        var addBookmark = new NpgsqlParameter("addbookmark", NpgsqlTypes.NpgsqlDbType.Boolean);
-        // ReSharper restore StringLiteralTypo
-
-        appUserId.Value = userId;
-        iPostId.Value = postId;
-        addBookmark.Value = isBookmark;
-        
-        _database.Database.ExecuteSqlRaw(
-            "SELECT * from add_history(@appuserid, @ipostid, @addbookmark)",
-            appUserId, iPostId, addBookmark);
-
-        return HistoryExist(userId, postId);
-    }
+    
 
     public bool Add(History history)
     {
-        return Add(history.UserId, history.PostId, history.IsBookmark);
+        _database.History.Add(history);
+        var result = _database.SaveChanges();
+        return result > 0;
     }
 
     public History Get(int historyId)

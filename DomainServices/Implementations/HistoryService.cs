@@ -8,14 +8,30 @@ namespace DomainServices.Implementations;
 public class HistoryService : IHistoryService
 {
     private readonly IHistoryRepository _historyRepository;
+    private readonly IUserRepository _userRepository;
+    private readonly ISharedRepository _sharedRepository;
 
-    public HistoryService(IHistoryRepository historyRepository)
+    public HistoryService(IHistoryRepository historyRepository, IUserRepository userRepository, ISharedRepository sharedRepository)
     {
         _historyRepository = historyRepository;
+        _userRepository = userRepository;
+        _sharedRepository = sharedRepository;
     }
 
     public bool Add(History history)
     {
+        var userExist = _userRepository.AppUserExist(history.UserId);
+        if (!userExist)
+        {
+            return false;
+        }
+        
+        var postType = _sharedRepository.GetPostType(history.PostId);
+        if (postType == "unknown")
+        {
+            return false;
+        }
+        
         return _historyRepository.Add(history);
     }
 

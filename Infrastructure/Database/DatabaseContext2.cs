@@ -1,5 +1,7 @@
-﻿using Domain.AnnotationsDTOs;
+﻿using System;
+using Domain.AnnotationsDTOs;
 using Domain.Models;
+using Infrastructure.Database.Converters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -39,4 +41,15 @@ namespace Infrastructure.Database;
             modelBuilder.Entity<AppUser>().Property(x => x.Id).HasColumnName("id");
         }
     
+        protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
+        {
+            // Register converter types (these overloads expect a converter type with parameterless ctor)
+            configurationBuilder
+                .Properties<DateTime>()
+                .HaveConversion<UtcDateTimeConverter>();
+
+            configurationBuilder
+                .Properties<DateTime?>()
+                .HaveConversion<NullableUtcDateTimeConverter>();
+        }
 }

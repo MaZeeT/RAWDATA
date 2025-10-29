@@ -159,14 +159,12 @@ order by date desc;
 -- History should be empty:
 select * from history;
 
--- Add browse history for a user with the function add_history(userid, postid);
--- Note: Only existing appusers allowed.
--- Note: Only existing posts allowed.
+-- Add browse history for a user
 
-select add_history(1, 71, false);
-select add_history(2, 19, false);
-select add_history(1, 120, false);
-select add_history(6, 19, false);
+insert into history (userid, postid, posttablename, date, isbookmark) values (1, 71, 'answers',CURRENT_TIMESTAMP(3), false);
+insert into history (userid, postid, posttablename, date, isbookmark) values (2, 19, 'questions',CURRENT_TIMESTAMP(3), false);
+insert into history (userid, postid, posttablename, date, isbookmark) values (1, 120, 'unknown',CURRENT_TIMESTAMP(3), false);
+insert into history (userid, postid, posttablename, date, isbookmark) values (6, 19, 'questions',CURRENT_TIMESTAMP(3), false);
 
 --   _   _   _   _   _   _   _   _   _  
 --  / \ / \ / \ / \ / \ / \ / \ / \ / \ 
@@ -174,14 +172,10 @@ select add_history(6, 19, false);
 --  \_/ \_/ \_/ \_/ \_/ \_/ \_/ \_/ \_/ 
 -- 
 
--- Add bookmark: add_history(appuserid integer, ipostid integer, addbookmark boolean)
--- Note: can only add one bookmark per userid, post
-
-select add_history(2, 71, true);
-select add_history(2, 71, true);
-select add_history(1, 71, true);
-select add_history(1, 71, false);
-select add_history(7, 71, true);
+-- Add bookmark
+insert into history (userid, postid, posttablename, date, isbookmark) values (2, 71, 'answers',CURRENT_TIMESTAMP(3), true);
+insert into history (userid, postid, posttablename, date, isbookmark) values (1, 71, 'answers',CURRENT_TIMESTAMP(3), false);
+insert into history (userid, postid, posttablename, date, isbookmark) values (7, 71, 'answers',CURRENT_TIMESTAMP(3), true);
 
 -- Show users' history and bookmarks
 select username, postid, posttablename, date, isbookmark from history INNER JOIN appusers ON history.userid=appusers.id

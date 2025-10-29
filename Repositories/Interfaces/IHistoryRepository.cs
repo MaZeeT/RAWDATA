@@ -4,7 +4,6 @@ using Domain.Services;
 namespace Repositories.Interfaces;
 public interface IHistoryRepository
 {
-    bool Add(int userId, int postId, bool isBookmark);
     bool Add(History history);
     History Get(int historyId);
     History Get(int userId, int postId);
