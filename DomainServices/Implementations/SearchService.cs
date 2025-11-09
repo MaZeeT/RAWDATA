@@ -9,11 +9,13 @@ public class SearchService : ISearchService
 {
     private readonly ISearchRepository _searchRepository;
     private readonly ISearchHistoryRepository _searchHistoryRepository;
+    private readonly IUserRepository _userRepository;
 
-    public SearchService(ISearchRepository searchRepository, ISearchHistoryRepository searchHistoryRepository)
+    public SearchService(ISearchRepository searchRepository, ISearchHistoryRepository searchHistoryRepository, IUserRepository userRepository)
     {
         _searchRepository = searchRepository;
         _searchHistoryRepository = searchHistoryRepository;
+        _userRepository = userRepository;
     }
 
     public IList<WordRank> WordRank(int userid, string searchstring, int searchtypecode, int? maxresults)
@@ -23,6 +25,13 @@ public class SearchService : ISearchService
 
     public IList<Posts> Search(int userid, string searchstring, int? searchtypecode, PagingAttributes pagingAttributes)
     {
+        var userExist = _userRepository.AppUserExist(userid);
+        if (!userExist)
+        {
+            return new List<Posts>();
+        }
+        
+        
         return _searchRepository.Search(userid, searchstring, searchtypecode, pagingAttributes);
     }
 
