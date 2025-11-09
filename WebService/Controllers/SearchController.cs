@@ -153,7 +153,7 @@ public class SearchController : SharedController
 
     private object CreateResult(IList<Posts> posts, SearchQuery searchparams, PagingAttributes attr)
     { 
-        if (posts.FirstOrDefault() != null)
+        if (posts.FirstOrDefault() == null)
         {
             return null;
         }
