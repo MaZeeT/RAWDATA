@@ -25,21 +25,14 @@ public class SearchDataRepository : ISearchRepository
     public IList<Posts> Search(int userid, string searchstring, int? searchtypecode,
         PagingAttributes pagingAttributes)
     {
-        // for performing searches with appsearch on the db
-        // do actual search using appsearch in db and build results
-
-        // need db context and searchtype lookuptable
         using var db = _dbContextFactory.CreateDbContext();
         var searchTypeLookupTable = new SearchTypeLookupTable();
-
-        // get params for db.func
-        // build searchstring
+        
         var search = new NpgsqlParameter("search", NpgsqlTypes.NpgsqlDbType.Text)
         {
             Value = BuildSearchString(searchstring, false)
         };
-
-        // lookup searchtype string
+        
         var searchtype = new NpgsqlParameter("searchtype", NpgsqlTypes.NpgsqlDbType.Text);
         if (searchtypecode >= 0 && searchtypecode <= 3)
         {
@@ -47,7 +40,6 @@ public class SearchDataRepository : ISearchRepository
         }
         else searchtype.Value = searchTypeLookupTable.searchType[3];
 
-        // userid 
         var appuserid = new NpgsqlParameter("appuserid", NpgsqlTypes.NpgsqlDbType.Integer)
         {
             Value = userid
@@ -60,22 +52,14 @@ public class SearchDataRepository : ISearchRepository
         };
 
         // count all matches
-        var matchcount = db.Search
-            .FromSqlRaw("select appsearch(@appuserid, @searchtype, @search, @internalcall)", appuserid, searchtype,
-                search, internalcall)
-            .Count();
-        Console.WriteLine($"{matchcount} results.");
+        var matchcount = MatchCount(db, appuserid, searchtype, search, internalcall);
 
         var page = ISharedRepository.GetPagination(matchcount, pagingAttributes);
 
         Console.WriteLine($"{page} page trying to get.");
 
         // get subset of results according to pagesize etc
-        var resultlist = db.Search
-            .FromSqlRaw("SELECT * from appsearch(@appuserid, @searchtype, @search)", appuserid, searchtype, search)
-            .Skip(page * pagingAttributes.PageSize)
-            .Take(pagingAttributes.PageSize)
-            .ToList();
+        var resultlist = SearchResults(db, appuserid, searchtype, search, page, pagingAttributes); 
 
         // build and map results to posts
         var resultposts = new List<Posts>();
@@ -107,46 +91,25 @@ public class SearchDataRepository : ISearchRepository
 
     public IList<WordRank> WordRank(int userid, string searchstring, int searchtypecode, int? maxresults)
     {
-        // for performing searches with wordrank on the db
-        // do actual search using appsearch in db and build results
-
-        // need db context and searchtype lookuptable
         using var db = _dbContextFactory.CreateDbContext();
         var st = new SearchTypeLookupTable();
-
-        // get params for db.func
-        // build searchstring
+        
         var search = new NpgsqlParameter("search", NpgsqlTypes.NpgsqlDbType.Text)
         {
             Value = BuildSearchString(searchstring, false)
         };
-
-        // lookup searchtype string
+        
         var searchType = new NpgsqlParameter("searchtype", NpgsqlTypes.NpgsqlDbType.Text);
         if (searchtypecode >= 4 && searchtypecode <= 5)
         {
             searchType.Value = st.searchType[searchtypecode];
         }
         else searchType.Value = st.searchType[5];
-
-        // userid 
+        
         var appUserId = new NpgsqlParameter("appuserid", NpgsqlTypes.NpgsqlDbType.Integer)
         {
             Value = userid
         };
-
-        // if internal call is specified, stored function appsearch won't add to searches/searchhistory
-        var internalCall = new NpgsqlParameter("internalcall", NpgsqlTypes.NpgsqlDbType.Boolean)
-        {
-            Value = true
-        };
-
-        // count all matches
-        var matchCount = db.Search
-            .FromSqlRaw("select appsearch(@appuserid, @searchtype, @search, @internalcall)", appUserId, searchType,
-                search, internalCall)
-            .Count();
-        Console.WriteLine($"{matchCount} results.");
 
         var limit = new NpgsqlParameter("limit", NpgsqlTypes.NpgsqlDbType.Integer)
         {
@@ -156,8 +119,7 @@ public class SearchDataRepository : ISearchRepository
         {
             limit.Value = maxresults;
         }
-
-        // call db.func wordrank
+        
         return db.WordRank
             .FromSqlRaw("SELECT * from wordrank(@appuserid, @searchtype, @search) limit @limit", appUserId,
                 searchType, search, limit)
@@ -197,5 +159,25 @@ public class SearchDataRepository : ISearchRepository
         var st = new SearchTypeLookupTable();
         var stype = Array.FindIndex(st.searchType, s => s.Equals(searchmethod));
         return stype;
+    }
+
+    private int MatchCount(DatabaseContext2 db,NpgsqlParameter appuserid, NpgsqlParameter searchtype, NpgsqlParameter search, NpgsqlParameter internalcall)
+    {
+        // count all matches
+        var matchcount = db.Search
+            .FromSqlRaw("select appsearch(@appuserid, @searchtype, @search, @internalcall)", appuserid, searchtype,
+                search, internalcall)
+            .Count();
+        Console.WriteLine($"{matchcount} results.");
+        return matchcount;
+    }
+
+    private List<Search> SearchResults(DatabaseContext2 db,NpgsqlParameter appuserid, NpgsqlParameter searchtype, NpgsqlParameter search, int page, PagingAttributes pagingAttributes)
+    {
+        return db.Search
+            .FromSqlRaw("SELECT * from appsearch(@appuserid, @searchtype, @search)", appuserid, searchtype, search)
+            .Skip(page * pagingAttributes.PageSize)
+            .Take(pagingAttributes.PageSize)
+            .ToList();
     }
 }
