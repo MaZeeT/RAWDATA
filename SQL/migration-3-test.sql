@@ -182,34 +182,6 @@ select username, postid, posttablename, date, isbookmark from history INNER JOIN
 order by date desc;
 
 
---   _   _   _   _   _   _   _   _   _   _   _  
---  / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ 
--- ( A | n | n | o | t | a | t | i | o | n | s )
---  \_/ \_/ \_/ \_/ \_/ \_/ \_/ \_/ \_/ \_/ \_/ 
---
-
--- Show users' annotations are empty:
-select username, postid, posttablename, body, annotations.date from annotations, history, appusers where historyid=history.id and history.userid=appusers.id;
-
-
--- Add note: annotate(appuserid integer, ipostid integer, note text)
--- Note: Adds bookmark automagically if it doesnt exist
--- Note: Only existing appusers allowed.
--- Note: Only existing posts allowed.
-
-select annotate(2, 71, 'my note for post 71: this post is very relevant');
-select annotate(1, 19, 'a note: remember to wash the dog');
-
-select annotate(5, 19, 'wrong userid');
-select annotate(1, 666, 'wrong postid');
-
--- Show users' annotations
-select username, postid, posttablename, body, annotations.date from annotations, history, appusers where historyid=history.id and history.userid=appusers.id;
-
--- Show users' history and bookmarks
-select username, postid, posttablename, date, isbookmark from history INNER JOIN appusers ON history.userid=appusers.id
-order by date desc;
-
 --  ____  _  _  ____  
 -- ( ___)( \( )(  _ \ 
 --  )__)  )  (  )(_) )

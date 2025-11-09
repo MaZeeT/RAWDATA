@@ -10,6 +10,5 @@ public interface IAnnotationService
     List<PostAnnotationsDto> GetAllAnnotationsOfUser(int userId, PagingAttributes pagingAttributes, out int count);
     bool UpdateAnnotation(int annotationId, string annotationBody);
     bool DeleteAnnotation(int id, int userId);
-    bool CreateAnnotation_withFunction(AnnotationsDto newAnnotation, out int newId);
     bool CreateAnnotation(AnnotationsDto newAnnotation, out int newId);
 }

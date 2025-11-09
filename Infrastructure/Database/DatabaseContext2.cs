@@ -20,7 +20,6 @@ namespace Infrastructure.Database;
         public DbSet<AppUser> AppUser { get; set; }
         public DbSet<History> History { get; set; }
         public DbSet<Annotations> Annotations { get; set; }
-        public DbSet<AnnotateFunctionDto> AnnotateFunction { get; set; }
         public DbSet<Questions> Questions { get; set; }
         public DbSet<Answers> Answers { get; set; }
         public DbSet<Searches> Searches { get; set; }
@@ -36,7 +35,6 @@ namespace Infrastructure.Database;
             modelBuilder.Entity<Search>().HasNoKey();
             modelBuilder.Entity<WordRank>().HasNoKey();
             modelBuilder.Entity<PostsTable>().HasNoKey();
-            modelBuilder.Entity<AnnotateFunctionDto>().HasNoKey();
 
             modelBuilder.Entity<AppUser>().ToTable("appusers");
             modelBuilder.Entity<AppUser>().Property(x => x.Id).HasColumnName("id");

@@ -145,42 +145,6 @@ public class AnnotationRepository : IAnnotationRepository
             return false;
         }
     }
-
-    public bool CreateAnnotation_withFunction(AnnotationsDto newAnnotation, out int newId)
-    {
-        try
-        {
-            using var db = _dbContextFactory.CreateDbContext();
-
-            var userId = new NpgsqlParameter("userid", NpgsqlTypes.NpgsqlDbType.Integer)
-            {
-                Value = newAnnotation.UserId
-            };
-            var postId = new NpgsqlParameter("postid", NpgsqlTypes.NpgsqlDbType.Integer)
-            {
-                Value = newAnnotation.PostId
-            };
-            var annotationBody = new NpgsqlParameter("body", NpgsqlTypes.NpgsqlDbType.Text)
-            {
-                Value = newAnnotation.Body
-            };
-
-            // since this select annotate function runs with select as Id and is attached to the AnnotateFunction Dto and returns only 1 result
-            // it is ok to .FirstOrDefult() and then .Id to get the value directly. 
-            newId = db.AnnotateFunction
-                .FromSqlRaw("select annotate(@userid, @postid, @body) as Id", userId, postId, annotationBody)
-                .FirstOrDefault()
-                .Id;
-            db.SaveChanges();
-            //if the returned id is somehow weird and the annotation is not found, then annotationFromDb gets null here
-            return true;
-        }
-        catch (Exception)
-        {
-            newId = -1;
-            return false;
-        }
-    }
     
     public bool AddAnnotation(AnnotationsDto newAnnotation, out int newId)
     {

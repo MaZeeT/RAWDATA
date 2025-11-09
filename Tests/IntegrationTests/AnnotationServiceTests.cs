@@ -1,4 +1,5 @@
-﻿using Domain.AnnotationsDTOs;
+﻿using System;
+using Domain.AnnotationsDTOs;
 using DomainServices.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
@@ -27,8 +28,9 @@ public class AnnotationServiceTests
         var annotation = new AnnotationsDto
         {
             UserId = UserId,
-            PostId = 14,
-            Body = "AddAnnotation_Successfully test"
+            PostId = 19,
+            Body = "AddAnnotation_Successfully test",
+            Date = new DateTime(2025, 11, 11, 11,11,11,11,DateTimeKind.Utc),
         };
         
         _sut.CreateAnnotation(annotation,  out var result);

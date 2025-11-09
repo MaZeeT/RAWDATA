@@ -41,11 +41,6 @@ public class AnnotationService : IAnnotationService
         return _annotationRepository.DeleteAnnotation(id, userId);
     }
 
-    public bool CreateAnnotation_withFunction(AnnotationsDto newAnnotation, out int newId)
-    {
-        return _annotationRepository.CreateAnnotation_withFunction(newAnnotation, out newId);
-    }
-
     public bool CreateAnnotation(AnnotationsDto newAnnotation, out int newId)
     {
         var userExist = _userRepository.AppUserExist(newAnnotation.UserId);

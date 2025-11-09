@@ -24,11 +24,7 @@ drop function if exists search_tfidf;
 drop function if exists search_simple;
 drop function if exists appsearch;
 drop function if exists wordrank;
-drop function if exists resolveid(integer);
-drop function if exists add_history(integer, integer, boolean);
-drop function if exists exists_bookmark;
 drop function if exists exists_appuser;
-drop function if exists annotate;
 
 --
 
@@ -43,93 +39,6 @@ begin
 end;
 $$ 
 language plpgsql;
-
-
--- overloaded function to resolve postid into tablename (questions, answers, comments)
-create or replace function resolveid(postid int)
-returns varchar as 
-$$
-declare
-   kind varchar;
-   typeid int;
-begin
-	select posttypeid from q_and_a where q_and_a.id=postid
-	into typeid;
-	if typeid=1 then
-		kind='questions';
-	elsif typeid=2 then
-		kind='answers';
-	elsif typeid is null then
-		kind='unknown';
-	end if;
-	RAISE NOTICE 'Looking up id, id is part of -- %', kind;
-	return kind;
-end;
-$$ 
-language plpgsql;
-
-
--- added: function that takes appuserid, postid and adds an entry into history as 1) history and 2) a bookmark
--- added: check user exists
--- todo: support comments
-create or replace function add_history(appuserid integer, ipostid integer, addbookmark boolean )
-returns boolean as 
-$$
-declare
-	tabl varchar;
-	checkz boolean;
-	existsuser boolean;
-begin
-	select exists_appuser(appuserid) into existsuser;
-	if existsuser=false then
-		RAISE NOTICE 'ERROR: Unknown user -- %', appuserid;
-		return false;
-	end if;
-	select resolveid(ipostid) into tabl; -- get table name
-	if tabl='questions' or tabl='answers'
-	then
-		if addbookmark=true then 
-			select exists_bookmark(appuserid, ipostid, tabl into checkz); 
-			if checkz=false
-			then RAISE NOTICE 'Adding bookmark for post -- %', ipostid;
-			insert into history (userid, postid, posttablename, date, isbookmark) values (appuserid, ipostid, tabl, CURRENT_TIMESTAMP(3), addbookmark);
-			else
-				RAISE NOTICE 'Bookmark for post exists, not added -- %', ipostid;
-			end if;
-		else
-			insert into history (userid, postid, posttablename, date, isbookmark) values (appuserid, ipostid, tabl,CURRENT_TIMESTAMP(3), addbookmark);
-			RAISE NOTICE 'Adding browse history for post -- %', ipostid;
-		end if;
-		return true;
-	else 
-		RAISE NOTICE 'Unable to add browse history, unknown post -- %', ipostid;	
-		return false;
-	end if;
-end;
-$$ 
-language plpgsql;
-
-
--- check bookmark
--- todo: exists_user (not really needed? this only called from other function, also doesnt insert)
-create or replace function exists_bookmark(appuserid integer, ipostid integer, tabl varchar)
-returns boolean as 
-$$
-declare
-	checkz boolean;
-begin
-			select isbookmark from history where userid=appuserid and postid=ipostid and posttablename=tabl and isbookmark=true into checkz; --hmm dont really like this part
-			if checkz=false or checkz is null then
-				RAISE NOTICE 'No bookmark found for post -- %', ipostid;
-				return false;
-			else 
-				RAISE NOTICE 'Bookmark exists for post -- %', ipostid;
-				return true;
-			end if;
-end;
-$$ 
-language plpgsql;
-
 
 -- check user exists
 create or replace function exists_appuser(appuserid integer)
@@ -149,43 +58,6 @@ begin
 end;
 $$ 
 language plpgsql;
-
-
--- added: annotations function
-create or replace function annotate(appuserid integer, ipostid integer, note text)
-returns integer as 
-$$
-declare
-	bid integer;
-	tabl varchar;
-	existsuser boolean;
-	newAnnotId integer;
-begin
-	select exists_appuser(appuserid) into existsuser;
-	if existsuser=false then
-		RAISE NOTICE 'ERROR: Unknown user -- %', appuserid;
-		return null;
-	end if;
-	perform add_history(appuserid, ipostid, true);
-	select resolveid(ipostid) into tabl; -- get table name
-	if tabl!='unknown'
-	then
-		select id from history 
-		where userid=appuserid and postid=ipostid and posttablename=tabl and isbookmark=true into bid;
-		
-		insert into annotations (userid, historyid, body, date) 
-		values (appuserid, bid, note,CURRENT_TIMESTAMP(3)) RETURNING id into newAnnotId;
-		
-		return newAnnotId;
-		
-	else
-		RAISE NOTICE 'ERROR: Unknown error.';
-		return null;
-	end if;
-end;
-$$ 
-language plpgsql;
-
 
 -- tokenizer function to split search string
 -- todo: remove non-alphanumeric characters from search string
