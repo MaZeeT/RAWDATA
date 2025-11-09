@@ -26,40 +26,16 @@ public class SearchDataRepository : ISearchRepository
         PagingAttributes pagingAttributes)
     {
         using var db = _dbContextFactory.CreateDbContext();
-        var searchTypeLookupTable = new SearchTypeLookupTable();
-        
-        var search = new NpgsqlParameter("search", NpgsqlTypes.NpgsqlDbType.Text)
-        {
-            Value = BuildSearchString(searchstring, false)
-        };
-        
-        var searchtype = new NpgsqlParameter("searchtype", NpgsqlTypes.NpgsqlDbType.Text);
-        if (searchtypecode >= 0 && searchtypecode <= 3)
-        {
-            searchtype.Value = searchTypeLookupTable.searchType[searchtypecode.Value];
-        }
-        else searchtype.Value = searchTypeLookupTable.searchType[3];
-
-        var appuserid = new NpgsqlParameter("appuserid", NpgsqlTypes.NpgsqlDbType.Integer)
-        {
-            Value = userid
-        };
-
-        // if internal call is specified, stored function appsearch won't add to searches/searchhistory
-        var internalcall = new NpgsqlParameter("internalcall", NpgsqlTypes.NpgsqlDbType.Boolean)
-        {
-            Value = true
-        };
 
         // count all matches
-        var matchcount = MatchCount(db, appuserid, searchtype, search, internalcall);
+        var matchcount = MatchCount(db, userid, searchtypecode, BuildSearchString(searchstring, false));
 
         var page = ISharedRepository.GetPagination(matchcount, pagingAttributes);
 
         Console.WriteLine($"{page} page trying to get.");
 
         // get subset of results according to pagesize etc
-        var resultlist = SearchResults(db, appuserid, searchtype, search, page, pagingAttributes); 
+        var resultlist = SearchResults(db, userid, searchtypecode, BuildSearchString(searchstring, false), page, pagingAttributes); 
 
         // build and map results to posts
         var resultposts = new List<Posts>();
@@ -161,8 +137,33 @@ public class SearchDataRepository : ISearchRepository
         return stype;
     }
 
-    private int MatchCount(DatabaseContext2 db,NpgsqlParameter appuserid, NpgsqlParameter searchtype, NpgsqlParameter search, NpgsqlParameter internalcall)
+    private int MatchCount(DatabaseContext2 db, int userid, int? searchtypecode, string searchString)
     {
+        var appuserid = new NpgsqlParameter("appuserid", NpgsqlTypes.NpgsqlDbType.Integer)
+        {
+            Value = userid
+        };
+        
+        var searchTypeLookupTable = new SearchTypeLookupTable();
+        
+        var searchtype = new NpgsqlParameter("searchtype", NpgsqlTypes.NpgsqlDbType.Text);
+        if (searchtypecode >= 0 && searchtypecode <= 3)
+        {
+            searchtype.Value = searchTypeLookupTable.searchType[searchtypecode.Value];
+        }
+        else searchtype.Value = searchTypeLookupTable.searchType[3];
+        
+        var search = new NpgsqlParameter("search", NpgsqlTypes.NpgsqlDbType.Text)
+        {
+            Value = searchString
+        };
+        
+        // if internal call is specified, stored function appsearch won't add to searches/searchhistory
+        var internalcall = new NpgsqlParameter("internalcall", NpgsqlTypes.NpgsqlDbType.Boolean)
+        {
+            Value = true
+        };
+        
         // count all matches
         var matchcount = db.Search
             .FromSqlRaw("select appsearch(@appuserid, @searchtype, @search, @internalcall)", appuserid, searchtype,
@@ -172,8 +173,27 @@ public class SearchDataRepository : ISearchRepository
         return matchcount;
     }
 
-    private List<Search> SearchResults(DatabaseContext2 db,NpgsqlParameter appuserid, NpgsqlParameter searchtype, NpgsqlParameter search, int page, PagingAttributes pagingAttributes)
+    private List<Search> SearchResults(DatabaseContext2 db, int userid, int? searchtypecode, string searchString, int page, PagingAttributes pagingAttributes)
     {
+        var appuserid = new NpgsqlParameter("appuserid", NpgsqlTypes.NpgsqlDbType.Integer)
+        {
+            Value = userid
+        };
+        
+        var searchTypeLookupTable = new SearchTypeLookupTable();
+        
+        var searchtype = new NpgsqlParameter("searchtype", NpgsqlTypes.NpgsqlDbType.Text);
+        if (searchtypecode >= 0 && searchtypecode <= 3)
+        {
+            searchtype.Value = searchTypeLookupTable.searchType[searchtypecode.Value];
+        }
+        else searchtype.Value = searchTypeLookupTable.searchType[3];
+        
+        var search = new NpgsqlParameter("search", NpgsqlTypes.NpgsqlDbType.Text)
+        {
+            Value = searchString
+        };
+        
         return db.Search
             .FromSqlRaw("SELECT * from appsearch(@appuserid, @searchtype, @search)", appuserid, searchtype, search)
             .Skip(page * pagingAttributes.PageSize)
