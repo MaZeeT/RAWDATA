@@ -1,4 +1,5 @@
-﻿using Domain.Services;
+﻿using System.Text.RegularExpressions;
+using Domain.Services;
 using Domain.Enums;
 using Domain.Models;
 using Infrastructure.Database;
@@ -146,13 +147,6 @@ public class SearchDataRepository : ISearchRepository
         
         var searchTypeLookupTable = new SearchTypeLookupTable();
         
-        var searchtype = new NpgsqlParameter("searchtype", NpgsqlTypes.NpgsqlDbType.Text);
-        if (searchtypecode >= 0 && searchtypecode <= 3)
-        {
-            searchtype.Value = searchTypeLookupTable.searchType[searchtypecode.Value];
-        }
-        else searchtype.Value = searchTypeLookupTable.searchType[3];
-        
         var search = new NpgsqlParameter("search", NpgsqlTypes.NpgsqlDbType.Text)
         {
             Value = searchString
@@ -163,6 +157,24 @@ public class SearchDataRepository : ISearchRepository
         {
             Value = true
         };
+        
+        var searchtype = new NpgsqlParameter("searchtype", NpgsqlTypes.NpgsqlDbType.Text);
+        switch (searchtypecode)
+        {
+            case 0:
+                searchtype.Value = searchTypeLookupTable.searchType[0];
+                break;
+            case 1:
+                searchtype.Value = searchTypeLookupTable.searchType[1];
+                break;
+            case 2:
+                searchtype.Value = searchTypeLookupTable.searchType[2];
+                break;
+            case 3:
+            default:
+                searchtype.Value = searchTypeLookupTable.searchType[3];
+                break;
+        }
         
         // count all matches
         var matchcount = db.Search
@@ -182,22 +194,74 @@ public class SearchDataRepository : ISearchRepository
         
         var searchTypeLookupTable = new SearchTypeLookupTable();
         
-        var searchtype = new NpgsqlParameter("searchtype", NpgsqlTypes.NpgsqlDbType.Text);
-        if (searchtypecode >= 0 && searchtypecode <= 3)
-        {
-            searchtype.Value = searchTypeLookupTable.searchType[searchtypecode.Value];
-        }
-        else searchtype.Value = searchTypeLookupTable.searchType[3];
-        
         var search = new NpgsqlParameter("search", NpgsqlTypes.NpgsqlDbType.Text)
         {
             Value = searchString
         };
         
-        return db.Search
-            .FromSqlRaw("SELECT * from appsearch(@appuserid, @searchtype, @search)", appuserid, searchtype, search)
-            .Skip(page * pagingAttributes.PageSize)
-            .Take(pagingAttributes.PageSize)
-            .ToList();
+        List<Search> resultList;
+        
+        var searchtype = new NpgsqlParameter("searchtype", NpgsqlTypes.NpgsqlDbType.Text);
+        switch (searchtypecode)
+        {
+            case 0: {}
+                searchtype.Value = searchTypeLookupTable.searchType[0];
+                InsertSearchToLogTabel(db, userid, (string)searchtype.Value, searchString);
+                
+                resultList = SearchAlgorithms.tfidf(db, appuserid, searchtype, search, page, pagingAttributes);
+                
+                break;
+            case 1:
+                searchtype.Value = searchTypeLookupTable.searchType[1];
+                InsertSearchToLogTabel(db, userid, (string)searchtype.Value, searchString);
+                
+                resultList = SearchAlgorithms.ExactMatch(db, appuserid, searchtype, search, page, pagingAttributes);
+                
+                break;
+            case 2:
+                searchtype.Value = searchTypeLookupTable.searchType[2];
+                InsertSearchToLogTabel(db, userid, (string)searchtype.Value, searchString);
+
+                resultList = SearchAlgorithms.SimpleSearch(db, appuserid, searchtype, search, page, pagingAttributes);
+
+                break;
+            case 3:
+            default:
+                searchtype.Value = searchTypeLookupTable.searchType[3];
+                InsertSearchToLogTabel(db, userid, (string)searchtype.Value, searchString);
+                
+                resultList = SearchAlgorithms.BestMatch(db, appuserid, searchtype, search, page, pagingAttributes);
+                break;
+        }
+        
+        return resultList;
+    }
+
+    private void InsertSearchToLogTabel(DatabaseContext2 db, int userid, string searchtype, string searchString)
+    {
+        // Insert search to search log
+        var searches = new Searches
+        {
+            Id = 0,
+            UserId = userid,
+            SearchType = searchtype,
+            SearchString = searchString,
+            Date = default
+        };
+        db.Searches.Add(searches);
+        db.SaveChanges();
+    }
+    
+    private NpgsqlParameter GetTokens(string searchString)
+    {
+        // Split searchstring to array of words
+        string[] tokens = Regex.Split(searchString, @"\s+");
+        
+        var tokenParameter = new NpgsqlParameter("search", NpgsqlTypes.NpgsqlDbType.Array | NpgsqlTypes.NpgsqlDbType.Text)
+        {
+            Value = tokens
+        };
+        
+        return tokenParameter;
     }
 }
