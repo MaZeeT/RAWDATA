@@ -163,26 +163,33 @@ public class SearchDataRepository : ISearchRepository
         {
             case 0:
                 searchtype.Value = searchTypeLookupTable.searchType[0];
-                break;
+                string[] tokens = Regex.Split(searchString, @"\s+");
+                return SearchAlgorithms.Tfidf.Count(db, tokens);
+                return db.Search
+                    .FromSqlRaw("select appsearch(@appuserid, @searchtype, @search, @internalcall)", appuserid, searchtype,
+                        search, internalcall)
+                    .Count();
             case 1:
                 searchtype.Value = searchTypeLookupTable.searchType[1];
-                break;
+                return db.Search
+                    .FromSqlRaw("select appsearch(@appuserid, @searchtype, @search, @internalcall)", appuserid, searchtype,
+                        search, internalcall)
+                    .Count();
             case 2:
                 searchtype.Value = searchTypeLookupTable.searchType[2];
-                break;
+                return db.Search
+                    .FromSqlRaw("select appsearch(@appuserid, @searchtype, @search, @internalcall)", appuserid, searchtype,
+                        search, internalcall)
+                    .Count();
             case 3:
             default:
                 searchtype.Value = searchTypeLookupTable.searchType[3];
-                break;
+                // count all matches
+                return db.Search
+                    .FromSqlRaw("select appsearch(@appuserid, @searchtype, @search, @internalcall)", appuserid, searchtype,
+                        search, internalcall)
+                    .Count();
         }
-        
-        // count all matches
-        var matchcount = db.Search
-            .FromSqlRaw("select appsearch(@appuserid, @searchtype, @search, @internalcall)", appuserid, searchtype,
-                search, internalcall)
-            .Count();
-        Console.WriteLine($"{matchcount} results.");
-        return matchcount;
     }
 
     private List<Search> SearchResults(DatabaseContext2 db, int userid, int? searchtypecode, string searchString, int page, PagingAttributes pagingAttributes)
@@ -208,8 +215,7 @@ public class SearchDataRepository : ISearchRepository
                 searchtype.Value = searchTypeLookupTable.searchType[0];
                 InsertSearchToLogTabel(db, userid, (string)searchtype.Value, searchString);
                 string[] tokens = Regex.Split(searchString, @"\s+");
-                resultList = SearchAlgorithms.tfidf(db, tokens);
-                
+                resultList = SearchAlgorithms.Tfidf.List(db, tokens);
                 break;
             case 1:
                 searchtype.Value = searchTypeLookupTable.searchType[1];
