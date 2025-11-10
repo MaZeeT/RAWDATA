@@ -3,6 +3,6 @@
     public class Search
     {
         public int PostId { get; set; }
-        public decimal Rank { get; set; }
+        public double Rank { get; set; }
     }
 }

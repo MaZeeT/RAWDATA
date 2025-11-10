@@ -25,6 +25,7 @@ namespace Infrastructure.Database;
         public DbSet<Searches> Searches { get; set; }
         public DbSet<Search> Search { get; set; }
         public DbSet<PostsTable> PostsTable { get; set; }
+        public DbSet<WiWeighted> WiWeighted { get; set; }
         public DbSet<WordRank> WordRank { get; set; }
         public DbSet<QAndA> QAndA { get; set; }
 
@@ -38,6 +39,8 @@ namespace Infrastructure.Database;
 
             modelBuilder.Entity<AppUser>().ToTable("appusers");
             modelBuilder.Entity<AppUser>().Property(x => x.Id).HasColumnName("id");
+            
+            modelBuilder.Entity<WiWeighted>().HasKey(w => new {w.Id, w.What, w.Word});
             
             modelBuilder.Entity<QAndA>().Property(x => x.Id).HasColumnName("id");
             modelBuilder.Entity<QAndA>().ToView("q_and_a");

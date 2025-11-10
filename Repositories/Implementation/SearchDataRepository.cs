@@ -207,8 +207,8 @@ public class SearchDataRepository : ISearchRepository
             case 0: {}
                 searchtype.Value = searchTypeLookupTable.searchType[0];
                 InsertSearchToLogTabel(db, userid, (string)searchtype.Value, searchString);
-                
-                resultList = SearchAlgorithms.tfidf(db, appuserid, searchtype, search, page, pagingAttributes);
+                string[] tokens = Regex.Split(searchString, @"\s+");
+                resultList = SearchAlgorithms.tfidf(db, tokens);
                 
                 break;
             case 1:
