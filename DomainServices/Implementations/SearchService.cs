@@ -20,6 +20,12 @@ public class SearchService : ISearchService
 
     public IList<WordRank> WordRank(int userid, string searchstring, int searchtypecode, int? maxresults)
     {
+        var userExist = _userRepository.AppUserExist(userid);
+        if (!userExist)
+        {
+            return new List<WordRank>();
+        }
+        
         return _searchRepository.WordRank(userid, searchstring, searchtypecode, maxresults);
     }
 

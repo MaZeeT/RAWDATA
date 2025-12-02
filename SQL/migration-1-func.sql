@@ -16,43 +16,8 @@
 -- \_/   \____/\_/  \|\____/ \_/ \_/\____/\_/  \|\____/
 
 
-drop function if exists addsearchhistory;
 drop function if exists tokenizer;
 drop function if exists wordrank;
-drop function if exists exists_appuser;
-
---
-
--- very simple function to add a searchstring to users history of searches
--- added: also store searchtype
-create or replace function addsearchhistory(appuserid int, stype text, search text)
-returns void as 
-$$
-begin
-	insert into searches (userid, searchtype, searchstring, date) values (appuserid, stype, search, CURRENT_TIMESTAMP(3));
-	RAISE NOTICE 'Adding search history -- %', search;
-end;
-$$ 
-language plpgsql;
-
--- check user exists
-create or replace function exists_appuser(appuserid integer)
-returns boolean as 
-$$
-declare
-	checkz integer;
-begin
-			select id from appusers where appusers.id=appuserid into checkz; --hmm dont really like this part
-			if checkz is null then
-				RAISE NOTICE 'No user found for id -- %', appuserid;
-				return false;
-			else 
-				RAISE NOTICE 'User exists with id -- %', appuserid;
-				return true;
-			end if;
-end;
-$$ 
-language plpgsql;
 
 -- tokenizer function to split search string
 -- todo: remove non-alphanumeric characters from search string
@@ -72,20 +37,14 @@ language plpgsql;
 
 -- D7 word-to-word
 -- returns ranked list of words found in matching posts
-create or replace function wordrank(appuserid int, searchtype text, searchstr text)
+create or replace function wordrank(searchtype text, searchstr text)
 returns table (term text, rank decimal) as
 $$
 declare
 	wordz text[];
 	w text;
     q text :='';
-	existsuser boolean;
 begin
-	select exists_appuser(appuserid) into existsuser;
-	if existsuser=false then
-		RAISE NOTICE 'ERROR: Unknown user -- %', appuserid;
-		return;
-	end if;
 	select tokenizer(searchstr)
 	into wordz;
 	if searchtype='wordstfidf' then
@@ -115,7 +74,6 @@ begin
 		raise notice 'Unknown searchtype -- %', searchtype;
 		return;
 	end if;
-	perform addsearchhistory(appuserid, searchtype, searchstr);
 	return query execute q;
 end;
 $$ 

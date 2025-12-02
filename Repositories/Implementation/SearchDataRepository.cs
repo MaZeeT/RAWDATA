@@ -66,22 +66,22 @@ public class SearchDataRepository : ISearchRepository
     }
 
 
-    public IList<WordRank> WordRank(int userid, string searchstring, int searchtypecode, int? maxresults)
+    public IList<WordRank> WordRank(int userid, string searchString, int searchtypecode, int? maxresults)
     {
         using var db = _dbContextFactory.CreateDbContext();
-        var st = new SearchTypeLookupTable();
+        var searchTypeLookupTable = new SearchTypeLookupTable();
         
         var search = new NpgsqlParameter("search", NpgsqlTypes.NpgsqlDbType.Text)
         {
-            Value = BuildSearchString(searchstring, false)
+            Value = BuildSearchString(searchString, false)
         };
         
         var searchType = new NpgsqlParameter("searchtype", NpgsqlTypes.NpgsqlDbType.Text);
         if (searchtypecode >= 4 && searchtypecode <= 5)
         {
-            searchType.Value = st.searchType[searchtypecode];
+            searchType.Value = searchTypeLookupTable.searchType[searchtypecode];
         }
-        else searchType.Value = st.searchType[5];
+        else searchType.Value = searchTypeLookupTable.searchType[5];
         
         var appUserId = new NpgsqlParameter("appuserid", NpgsqlTypes.NpgsqlDbType.Integer)
         {
@@ -96,6 +96,8 @@ public class SearchDataRepository : ISearchRepository
         {
             limit.Value = maxresults;
         }
+        
+        InsertSearchToLogTable(db, userid, searchTypeLookupTable.searchType[searchtypecode], searchString);
         
         return db.WordRank
             .FromSqlRaw("SELECT * from wordrank(@appuserid, @searchtype, @search) limit @limit", appUserId,
