@@ -105,7 +105,6 @@ public class SearchDataRepository : ISearchRepository
 
     public string BuildSearchString(string searchstring, bool reverse)
     {
-        // convert query search string to appsearch db func search string or the reverse
         string[] separators = { ",", ".", "...", " " };
 
         var words = searchstring.Split(separators, StringSplitOptions.RemoveEmptyEntries);

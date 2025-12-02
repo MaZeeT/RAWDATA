@@ -18,11 +18,6 @@
 
 drop function if exists addsearchhistory;
 drop function if exists tokenizer;
-drop function if exists search_exactmatch;
-drop function if exists search_bestmatch;
-drop function if exists search_tfidf;
-drop function if exists search_simple;
-drop function if exists appsearch;
 drop function if exists wordrank;
 drop function if exists exists_appuser;
 
@@ -75,147 +70,8 @@ end;
 $$ 
 language plpgsql;
 
-
--- D1 Simple search function ---------------------------------------------------------------------------
-CREATE OR REPLACE FUNCTION search_simple(keyword text[])
-RETURNS text as  
-$$
-declare
-            q text := '';
-BEGIN
-                q:= q||' SELECT questions.id, 0::decimal FROM questions WHERE questions.title ~* ''';
-                q:= q|| keyword[1];
-                q:= q|| ''' ';
-                q:= q|| 'or questions.body ~* ''';
-                q:= q|| keyword[1];
-                q:= q|| ''' ';
-                q:= q||' UNION SELECT answers.id, 0::decimal FROM answers WHERE answers.body ~* ''';
-                q:= q|| keyword[1];
-                q:= q|| ''' ';
-                RAISE NOTICE 'SimpleSearch: Using only first keymord -- %', keyword[1];
-              RETURN q;
-END;
-$$
-language plpgsql;
-
-
--- D3 Exact-match querying
-create or replace FUNCTION search_exactmatch(keywordsArray text[]) 
-returns text AS
-$$
-declare 
-    keyword text;
-        a_final text :='';
-        lengthArray integer;
-        a_count integer;
-        q_count integer;
-        w text;
-begin
-        lengthArray := array_length(keywordsArray, 1);
-        RAISE NOTICE 'Exactmatch found lengthArray of -- % ', lengthArray;
-        a_count:= array_length(keywordsArray, 1);
-        q_count:= array_length(keywordsArray, 1);
-        if(lengthArray <> 0) then
-            if (lengthArray = 1) then
-                    a_final:= a_final || ' SELECT answers.id, 0::decimal FROM answers, (';
-                    a_final:= a_final || ' SELECT wi.id from wi where word = ''';
-                    a_final:= a_final || keywordsArray[1] ;
-                    a_final:= a_final || ''' ';
-                    a_final := a_final || ' ) t WHERE answers.id=t.id UNION SELECT questions.id, 0::decimal FROM questions, ( ';
-                    a_final := a_final || ' SELECT wi.id from wi where  word = ''';
-                    a_final := a_final || keywordsArray[1] ;
-                    a_final := a_final || ''' ';
-                    a_final := a_final || ' ) t WHERE questions.id=t.id';
-            else
-                    a_final:= a_final || ' SELECT answers.id, 0::decimal FROM answers, ( ';
-                    foreach w in array keywordsArray 
-                    loop
-                        a_count := a_count - 1;
-                        a_final := a_final || ' SELECT wi.id from wi where  word = ''';
-                        a_final := a_final || w ;
-                        a_final := a_final || ''' ';
-                        if(a_count > 0) then
-                            a_final := a_final || ' INTERSECT ';
-                        end if;
-                    end loop;
-                    a_final := a_final || ' ) t WHERE answers.id=t.id UNION SELECT questions.id, 0::decimal FROM questions, ( ';
-                    foreach w in array keywordsArray 
-                    loop
-                        q_count := q_count - 1;
-                        a_final := a_final || ' SELECT wi.id from wi where  word = ''';
-                        a_final := a_final || w ;
-                        a_final := a_final || ''' ';
-                        if(q_count > 0) then
-                            a_final := a_final || ' INTERSECT ';
-                        end if;
-                    end loop;
-                    a_final := a_final || ' ) t WHERE questions.id=t.id';
-            END IF;
-            RETURN a_final;
-        END IF;
-end; 
-$$ 
-language plpgsql;
-
-
--- D4 search, best match, adapted from slides
--- takes array of search words and builds query string
--- currently searches q and a, not comments
-create or replace function search_bestmatch(searchwords text[])
-returns text as 
-$$
-declare
-	w text;
-	q text :='';
-begin
-	q:='select p.id, sum(relevance)::decimal rank from (SELECT id, body FROM questions UNION ALL SELECT id, body FROM answers) p, (';
-	foreach w in array searchwords
-loop
-	q := q || 'select distinct id, 1 relevance from wi where word = ''';
-	q := q || w;
-	q := q || ''' union all ';
-end loop;
-	select regexp_replace(q, '\sunion all\s$', '') --remove last union all
-	into q;
-	q := q || ') t where p.id=t.id group by p.id, body order by rank desc;';
-	return q;
-end;
-$$ 
-language plpgsql;
-
-
--- D6 search, tfidf
--- TF = (Number of time the word occurs in the text) / (Total number of words in text)
--- IDF = (Total number of documents / Number of documents with word t in it)
--- TF-IDF = TF * LOG(IDF)
--- takes array of search words and builds query string
--- currently searches q and a, not comments
-create or replace function search_tfidf(searchwords text[])
-returns text as 
-$$
-declare
-	w text;
-	q text :='';
-begin
-	q:='select t.id, round(sum(tfidf), 4) rank from (';
-	foreach w in array searchwords
-loop
-	q := q || 'select distinct on (id, what, word) id, what, word, tfidf from wi_weighted where word = ''';
-	q := q || w;
-	q := q || '''  and (what=''title'' or what=''body'') union all ';
-end loop;
-	select regexp_replace(q, '\sunion all\s$', '') --remove last union all
-	into q;
-	q := q || ') t group by t.id order by rank desc;';
-	return q;
-end;
-$$ 
-language plpgsql;
-
-
 -- D7 word-to-word
 -- returns ranked list of words found in matching posts
--- can't immediately be called from appsearch, as returns something different?
 create or replace function wordrank(appuserid int, searchtype text, searchstr text)
 returns table (term text, rank decimal) as
 $$
@@ -261,48 +117,6 @@ begin
 	end if;
 	perform addsearchhistory(appuserid, searchtype, searchstr);
 	return query execute q;
-end;
-$$ 
-language plpgsql;
-
-
--- mother function for searching
--- added: third parameter: searchtype
--- added: check user exists
-create or replace function appsearch(appuserid int, searchtype text, searchstr text, internalcaller boolean DEFAULT false)
-returns table (postid integer, rank decimal) as 
-$$
-declare
-	wordz text[];
-	w text;
-    q text :='';
-	existsuser boolean;
-begin
-if internalcaller=false then
-	select exists_appuser(appuserid) into existsuser;
-	if existsuser=false then
-		RAISE NOTICE 'ERROR: Unknown user -- %', appuserid;
-		return;
-	end if;
-	perform addsearchhistory(appuserid, searchtype, searchstr);
-end if;
-	select tokenizer(searchstr)
-	into wordz;
-	if searchtype='tfidf' then
-		select search_tfidf(wordz)
-		into q;
-	elsif searchtype='exactmatch' then
-		select search_exactmatch(wordz)
-		into q;	
-	elsif searchtype='simple' then
-		select search_simple(wordz)
-		into q;	
-	else
-		select search_bestmatch(wordz)
-		into q;
-	end if;
-raise notice 'Building query -- %', q;
-return query execute q;
 end;
 $$ 
 language plpgsql;
