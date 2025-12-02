@@ -172,6 +172,7 @@ public class SearchDataRepository : ISearchRepository
                     .Count();
             case 1:
                 searchtype.Value = searchTypeLookupTable.searchType[1];
+                return SearchAlgorithms.ExactMatch.Count(db, tokens);
                 return db.Search
                     .FromSqlRaw("select appsearch(@appuserid, @searchtype, @search, @internalcall)", appuserid, searchtype,
                         search, internalcall)
@@ -225,7 +226,8 @@ public class SearchDataRepository : ISearchRepository
                 searchtype.Value = searchTypeLookupTable.searchType[1];
                 InsertSearchToLogTabel(db, userid, (string)searchtype.Value, searchString);
                 
-                resultList = SearchAlgorithms.ExactMatch(db, appuserid, searchtype, search, page, pagingAttributes);
+                resultList = SearchAlgorithms.ExactMatch.List(db, tokens);
+                //resultList = SearchAlgorithms.ExactMatch(db, appuserid, searchtype, search, page, pagingAttributes);
                 
                 break;
             case 2:

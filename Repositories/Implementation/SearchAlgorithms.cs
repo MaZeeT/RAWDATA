@@ -1,8 +1,6 @@
 ﻿using Domain.Models;
-using Domain.Services;
 using Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
-using Npgsql;
 
 namespace Repositories.Implementation;
 
@@ -19,16 +17,16 @@ public static class SearchAlgorithms
         {
             return Query(db, searchWords).Count();
         }
-    
+
         private static IEnumerable<Search> Query(DatabaseContext2 db, string[] searchWords)
         {
             // Base query from wi_weighted table
             var query = db.WiWeighted
-                .Where(w => (w.What == "title" || w.What == "body") 
+                .Where(w => (w.What == "title" || w.What == "body")
                             && searchWords.Contains(w.Word));
 
             // Step 1: Let EF compute the sum (no rounding yet)
-            var intermediate =  query
+            var intermediate = query
                 .GroupBy(w => w.Id)
                 .Select(g => new
                 {
@@ -37,7 +35,7 @@ public static class SearchAlgorithms
                 })
                 .OrderByDescending(r => r.Rank)
                 .ToList();
-        
+
             // Step 2: Perform rounding in memory (safe and unambiguous)
             var results = intermediate
                 .Select(r => new Search
@@ -50,7 +48,89 @@ public static class SearchAlgorithms
         }
     }
 
-    public static class ExactMatchClass {}
+    public static class ExactMatch
+    {
+        internal static List<Search> List(DatabaseContext2 db, string[] searchWords)
+        {
+            return Query(db, searchWords).ToList();
+        }
+
+        internal static int Count(DatabaseContext2 db, string[] searchWords)
+        {
+            return Query(db, searchWords).Count();
+        }
+
+        private static IQueryable<Search> Query(DatabaseContext2 db, string[] searchWords)
+        {
+            if (searchWords.Length == 0)
+                return Enumerable.Empty<Search>().AsQueryable();
+
+            IQueryable<int> answerIds;
+            IQueryable<int> questionIds;
+
+            if (searchWords.Length == 1)
+            {
+                var kw = searchWords[0];
+
+                answerIds = from a in db.Answers
+                    join w in db.WiWeighted on a.Id equals w.Id
+                    where w.Word == kw
+                    select a.Id;
+
+                questionIds = from q in db.Questions
+                    join w in db.WiWeighted on q.Id equals w.Id
+                    where w.Word == kw
+                    select q.Id;
+            }
+            else
+            {
+                // Multiple keywords -> INTERSECT logic
+                answerIds = db.WiWeighted.Where(w => w.Word == searchWords[0])
+                    .Select(w => w.Id);
+
+                foreach (var kw in searchWords.Skip(1))
+                {
+                    answerIds = answerIds.Intersect(
+                        db.WiWeighted.Where(w => w.Word == kw).Select(w => w.Id)
+                    );
+                }
+
+                questionIds = db.WiWeighted.Where(w => w.Word == searchWords[0])
+                    .Select(w => w.Id);
+
+                foreach (var kw in searchWords.Skip(1))
+                {
+                    questionIds = questionIds.Intersect(
+                        db.WiWeighted.Where(w => w.Word == kw).Select(w => w.Id)
+                    );
+                }
+
+                // Join filtered ids with answers/questions
+                answerIds = from a in db.Answers
+                    join id in answerIds on a.Id equals id
+                    select a.Id;
+
+                questionIds = from q in db.Questions
+                    join id in questionIds on q.Id equals id
+                    select q.Id;
+            }
+
+            // Build final Search result
+            var answersQuery = answerIds.Select(id => new Search
+            {
+                PostId = id,
+                Rank = (double)0m
+            });
+
+            var questionsQuery = questionIds.Select(id => new Search
+            {
+                PostId = id,
+                Rank = (double)0m
+            });
+
+            return answersQuery.Concat(questionsQuery);
+        }
+    }
 
     public static class SimpleSearch
     {
@@ -63,12 +143,12 @@ public static class SearchAlgorithms
         {
             return Query(db, searchWords).Count();
         }
-    
+
         private static IQueryable<Search> Query(DatabaseContext2 db, string[] searchWords)
         {
             if (searchWords.Length == 0)
                 return new List<Search>().AsQueryable();
-            
+
             var keyword = searchWords[0];
 
             // Wrap keyword with % for substring search (ILike = case-insensitive)
@@ -128,7 +208,8 @@ public static class SearchAlgorithms
             // Join posts with relevance
             var query = from p in posts
                 join r in relevanceQuery on p.Id equals r.Id
-                group r by p.Id into g
+                group r by p.Id
+                into g
                 select new Search
                 {
                     PostId = g.Key,
@@ -137,37 +218,6 @@ public static class SearchAlgorithms
 
             return query.OrderByDescending(s => s.Rank);
         }
-    }
-    
-   /* public static class ExactMatch
-    {
-        internal static List<Search> List(DatabaseContext2 db, string[] searchWords)
-        {
-            return ExactMatch(db, searchWords).ToList();
-        }
-
-        internal static int Count(DatabaseContext2 db, string[] searchWords)
-        {
-            return ExactMatch(db, searchWords).Count();
-        }
-
-        private static IEnumerable<Search> ExactMatch(DatabaseContext2 db, string[] searchWords)
-        {
-            db.Search
-                .FromSqlRaw("SELECT * from appsearch(@appuserid, @searchtype, @search)", appuserid, searchtype, search)
-        }
-    }*/
-    
-    internal static List<Search> ExactMatch(DatabaseContext2 db, NpgsqlParameter appuserid, NpgsqlParameter searchtype, NpgsqlParameter search, int page, PagingAttributes pagingAttributes)
-    {
-                        
-        var resultList = db.Search
-            .FromSqlRaw("SELECT * from appsearch(@appuserid, @searchtype, @search)", appuserid, searchtype, search)
-            .Skip(page * pagingAttributes.PageSize)
-            .Take(pagingAttributes.PageSize)
-            .ToList();
-        
-        return resultList;
     }
     
 }
