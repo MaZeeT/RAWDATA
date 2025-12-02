@@ -159,11 +159,12 @@ public class SearchDataRepository : ISearchRepository
         };
         
         var searchtype = new NpgsqlParameter("searchtype", NpgsqlTypes.NpgsqlDbType.Text);
+        string[] tokens = Regex.Split(searchString, @"\s+");
+        
         switch (searchtypecode)
         {
             case 0:
                 searchtype.Value = searchTypeLookupTable.searchType[0];
-                string[] tokens = Regex.Split(searchString, @"\s+");
                 return SearchAlgorithms.Tfidf.Count(db, tokens);
                 return db.Search
                     .FromSqlRaw("select appsearch(@appuserid, @searchtype, @search, @internalcall)", appuserid, searchtype,
@@ -177,6 +178,7 @@ public class SearchDataRepository : ISearchRepository
                     .Count();
             case 2:
                 searchtype.Value = searchTypeLookupTable.searchType[2];
+                return SearchAlgorithms.SimpleSearch.Count(db, tokens);
                 return db.Search
                     .FromSqlRaw("select appsearch(@appuserid, @searchtype, @search, @internalcall)", appuserid, searchtype,
                         search, internalcall)
@@ -209,12 +211,13 @@ public class SearchDataRepository : ISearchRepository
         List<Search> resultList;
         
         var searchtype = new NpgsqlParameter("searchtype", NpgsqlTypes.NpgsqlDbType.Text);
+        string[] tokens = Regex.Split(searchString, @"\s+");
+        
         switch (searchtypecode)
         {
             case 0: {}
                 searchtype.Value = searchTypeLookupTable.searchType[0];
                 InsertSearchToLogTabel(db, userid, (string)searchtype.Value, searchString);
-                string[] tokens = Regex.Split(searchString, @"\s+");
                 resultList = SearchAlgorithms.Tfidf.List(db, tokens);
                 break;
             case 1:
@@ -227,9 +230,7 @@ public class SearchDataRepository : ISearchRepository
             case 2:
                 searchtype.Value = searchTypeLookupTable.searchType[2];
                 InsertSearchToLogTabel(db, userid, (string)searchtype.Value, searchString);
-
-                resultList = SearchAlgorithms.SimpleSearch(db, appuserid, searchtype, search, page, pagingAttributes);
-
+                resultList = SearchAlgorithms.SimpleSearch.List(db, tokens);
                 break;
             case 3:
             default:
