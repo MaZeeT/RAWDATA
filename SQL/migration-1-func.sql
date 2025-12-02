@@ -1,41 +1,6 @@
--- GROUP: raw6, MEMBERS: Mads Zeuch Ethelberg, Monica Toader, Stefan Dimitriu, Tue Brisson Mosich
 
---
--- ___________                                                __    
--- \_   _____/___________    _____   ______  _  _____________|  | __
---  |    __) \_  __ \__  \  /     \_/ __ \ \/ \/ /  _ \_  __ \  |/ /
---  |     \   |  | \// __ \|  Y Y  \  ___/\     (  <_> )  | \/    < 
---  \___  /   |__|  (____  /__|_|  /\___  >\/\_/ \____/|__|  |__|_ \
---      \/               \/      \/     \/                        \/
--- 
-
---  _____ _     _      ____ _____ _  ____  _      ____ 
--- /    // \ /\/ \  /|/   _Y__ __Y \/  _ \/ \  /|/ ___\
--- |  __\| | ||| |\ |||  /   / \ | || / \|| |\ |||    \
--- | |   | \_/|| | \|||  \_  | | | || \_/|| | \||\___ |
--- \_/   \____/\_/  \|\____/ \_/ \_/\____/\_/  \|\____/
-
-
-drop function if exists tokenizer;
 drop function if exists wordrank;
 
--- tokenizer function to split search string
--- todo: remove non-alphanumeric characters from search string
-create or replace function tokenizer(searchstr text)
-returns text[] as 
-$$
-declare
-   _wordz text[];
-begin
-	select regexp_split_to_array(searchstr, '\s+')
-	into _wordz;
-	RAISE NOTICE 'Splitting into tokens -- %', _wordz;
-	return _wordz;
-end;
-$$ 
-language plpgsql;
-
--- D7 word-to-word
 -- returns ranked list of words found in matching posts
 create or replace function wordrank(searchtype text, searchstr text)
 returns table (term text, rank decimal) as
@@ -45,7 +10,7 @@ declare
 	w text;
     q text :='';
 begin
-	select tokenizer(searchstr)
+    select regexp_split_to_array(searchstr, '\s+')
 	into wordz;
 	if searchtype='wordstfidf' then
 		q:='select word, sum(rank) from wi, (select id, round(sum(tfidf), 4) rank from (';
@@ -78,9 +43,3 @@ begin
 end;
 $$ 
 language plpgsql;
-
---  ____  _  _  ____  
--- ( ___)( \( )(  _ \ 
---  )__)  )  (  )(_) )
--- (____)(_)\_)(____/ 
--- 

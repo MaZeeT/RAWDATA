@@ -100,8 +100,7 @@ public class SearchDataRepository : ISearchRepository
         InsertSearchToLogTable(db, userid, searchTypeLookupTable.searchType[searchtypecode], searchString);
         
         return db.WordRank
-            .FromSqlRaw("SELECT * from wordrank(@appuserid, @searchtype, @search) limit @limit", appUserId,
-                searchType, search, limit)
+            .FromSqlRaw("SELECT * from wordrank(@searchtype, @search) limit @limit", searchType, search, limit)
             .ToList();
     }
 
