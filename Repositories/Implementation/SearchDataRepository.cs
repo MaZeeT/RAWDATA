@@ -187,6 +187,7 @@ public class SearchDataRepository : ISearchRepository
             default:
                 searchtype.Value = searchTypeLookupTable.searchType[3];
                 // count all matches
+                return SearchAlgorithms.BestMatch.Count(db, tokens);
                 return db.Search
                     .FromSqlRaw("select appsearch(@appuserid, @searchtype, @search, @internalcall)", appuserid, searchtype,
                         search, internalcall)
@@ -237,7 +238,8 @@ public class SearchDataRepository : ISearchRepository
                 searchtype.Value = searchTypeLookupTable.searchType[3];
                 InsertSearchToLogTabel(db, userid, (string)searchtype.Value, searchString);
                 
-                resultList = SearchAlgorithms.BestMatch(db, appuserid, searchtype, search, page, pagingAttributes);
+                resultList = SearchAlgorithms.BestMatch.List(db, tokens);
+                //resultList = SearchAlgorithms.BestMatch(db, appuserid, searchtype, search, page, pagingAttributes);
                 break;
         }
         

@@ -97,8 +97,47 @@ public static class SearchAlgorithms
                 .Union(answerMatches);
         }
     }
-    
-    public static class BestMatchClass {}
+
+    public static class BestMatch
+    {
+        internal static List<Search> List(DatabaseContext2 db, string[] searchWords)
+        {
+            return Query(db, searchWords).ToList();
+        }
+
+        internal static int Count(DatabaseContext2 db, string[] searchWords)
+        {
+            return Query(db, searchWords).Count();
+        }
+
+        private static IQueryable<Search> Query(DatabaseContext2 db, string[] searchWords)
+        {
+            if (searchWords.Length == 0)
+                return Enumerable.Empty<Search>().AsQueryable();
+
+            // Combine questions and answers
+            var posts = db.Questions
+                .Select(q => new { q.Id, q.Body })
+                .Concat(db.Answers.Select(a => new { a.Id, a.Body }));
+
+            // Build relevance table for all keywords
+            var relevanceQuery = db.WiWeighted
+                .Where(w => searchWords.Contains(w.Word))
+                .Select(w => new { w.Id, Relevance = 1 });
+
+            // Join posts with relevance
+            var query = from p in posts
+                join r in relevanceQuery on p.Id equals r.Id
+                group r by p.Id into g
+                select new Search
+                {
+                    PostId = g.Key,
+                    Rank = (double)(g.Sum(x => (decimal?)x.Relevance) ?? 0m)
+                };
+
+            return query.OrderByDescending(s => s.Rank);
+        }
+    }
     
    /* public static class ExactMatch
     {
@@ -131,15 +170,4 @@ public static class SearchAlgorithms
         return resultList;
     }
     
-    internal static List<Search> BestMatch(DatabaseContext2 db, NpgsqlParameter appuserid, NpgsqlParameter searchtype, NpgsqlParameter search, int page, PagingAttributes pagingAttributes)
-    {
-                        
-        var resultList = db.Search
-            .FromSqlRaw("SELECT * from appsearch(@appuserid, @searchtype, @search)", appuserid, searchtype, search)
-            .Skip(page * pagingAttributes.PageSize)
-            .Take(pagingAttributes.PageSize)
-            .ToList();
-        
-        return resultList;
-    }
 }
