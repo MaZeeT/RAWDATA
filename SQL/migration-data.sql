@@ -1,5 +1,3 @@
--- GROUP: raw6, MEMBERS: Mads Zeuch Ethelberg, Monica Toader, Stefan Dimitriu, Tue Brisson Mosich
-
 --
 --   _________ __                 __    ________          __          
 --  /   _____//  |______    ____ |  | __\______ \ _____ _/  |______   

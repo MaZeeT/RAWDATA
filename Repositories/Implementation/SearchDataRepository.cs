@@ -96,12 +96,24 @@ public class SearchDataRepository : ISearchRepository
         {
             limit.Value = maxresults;
         }
+
+        var resultLimit = maxresults ?? 1000;
         
         InsertSearchToLogTable(db, userid, searchTypeLookupTable.searchType[searchtypecode], searchString);
+        string[] words = Regex.Split(searchString, @"\s+");
+        switch (searchTypeLookupTable.searchType[searchtypecode])
+        {
+            case "wordstfidf":
+                return WordRankTfidf(db, words, resultLimit);
+            case "wordsbest":
+                return WordRankBest(db, words, resultLimit);
+            default:
+                throw new ArgumentException("Invalid search type");
+        }
         
-        return db.WordRank
+       /* return db.WordRank
             .FromSqlRaw("SELECT * from wordrank(@searchtype, @search) limit @limit", searchType, search, limit)
-            .ToList();
+            .ToList();*/
     }
 
     public string BuildSearchString(string searchstring, bool reverse)
@@ -205,5 +217,67 @@ public class SearchDataRepository : ISearchRepository
         };
         db.Searches.Add(searches);
         db.SaveChanges();
+    }
+    
+    private IList<WordRank> WordRankTfidf(DatabaseContext2 db, string[] words, int limit)
+    {
+        // Build the UNION ALL equivalent
+        var weightedQuery = words
+            .Select(w =>
+                db.WiWeighted
+                    .Where(x => x.Word == w && (x.What == "title" || x.What == "body"))
+                    .Select(x => new { x.Id, x.Tfidf })
+            )
+            .Aggregate((a, b) => a.Concat(b));
+
+        // Sum TFIDF per id
+        var perDoc = weightedQuery
+            .GroupBy(x => x.Id)
+            .Select(g => new { Id = g.Key, Rank = g.Sum(x => x.Tfidf) });
+
+        // Join wi and group per word
+        var result = db.WiWeighted
+            .Join(perDoc, wi => wi.Id, d => d.Id, (wi, d) => new { wi.Word, d.Rank })
+            .GroupBy(x => x.Word)
+            .Select(g => new WordRank
+            {
+                Term = g.Key,
+                Rank = (decimal)g.Sum(x => x.Rank)
+            })
+            .OrderByDescending(x => x.Rank)
+            .Take(limit)
+            .ToList();
+
+        return result;
+    }
+    
+    private IList<WordRank> WordRankBest(DatabaseContext2 db, string[] words, int limit)
+    {
+        // Build UNION ALL for wi
+        var baseQuery = words
+            .Select(w =>
+                db.WiWeighted
+                    .Where(x => x.Word == w)
+                    .Select(x => new { x.Id, Relevance = 1 })
+            )
+            .Aggregate((a, b) => a.Concat(b));
+
+        var perDoc = baseQuery
+            .GroupBy(x => x.Id)
+            .Select(g => new { Id = g.Key, Rank = g.Sum(x => x.Relevance) });
+
+        var result = db.WiWeighted
+            .Join(perDoc, wi => wi.Id, d => d.Id, (wi, d) => new { wi.Word, d.Rank })
+            .GroupBy(x => x.Word)
+            .Select(g => new WordRank
+            {
+                Term = g.Key,
+                Rank = g.Sum(x => x.Rank)
+            })
+            .OrderByDescending(x => x.Rank)
+            .Take(limit)
+            .ToList();
+
+        return result;
     }
 }
