@@ -18,7 +18,7 @@ public class SearchService : ISearchService
         _userRepository = userRepository;
     }
 
-    public IList<WordRank> WordRank(int userid, string searchstring, int searchtypecode, int? maxresults)
+    public IList<WordRank> WordRank(int userid, string searchString, int searchTypeCode, int? maxResults)
     {
         var userExist = _userRepository.AppUserExist(userid);
         if (!userExist)
@@ -26,10 +26,10 @@ public class SearchService : ISearchService
             return new List<WordRank>();
         }
         
-        return _searchRepository.WordRank(userid, searchstring, searchtypecode, maxresults);
+        return _searchRepository.WordRank(userid, searchString, searchTypeCode, maxResults);
     }
 
-    public IList<Posts> Search(int userid, string searchstring, int? searchtypecode, PagingAttributes pagingAttributes)
+    public IList<Posts> Search(int userid, string searchString, int? searchTypeCode, PagingAttributes pagingAttributes)
     {
         var userExist = _userRepository.AppUserExist(userid);
         if (!userExist)
@@ -38,12 +38,12 @@ public class SearchService : ISearchService
         }
         
         
-        return _searchRepository.Search(userid, searchstring, searchtypecode, pagingAttributes);
+        return _searchRepository.Search(userid, searchString, searchTypeCode, pagingAttributes);
     }
 
-    public string BuildSearchString(string searchstring, bool reverse)
+    public string BuildSearchString(string searchString, bool reverse)
     {
-        return _searchRepository.BuildSearchString(searchstring, reverse);
+        return _searchRepository.BuildSearchString(searchString, reverse);
     }
 
     public int SearchTypeLookup(string searchType)
