@@ -14,7 +14,7 @@ public class HistoryRepository : IHistoryRepository
     {
         _database = factory.CreateDbContext();
     }
-    
+
 
     public bool Add(History history)
     {
@@ -25,7 +25,8 @@ public class HistoryRepository : IHistoryRepository
 
     public History Get(int historyId)
     {
-        return _database.History.Find(historyId);
+        return _database.History.Find(historyId)
+               ?? throw new ArgumentException("HistoryId not found");
     }
 
     public History Get(int userId, int postId)
@@ -35,8 +36,8 @@ public class HistoryRepository : IHistoryRepository
         {
             return histories[0];
         }
-        
-        return null;
+
+        throw new ArgumentException("HistoryEntity not found");
     }
 
     public List<History> GetHistoryList(int userId)
@@ -94,7 +95,7 @@ public class HistoryRepository : IHistoryRepository
             x.UserId == userId &&
             x.PostId == postId &&
             x.IsBookmark == true);
-        
+
         foreach (var history in histories)
         {
             _database.History.Update(history);

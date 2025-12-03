@@ -19,8 +19,6 @@ public class SharedRepository : ISharedRepository
     
     public string GetPostType(int postId)
     {
-        Console.WriteLine($"Postid -- {postId}");
-
         using var db = _dbContextFactory.CreateDbContext();
         var postTypeId = db.QAndA.Find(postId);
         var tablename = postTypeId?.PostTypeId switch

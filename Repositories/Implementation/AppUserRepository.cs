@@ -10,7 +10,7 @@ namespace Repositories.Implementation;
 
 public class AppUserRepository : IUserRepository
 {
-    readonly DatabaseContext _database;
+    private readonly DatabaseContext _database;
 
     public AppUserRepository(IDbContextFactory<DatabaseContext> factory)
     {
@@ -35,13 +35,7 @@ public class AppUserRepository : IUserRepository
             return user.Id;
         }
     }
-
-    /// <summary>
-    /// The function handlex the potential existance of many users with the same username 
-    /// But in the db we handle this by having a constraint on the table that usernamens are unique
-    /// </summary>
-    /// <param name="username"></param>
-    /// <returns></returns>
+    
     public AppUser GetAppUser(string username)
     {
         var appUsers = _database.AppUser.Where(user => user.Username == username).ToList();
@@ -50,7 +44,7 @@ public class AppUserRepository : IUserRepository
             return appUsers[0];
         }
 
-        return null;
+        throw new ArgumentException("User not found");
     }
 
     public bool CreateAppUser(string username, string password, string salt)
@@ -79,7 +73,7 @@ public class AppUserRepository : IUserRepository
             return GetAppUser(name);
         }
 
-        return null;
+        throw new ArgumentException("User not found");
     }
 
     public bool UpdateAppUserName(string oldName, string newName)

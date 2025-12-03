@@ -13,7 +13,7 @@ public class SearchDataRepository : ISearchRepository
 {
     private readonly IDbContextFactory<DatabaseContext> _dbContextFactory;
     private readonly IQuestionRepository _questionRepository;
-    private readonly ISharedRepository _sharedRepositoryService; //shared stuff by injection
+    private readonly ISharedRepository _sharedRepositoryService;
 
     public SearchDataRepository(IDbContextFactory<DatabaseContext> factory, IQuestionRepository questionRepository,
         ISharedRepository sharedRepositoryService)
@@ -23,20 +23,20 @@ public class SearchDataRepository : ISearchRepository
         _sharedRepositoryService = sharedRepositoryService;
     }
 
-    public IList<Posts> Search(int userid, string searchstring, int? searchtypecode,
+    public IList<Posts> Search(int userid, string searchString, int? searchTypeCode,
         PagingAttributes pagingAttributes)
     {
         using var db = _dbContextFactory.CreateDbContext();
 
         // count all matches
-        var matchCount = MatchCount(db, userid, searchtypecode, BuildSearchString(searchstring, false));
+        var matchCount = MatchCount(db, searchTypeCode, BuildSearchString(searchString, false));
 
         var page = ISharedRepository.GetPagination(matchCount, pagingAttributes);
 
         Console.WriteLine($"{page} page trying to get.");
 
         // get subset of results according to pagesize etc
-        var resultList = SearchResults(db, userid, searchtypecode, BuildSearchString(searchstring, false), page, pagingAttributes); 
+        var resultList = SearchResults(db, userid, searchTypeCode, BuildSearchString(searchString, false), page, pagingAttributes); 
 
         // build and map results to posts
         var resultPosts = new List<Posts>();
@@ -66,42 +66,23 @@ public class SearchDataRepository : ISearchRepository
     }
 
 
-    public IList<WordRank> WordRank(int userid, string searchString, int searchtypecode, int? maxresults)
+    public IList<WordRank> WordRank(int userid, string searchString, int searchTypeCode, int? maxResults)
     {
         using var db = _dbContextFactory.CreateDbContext();
         var searchTypeLookupTable = new SearchTypeLookupTable();
         
-        var search = new NpgsqlParameter("search", NpgsqlTypes.NpgsqlDbType.Text)
-        {
-            Value = BuildSearchString(searchString, false)
-        };
-        
         var searchType = new NpgsqlParameter("searchtype", NpgsqlTypes.NpgsqlDbType.Text);
-        if (searchtypecode >= 4 && searchtypecode <= 5)
+        if (searchTypeCode >= 4 && searchTypeCode <= 5)
         {
-            searchType.Value = searchTypeLookupTable.searchType[searchtypecode];
+            searchType.Value = searchTypeLookupTable.searchType[searchTypeCode];
         }
         else searchType.Value = searchTypeLookupTable.searchType[5];
-        
-        var appUserId = new NpgsqlParameter("appuserid", NpgsqlTypes.NpgsqlDbType.Integer)
-        {
-            Value = userid
-        };
 
-        var limit = new NpgsqlParameter("limit", NpgsqlTypes.NpgsqlDbType.Integer)
-        {
-            Value = 1000
-        };
-        if (maxresults != null)
-        {
-            limit.Value = maxresults;
-        }
-
-        var resultLimit = maxresults ?? 1000;
+        var resultLimit = maxResults ?? 1000;
         
-        InsertSearchToLogTable(db, userid, searchTypeLookupTable.searchType[searchtypecode], searchString);
+        InsertSearchToLogTable(db, userid, searchTypeLookupTable.searchType[searchTypeCode], searchString);
         string[] words = Regex.Split(searchString, @"\s+");
-        switch (searchTypeLookupTable.searchType[searchtypecode])
+        switch (searchTypeLookupTable.searchType[searchTypeCode])
         {
             case "wordstfidf":
                 return WordRankTfidf(db, words, resultLimit);
@@ -110,20 +91,16 @@ public class SearchDataRepository : ISearchRepository
             default:
                 throw new ArgumentException("Invalid search type");
         }
-        
-       /* return db.WordRank
-            .FromSqlRaw("SELECT * from wordrank(@searchtype, @search) limit @limit", searchType, search, limit)
-            .ToList();*/
     }
 
-    public string BuildSearchString(string searchstring, bool reverse)
+    public string BuildSearchString(string searchString, bool reverse)
     {
-        string[] separators = { ",", ".", "...", " " };
+        string[] separators = [",", ".", "...", " "];
 
-        var words = searchstring.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+        var words = searchString.Split(separators, StringSplitOptions.RemoveEmptyEntries);
         Console.WriteLine($"{words.Length} tokens in search");
 
-        // added to filter non-aplhanumeric chars
+        // added to filter non-alphanumeric chars
         // better to have it at backend if some1 sends weird request :)
         var filteredTokens = new List<string>();
         foreach (var s in words)
@@ -142,19 +119,18 @@ public class SearchDataRepository : ISearchRepository
         return finalString;
     }
 
-    public int SearchTypeLookup(string searchmethod)
+    public int SearchTypeLookup(string searchType)
     {
-        // get stype from string methodname
+        // get search type from string method name
         var st = new SearchTypeLookupTable();
-        var stype = Array.FindIndex(st.searchType, s => s.Equals(searchmethod));
-        return stype;
+        return Array.FindIndex(st.searchType, s => s.Equals(searchType));
     }
 
-    private static int MatchCount(DatabaseContext db, int userid, int? searchtypecode, string searchString)
+    private static int MatchCount(DatabaseContext db, int? searchTypeCode, string searchString)
     {
         string[] tokens = Regex.Split(searchString, @"\s+");
         
-        switch (searchtypecode)
+        switch (searchTypeCode)
         {
             case 0:
                 return SearchAlgorithms.Tfidf.Count(db, tokens);

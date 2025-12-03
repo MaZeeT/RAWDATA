@@ -9,10 +9,10 @@ public interface ISharedRepository
     SinglePost GetPost(int postId);
     IList<Posts> GetThread(int questionId);
 
-    static int GetPagination(int matchcount, PagingAttributes pagingAttributes)
+    static int GetPagination(int matchCount, PagingAttributes pagingAttributes)
     {
         //calc max pages and set requested page to last page if out of bounds
-        var maxPages = (int)Math.Ceiling((double)matchcount / pagingAttributes.PageSize);
+        var maxPages = (int)Math.Ceiling((double)matchCount / pagingAttributes.PageSize);
         const int minPages = 1;
 
         Console.WriteLine($"{maxPages} calculated pages.");
