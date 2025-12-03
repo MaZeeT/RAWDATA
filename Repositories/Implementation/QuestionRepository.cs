@@ -18,7 +18,7 @@ public class QuestionRepository : IQuestionRepository
     public Questions GetQuestion(int questionId)
     {
         using var db = _dbContextFactory.CreateDbContext();
-        return db.Questions.Find(questionId);
+        return db.Questions.Find(questionId) ?? throw new KeyNotFoundException($"Question with id {questionId} not found");
     }
     
     public IList<Questions> GetQuestions(PagingAttributes pagingAttributes)

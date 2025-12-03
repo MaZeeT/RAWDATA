@@ -11,7 +11,6 @@ public interface ISharedRepository
 
     static int GetPagination(int matchCount, PagingAttributes pagingAttributes)
     {
-        //calc max pages and set requested page to last page if out of bounds
         var maxPages = (int)Math.Ceiling((double)matchCount / pagingAttributes.PageSize);
         const int minPages = 1;
 

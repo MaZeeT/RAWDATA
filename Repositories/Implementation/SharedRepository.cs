@@ -1,7 +1,6 @@
 ﻿using Domain.Models;
 using Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
-using Npgsql;
 using Repositories.Interfaces;
 
 namespace Repositories.Implementation;
@@ -35,14 +34,10 @@ public class SharedRepository : ISharedRepository
     private Answers GetAnswer(int answerId)
     {
         using var db = _dbContextFactory.CreateDbContext();
-        return db.Answers.Find(answerId);
+        return db.Answers.Find(answerId) ?? throw new KeyNotFoundException($"Answer with id {answerId} not found");
     }
 
     public SinglePost GetPost(int postId)
-        //try to get a particular post, q or a
-        //returns null if post not found
-        //use SinglePost.Id for annotations
-        //use SinglePost.QuestionId to get the thread the post belongs to
     {
         var returnPost = new SinglePost();
 
@@ -70,7 +65,7 @@ public class SharedRepository : ISharedRepository
                 return returnPost;
             }
             default:
-                return null; //else its unknown!
+                throw new ArgumentOutOfRangeException($"type {type} is unknown");
         }
     }
 

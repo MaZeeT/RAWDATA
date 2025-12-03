@@ -72,7 +72,7 @@ public class SearchDataRepository : ISearchRepository
         var searchTypeLookupTable = new SearchTypeLookupTable();
         
         var searchType = new NpgsqlParameter("searchtype", NpgsqlTypes.NpgsqlDbType.Text);
-        if (searchTypeCode >= 4 && searchTypeCode <= 5)
+        if (searchTypeCode is >= 4 and <= 5)
         {
             searchType.Value = searchTypeLookupTable.searchType[searchTypeCode];
         }

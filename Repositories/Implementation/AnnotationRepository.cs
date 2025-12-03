@@ -2,8 +2,6 @@
 using Domain.AnnotationsDTOs;
 using Domain.Services;
 using Microsoft.EntityFrameworkCore;
-using System.Data.Common;
-using Npgsql;
 using Repositories.Interfaces;
 
 namespace Repositories.Implementation;
@@ -16,42 +14,22 @@ public class AnnotationRepository : IAnnotationRepository
     {
         _dbContextFactory = factory;
     }
-
-    /// <summary>
-    /// Returns annotation found only by annotationId
-    /// </summary>
-    /// <param name="annotationId"></param>
-    /// <returns>Annotations Type Object</returns>
+    
     public Annotations GetAnnotation(int annotationId)
     {
         using var db = _dbContextFactory.CreateDbContext();
-        var result = db.Annotations.Find(annotationId);
-
-        return result;
+        return db.Annotations.Find(annotationId) ?? throw new KeyNotFoundException("Annotation not found");
     }
-
-    /// <summary>
-    /// Returns annotation found by annotationId and userId
-    /// </summary>
-    /// <param name="annotationId"></param>
-    /// <param name="userId"></param>
-    /// <returns>Annotations Type Object</returns>
+    
     private Annotations GetAnnotationByUserId(int annotationId, int userId)
     {
         using var db = _dbContextFactory.CreateDbContext();
         var result = db.Annotations
             .Where(a => a.UserId == userId)
             .FirstOrDefault(a => a.Id == annotationId);
-        return result;
+        return result ?? throw new KeyNotFoundException("Annotation not found");
     }
 
-    /// <summary>
-    /// Gets all the annotations of a userId and a postId
-    /// </summary>
-    /// <param name="userId"></param>
-    /// <param name="postId"></param>
-    /// <param name="pagingAttributes"></param>
-    /// <returns>List Type SimpleAnnotationsDto</returns>
     public List<SimpleAnnotationDto> GetUserAnnotationsMadeOnAPost(int userId, int postId,
         PagingAttributes pagingAttributes)
     {
@@ -82,15 +60,7 @@ public class AnnotationRepository : IAnnotationRepository
             select tot.Count();
         return annotationsCount.FirstOrDefault();
     }
-
-
-    /// <summary>
-    /// Returns a list of annotations and their postId recorded in history table
-    /// </summary>
-    /// <param name="userId"></param>
-    /// <param name="pagingAttributes"></param>
-    /// <param name="count"></param>
-    /// <returns></returns>
+    
     public List<PostAnnotationsDto> GetAllAnnotationsOfUser(int userId, PagingAttributes pagingAttributes,
         out int count)
     {
@@ -123,13 +93,7 @@ public class AnnotationRepository : IAnnotationRepository
         
         return listCount;
     }
-
-    /// <summary>
-    /// Deletes selected annotation of annotationId of a userId 
-    /// </summary>
-    /// <param name="id"></param>
-    /// <param name="userId"></param>
-    /// <returns>boolean</returns>
+    
     public bool DeleteAnnotation(int id, int userId)
     {
         using var db = _dbContextFactory.CreateDbContext();

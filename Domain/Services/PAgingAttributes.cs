@@ -5,7 +5,7 @@
         private const int MaxPageSize = 100;
         private const int DefPageSize = 10;
         private int _pageSize = DefPageSize;
-        private const int FirstPage = 1; // first page is page one, not page zero
+        private const int FirstPage = 1;
         private int _page = FirstPage;
         public int Page
         {
