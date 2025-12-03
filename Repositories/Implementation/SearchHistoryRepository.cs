@@ -8,9 +8,9 @@ namespace Repositories.Implementation;
 
 public class SearchHistoryRepository : ISearchHistoryRepository
 {
-    private readonly IDbContextFactory<DatabaseContext2> _dbContextFactory;
+    private readonly IDbContextFactory<DatabaseContext> _dbContextFactory;
 
-    public SearchHistoryRepository(IDbContextFactory<DatabaseContext2> factory)
+    public SearchHistoryRepository(IDbContextFactory<DatabaseContext> factory)
     {
         _dbContextFactory = factory;
     }

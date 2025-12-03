@@ -10,9 +10,9 @@ namespace Repositories.Implementation;
 
 public class AppUserRepository : IUserRepository
 {
-    readonly DatabaseContext2 _database;
+    readonly DatabaseContext _database;
 
-    public AppUserRepository(IDbContextFactory<DatabaseContext2> factory)
+    public AppUserRepository(IDbContextFactory<DatabaseContext> factory)
     {
         _database = factory.CreateDbContext();
     }

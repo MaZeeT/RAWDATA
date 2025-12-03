@@ -8,9 +8,9 @@ namespace Repositories.Implementation;
 
 public class QuestionRepository : IQuestionRepository
 {
-    private readonly IDbContextFactory<DatabaseContext2> _dbContextFactory;
+    private readonly IDbContextFactory<DatabaseContext> _dbContextFactory;
 
-    public QuestionRepository(IDbContextFactory<DatabaseContext2> dbContextFactory)
+    public QuestionRepository(IDbContextFactory<DatabaseContext> dbContextFactory)
     {
         _dbContextFactory = dbContextFactory;
     }

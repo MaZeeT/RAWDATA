@@ -8,17 +8,17 @@ public static class SearchAlgorithms
 {
     public static class Tfidf
     {
-        internal static List<Search> List(DatabaseContext2 db, string[] searchWords)
+        internal static List<Search> List(DatabaseContext db, string[] searchWords)
         {
             return Query(db, searchWords).ToList();
         }
 
-        internal static int Count(DatabaseContext2 db, string[] searchWords)
+        internal static int Count(DatabaseContext db, string[] searchWords)
         {
             return Query(db, searchWords).Count();
         }
 
-        private static IEnumerable<Search> Query(DatabaseContext2 db, string[] searchWords)
+        private static IEnumerable<Search> Query(DatabaseContext db, string[] searchWords)
         {
             // Base query from wi_weighted table
             var query = db.WiWeighted
@@ -50,17 +50,17 @@ public static class SearchAlgorithms
 
     public static class ExactMatch
     {
-        internal static List<Search> List(DatabaseContext2 db, string[] searchWords)
+        internal static List<Search> List(DatabaseContext db, string[] searchWords)
         {
             return Query(db, searchWords).ToList();
         }
 
-        internal static int Count(DatabaseContext2 db, string[] searchWords)
+        internal static int Count(DatabaseContext db, string[] searchWords)
         {
             return Query(db, searchWords).Count();
         }
 
-        private static IQueryable<Search> Query(DatabaseContext2 db, string[] searchWords)
+        private static IQueryable<Search> Query(DatabaseContext db, string[] searchWords)
         {
             if (searchWords.Length == 0)
                 return Enumerable.Empty<Search>().AsQueryable();
@@ -134,17 +134,17 @@ public static class SearchAlgorithms
 
     public static class SimpleSearch
     {
-        internal static List<Search> List(DatabaseContext2 db, string[] searchWords)
+        internal static List<Search> List(DatabaseContext db, string[] searchWords)
         {
             return Query(db, searchWords).ToList();
         }
 
-        internal static int Count(DatabaseContext2 db, string[] searchWords)
+        internal static int Count(DatabaseContext db, string[] searchWords)
         {
             return Query(db, searchWords).Count();
         }
 
-        private static IQueryable<Search> Query(DatabaseContext2 db, string[] searchWords)
+        private static IQueryable<Search> Query(DatabaseContext db, string[] searchWords)
         {
             if (searchWords.Length == 0)
                 return new List<Search>().AsQueryable();
@@ -180,17 +180,17 @@ public static class SearchAlgorithms
 
     public static class BestMatch
     {
-        internal static List<Search> List(DatabaseContext2 db, string[] searchWords)
+        internal static List<Search> List(DatabaseContext db, string[] searchWords)
         {
             return Query(db, searchWords).ToList();
         }
 
-        internal static int Count(DatabaseContext2 db, string[] searchWords)
+        internal static int Count(DatabaseContext db, string[] searchWords)
         {
             return Query(db, searchWords).Count();
         }
 
-        private static IQueryable<Search> Query(DatabaseContext2 db, string[] searchWords)
+        private static IQueryable<Search> Query(DatabaseContext db, string[] searchWords)
         {
             if (searchWords.Length == 0)
                 return Enumerable.Empty<Search>().AsQueryable();

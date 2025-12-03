@@ -8,10 +8,10 @@ namespace Repositories.Implementation;
 
 public class SharedRepository : ISharedRepository
 {
-    private readonly IDbContextFactory<DatabaseContext2> _dbContextFactory;
+    private readonly IDbContextFactory<DatabaseContext> _dbContextFactory;
     private readonly IQuestionRepository _questionRepository;
 
-    public SharedRepository(IDbContextFactory<DatabaseContext2> factory, IQuestionRepository questionRepository)
+    public SharedRepository(IDbContextFactory<DatabaseContext> factory, IQuestionRepository questionRepository)
     {
         _dbContextFactory = factory;
         _questionRepository = questionRepository;

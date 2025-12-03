@@ -11,11 +11,11 @@ namespace Repositories.Implementation;
 
 public class SearchDataRepository : ISearchRepository
 {
-    private readonly IDbContextFactory<DatabaseContext2> _dbContextFactory;
+    private readonly IDbContextFactory<DatabaseContext> _dbContextFactory;
     private readonly IQuestionRepository _questionRepository;
     private readonly ISharedRepository _sharedRepositoryService; //shared stuff by injection
 
-    public SearchDataRepository(IDbContextFactory<DatabaseContext2> factory, IQuestionRepository questionRepository,
+    public SearchDataRepository(IDbContextFactory<DatabaseContext> factory, IQuestionRepository questionRepository,
         ISharedRepository sharedRepositoryService)
     {
         _dbContextFactory = factory;
@@ -150,7 +150,7 @@ public class SearchDataRepository : ISearchRepository
         return stype;
     }
 
-    private static int MatchCount(DatabaseContext2 db, int userid, int? searchtypecode, string searchString)
+    private static int MatchCount(DatabaseContext db, int userid, int? searchtypecode, string searchString)
     {
         string[] tokens = Regex.Split(searchString, @"\s+");
         
@@ -171,7 +171,7 @@ public class SearchDataRepository : ISearchRepository
         }
     }
 
-    private static List<Search> SearchResults(DatabaseContext2 db, int userid, int? searchtypecode, string searchString, int page, PagingAttributes pagingAttributes)
+    private static List<Search> SearchResults(DatabaseContext db, int userid, int? searchtypecode, string searchString, int page, PagingAttributes pagingAttributes)
     {
         
         var searchTypeLookupTable = new SearchTypeLookupTable();
@@ -204,7 +204,7 @@ public class SearchDataRepository : ISearchRepository
         return resultList;
     }
 
-    private static void InsertSearchToLogTable(DatabaseContext2 db, int userid, string searchtype, string searchString)
+    private static void InsertSearchToLogTable(DatabaseContext db, int userid, string searchtype, string searchString)
     {
         // Insert search to search log
         var searches = new Searches
@@ -219,7 +219,7 @@ public class SearchDataRepository : ISearchRepository
         db.SaveChanges();
     }
     
-    private IList<WordRank> WordRankTfidf(DatabaseContext2 db, string[] words, int limit)
+    private IList<WordRank> WordRankTfidf(DatabaseContext db, string[] words, int limit)
     {
         // Build the UNION ALL equivalent
         var weightedQuery = words
@@ -251,7 +251,7 @@ public class SearchDataRepository : ISearchRepository
         return result;
     }
     
-    private IList<WordRank> WordRankBest(DatabaseContext2 db, string[] words, int limit)
+    private IList<WordRank> WordRankBest(DatabaseContext db, string[] words, int limit)
     {
         // Build UNION ALL for wi
         var baseQuery = words

@@ -31,10 +31,10 @@ public static class ServiceConfigurator
         services.AddSingleton<ISearchHistoryRepository, SearchHistoryRepository>();
         services.AddSingleton<ISharedRepository, SharedRepository>();
 
-        services.AddPooledDbContextFactory<DatabaseContext2>(options =>
+        services.AddPooledDbContextFactory<DatabaseContext>(options =>
         {
             options
-                .UseLoggerFactory(DatabaseContext2.MyLoggerFactory)
+                .UseLoggerFactory(DatabaseContext.MyLoggerFactory)
                 .UseNpgsql(database);
         });
     }

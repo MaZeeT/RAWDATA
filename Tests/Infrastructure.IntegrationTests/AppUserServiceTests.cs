@@ -11,7 +11,7 @@ namespace Tests.Infrastructure.IntegrationTests
     public class AppUserRepositoryTests
     {
 
-        private readonly IDbContextFactory<DatabaseContext2> _dbContextFactory;
+        private readonly IDbContextFactory<DatabaseContext> _dbContextFactory;
         private readonly ServiceProvider _serviceProvider;
         private const int userId = 12;
         private const string userName = "in";
@@ -23,15 +23,15 @@ namespace Tests.Infrastructure.IntegrationTests
             string database = "host=localhost;port=5432;db=stackoverflow;uid=postgres;pwd=Password123";
             var services = new ServiceCollection();
             services.AddSingleton<IUserRepository, AppUserRepository>();
-            services.AddPooledDbContextFactory<DatabaseContext2>(options =>
+            services.AddPooledDbContextFactory<DatabaseContext>(options =>
             {
                 options
-                    .UseLoggerFactory(DatabaseContext2.MyLoggerFactory)
+                    .UseLoggerFactory(DatabaseContext.MyLoggerFactory)
                     .UseNpgsql(database);
             });
 
             _serviceProvider = services.BuildServiceProvider();
-            _dbContextFactory =  _serviceProvider.GetRequiredService<IDbContextFactory<DatabaseContext2>>();
+            _dbContextFactory =  _serviceProvider.GetRequiredService<IDbContextFactory<DatabaseContext>>();
         }
         
         [Fact]

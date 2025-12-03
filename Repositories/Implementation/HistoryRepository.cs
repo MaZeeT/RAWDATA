@@ -8,9 +8,9 @@ namespace Repositories.Implementation;
 
 public class HistoryRepository : IHistoryRepository
 {
-    private readonly DatabaseContext2 _database;
+    private readonly DatabaseContext _database;
 
-    public HistoryRepository(IDbContextFactory<DatabaseContext2> factory)
+    public HistoryRepository(IDbContextFactory<DatabaseContext> factory)
     {
         _database = factory.CreateDbContext();
     }

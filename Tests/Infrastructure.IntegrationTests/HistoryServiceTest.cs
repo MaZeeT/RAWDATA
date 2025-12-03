@@ -14,7 +14,7 @@ namespace Tests.Infrastructure.IntegrationTests
 {
     public class HistoryRepositoryTest
     {
-        private readonly IDbContextFactory<DatabaseContext2> _dbContextFactory;
+        private readonly IDbContextFactory<DatabaseContext> _dbContextFactory;
         private readonly ServiceProvider _serviceProvider;
         private const int testUserId = 40;
         private DateTime dateTime = new DateTime(2023,11,24,22,12,44);
@@ -24,15 +24,15 @@ namespace Tests.Infrastructure.IntegrationTests
             const string database = "host=localhost;port=5432;db=stackoverflow;uid=postgres;pwd=Password123";
             var services = new ServiceCollection();
             services.AddSingleton<IHistoryRepository, HistoryRepository>();
-            services.AddPooledDbContextFactory<DatabaseContext2>(options =>
+            services.AddPooledDbContextFactory<DatabaseContext>(options =>
             {
                 options
-                    .UseLoggerFactory(DatabaseContext2.MyLoggerFactory)
+                    .UseLoggerFactory(DatabaseContext.MyLoggerFactory)
                     .UseNpgsql(database);
             });
 
             _serviceProvider = services.BuildServiceProvider();
-            _dbContextFactory =  _serviceProvider.GetRequiredService<IDbContextFactory<DatabaseContext2>>();
+            _dbContextFactory =  _serviceProvider.GetRequiredService<IDbContextFactory<DatabaseContext>>();
         }
 
         [Fact (Skip = "checking for valid user is moved to service layer")] //Todo move test to service layer
