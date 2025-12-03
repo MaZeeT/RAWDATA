@@ -30,7 +30,7 @@ public class AnnotationServiceTests
             UserId = UserId,
             PostId = 19,
             Body = "AddAnnotation_Successfully test",
-            Date = new DateTime(2025, 11, 11, 11,11,11,11,DateTimeKind.Utc),
+            Date = new DateTime(2025, 11, 11, 11,11,11,11,DateTimeKind.Utc)
         };
         
         _sut.CreateAnnotation(annotation,  out var result);

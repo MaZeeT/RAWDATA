@@ -1,10 +1,7 @@
 using System;
-using System.Runtime.InteropServices.JavaScript;
 using Domain.Models;
-using Humanizer;
 using Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using Repositories.Implementation;
 using Repositories.Interfaces;
@@ -16,8 +13,8 @@ namespace Tests.Infrastructure.IntegrationTests
     {
         private readonly IDbContextFactory<DatabaseContext> _dbContextFactory;
         private readonly ServiceProvider _serviceProvider;
-        private const int testUserId = 40;
-        private DateTime dateTime = new DateTime(2023,11,24,22,12,44);
+        private const int TestUserId = 40;
+        private readonly DateTime _dateTime = new DateTime(2023,11,24,22,12,44);
         
         public HistoryRepositoryTest()
         {
@@ -41,7 +38,7 @@ namespace Tests.Infrastructure.IntegrationTests
             var service = _serviceProvider.GetRequiredService<IHistoryRepository>();
             var history = new History
             {
-                UserId = testUserId,
+                UserId = TestUserId,
                 PostId = 110,
                 IsBookmark = false
             };
@@ -55,7 +52,7 @@ namespace Tests.Infrastructure.IntegrationTests
             var service = _serviceProvider.GetRequiredService<IHistoryRepository>();
             var history = new History
             {
-                UserId = testUserId,
+                UserId = TestUserId,
                 PostId = 1760,
                 IsBookmark = false
             };
@@ -65,7 +62,7 @@ namespace Tests.Infrastructure.IntegrationTests
             Assert.True(result);
 
             //clean up todo delete when mock is working
-            service.DeleteHistory(service.Get(testUserId, 1760).Id);
+            service.DeleteHistory(service.Get(TestUserId, 1760).Id);
         }
 
         [Fact]
@@ -74,7 +71,7 @@ namespace Tests.Infrastructure.IntegrationTests
             var service = _serviceProvider.GetRequiredService<IHistoryRepository>();
 
             const int invalidModifier = -1;
-            const int userid = testUserId;
+            const int userid = TestUserId;
             const int postId = 1760;
 
             var history = new History
@@ -82,7 +79,7 @@ namespace Tests.Infrastructure.IntegrationTests
                 UserId = userid,
                 PostId = postId,
                 PostTableName = "questions",
-                Date = dateTime,
+                Date = _dateTime,
                 IsBookmark = true
             };
 
@@ -101,7 +98,7 @@ namespace Tests.Infrastructure.IntegrationTests
             var service = _serviceProvider.GetRequiredService<IHistoryRepository>();
 
             const int invalidModifier = -1;
-            const int userid = testUserId;
+            const int userid = TestUserId;
             const int postId = 709;
             
             var history = new History
@@ -109,7 +106,7 @@ namespace Tests.Infrastructure.IntegrationTests
                 UserId = userid,
                 PostId = postId,
                 PostTableName = "questions",
-                Date = dateTime,
+                Date = _dateTime,
                 IsBookmark = true
             };
 
@@ -128,7 +125,7 @@ namespace Tests.Infrastructure.IntegrationTests
             var service = _serviceProvider.GetRequiredService<IHistoryRepository>();
 
             const int invalidModifier = -1;
-            const int userid = testUserId;
+            const int userid = TestUserId;
             const int postId = 1711;
 
             var history = new History
@@ -136,7 +133,7 @@ namespace Tests.Infrastructure.IntegrationTests
                 UserId = userid,
                 PostId = postId,
                 PostTableName = "questions",
-                Date = dateTime,
+                Date = _dateTime,
                 IsBookmark = true
             };
 
@@ -154,7 +151,7 @@ namespace Tests.Infrastructure.IntegrationTests
         {
             var service = _serviceProvider.GetRequiredService<IHistoryRepository>();
 
-            const int userid = testUserId;
+            const int userid = TestUserId;
             const int postId = 1760;
 
             var history = new History
@@ -162,7 +159,7 @@ namespace Tests.Infrastructure.IntegrationTests
                 UserId = userid,
                 PostId = postId,
                 PostTableName = "questions",
-                Date = dateTime,
+                Date = _dateTime,
                 IsBookmark = true
             };
 
@@ -197,7 +194,7 @@ namespace Tests.Infrastructure.IntegrationTests
         public void HistoryDeleteUserHistory()
         {
             var service = _serviceProvider.GetRequiredService<IHistoryRepository>();
-            const int userid = testUserId;
+            const int userid = TestUserId;
 
             const int postId1 = 19;
             const int postId2 = 709;
@@ -209,7 +206,7 @@ namespace Tests.Infrastructure.IntegrationTests
                 UserId = userid,
                 PostId = postId1,
                 PostTableName = "questions",
-                Date = dateTime,
+                Date = _dateTime,
                 IsBookmark = false
             };
             
@@ -218,7 +215,7 @@ namespace Tests.Infrastructure.IntegrationTests
                 UserId = userid,
                 PostId = postId2,
                 PostTableName = "questions",
-                Date = dateTime,
+                Date = _dateTime,
                 IsBookmark = false
             };
             
@@ -227,7 +224,7 @@ namespace Tests.Infrastructure.IntegrationTests
                 UserId = userid,
                 PostId = postId3,
                 PostTableName = "questions",
-                Date = dateTime,
+                Date = _dateTime,
                 IsBookmark = true
             };
             
@@ -236,7 +233,7 @@ namespace Tests.Infrastructure.IntegrationTests
                 UserId = userid,
                 PostId = postId4,
                 PostTableName = "questions",
-                Date = dateTime,
+                Date = _dateTime,
                 IsBookmark = false
             };
 
@@ -277,7 +274,7 @@ namespace Tests.Infrastructure.IntegrationTests
         public void HistoryDeleteValid()
         {
             var service = _serviceProvider.GetRequiredService<IHistoryRepository>();
-            const int userId = testUserId;
+            const int userId = TestUserId;
             const int postId = 709;
             const bool isBookmark = true;
             var historyToAdd = new History {UserId = userId, PostId = postId, IsBookmark = isBookmark};
@@ -337,7 +334,7 @@ namespace Tests.Infrastructure.IntegrationTests
         public void GetHistoryList()
         {
             var service = _serviceProvider.GetRequiredService<IHistoryRepository>();
-            const int userId = testUserId;
+            const int userId = TestUserId;
 
             const int postId1 = 19;
             const int postId2 = 709;
@@ -348,7 +345,7 @@ namespace Tests.Infrastructure.IntegrationTests
                 UserId = userId,
                 PostId = postId1,
                 PostTableName = "questions",
-                Date = dateTime,
+                Date = _dateTime,
                 IsBookmark = false
             };
             
@@ -357,7 +354,7 @@ namespace Tests.Infrastructure.IntegrationTests
                 UserId = userId,
                 PostId = postId2,
                 PostTableName = "questions",
-                Date = dateTime,
+                Date = _dateTime,
                 IsBookmark = true
             };
             
@@ -366,7 +363,7 @@ namespace Tests.Infrastructure.IntegrationTests
                 UserId = userId,
                 PostId = postId3,
                 PostTableName = "questions",
-                Date = dateTime,
+                Date = _dateTime,
                 IsBookmark = false
             };
             
@@ -396,7 +393,7 @@ namespace Tests.Infrastructure.IntegrationTests
         public void GetBookmarks()
         {
             var service = _serviceProvider.GetRequiredService<IHistoryRepository>();
-            const int userId = testUserId;
+            const int userId = TestUserId;
 
             const int postId1 = 19;
             const int postId2 = 709;
@@ -408,7 +405,7 @@ namespace Tests.Infrastructure.IntegrationTests
                 UserId = userId,
                 PostId = postId1,
                 PostTableName = "questions",
-                Date = dateTime,
+                Date = _dateTime,
                 IsBookmark = false
             };
             
@@ -417,7 +414,7 @@ namespace Tests.Infrastructure.IntegrationTests
                 UserId = userId,
                 PostId = postId2,
                 PostTableName = "questions",
-                Date = dateTime,
+                Date = _dateTime,
                 IsBookmark = true
             };
             
@@ -426,7 +423,7 @@ namespace Tests.Infrastructure.IntegrationTests
                 UserId = userId,
                 PostId = postId3,
                 PostTableName = "questions",
-                Date = dateTime,
+                Date = _dateTime,
                 IsBookmark = true
             };
             
@@ -435,7 +432,7 @@ namespace Tests.Infrastructure.IntegrationTests
                 UserId = userId,
                 PostId = postId4,
                 PostTableName = "questions",
-                Date = dateTime,
+                Date = _dateTime,
                 IsBookmark = false
             };
 
@@ -468,7 +465,7 @@ namespace Tests.Infrastructure.IntegrationTests
         {
             var service = _serviceProvider.GetRequiredService<IHistoryRepository>();
 
-            const int userId = testUserId;
+            const int userId = TestUserId;
             const int postId = 709;
             const bool isBookmark = true;
             var history = new History {UserId = userId, PostId = postId, IsBookmark = isBookmark};
