@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Domain.Enums;
 using Domain.Models;
 using Domain.Services;
 using DomainServices.Interfaces;
@@ -43,17 +44,17 @@ public class SearchController : SharedController
         switch (searchQuery.SearchType)
         {
             //checking of params
-            case >= 0 and <= 3:
+            case SearchType.Tfidf or SearchType.ExactMatch or SearchType.Simple or SearchType.BestMatch:
                 //wrong search type, redirect
                 return RedirectToAction("Search", new { s = searchQuery.SearchTerms, stype = searchQuery.SearchType });
-            case >= 4 and <= 5:
+            case SearchType.WordsTfidf or SearchType.WordsBest:
             {
                 var search = _searchService.WordRank(userId, searchQuery.SearchTerms, searchQuery.SearchType, maxResults);
                 return Ok(search);
             }
             default:
             {
-                var search = _searchService.WordRank(userId, searchQuery.SearchTerms, 5, maxResults);
+                var search = _searchService.WordRank(userId, searchQuery.SearchTerms, SearchType.WordsBest, maxResults);
                 return Ok(search);
             }
         }
@@ -80,7 +81,7 @@ public class SearchController : SharedController
         switch (searchparams.SearchType)
         {
             //checking of params
-            case >= 0 and <= 3:
+            case SearchType.Tfidf or SearchType.ExactMatch or SearchType.Simple or SearchType.BestMatch:
             {
                 //do search, fix page also if needed as a bonus
                 var search = _searchService.Search(userId, searchparams.SearchTerms, searchparams.SearchType, pagingAttributes);
@@ -97,7 +98,7 @@ public class SearchController : SharedController
                 
                 return Ok(result);
             }
-            case >= 4 and <= 5:
+            case SearchType.WordsTfidf or SearchType.WordsBest:
                 //wrong search type, redirect
                 return RedirectToAction("WordRank", new { s = searchparams.SearchTerms, stype = searchparams.SearchType });
             default:
@@ -178,8 +179,8 @@ public class SearchController : SharedController
         };
     }
 
-    private string CreatePagingLink(string s, int stype, int page, int pageSize)
+    private string CreatePagingLink(string s, SearchType searchType, int page, int pageSize)
     {
-        return Url.Link(nameof(Search), new { s, stype, page, pageSize });
+        return Url.Link(nameof(Search), new { s, searchType, page, pageSize });
     }
 }

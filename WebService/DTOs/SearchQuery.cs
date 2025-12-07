@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.ComponentModel.DataAnnotations;
+using Domain.Enums;
+using Microsoft.AspNetCore.Mvc;
 
 namespace WebService.DTOs;
 
@@ -8,5 +10,6 @@ public class SearchQuery
     public string SearchTerms { get; set; } // comma-delimited
     
     [FromQuery(Name = "stype")] //Todo remove this mapping from SearchType to stype when frontend is being worked on
-    public int SearchType { get; set; } = 3; // this sets stype to 3 if there is no stype param
+    [EnumDataType(typeof(SearchType))]
+    public SearchType SearchType { get; set; } = SearchType.BestMatch; // this sets stype to 3 if there is no stype param
 }

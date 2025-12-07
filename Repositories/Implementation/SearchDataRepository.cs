@@ -23,20 +23,20 @@ public class SearchDataRepository : ISearchRepository
         _sharedRepositoryService = sharedRepositoryService;
     }
 
-    public IList<Posts> Search(int userid, string searchString, int? searchTypeCode,
+    public IList<Posts> Search(int userid, string searchString, SearchType searchType,
         PagingAttributes pagingAttributes)
     {
         using var db = _dbContextFactory.CreateDbContext();
 
         // count all matches
-        var matchCount = MatchCount(db, searchTypeCode, BuildSearchString(searchString, false));
+        var matchCount = MatchCount(db, searchType, BuildSearchString(searchString, false));
 
         var page = ISharedRepository.GetPagination(matchCount, pagingAttributes);
 
         Console.WriteLine($"{page} page trying to get.");
 
         // get subset of results according to pagesize etc
-        var resultList = SearchResults(db, userid, searchTypeCode, BuildSearchString(searchString, false), page, pagingAttributes); 
+        var resultList = SearchResults(db, userid, searchType, BuildSearchString(searchString, false), page, pagingAttributes); 
 
         // build and map results to posts
         var resultPosts = new List<Posts>();
@@ -66,27 +66,19 @@ public class SearchDataRepository : ISearchRepository
     }
 
 
-    public IList<WordRank> WordRank(int userid, string searchString, int searchTypeCode, int? maxResults)
+    public IList<WordRank> WordRank(int userid, string searchString, SearchType searchTyper, int? maxResults)
     {
         using var db = _dbContextFactory.CreateDbContext();
-        var searchTypeLookupTable = new SearchTypeLookupTable();
         
-        var searchType = new NpgsqlParameter("searchtype", NpgsqlTypes.NpgsqlDbType.Text);
-        if (searchTypeCode is >= 4 and <= 5)
-        {
-            searchType.Value = searchTypeLookupTable.searchType[searchTypeCode];
-        }
-        else searchType.Value = searchTypeLookupTable.searchType[5];
-
         var resultLimit = maxResults ?? 1000;
         
-        InsertSearchToLogTable(db, userid, searchTypeLookupTable.searchType[searchTypeCode], searchString);
+        InsertSearchToLogTable(db, userid, searchTyper, searchString);
         string[] words = Regex.Split(searchString, @"\s+");
-        switch (searchTypeLookupTable.searchType[searchTypeCode])
+        switch (searchTyper)
         {
-            case "wordstfidf":
+            case SearchType.WordsTfidf:
                 return WordRankTfidf(db, words, resultLimit);
-            case "wordsbest":
+            case SearchType.WordsBest:
                 return WordRankBest(db, words, resultLimit);
             default:
                 throw new ArgumentException("Invalid search type");
@@ -119,60 +111,50 @@ public class SearchDataRepository : ISearchRepository
         return finalString;
     }
 
-    public int SearchTypeLookup(string searchType)
-    {
-        // get search type from string method name
-        var st = new SearchTypeLookupTable();
-        return Array.FindIndex(st.searchType, s => s.Equals(searchType));
-    }
-
-    private static int MatchCount(DatabaseContext db, int? searchTypeCode, string searchString)
+    private static int MatchCount(DatabaseContext db, SearchType searchType, string searchString)
     {
         string[] tokens = Regex.Split(searchString, @"\s+");
         
-        switch (searchTypeCode)
+        switch (searchType)
         {
-            case 0:
+            case SearchType.Tfidf:
                 return SearchAlgorithms.Tfidf.Count(db, tokens);
 
-            case 1:
+            case SearchType.ExactMatch:
                 return SearchAlgorithms.ExactMatch.Count(db, tokens);
 
-            case 2:
+            case SearchType.Simple:
                 return SearchAlgorithms.SimpleSearch.Count(db, tokens);
 
-            case 3:
+            case SearchType.BestMatch:
             default:
                 return SearchAlgorithms.BestMatch.Count(db, tokens);
         }
     }
 
-    private static List<Search> SearchResults(DatabaseContext db, int userid, int? searchtypecode, string searchString, int page, PagingAttributes pagingAttributes)
+    private static List<Search> SearchResults(DatabaseContext db, int userid, SearchType searchType, string searchString, int page, PagingAttributes pagingAttributes)
     {
-        
-        var searchTypeLookupTable = new SearchTypeLookupTable();
-
         List<Search> resultList;
         
         string[] tokens = Regex.Split(searchString, @"\s+");
         
-        switch (searchtypecode)
+        switch (searchType)
         {
-            case 0:
-                InsertSearchToLogTable(db, userid, searchTypeLookupTable.searchType[0], searchString);
+            case SearchType.Tfidf:
+                InsertSearchToLogTable(db, userid, SearchType.Tfidf, searchString);
                 resultList = SearchAlgorithms.Tfidf.List(db, tokens);
                 break;
-            case 1:
-                InsertSearchToLogTable(db, userid, searchTypeLookupTable.searchType[1], searchString);
+            case SearchType.ExactMatch:
+                InsertSearchToLogTable(db, userid, SearchType.ExactMatch, searchString);
                 resultList = SearchAlgorithms.ExactMatch.List(db, tokens);
                 break;
-            case 2:
-                InsertSearchToLogTable(db, userid, searchTypeLookupTable.searchType[2], searchString);
+            case SearchType.Simple:
+                InsertSearchToLogTable(db, userid, SearchType.Simple, searchString);
                 resultList = SearchAlgorithms.SimpleSearch.List(db, tokens);
                 break;
-            case 3:
+            case SearchType.BestMatch:
             default:
-                InsertSearchToLogTable(db, userid, searchTypeLookupTable.searchType[3], searchString);
+                InsertSearchToLogTable(db, userid, SearchType.BestMatch, searchString);
                 resultList = SearchAlgorithms.BestMatch.List(db, tokens);
                 break;
         }
@@ -180,7 +162,7 @@ public class SearchDataRepository : ISearchRepository
         return resultList;
     }
 
-    private static void InsertSearchToLogTable(DatabaseContext db, int userid, string searchtype, string searchString)
+    private static void InsertSearchToLogTable(DatabaseContext db, int userid, SearchType searchtype, string searchString)
     {
         // Insert search to search log
         var searches = new Searches

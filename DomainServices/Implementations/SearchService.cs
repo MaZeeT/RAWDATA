@@ -1,4 +1,5 @@
-﻿using Domain.Models;
+﻿using Domain.Enums;
+using Domain.Models;
 using Domain.Services;
 using DomainServices.Interfaces;
 using Repositories.Interfaces;
@@ -18,7 +19,7 @@ public class SearchService : ISearchService
         _userRepository = userRepository;
     }
 
-    public IList<WordRank> WordRank(int userid, string searchString, int searchTypeCode, int? maxResults)
+    public IList<WordRank> WordRank(int userid, string searchString, SearchType searchType, int? maxResults)
     {
         var userExist = _userRepository.AppUserExist(userid);
         if (!userExist)
@@ -26,10 +27,10 @@ public class SearchService : ISearchService
             return new List<WordRank>();
         }
         
-        return _searchRepository.WordRank(userid, searchString, searchTypeCode, maxResults);
+        return _searchRepository.WordRank(userid, searchString, searchType, maxResults);
     }
 
-    public IList<Posts> Search(int userid, string searchString, int? searchTypeCode, PagingAttributes pagingAttributes)
+    public IList<Posts> Search(int userid, string searchString, SearchType searchType, PagingAttributes pagingAttributes)
     {
         var userExist = _userRepository.AppUserExist(userid);
         if (!userExist)
@@ -38,17 +39,12 @@ public class SearchService : ISearchService
         }
         
         
-        return _searchRepository.Search(userid, searchString, searchTypeCode, pagingAttributes);
+        return _searchRepository.Search(userid, searchString, searchType, pagingAttributes);
     }
 
     public string BuildSearchString(string searchString, bool reverse)
     {
         return _searchRepository.BuildSearchString(searchString, reverse);
-    }
-
-    public int SearchTypeLookup(string searchType)
-    {
-        return _searchRepository.SearchTypeLookup(searchType);
     }
 
     public bool DeleteUserSearchHistory(int userId)

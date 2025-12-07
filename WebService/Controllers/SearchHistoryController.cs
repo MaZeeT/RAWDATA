@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using Domain.Enums;
 using Domain.Models;
 using Domain.Services;
 using DomainServices.Interfaces;
@@ -76,12 +77,10 @@ public class SearchHistoryController : SharedController
             searchString = _searchService.BuildSearchString(searches.SearchString, true);
         }
 
-        var searchType = _searchService.SearchTypeLookup(searches.SearchType);
-
         var url = Url.Link(
             nameof(SearchController.Search),
             new{
-                s = searchString, stype = searchType
+                s = searchString, stype = searches.SearchType
             });
 
         return new SearchHistoryListDto{
