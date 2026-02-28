@@ -34,9 +34,9 @@ public class AuthenticationController : ControllerBase
             return BadRequest();
         }
 
-        if (_userService.GetAppUser(dto.Username) != null)
+        if (_userService.UserExists(dto.Username))
         {
-            return BadRequest();
+            return BadRequest("Username already exists");
         }
 
         int.TryParse(

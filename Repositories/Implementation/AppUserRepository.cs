@@ -115,6 +115,6 @@ public class AppUserRepository : IUserRepository
 
     public bool AppUserExist(string username)
     {
-        return AppUserExist(GetAppUserId(username));
+        return _database.AppUser.Any(user => user.Username == username);
     }
 }

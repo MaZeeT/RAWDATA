@@ -27,4 +27,9 @@ public class UserService : IUserService
     {
         return _userRepository.CreateUser(name, password, salt);
     }
+
+    public bool UserExists(string username)
+    {
+        return _userRepository.AppUserExist(username);
+    }
 }
