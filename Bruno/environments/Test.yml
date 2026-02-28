@@ -1,0 +1,4 @@
+name: Test
+variables:
+  - name: token
+    value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjMwNSIsIm5iZiI6MTc3MjMxNjc1NywiZXhwIjoxNzcyNDAzMTU3LCJpYXQiOjE3NzIzMTY3NTd9.UNSZDvmVcPZLJ3Rrq7-45S-BTaEPmWR2cEVTSV3P6vs
