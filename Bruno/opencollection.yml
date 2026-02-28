@@ -15,6 +15,9 @@ config:
       bypassProxy: ""
 
 request:
+  headers:
+    - name: Content-Type
+      value: application/json
   auth:
     type: bearer
     token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjMwNSIsIm5iZiI6MTc3MjMxNTg5NSwiZXhwIjoxNzcyNDAyMjk1LCJpYXQiOjE3NzIzMTU4OTV9.KY4mnC8Bc4L5faogGfHnZQLL1n1k7cz_E5B8cSJZzaw

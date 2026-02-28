@@ -1,0 +1,22 @@
+info:
+  name: UpdateAnnotation
+  type: http
+  seq: 5
+
+http:
+  method: PUT
+  url: http://localhost:5001/api/annotations/42
+  body:
+    type: json
+    data: |-
+      {
+        "postId" : 1,
+        "body": "test text updated"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

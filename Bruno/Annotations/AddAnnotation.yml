@@ -1,0 +1,22 @@
+info:
+  name: AddAnnotation
+  type: http
+  seq: 4
+
+http:
+  method: POST
+  url: http://localhost:5001/api/annotations
+  body:
+    type: json
+    data: |-
+      {
+        "postId" : 1,
+        "body": "test text"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
