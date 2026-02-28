@@ -45,3 +45,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+public partial class Program { } // ensures that the custom WebApplicationFactory in the test project can access this class.
