@@ -143,9 +143,7 @@ public class AppUserRepositoryTests
     {
         IUserRepository service = new AppUserRepository(_dbContextFactory);
 
-        AppUser user = service.CreateUser(UserName, Password, Salt);
-
-        Assert.Null(user);
+        Assert.Throws<ArgumentException>(() => service.CreateUser(UserName, Password, Salt));
     }
 
     [Fact]
@@ -210,11 +208,10 @@ public class AppUserRepositoryTests
 
         bool creationBool = service.CreateAppUser(newUserName, Password, Salt);
         bool existBeforeDeletion = service.AppUserExist(newUserName);
-        bool deletionBool = service.DeleteAppUser(falseName);
+        Assert.Throws<ArgumentException>(() => service.DeleteAppUser(falseName));
 
         Assert.True(creationBool);
         Assert.True(existBeforeDeletion);
-        Assert.False(deletionBool);
         Assert.True(service.AppUserExist(newUserName));
 
         //clean up todo delete when mock is working

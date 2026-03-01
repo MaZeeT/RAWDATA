@@ -313,9 +313,7 @@ namespace Tests.Infrastructure.IntegrationTests
             var service = _serviceProvider.GetRequiredService<IHistoryRepository>();
             const int id = -31;
 
-            var history = service.Get(id);
-
-            Assert.Null(history);
+            Assert.Throws<ArgumentException>(() => service.Get(id));
         }
 
         [Fact]
@@ -325,9 +323,7 @@ namespace Tests.Infrastructure.IntegrationTests
             const int userId = -31;
             const int postId = -123;
 
-            var history = service.Get(userId, postId);
-
-            Assert.Null(history);
+            Assert.Throws<ArgumentException>(() => service.Get(userId, postId));
         }
 
         [Fact]
