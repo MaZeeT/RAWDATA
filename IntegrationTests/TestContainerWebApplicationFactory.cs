@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿/* TODO implement testcontainers
+ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -52,4 +53,4 @@ public class TestContainerWebApplicationFactory
             db.Database.Migrate();
         });
     }
-}
+}*/

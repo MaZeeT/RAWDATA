@@ -21,7 +21,7 @@ namespace Tests.Infrastructure.IntegrationTests
             const string database = "host=localhost;port=5432;db=stackoverflow;uid=postgres;pwd=Password123";
             var services = new ServiceCollection();
             services.AddSingleton<IHistoryRepository, HistoryRepository>();
-            services.AddPooledDbContextFactory<DatabaseContext>(options =>
+            services.AddDbContextFactory<DatabaseContext>(options =>
             {
                 options
                     .UseLoggerFactory(DatabaseContext.MyLoggerFactory)
