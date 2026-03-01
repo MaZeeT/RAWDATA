@@ -1,8 +1,7 @@
 ﻿define(["knockout", "annotationsService", "messaging", "postservice", "util"], function (ko, as, mess, postservice, util) {
 
     return function () {
-
-       // let postUrl = ko.observable(mess.getState().selectedPost);
+        
         let updateAnnotationValue = ko.observable("");
         let deletedAnnotStatus = ko.observable(false);
 

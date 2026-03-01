@@ -18,20 +18,12 @@
             <input type="text" class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm"
                    data-bind="value: searchTerms, click: clrsearchfield">
         </div>
-
-        <!-- <input class="form-control form-control-lg" data-bind="value: searchTerms, click: clrsearchfield"> -->
-        <!-- <input class="form-control form-control-lg" data-bind="value: searchTerms, click: clrsearchfield, event: {keypress: enter}"> -->
+        
         <div class="container">
             <div class="row">
                 <div class="card-body col-xs-4 text-center col-xs-offset-4 center-block">
 
                     <h6 class="card-link">Max. results:</h6>
-                    <!-- <div class="input-group input-group-sm mb-3">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="inputGroup-sizing-sm">Max. results:</span>
-                        </div>
-                        <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" data-bind="value: selectedValue">
-                    </div>-->
                     <input type="text" class="form-control form-control-sm w-25 h-25" data-bind="value: selectedValue">
                     <input type="range" min="0" max="200" class="slider"
                             data-bind="value: selectedValue, valueUpdate: 'input'">
@@ -48,9 +40,7 @@
                                                                                                     data-bind="checked: stypebtn"/>
                         TFIDF</label>
                 </div>
-
-                <!-- <select data-bind="options: noofresults, value: getnoofresults,
-                event: {change: noofresultschanged}"></select> -->
+                
                 <div class="card-body col-xs-4 text-center">
                     <button type="button" class="card-link h-100 w-75 btn btn-light" data-bind="click: cloudupdate">
                         Update Cloud

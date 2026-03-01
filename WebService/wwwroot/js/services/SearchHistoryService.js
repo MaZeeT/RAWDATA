@@ -3,7 +3,7 @@
     //GET http://localhost:5001/api/hisory/searches
     //GetAllAnnotationsOfUser([FromQuery] PagingAttributes pagingAttributes)
     let getSearchHist = async function (p, ps, callback) {
-        let toekn = window.localStorage.getItem('userToken');
+        let toekn = globalThis.localStorage.getItem('userToken');
         var response = await fetch(
             buildUrl("api/history/searches", {
                 page: p,
@@ -60,7 +60,7 @@
                 method: 'DELETE',
 
                 headers: new Headers({
-                    'Authorization': 'Bearer ' + window.localStorage.getItem("userToken"),
+                    'Authorization': 'Bearer ' + globalThis.localStorage.getItem("userToken"),
                     'Content-Type': 'application/json'
                 }),
             }).then(function (response) {

@@ -52,9 +52,7 @@
                     }
 
                     if (data.status == 401) {
-                        //unauthorized, goto login page
                         changeComp('unauth');
-                        //mess.dispatch(mess.actions.selectMenu("authentication"));
                         return;
                     } else {
                         //ok so far

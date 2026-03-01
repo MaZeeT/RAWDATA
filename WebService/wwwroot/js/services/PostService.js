@@ -6,7 +6,7 @@
                 const response = await fetch(url, {
                     method: 'GET',
                     headers: new Headers({
-                        'Authorization': 'Bearer ' + window.localStorage.getItem("userToken"),
+                        'Authorization': 'Bearer ' + globalThis.localStorage.getItem("userToken"),
                         'Content-Type': 'application/json'
                     }),
                 }).then(function (response) {
@@ -30,7 +30,7 @@
                 // body: JSON.stringify(incomingUserCredentials), // data can be `string` or {object}!
 
                 headers: new Headers({
-                    'Authorization': 'Bearer ' + window.localStorage.getItem("userToken"),
+                    'Authorization': 'Bearer ' + globalThis.localStorage.getItem("userToken"),
                     'Content-Type': 'application/json'
                 }),
             }).then(function (response) {
@@ -54,7 +54,7 @@
                 body: JSON.stringify(requestBody), // data can be `string` or {object}!
 
                 headers: new Headers({
-                    'Authorization': 'Bearer ' + window.localStorage.getItem("userToken"),
+                    'Authorization': 'Bearer ' + globalThis.localStorage.getItem("userToken"),
                     'Content-Type': 'application/json'
                 }),
             }).then(function (response) {
@@ -78,7 +78,7 @@
                 body: JSON.stringify(requestBody), // data can be `string` or {object}!
 
                 headers: new Headers({
-                    'Authorization': 'Bearer ' + window.localStorage.getItem("userToken"),
+                    'Authorization': 'Bearer ' + globalThis.localStorage.getItem("userToken"),
                     'Content-Type': 'application/json'
                 }),
             }).then(function (response) {
@@ -98,7 +98,7 @@
                 method: 'DELETE', // or 'PUT'
                 
                 headers: new Headers({
-                    'Authorization': 'Bearer ' + window.localStorage.getItem("userToken"),
+                    'Authorization': 'Bearer ' + globalThis.localStorage.getItem("userToken"),
                     'Content-Type': 'application/json'
                 }),
             }).then(function (response) {

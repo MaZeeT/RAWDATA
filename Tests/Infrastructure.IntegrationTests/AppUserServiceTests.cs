@@ -75,8 +75,6 @@ public class AppUserRepositoryTests
     public void GetAppUserById()
     {
         IUserRepository service = new AppUserRepository(_dbContextFactory);
-        //const int userId = 12;
-        //const string userName = "in"; //Hardcoded user in DB //todo replace with a mock
 
         Assert.Equal(UserName, service.GetAppUserName(UserId));
     }
@@ -85,8 +83,6 @@ public class AppUserRepositoryTests
     public void GetAppUserByName()
     {
         IUserRepository service = new AppUserRepository(_dbContextFactory);
-        //const int userId = 12;
-        //const string userName = "in"; //Hardcoded user in DB //todo replace with a mock
 
         Assert.Equal(UserId, service.GetAppUserId(UserName));
     }

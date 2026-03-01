@@ -1,7 +1,7 @@
 ﻿define(["knockout", "bookmarksService", 'messaging', 'util'], function (ko, bs, mess, util) {
 
     return function () {
-        let token = window.localStorage.getItem('userToken');
+        let token = globalThis.localStorage.getItem('userToken');
 
         let pgSizeOptions = ko.observableArray([5, 10, 20, 30, 40, 50]);
         let pgSize = ko.observable(10);

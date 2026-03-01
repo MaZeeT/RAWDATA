@@ -53,7 +53,7 @@
     let currentMenu = ko.observable(menuElements[0]);
     let currentComponent = ko.observable();
     let isTokenSet = ko.observable(false);
-    if (window.localStorage.getItem('userToken')) {
+    if (globalThis.localStorage.getItem('userToken')) {
         currentComponent = ko.observable(currentMenu().component);
         isTokenSet(true);
     } else {
@@ -84,8 +84,7 @@
     let signOutUser = function () {
         console.log("sign out clicked");
         localStorage.removeItem('userToken');
-        //window.localStorage.clear();
-        window.location.reload();
+        globalThis.location.reload();
     };
 
     return {

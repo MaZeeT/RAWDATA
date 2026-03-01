@@ -2,7 +2,7 @@ define([], function () {
 
     let getWCItems = async function (s, st, max, callback) {
         let response = null;
-        let toekn = window.localStorage.getItem('userToken');
+        let toekn = globalThis.localStorage.getItem('userToken');
         if (max == 0) {
             response = await fetch(
                 buildUrl("api/search/wordrank", {

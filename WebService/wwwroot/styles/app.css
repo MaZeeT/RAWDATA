@@ -26,7 +26,6 @@
 a.nav-link.signout-btn {
     padding-left: 0;
     color: white;
-    /* border: 1px solid white; */
 }
 
 /**********************************HOME PAGE STYLING***************************************/
@@ -134,8 +133,6 @@ thead.header-table-style.bp {
     padding-bottom: 0px;
     border: 1px solid aliceblue;
     border-radius: 1rem;
-    /*overflow-y: scroll;
-    height: 300px;*/
 }
     .card-body.annotations-container {
         overflow-y: scroll;

@@ -8,7 +8,7 @@
                 method: 'GET', // or 'PUT'
 
                 headers: new Headers({
-                    'Authorization': 'Bearer ' + window.localStorage.getItem("userToken"),
+                    'Authorization': 'Bearer ' + globalThis.localStorage.getItem("userToken"),
                     'Content-Type': 'application/json'
                 }),
             }).then(function (response) {

@@ -96,7 +96,6 @@
         //comp change requested
         function changeComp(component) {
             if (component === 'previous' && storedPreviousView) {
-                // saveStuff();
                 messaging.dispatch(messaging.actions.selectMenu(storedPreviousView));
             }
         }

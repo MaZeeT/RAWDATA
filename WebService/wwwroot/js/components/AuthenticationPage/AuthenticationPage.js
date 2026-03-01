@@ -57,8 +57,8 @@
             authservice.getLoginUser(userCredentials, function (authenticationResponse) {
                 const token = authenticationResponse.token;
                 if (token) {
-                    window.localStorage.setItem("userToken", token);
-                    window.location.reload();
+                    globalThis.localStorage.setItem("userToken", token);
+                    globalThis.location.reload();
                     messaging.dispatch(messaging.actions.selectMenu("Home"));
                 }
             });

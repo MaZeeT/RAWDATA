@@ -49,7 +49,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
  * v1.0.1
  * MIT license
  */
-var windowIsDefined = (typeof window === "undefined" ? "undefined" : _typeof(window)) === "object";
+var windowIsDefined = (typeof globalThis.window === "undefined" ? "undefined" : _typeof(globalThis.window)) === "object";
 
 (function (factory) {
 	if (typeof define === "function" && define.amd) {
@@ -62,8 +62,8 @@ var windowIsDefined = (typeof window === "undefined" ? "undefined" : _typeof(win
 			jQuery = null;
 		}
 		module.exports = factory(jQuery);
-	} else if (window) {
-		window.Slider = factory(window.jQuery);
+	} else if (globalThis) {
+        globalThis.Slider = factory(globalThis.jQuery);
 	}
 })(function ($) {
 	// Constants
@@ -71,14 +71,14 @@ var windowIsDefined = (typeof window === "undefined" ? "undefined" : _typeof(win
 	var NAMESPACE_ALTERNATE = 'bootstrapSlider';
 
 	// Polyfill console methods
-	if (windowIsDefined && !window.console) {
-		window.console = {};
+	if (windowIsDefined && !globalThis.console) {
+        globalThis.console = {};
 	}
-	if (windowIsDefined && !window.console.log) {
-		window.console.log = function () {};
+	if (windowIsDefined && !globalThis.console.log) {
+        globalThis.console.log = function () {};
 	}
-	if (windowIsDefined && !window.console.warn) {
-		window.console.warn = function () {};
+	if (windowIsDefined && !globalThis.console.warn) {
+        globalThis.console.warn = function () {};
 	}
 
 	// Reference to Slider constructor
@@ -609,7 +609,7 @@ var windowIsDefined = (typeof window === "undefined" ? "undefined" : _typeof(win
 			this.eventToCallbackMap = {};
 			this.sliderElem.id = this.options.id;
 
-			this.touchCapable = 'ontouchstart' in window || window.DocumentTouch && document instanceof window.DocumentTouch;
+			this.touchCapable = 'ontouchstart' in globalThis || globalThis.DocumentTouch && document instanceof globalThis.DocumentTouch;
 
 			this.touchX = 0;
 			this.touchY = 0;
@@ -1654,7 +1654,7 @@ var windowIsDefined = (typeof window === "undefined" ? "undefined" : _typeof(win
 					if (index === -1) {
 						// Set default to first tick
 						index = 0;
-						window.console.warn('(lock_to_ticks) _keydown: index should not be -1');
+                        globalThis.console.warn('(lock_to_ticks) _keydown: index should not be -1');
 					}
 					index += dir;
 					index = Math.max(0, Math.min(this.options.ticks.length - 1, index));

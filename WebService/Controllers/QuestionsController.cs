@@ -86,7 +86,7 @@ public class QuestionsController : SharedController
         var result = _historyService.Add(browseHistory);
         if (!result)
         {
-            throw new Exception("Could not add question");
+            throw new ArgumentException("Could not add question");
         }
 
         // create thread dto
