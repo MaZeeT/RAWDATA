@@ -13,12 +13,12 @@ public class UserService : IUserService
         _userRepository = userRepository;
     }
 
-    public string GetUserName(int id)
+    public string? GetUserName(int id)
     {
         return _userRepository.GetAppUserName(id);
     }
 
-    public AppUser GetAppUser(string username)
+    public AppUser? GetAppUser(string username)
     {
         return _userRepository.GetAppUser(username);
     }

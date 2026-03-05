@@ -107,7 +107,7 @@ public class AppUserRepositoryTests
     public void CreateAppUserTwice()
     {
         IUserRepository service = new AppUserRepository(_dbContextFactory);
-        const string newUserName = "Mr. Tester von testons";
+        const string newUserName = "Mr. Tester von test";
 
         bool creationBoolOne = service.CreateAppUser(newUserName, Password, Salt);
         bool creationBoolTwo = service.CreateAppUser(newUserName, Password, Salt);
@@ -125,7 +125,7 @@ public class AppUserRepositoryTests
     public void CreateUserGetObject()
     {
         IUserRepository service = new AppUserRepository(_dbContextFactory);
-        const string newUserName = "Mr. Tester von testonsen";
+        const string newUserName = "Mr. Tester von test";
 
         AppUser user = service.CreateUser(newUserName, Password, Salt);
 
@@ -148,7 +148,7 @@ public class AppUserRepositoryTests
     {
         IUserRepository service = new AppUserRepository(_dbContextFactory);
         const string userNameOne = "Ms. donald docker";
-        const string userNameTwo = "Ms. donald ducker";
+        const string userNameTwo = "Ms. donald duck";
 
         bool creationBool = service.CreateAppUser(userNameOne, Password, Salt);
         int userIdOne = service.GetAppUserId(userNameOne);
@@ -173,7 +173,7 @@ public class AppUserRepositoryTests
     {
         IUserRepository service = new AppUserRepository(_dbContextFactory);
         const string userNameOne = "Ms. ronaldo docker";
-        const string userNameTwo = "Ms. ronaldo ducker";
+        const string userNameTwo = "Ms. ronaldo duck";
 
         bool updateBool = service.UpdateAppUserName(userNameOne, userNameTwo);
 

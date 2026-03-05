@@ -45,7 +45,7 @@ public class AuthenticationController : ControllerBase
 
         if (size == 0)
         {
-            throw new ArgumentException();
+            return BadRequest();
         }
 
         var salt = PasswordService.GenerateSalt(size);

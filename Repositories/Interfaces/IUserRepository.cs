@@ -8,8 +8,8 @@ public interface IUserRepository
     bool UpdateAppUserName(string oldName, string newName);
     bool DeleteAppUser(int id);
     bool DeleteAppUser(string username);
-    AppUser GetAppUser(string username);
-    string GetAppUserName(int id);
+    AppUser? GetAppUser(string username);
+    string? GetAppUserName(int id);
     int GetAppUserId(string username);
     bool AppUserExist(int id);
     bool AppUserExist(string username);

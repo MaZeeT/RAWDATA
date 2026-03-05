@@ -14,10 +14,10 @@ public class AppUserRepository : IUserRepository
         _database = factory.CreateDbContext();
     }
 
-    public string GetAppUserName(int id)
+    public string? GetAppUserName(int id)
     {
         var result = _database.AppUser.Find(id);
-        return result.Username;
+        return result?.Username;
     }
 
     public int GetAppUserId(string username)
@@ -27,13 +27,11 @@ public class AppUserRepository : IUserRepository
         {
             return -1;
         }
-        else
-        {
-            return user.Id;
-        }
+
+        return user.Id;
     }
     
-    public AppUser GetAppUser(string username)
+    public AppUser? GetAppUser(string username)
     {
         var appUsers = _database.AppUser.Where(user => user.Username == username).ToList();
         if (appUsers.Count > 0)
@@ -41,7 +39,7 @@ public class AppUserRepository : IUserRepository
             return appUsers[0];
         }
 
-        throw new ArgumentException("User not found");
+        return null;
     }
 
     public bool CreateAppUser(string username, string password, string salt)
