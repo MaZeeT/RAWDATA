@@ -10,29 +10,25 @@ using Xunit;
 
 namespace IntegrationTests.Annotations;
 
-public class AnnotationTests : IClassFixture<WebApplicationFactory<AnnotationsController>>
+public class AnnotationTests : IClassFixture<WebApplicationFactory<AnnotationsController>>, IAsyncLifetime
 {
-    private readonly HttpClient _httpClient;
+    private readonly WebApplicationFactory<AnnotationsController> _factory;
+    private HttpClient _httpClient = null!;
     
     public AnnotationTests(WebApplicationFactory<AnnotationsController> factory)
     {
-        _httpClient = factory.CreateDefaultClient();
-        var token = GetToken().Result;
-        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        _factory = factory;
     }
-
-    private async Task<string> GetToken()
+    
+    public async ValueTask InitializeAsync()
     {
-        var response = await _httpClient.PostAsJsonAsync(
-            "/api/auth/tokens",  
-            new { username = "mazeettest", password = "testtest" }, 
-            TestContext.Current.CancellationToken
-            );
-        using var doc = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
-        var token = doc.RootElement.GetProperty("token").GetString() ?? string.Empty;
-        return token;
-    }
+        _httpClient = _factory.CreateClient();
 
+        var token = await GetToken();
+
+        _httpClient.DefaultRequestHeaders.Authorization =
+            new AuthenticationHeaderValue("Bearer", token);
+    }
     
     [Fact]
     public async Task Get_ReturnOk_ForExistingAnnotations()
@@ -78,5 +74,19 @@ public class AnnotationTests : IClassFixture<WebApplicationFactory<AnnotationsCo
         var response = await _httpClient.GetAsync("/api/annotations/422", TestContext.Current.CancellationToken);
         
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+    }
+    
+    public ValueTask DisposeAsync() => ValueTask.CompletedTask;
+
+    private async Task<string> GetToken()
+    {
+        var response = await _httpClient.PostAsJsonAsync(
+            "/api/auth/tokens",  
+            new { username = "mazeettest", password = "testtest" }, 
+            TestContext.Current.CancellationToken
+        );
+        using var doc = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
+        var token = doc.RootElement.GetProperty("token").GetString() ?? string.Empty;
+        return token;
     }
 }
