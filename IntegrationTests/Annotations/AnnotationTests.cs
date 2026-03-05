@@ -1,7 +1,6 @@
 ﻿using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using System.Text;
 using System.Text.Json;
 using Domain.AnnotationsDTOs;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -34,45 +33,48 @@ public class AnnotationTests : IClassFixture<WebApplicationFactory<AnnotationsCo
     public async Task Get_ReturnOk_ForExistingAnnotations()
     {
         // Arrange
-        var annotationOne = new AnnotationsDto()
-        {
-            PostId = 19,
-            Body = "First test annotation",
-        };
-        
-        var annotationTwo = new AnnotationsDto()
+        var annotation = new AnnotationsDto()
         {
             PostId = 19,
             Body = "Second test annotation",
         };
+
+        var arrangeResponse = await _httpClient.PostAsJsonAsync("/api/annotations", annotation, TestContext.Current.CancellationToken);
         
-        var json = "{\n  \"postId\" : 1,\n  \"body\": \"test text\"\n}";
-        var content = new StringContent(json, Encoding.UTF8, "application/json");
+        arrangeResponse.EnsureSuccessStatusCode();
         
-        var responseOne = await _httpClient.PostAsync("/api/annotations", content, TestContext.Current.CancellationToken);
-            
+        var createdAnnotation = await arrangeResponse.Content.ReadFromJsonAsync<AnnotationsDto>(TestContext.Current.CancellationToken);
         
         // Act
-        var response = await _httpClient.GetAsync("/api/annotations/422", TestContext.Current.CancellationToken);
+        var response = await _httpClient.GetAsync($"/api/annotations/{createdAnnotation!.AnnotationId}", TestContext.Current.CancellationToken);
         
         // Assert
-        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
-        
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
     
     [Fact]
     public async Task Get_ReturnsOK_ForExistingAnnotation()
     {
-        var response = await _httpClient.GetAsync("/api/annotations/42", TestContext.Current.CancellationToken);
+        // Arrange
+        const string validId = "42";
         
+        // Act
+        var response = await _httpClient.GetAsync($"/api/annotations/{validId}", TestContext.Current.CancellationToken);
+        
+        // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
 
     [Fact]
     public async Task Get_ReturnsNotFound_ForMissingAnnotation()
     {
-        var response = await _httpClient.GetAsync("/api/annotations/422", TestContext.Current.CancellationToken);
+        // Arrange
+        const string invalidId = "422";
         
+        // Act
+        var response = await _httpClient.GetAsync($"/api/annotations/{invalidId}", TestContext.Current.CancellationToken);
+        
+        // Assert
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
     
