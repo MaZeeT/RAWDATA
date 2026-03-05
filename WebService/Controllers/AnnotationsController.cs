@@ -117,7 +117,7 @@ public class AnnotationsController : SharedController
         //need to encode body before sending to db - this can also be done inside the UpdateAnnotation function.
         if (_annotationService.UpdateAnnotation(annotationId, annotation.Body))
         {
-            return NoContent();
+            return Ok();
         }
 
         return BadRequest();

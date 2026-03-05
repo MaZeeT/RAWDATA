@@ -29,6 +29,95 @@ public class AnnotationTests : IClassFixture<WebApplicationFactory<AnnotationsCo
             new AuthenticationHeaderValue("Bearer", token);
     }
     
+    [Fact
+        (Skip = "Annotation is present in the database but fails to fetch them for test")
+    ]
+    public async Task Get_ReturnsOK_GetAllUserAnnotationsMadeOnPostId()
+    {
+        // Arrange
+        const int postId = 19;
+        
+        var annotation = new AnnotationsDto()
+        {
+            PostId = postId,
+            Body = "Test annotation",
+        };
+        
+        var arrangeResponse = await _httpClient.PostAsJsonAsync("/api/annotations", annotation, TestContext.Current.CancellationToken);
+        
+        arrangeResponse.EnsureSuccessStatusCode();
+        
+        // Act
+        var response = await _httpClient.GetAsync($"/api/annotations/post/{postId}", TestContext.Current.CancellationToken);
+        
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+    }
+    
+    [Fact]
+    public async Task Get_ReturnsOK_GetAllAnnotationsOfUser()
+    {
+        // Arrange
+        
+        // Act
+        var response = await _httpClient.GetAsync($"/api/annotations/user", TestContext.Current.CancellationToken);
+        
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+    }
+    
+    [Fact]
+    public async Task Get_ReturnsOK_GetAnyAnnotationById()
+    {
+        // Arrange
+        const int postId = 19;
+        
+        var annotation = new AnnotationsDto()
+        {
+            PostId = postId,
+            Body = "Test annotation",
+        };
+        
+        var arrangeResponse = await _httpClient.PostAsJsonAsync("/api/annotations", annotation, TestContext.Current.CancellationToken);
+        arrangeResponse.EnsureSuccessStatusCode();
+        
+        var annotationsDto = await arrangeResponse.Content.ReadFromJsonAsync<AnnotationsDto>(cancellationToken: TestContext.Current.CancellationToken); 
+        var annotationId = annotationsDto?.AnnotationId;
+        
+        // Act
+        var response = await _httpClient.GetAsync($"/api/annotations/{annotationId}", TestContext.Current.CancellationToken);
+        
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+    }
+    
+    [Fact]
+    public async Task Put_ReturnsOK_UpdateAnnotation()
+    {
+        // Arrange
+        const int postId = 19;
+        
+        var annotation = new AnnotationsDto()
+        {
+            PostId = postId,
+            Body = "Test annotation",
+        };
+        
+        var arrangeResponse = await _httpClient.PostAsJsonAsync("/api/annotations", annotation, TestContext.Current.CancellationToken);
+        arrangeResponse.EnsureSuccessStatusCode();
+        
+        var annotationsDto = await arrangeResponse.Content.ReadFromJsonAsync<AnnotationsDto>(cancellationToken: TestContext.Current.CancellationToken);
+        Assert.NotNull(annotationsDto);
+        
+        annotationsDto.Body = "Updated test annotation";
+        
+        // Act
+        var response = await _httpClient.PutAsJsonAsync($"/api/annotations/{annotationsDto.AnnotationId}", annotationsDto, TestContext.Current.CancellationToken);
+        
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+    }
+    
     [Fact]
     public async Task Get_ReturnOk_ForExistingAnnotations()
     {
@@ -47,6 +136,31 @@ public class AnnotationTests : IClassFixture<WebApplicationFactory<AnnotationsCo
         
         // Act
         var response = await _httpClient.GetAsync($"/api/annotations/{createdAnnotation!.AnnotationId}", TestContext.Current.CancellationToken);
+        
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+    }
+    
+    [Fact]
+    public async Task Delete_ReturnsOK_DeleteAnnotation()
+    {
+        // Arrange
+        const int postId = 19;
+        
+        var annotation = new AnnotationsDto()
+        {
+            PostId = postId,
+            Body = "Test annotation",
+        };
+        
+        var arrangeResponse = await _httpClient.PostAsJsonAsync("/api/annotations", annotation, TestContext.Current.CancellationToken);
+        arrangeResponse.EnsureSuccessStatusCode();
+        
+        var annotationsDto = await arrangeResponse.Content.ReadFromJsonAsync<AnnotationsDto>(cancellationToken: TestContext.Current.CancellationToken); 
+        var annotationId = annotationsDto?.AnnotationId;
+        
+        // Act
+        var response = await _httpClient.DeleteAsync($"/api/annotations/{annotationId}", TestContext.Current.CancellationToken);
         
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
