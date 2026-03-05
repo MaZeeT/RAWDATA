@@ -5,7 +5,7 @@ namespace Repositories.Interfaces;
 
 public interface IAnnotationRepository
 {
-    Annotations GetAnnotation(int annotationId);
+    Annotations? GetAnnotation(int annotationId);
     List<SimpleAnnotationDto> GetUserAnnotationsMadeOnAPost(int userId, int postId, PagingAttributes pagingAttributes);
     List<PostAnnotationsDto> GetAllAnnotationsOfUser(int userId, PagingAttributes pagingAttributes, out int count);
     bool UpdateAnnotation(int annotationId, string annotationBody);

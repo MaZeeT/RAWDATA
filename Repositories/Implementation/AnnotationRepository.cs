@@ -15,19 +15,19 @@ public class AnnotationRepository : IAnnotationRepository
         _dbContextFactory = factory;
     }
     
-    public Annotations GetAnnotation(int annotationId)
+    public Annotations? GetAnnotation(int annotationId)
     {
         using var db = _dbContextFactory.CreateDbContext();
-        return db.Annotations.Find(annotationId) ?? throw new KeyNotFoundException("Annotation not found");
+        return db.Annotations.Find(annotationId);
     }
     
-    private Annotations GetAnnotationByUserId(int annotationId, int userId)
+    private Annotations? GetAnnotationByUserId(int annotationId, int userId)
     {
         using var db = _dbContextFactory.CreateDbContext();
         var result = db.Annotations
             .Where(a => a.UserId == userId)
             .FirstOrDefault(a => a.Id == annotationId);
-        return result ?? throw new KeyNotFoundException("Annotation not found");
+        return result;
     }
 
     public List<SimpleAnnotationDto> GetUserAnnotationsMadeOnAPost(int userId, int postId,

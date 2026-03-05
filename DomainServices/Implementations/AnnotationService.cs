@@ -16,7 +16,7 @@ public class AnnotationService : IAnnotationService
         _userRepository = userRepository;
     }
 
-    public Annotations GetAnnotation(int annotationId)
+    public Annotations? GetAnnotation(int annotationId)
     {
         return _annotationRepository.GetAnnotation(annotationId);
     }
