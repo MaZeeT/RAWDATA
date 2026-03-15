@@ -205,7 +205,7 @@ public class AppUserRepositoryTests
 
         bool creationBool = service.CreateAppUser(newUserName, Password, Salt);
         bool existBeforeDeletion = service.AppUserExist(newUserName);
-        Assert.Throws<ArgumentException>(() => service.DeleteAppUser(falseName));
+        Assert.False(service.DeleteAppUser(falseName));
 
         Assert.True(creationBool);
         Assert.True(existBeforeDeletion);
