@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using WebService.Controllers;
 using Xunit;
 
-namespace IntegrationTests.Annotations;
+namespace IntegrationTests;
 
 public class AnnotationTests : IClassFixture<WebApplicationFactory<AnnotationsController>>, IAsyncLifetime
 {

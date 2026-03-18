@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using WebService.Controllers;
 using Xunit;
 
-namespace IntegrationTests.Bookmarks;
+namespace IntegrationTests;
 
 public class BookmarkTests : IClassFixture<WebApplicationFactory<BookmarkController>>, IAsyncLifetime
 {

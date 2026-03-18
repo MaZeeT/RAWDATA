@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using WebService.Controllers;
 using Xunit;
 
-namespace IntegrationTests.History;
+namespace IntegrationTests;
 
 public class HistoryTests : IClassFixture<WebApplicationFactory<HistoryController>>, IClassFixture<WebApplicationFactory<QuestionsController>>, IAsyncLifetime
 {
