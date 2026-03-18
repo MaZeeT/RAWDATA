@@ -29,9 +29,7 @@ public class AnnotationTests : IClassFixture<WebApplicationFactory<AnnotationsCo
             new AuthenticationHeaderValue("Bearer", token);
     }
     
-    [Fact
-        (Skip = "Annotation is present in the database but fails to fetch them for test")
-    ]
+    [Fact]
     public async Task Get_ReturnsOK_GetAllUserAnnotationsMadeOnPostId()
     {
         // Arrange

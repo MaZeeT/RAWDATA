@@ -35,18 +35,17 @@ public class AnnotationRepository : IAnnotationRepository
     {
         using var db = _dbContextFactory.CreateDbContext();
         var page = ISharedRepository.GetPagination(UserAnnotOnPostListCount(userId, postId), pagingAttributes);
-        var annotationsOfPostList = (from annot in db.Annotations
-                join hist in db.History on annot.HistoryId equals hist.Id
-                where hist.PostId == postId && annot.UserId == userId
-                select new SimpleAnnotationDto
-                {
-                    AnnotationId = annot.Id,
-                    Body = annot.Body,
-                    Date = annot.Date
-                }).Skip(page * pagingAttributes.PageSize)
-            .Take(pagingAttributes.PageSize)
-            .ToList();
-        return annotationsOfPostList;
+
+        var query =
+            from annotation in db.Annotations
+            join history in db.History on annotation.HistoryId equals history.Id
+            where annotation.HistoryId == postId && annotation.UserId == userId
+            select new SimpleAnnotationDto();
+        
+            return query
+                .Skip(page * pagingAttributes.PageSize)
+                .Take(pagingAttributes.PageSize)
+                .ToList();
     }
 
     private int UserAnnotOnPostListCount(int userId, int postId)
