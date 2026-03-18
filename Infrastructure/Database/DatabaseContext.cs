@@ -33,6 +33,10 @@ namespace Infrastructure.Database;
             modelBuilder.CreateMap(); // If this is custom, ensure the method exists
 
             modelBuilder.Entity<Search>().HasNoKey();
+            modelBuilder.Entity<Searches>()
+                .Property(e => e.SearchType)
+                .HasConversion<string>();
+            
             modelBuilder.Entity<WordRank>().HasNoKey();
             modelBuilder.Entity<PostsTable>().HasNoKey();
 

@@ -27,7 +27,7 @@ public class SearchHistoryRepository : ISearchHistoryRepository
 
         var list = db.Searches
             .Where(x => x.UserId == userId)
-            .OrderByDescending(x => x.Date)
+            //.OrderByDescending(x => x.Date)
             .Skip(page * pagingAttributes.PageSize)
             .Take(pagingAttributes.PageSize)
             .ToList();
@@ -38,14 +38,12 @@ public class SearchHistoryRepository : ISearchHistoryRepository
     public bool DeleteUserSearchHistory(int userId)
     {
         using var db = _dbContextFactory.CreateDbContext();
-        var history = db.Searches.Where(x =>
-            x.UserId == userId);
-
-        foreach (var entry in history)
-        {
-            db.Searches.Remove(entry);
-        }
-
-        return db.SaveChanges() > 0;
+        var rowsDeleted = db.Searches
+            .Where(x => x.UserId == userId)
+            .ExecuteDelete();
+        
+        db.SaveChanges();
+        
+        return rowsDeleted > 0;
     }
 }
