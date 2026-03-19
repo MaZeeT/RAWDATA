@@ -1,20 +1,20 @@
-﻿define(["knockout", "annotationsService", "messaging", "postservice", "util"], function (ko, as, mess, postservice, util) {
+﻿define(["knockout", "annotationsService", "messaging", "postservice", "util"], function (knockout, annotationsService, messaging, postservice, util) {
 
     return function () {
         
-        let updateAnnotationValue = ko.observable("");
-        let deletedAnnotStatus = ko.observable(false);
+        let updateAnnotationValue = knockout.observable("");
+        let deletedAnnotStatus = knockout.observable(false);
 
-        let annolist = ko.observableArray([]);
+        let annolist = knockout.observableArray([]);
         let p = 1; //initial page
-        let pshow = ko.observable();
+        let pshow = knockout.observable();
 
         let nexturi = '666'; //placeholder for grabbing querystring page=
         let prevuri = '666'; //placeholder for grabbing querystring page=
 
-        let pgsizepreset = ko.observableArray(['5', '10', '20', '30', '40', '50']) //selection of pagesizes
-        let loaded = ko.observable(false); //help with hiding elements until initial data has been loaded 
-        let getpgsize = ko.observable(10); //for getting new pagesize
+        let pgsizepreset = knockout.observableArray(['5', '10', '20', '30', '40', '50']) //selection of pagesizes
+        let loaded = knockout.observable(false); //help with hiding elements until initial data has been loaded 
+        let getpgsize = knockout.observable(10); //for getting new pagesize
         let ps = getpgsize(); //initial pagesize
 
         //grab data when pagesize change
@@ -30,8 +30,8 @@
         //thread requested, switch to thread view
         let selectPostItem = function (item) {
             saveStuff();
-            mess.dispatch(mess.actions.selectPost(item.postUrl));
-            mess.dispatch(mess.actions.selectMenu("postdetails"));
+            messaging.dispatch(messaging.actions.selectPost(item.postUrl));
+            messaging.dispatch(messaging.actions.selectMenu("postdetails"));
         };
 
         //grab data when page change
@@ -82,7 +82,7 @@
 
         //get all annos
         function getAnnos(npg, ps) {
-            as.getAllAnnos(npg, ps, function (data) {
+            annotationsService.getAllAnnos(npg, ps, function (data) {
                 if (data) {
                     p = npg;
                     pshow(p);
@@ -99,35 +99,35 @@
         function changeComp(component) {
             if (component === 'history') {
                 saveStuff();
-                mess.dispatch(mess.actions.selectMenu("History"));
+                messaging.dispatch(messaging.actions.selectMenu("History"));
             } else if (component === 'book') {
                 saveStuff();
-                mess.dispatch(mess.actions.selectMenu("Bookmarks"));
+                messaging.dispatch(messaging.actions.selectMenu("Bookmarks"));
             } else if (component === 'searchhistory') {
                 saveStuff();
-                mess.dispatch(mess.actions.selectMenu("Search History"));
+                messaging.dispatch(messaging.actions.selectMenu("Search History"));
             } else if (component === 'previous' && storedPreviousView) {
                 saveStuff();
-                mess.dispatch(mess.actions.selectMenu(storedPreviousView));
+                messaging.dispatch(messaging.actions.selectMenu(storedPreviousView));
             }
         }
 
 
         //store stuff from this view
         let saveStuff = function () {
-            mess.dispatch(mess.actions.selectCurrentPage(p));
-            mess.dispatch(mess.actions.selectMaxPages(ps));
+            messaging.dispatch(messaging.actions.selectCurrentPage(p));
+            messaging.dispatch(messaging.actions.selectMaxPages(ps));
             //store current component name
-            mess.dispatch(mess.actions.selectPreviousView("Annotations"));
+            messaging.dispatch(messaging.actions.selectPreviousView("Annotations"));
         };
 
         //restore stuff to this view
         let restoreStuff = function () {
             //get previous component/view
-            storedPreviousView = mess.getState().selectedPreviousView;
+            storedPreviousView = messaging.getState().selectedPreviousView;
             //restore fields
-            let storedMaxPages = mess.getState().selectedMaxPages;
-            let storedCurrentPage = mess.getState().selectedCurrentPage;
+            let storedMaxPages = messaging.getState().selectedMaxPages;
+            let storedCurrentPage = messaging.getState().selectedCurrentPage;
 
             if (storedPreviousView == "Annotations" && (storedCurrentPage)) { p = storedCurrentPage; }
             if (storedMaxPages) {

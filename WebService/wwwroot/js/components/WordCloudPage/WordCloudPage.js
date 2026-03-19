@@ -1,19 +1,19 @@
-﻿define(['knockout', 'wordCloudService', 'messaging', "jqcloud"], function (ko, wc, mess) {
+﻿define(['knockout', 'wordCloudService', 'messaging', "jqcloud"], function (knockout, wordCloudService, messaging) {
 
     return function () {
 
-        let loaded = ko.observable(false); // help with hiding elements until initial data has been loaded 
+        let loaded = knockout.observable(false); // help with hiding elements until initial data has been loaded 
 
         let max = 15;
         let stype = 4;
 
-        let stypebtn = ko.observable("tfidf");
-        let selectedValue = ko.observable(15);
+        let stypebtn = knockout.observable("tfidf");
+        let selectedValue = knockout.observable(15);
 
         const placeholderStr = "Input search terms here...";
-        let searchTerms = ko.observable(placeholderStr);
+        let searchTerms = knockout.observable(placeholderStr);
 
-        let searchResult = ko.observableArray([]);
+        let searchResult = knockout.observableArray([]);
 
         //clearing searchfield when clicked
         let clrsearchfield = function () {
@@ -35,7 +35,7 @@
         };
 
         let doWordRankSearch = function (terms, stype, max) {
-            wc.getWCItems(terms, stype, max, function (data) {
+            wordCloudService.getWCItems(terms, stype, max, function (data) {
                 if (data) {
                     if (data.status == 400) {
                         //bad request
@@ -94,39 +94,39 @@
         function changeComp(component) {
             if (component === 'search') {
                 saveStuff();
-                mess.dispatch(mess.actions.selectMenu("Search"));
+                messaging.dispatch(messaging.actions.selectMenu("Search"));
             } else if (component === 'browse') {
                 saveStuff();
-                mess.dispatch(mess.actions.selectMenu("Browse"));
+                messaging.dispatch(messaging.actions.selectMenu("Browse"));
             } else if (component === 'unauth') {
                 saveStuff();
-                mess.dispatch(mess.actions.selectMenu("authentication"));
+                messaging.dispatch(messaging.actions.selectMenu("authentication"));
             } else if (component === 'previous' && storedPreviousView) {
                 saveStuff();
-                mess.dispatch(mess.actions.selectMenu(storedPreviousView));
+                messaging.dispatch(messaging.actions.selectMenu(storedPreviousView));
             }
         }
 
         //store stuff from this view
         let saveStuff = function () {
-            mess.dispatch(mess.actions.selectSearchTerms(searchTerms()));
+            messaging.dispatch(messaging.actions.selectSearchTerms(searchTerms()));
             if (storedSearchOptions) {
                 if (stypebtn() == "tfidf" && storedSearchOptions != "tfidf" || stypebtn() == "tfidf" && storedSearchOptions != "TFIDF") {
-                    mess.dispatch(mess.actions.selectSearchOptions(stypebtn()));
+                    messaging.dispatch(messaging.actions.selectSearchOptions(stypebtn()));
                 }
             }
-            mess.dispatch(mess.actions.selectMaxWords(selectedValue()));
+            messaging.dispatch(messaging.actions.selectMaxWords(selectedValue()));
             //store current component name
-            mess.dispatch(mess.actions.selectPreviousView("WordCloud"));
+            messaging.dispatch(messaging.actions.selectPreviousView("WordCloud"));
         };
 
         let restoreStuff = function () {
             //get previous component/view
-            storedPreviousView = mess.getState().selectedPreviousView;
+            storedPreviousView = messaging.getState().selectedPreviousView;
             //restore fields
-            let storedSearchTerms = mess.getState().selectedSearchTerms;
-            storedSearchOptions = mess.getState().selectedSearchOptions;
-            let storedMaxWords = mess.getState().selectedMaxWords;
+            let storedSearchTerms = messaging.getState().selectedSearchTerms;
+            storedSearchOptions = messaging.getState().selectedSearchOptions;
+            let storedMaxWords = messaging.getState().selectedMaxWords;
 
             if (storedMaxWords) {
                 selectedValue(storedMaxWords)

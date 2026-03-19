@@ -1,31 +1,31 @@
-﻿define(['knockout', 'homeService', 'messaging', 'util'], function (ko, homeserv, messaging, util) {
+﻿define(['knockout', 'homeService', 'messaging', 'util'], function (knockout, homeService, messaging, util) {
 
     return function () {
 
         //Pagination
-        let pageSizeSelection = ko.observableArray(['5', '10', '20', '30', '40', '50']); //selection of pagesizes
-        let selectedPageSize = ko.observable();
-        let getPageSize = ko.observable(10);
+        let pageSizeSelection = knockout.observableArray(['5', '10', '20', '30', '40', '50']); //selection of pagesizes
+        let selectedPageSize = knockout.observable();
+        let getPageSize = knockout.observable(10);
 
-        let currentPage = ko.observable(1);
-        let numberOfPages = ko.observable();
+        let currentPage = knockout.observable(1);
+        let numberOfPages = knockout.observable();
 
         let nexturi = '666'; //placeholder for grabbing querystring page= value
         let prevuri = '666'; //placeholder for grabbing querystring page= value
 
         //Other dropdowns
-        let searchTypeValSelector = ko.observableArray(["TFIDF", "Exact Match", "Simple Match", "Best Match"]); //selection of searchtypes
-        let searchTypeValue = ko.observable("Best Match");
-        let selectedSearchType = ko.observable();
+        let searchTypeValSelector = knockout.observableArray(["TFIDF", "Exact Match", "Simple Match", "Best Match"]); //selection of searchtypes
+        let searchTypeValue = knockout.observable("Best Match");
+        let selectedSearchType = knockout.observable();
         
         //Search
         const placeholderStr = "Input search terms here...";
-        let searchTerms = ko.observable(placeholderStr);
-        let searchstring = ko.observable("");
+        let searchTerms = knockout.observable(placeholderStr);
+        let searchstring = knockout.observable("");
 
-        let searchResult = ko.observableArray([]);
-        let showTable = ko.observable(false);
-        let totalResults = ko.observable("0");
+        let searchResult = knockout.observableArray([]);
+        let showTable = knockout.observable(false);
+        let totalResults = knockout.observable("0");
 
         ///////////////////////////////////////////////////////////////////////////////////////////
 
@@ -81,7 +81,7 @@
                 let givenSearchType = util.searchTypeSelectorMapping(srcTypeVal);
                 let object = util.conputeUrlStringWithPagination(searchString, givenSearchType, pageSize, currPage);
 
-                homeserv.getSearchItems(object, function (responseData) {
+                homeService.getSearchItems(object, function (responseData) {
                     if (responseData) {
 
                         currentPage(currPage);

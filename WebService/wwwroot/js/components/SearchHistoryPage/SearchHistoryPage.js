@@ -1,19 +1,19 @@
-﻿define(["knockout", "searchHistoryService", "messaging", "util"], function (ko, shs, mess, util) {
+﻿define(["knockout", "searchHistoryService", "messaging", "util"], function (knockout, searchHistoryService, messaging, util) {
 
     return function () {
 
-        let deletedAnnotStatus = ko.observable(false);
+        let deletedAnnotStatus = knockout.observable(false);
 
-        let annolist = ko.observableArray([]);
+        let annolist = knockout.observableArray([]);
         let p = 1; //initial page
-        let pshow = ko.observable();
+        let pshow = knockout.observable();
 
         let nexturi = '666'; //placeholder for grabbing querystring page=
         let prevuri = '666'; //placeholder for grabbing querystring page=
 
-        let pgsizepreset = ko.observableArray(['5', '10', '20', '30', '40', '50']) //selection of pagesizes
-        let loaded = ko.observable(false); //help with hiding elements until initial data has been loaded 
-        let getpgsize = ko.observable(10); //for getting new pagesize
+        let pgsizepreset = knockout.observableArray(['5', '10', '20', '30', '40', '50']) //selection of pagesizes
+        let loaded = knockout.observable(false); //help with hiding elements until initial data has been loaded 
+        let getpgsize = knockout.observable(10); //for getting new pagesize
         let ps = getpgsize(); //initial pagesize
 
         //grab data when pagesize change
@@ -34,11 +34,11 @@
             let s = item.searchString;
             let gotoSearch = resolveHelper(item)[0];
 
-            mess.dispatch(mess.actions.selectSearchOptions(stype));
-            mess.dispatch(mess.actions.selectSearchTerms(s));
+            messaging.dispatch(messaging.actions.selectSearchOptions(stype));
+            messaging.dispatch(messaging.actions.selectSearchTerms(s));
 
             if (gotoSearch) {
-                mess.dispatch(mess.actions.selectMenu(gotoSearch));
+                messaging.dispatch(messaging.actions.selectMenu(gotoSearch));
             }
         };
 
@@ -56,7 +56,7 @@
 
         //delete all search history
         let deleteSearchHistory = function () {
-            shs.deleteSearchHistory(function (serverResponse) {
+            searchHistoryService.deleteSearchHistory(function (serverResponse) {
                 let status = serverResponse.status;
                 if (status === 200) {
                     p = 1;
@@ -71,7 +71,7 @@
 
         //get all annos
         function getSearchHistory(npg, ps) {
-            shs.getSearchHist(npg, ps, function (data) {
+            searchHistoryService.getSearchHist(npg, ps, function (data) {
                 if (data) {
 
                     if (data.status == 400 || data.status == 666) {
@@ -143,37 +143,37 @@
         function changeComp(component) {
             if (component === 'history') {
                 saveStuff();
-                mess.dispatch(mess.actions.selectMenu("History"));
+                messaging.dispatch(messaging.actions.selectMenu("History"));
             } else if (component === 'book') {
                 saveStuff();
-                mess.dispatch(mess.actions.selectMenu("Annotations"));
+                messaging.dispatch(messaging.actions.selectMenu("Annotations"));
             } else if (component === 'anno') {
                 saveStuff();
-                mess.dispatch(mess.actions.selectMenu("Bookmarks"));
+                messaging.dispatch(messaging.actions.selectMenu("Bookmarks"));
             } else if (component === 'unauth') {
                 saveStuff();
-                mess.dispatch(mess.actions.selectMenu("authentication"));
+                messaging.dispatch(messaging.actions.selectMenu("authentication"));
             } else if (component === 'previous' && storedPreviousView) {
                 saveStuff();
-                mess.dispatch(mess.actions.selectMenu(storedPreviousView));
+                messaging.dispatch(messaging.actions.selectMenu(storedPreviousView));
             }
         }
 
         //store stuff from this view
         let saveStuff = function () {
-            mess.dispatch(mess.actions.selectCurrentPage(p));
-            mess.dispatch(mess.actions.selectMaxPages(ps));
+            messaging.dispatch(messaging.actions.selectCurrentPage(p));
+            messaging.dispatch(messaging.actions.selectMaxPages(ps));
             //store current component name
-            mess.dispatch(mess.actions.selectPreviousView("Search History"));
+            messaging.dispatch(messaging.actions.selectPreviousView("Search History"));
         };
 
         //restore stuff to this view
         let restoreStuff = function () {
             //get previous component/view
-            storedPreviousView = mess.getState().selectedPreviousView;
+            storedPreviousView = messaging.getState().selectedPreviousView;
             //restore fields
-            let storedMaxPages = mess.getState().selectedMaxPages;
-            let storedCurrentPage = mess.getState().selectedCurrentPage;
+            let storedMaxPages = messaging.getState().selectedMaxPages;
+            let storedCurrentPage = messaging.getState().selectedCurrentPage;
 
             if (storedPreviousView == "Search History" && (storedCurrentPage)) { p = storedCurrentPage; }
             if (storedMaxPages) {

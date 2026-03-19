@@ -1,12 +1,12 @@
-﻿define(["knockout", "authservice", "messaging", "validation"], function (ko, authservice, messaging, validation) {
+﻿define(["knockout", "authservice", "messaging", "validation"], function (knockout, authservice, messaging, validation) {
     return function () {
 
-        let loginUsername = ko.observable();
-        let loginPassword = ko.observable();
-        let errorMessage = ko.observable(false);
-        let errorDuplicatedUserMessage = ko.observable(false);
-        let showlogInUserForm = ko.observable(true);
-        let showSignUpForm = ko.observable(false);
+        let loginUsername = knockout.observable();
+        let loginPassword = knockout.observable();
+        let errorMessage = knockout.observable(false);
+        let errorDuplicatedUserMessage = knockout.observable(false);
+        let showlogInUserForm = knockout.observable(true);
+        let showSignUpForm = knockout.observable(false);
 
         let signupUserActionButton = function () {
             //hide the previous form and show new one

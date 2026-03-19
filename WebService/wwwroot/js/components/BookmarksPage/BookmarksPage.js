@@ -1,20 +1,20 @@
-﻿define(["knockout", "bookmarksService", 'messaging', 'util'], function (ko, bs, mess, util) {
+﻿define(["knockout", "bookmarksService", 'messaging', 'util'], function (knockout, bookmarkService, messaging, util) {
 
     return function () {
         let token = globalThis.localStorage.getItem('userToken');
 
-        let pgSizeOptions = ko.observableArray([5, 10, 20, 30, 40, 50]);
-        let pgSize = ko.observable(10);
-        let totalPages = ko.observable();
-        let totalResults = ko.observable();
-        let currentPage = ko.observable(1);
+        let pgSizeOptions = knockout.observableArray([5, 10, 20, 30, 40, 50]);
+        let pgSize = knockout.observable(10);
+        let totalPages = knockout.observable();
+        let totalResults = knockout.observable();
+        let currentPage = knockout.observable(1);
 
-        let prevUrl = ko.observable();
-        let nextUrl = ko.observable();
-        let items = ko.observableArray();
+        let prevUrl = knockout.observable();
+        let nextUrl = knockout.observable();
+        let items = knockout.observableArray();
 
         let getData = function (url) {
-            bs.getBookmarks(token, url, function (response) {
+            bookmarkService.getBookmarks(token, url, function (response) {
                 if (util.getParameterByName('page', url)) {
                     currentPage(util.getParameterByName('page', url));
                 }
@@ -30,7 +30,7 @@
         let pageSize = function (size) {
             pgSize(size);
             currentPage(1);
-            let url = bs.buildUrl(currentPage(), pgSize());
+            let url = bookmarkService.buildUrl(currentPage(), pgSize());
             getData(url);
         };
 
@@ -42,7 +42,7 @@
 
         let deleteBookmark = function (postId) {
             //delete on backend
-            bs.deleteBookmark(token, postId, function (response) {
+            bookmarkService.deleteBookmark(token, postId, function (response) {
                 return response;
             });
 
@@ -53,51 +53,51 @@
         };
 
         let deletions = function () {
-            bs.deleteBookmarks(token, function (response) {
+            bookmarkService.deleteBookmarks(token, function (response) {
               //  return response;
                 currentPage(1);
-                let url = bs.buildUrl(currentPage(), pgSize());
+                let url = bookmarkService.buildUrl(currentPage(), pgSize());
                 getData(url);
             })
 
         };
 
         let selectPostItem = function (item) {
-            mess.dispatch(mess.actions.selectPost(item));
-            mess.dispatch(mess.actions.selectMenu("postdetails"));
+            messaging.dispatch(messaging.actions.selectPost(item));
+            messaging.dispatch(messaging.actions.selectMenu("postdetails"));
         };
 
         //store stuff from this view
         let saveStuff = function () {
-            mess.dispatch(mess.actions.selectCurrentPage(currentPage()));
-            mess.dispatch(mess.actions.selectMaxPages(pgSize()));
-            mess.dispatch(mess.actions.selectPreviousView("Bookmarks"));
+            messaging.dispatch(messaging.actions.selectCurrentPage(currentPage()));
+            messaging.dispatch(messaging.actions.selectMaxPages(pgSize()));
+            messaging.dispatch(messaging.actions.selectPreviousView("Bookmarks"));
         };
 
         //comp change requested
         function changeComp(component) {
             if (component === 'anno') {
                 saveStuff();
-                mess.dispatch(mess.actions.selectMenu("Annotations"));
+                messaging.dispatch(messaging.actions.selectMenu("Annotations"));
             } else if (component === 'history') {
                 saveStuff();
-                mess.dispatch(mess.actions.selectMenu("History"));
+                messaging.dispatch(messaging.actions.selectMenu("History"));
             } else if (component === 'searchhistory') {
                 saveStuff();
-                mess.dispatch(mess.actions.selectMenu("Search History"));
+                messaging.dispatch(messaging.actions.selectMenu("Search History"));
             } else if (component === 'previous' && storedPreviousView) {
                 saveStuff();
-                mess.dispatch(mess.actions.selectMenu(storedPreviousView));
+                messaging.dispatch(messaging.actions.selectMenu(storedPreviousView));
             }
         };
 
         //restore stuff to this view
         let restoreStuff = function () {
             //get previous component/view
-            storedPreviousView = mess.getState().selectedPreviousView;
+            storedPreviousView = messaging.getState().selectedPreviousView;
             //restore fields
-            let storedMaxPages = mess.getState().selectedMaxPages;
-            let storedCurrentPage = mess.getState().selectedCurrentPage;
+            let storedMaxPages = messaging.getState().selectedMaxPages;
+            let storedCurrentPage = messaging.getState().selectedCurrentPage;
             if (storedPreviousView == "Bookmarks" && (storedCurrentPage)) { currentPage(storedCurrentPage); }
             if (storedMaxPages) {
                 pgSize(storedMaxPages);
@@ -108,7 +108,7 @@
         let storedPreviousView;
         restoreStuff();
         saveStuff();
-        let url = bs.buildUrl(currentPage(), pgSize());
+        let url = bookmarkService.buildUrl(currentPage(), pgSize());
         getData(url);
 
         return {

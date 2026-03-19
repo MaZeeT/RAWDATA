@@ -1,19 +1,19 @@
-﻿define(['knockout', 'postservice', 'messaging'], function (ko, postservice, messaging) {
+﻿define(['knockout', 'postservice', 'messaging'], function (knockout, postService, messaging) {
     return function () {
-        let postUrl = ko.observable(messaging.getState().selectedPost);
-        let annotationBodyText = ko.observable("");
-        let annotatedPostValues = ko.observable();
-        let updateAnnotationValue = ko.observable("");
+        let postUrl = knockout.observable(messaging.getState().selectedPost);
+        let annotationBodyText = knockout.observable("");
+        let annotatedPostValues = knockout.observable();
+        let updateAnnotationValue = knockout.observable("");
 
-        let postDetails = ko.observable([]);
-        let postAnnotationsArray = ko.observable([]);
-        let showspinner = ko.observable(true);
-        let showAnnotTextArea = ko.observable(false);
-        let responseData = ko.observable(false);
-        let deletedAnnotStatus = ko.observable(false);
-        let newAnnotation = ko.observable({});
+        let postDetails = knockout.observable([]);
+        let postAnnotationsArray = knockout.observable([]);
+        let showspinner = knockout.observable(true);
+        let showAnnotTextArea = knockout.observable(false);
+        let responseData = knockout.observable(false);
+        let deletedAnnotStatus = knockout.observable(false);
+        let newAnnotation = knockout.observable({});
 
-        postservice.getAllChildDataOfPostUrl(postUrl(), function (responseFromServer) {
+        postService.getAllChildDataOfPostUrl(postUrl(), function (responseFromServer) {
             if (responseFromServer) {
                 postDetails(responseFromServer);
                 postAnnotationsArray(responseFromServer);
@@ -27,7 +27,7 @@
 
         let addBookmark = function (value) {
             const createBookmarkUrl = value.createBookmarkLink;
-            postservice.savePostAsBookmark(createBookmarkUrl, function (responseFromServer) {
+            postService.savePostAsBookmark(createBookmarkUrl, function (responseFromServer) {
                 responseData(responseFromServer);
             });
         };
@@ -36,7 +36,7 @@
             if (updateAnnotationValue() && value.annotationId) {
                 let annotationId = value.annotationId;
                 let annotationBody = updateAnnotationValue();
-                postservice.updateAnnotation(annotationId, annotationBody, function (serverResponse) {
+                postService.updateAnnotation(annotationId, annotationBody, function (serverResponse) {
                     let status = serverResponse.status;
                     if (status === 204) {
                         callServiceGetThread(postUrl());
@@ -49,7 +49,7 @@
         let deleteAnnotation = function (value) {
             if (value.annotationId) {
                 let annotationId = value.annotationId;
-                postservice.deleteAnnotation(annotationId, function (serverResponse) {
+                postService.deleteAnnotation(annotationId, function (serverResponse) {
                     let status = serverResponse.status;
                     if (status === 200) {
                         updateAnnotationValue("");
@@ -74,7 +74,7 @@
                 annotBody
             };
 
-            postservice.saveAnnotationOnPost(createAnnotObject, function (responseFromServer) {
+            postService.saveAnnotationOnPost(createAnnotObject, function (responseFromServer) {
                 if (responseFromServer) {
                     annotationBodyText("");
                     newAnnotation(responseFromServer);
@@ -84,7 +84,7 @@
         });
 
         function callServiceGetThread(postUrl) {
-            postservice.getAllChildDataOfPostUrl(postUrl, function (responseFromServer) {
+            postService.getAllChildDataOfPostUrl(postUrl, function (responseFromServer) {
                 if (responseFromServer) {
                     postDetails(responseFromServer);
                     postAnnotationsArray(responseFromServer);
