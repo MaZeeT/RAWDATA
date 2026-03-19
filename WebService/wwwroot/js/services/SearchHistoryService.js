@@ -2,17 +2,17 @@
 
     //GET http://localhost:5001/api/hisory/searches
     //GetAllAnnotationsOfUser([FromQuery] PagingAttributes pagingAttributes)
-    let getSearchHist = async function (p, ps, callback) {
-        let toekn = globalThis.localStorage.getItem('userToken');
-        var response = await fetch(
+    let getSearchHist = async function (page, pageSize, callback) {
+        let token = globalThis.localStorage.getItem('userToken');
+        let response = await fetch(
             buildUrl("api/history/searches", {
-                page: p,
-                pageSize: ps
+                page: page,
+                pageSize: pageSize
             }),
             {
                 method: "GET",
                 headers: {
-                    Authorization: "Bearer " + toekn
+                    Authorization: "Bearer " + token
                 }
             }
         );
@@ -22,14 +22,14 @@
             try {
                 data = await response.json();    //try to parse
             } catch (error) {         //json was incomplete
-                let errorresponse = new Object();
-                errorresponse.status = 666; //custom status code
-                data = errorresponse;
+                let errorResponse = new Object();
+                errorResponse.status = 666; //custom status code
+                data = errorResponse;
             }
         } else if (response.status == 401) { //we are unauthorized!
-            let errorresponse = new Object();
-            errorresponse.status = response.status;  //send back status 401
-            data = errorresponse;
+            let errorResponse = new Object();
+            errorResponse.status = response.status;  //send back status 401
+            data = errorResponse;
         }
         callback(data);     //ok? then send it back
     };

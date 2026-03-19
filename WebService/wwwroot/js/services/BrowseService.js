@@ -1,16 +1,16 @@
 define([], function () {
 
-    let getBrowseItems = async function (p, ps, callback) {
-        let toekn = globalThis.localStorage.getItem('userToken');
+    let getBrowseItems = async function (page, pageSize, callback) {
+        let token = globalThis.localStorage.getItem('userToken');
         let response = await fetch(
             buildUrl("api/questions", {
-                page: p,
-                pageSize: ps
+                page: page,
+                pageSize: pageSize
             }),
             {
                 method: "GET",
                 headers: {
-                    Authorization: "Bearer "+toekn
+                    Authorization: "Bearer "+token
                 }
             }
         );
@@ -21,14 +21,14 @@ define([], function () {
                 data = await response.json();    //try to parse
             }
             catch (error) {         //json was incomplete
-                let errorresponse = new Object();
-                errorresponse.status = 666; //custom status code
-                data = errorresponse;
+                let errorResponse = new Object();
+                errorResponse.status = 666; //custom status code
+                data = errorResponse;
             }
         } else if (response.status == 401) { //we are unauthorized!
-            let errorresponse = new Object();
-            errorresponse.status = response.status;  //send back status 401
-            data = errorresponse;
+            let errorResponse = new Object();
+            errorResponse.status = response.status;  //send back status 401
+            data = errorResponse;
         }
         callback(data);     //ok? then send it back
     };

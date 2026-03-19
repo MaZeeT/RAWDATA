@@ -1,18 +1,18 @@
 define([], function () {
 
-    let getWCItems = async function (s, st, max, callback) {
+    let getWCItems = async function (searchTerm, searchType, max, callback) {
         let response = null;
-        let toekn = globalThis.localStorage.getItem('userToken');
+        let token = globalThis.localStorage.getItem('userToken');
         if (max == 0) {
             response = await fetch(
                 buildUrl("api/search/wordrank", {
-                    s: s,
-                    stype: st
+                    s: searchTerm,
+                    stype: searchType
                 }),
                 {
                     method: "GET",
                     headers: {
-                        Authorization: "Bearer " + toekn
+                        Authorization: "Bearer " + token
                     }
                 }
             );
@@ -20,14 +20,14 @@ define([], function () {
         else {
             response = await fetch(
                 buildUrl("api/search/wordrank", {
-                    s: s,
-                    stype: st,
+                    s: searchTerm,
+                    stype: searchType,
                     maxresults: max
                 }),
                 {
                     method: "GET",
                     headers: {
-                        Authorization: "Bearer " + toekn
+                        Authorization: "Bearer " + token
                     }
                 }
             );
@@ -41,31 +41,31 @@ define([], function () {
                 data = await response.json();    //try to parse
             }
             catch (error) {         //json was incomplete
-                let errorresponse = new Object();
-                errorresponse.status = 666; //custom status code
-                data = errorresponse;
+                let errorResponse = new Object();
+                errorResponse.status = 666; //custom status code
+                data = errorResponse;
             }
         } else if (response.status == 401) { //we are unauthorized!
-            let errorresponse = new Object();
-            errorresponse.status = response.status;  //send back status 401
-            data = errorresponse;
+            let errorResponse = new Object();
+            errorResponse.status = response.status;  //send back status 401
+            data = errorResponse;
         }
         callback(data);     //ok? then send it back
     };
 
 
     function buildUrl(url, parameters) {
-        let qs = "";
+        let queryString = "";
         for (const key in parameters) {
             if (parameters.hasOwnProperty(key)) {
                 const value = parameters[key];
-                qs +=
+                queryString +=
                     encodeURIComponent(key) + "=" + encodeURIComponent(value) + "&";
             }
         }
-        if (qs.length > 0) {
-            qs = qs.substring(0, qs.length - 1); //chop off last "&"
-            url = url + "?" + qs;
+        if (queryString.length > 0) {
+            queryString = queryString.substring(0, queryString.length - 1); //chop off last "&"
+            url = url + "?" + queryString;
         }
         return url;
     }
