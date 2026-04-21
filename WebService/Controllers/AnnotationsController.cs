@@ -58,7 +58,10 @@ public class AnnotationsController : SharedController
 
         foreach (var annotation in listOfAnnotations)
         {
-            var postDataForAnnot = _threadService.GetPost(annotation.PostId);
+            if (annotation.PostId == null) 
+                continue;
+            
+            var postDataForAnnot = _threadService.GetPost(annotation.PostId.Value);
             annotation.PostId = postDataForAnnot.Id;
             annotation.QuestionId = postDataForAnnot.QuestionId;
             annotation.Title = postDataForAnnot.Title;

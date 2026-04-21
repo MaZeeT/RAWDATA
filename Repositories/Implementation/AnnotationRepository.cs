@@ -66,19 +66,20 @@ public class AnnotationRepository : IAnnotationRepository
         using var db = _dbContextFactory.CreateDbContext();
         count = GetAllAnnotationsOfUserCount(userId);
         var page = ISharedRepository.GetPagination(count, pagingAttributes);
-
-        var result = (from annot in db.Annotations
-                join hist in db.History on annot.HistoryId equals hist.Id
-                where annot.UserId == userId
-                select new PostAnnotationsDto
-                {
-                    AnnotationId = annot.Id,
-                    PostId = hist.PostId,
-                    Body = annot.Body,
-                    Date = annot.Date
-                }).Skip(page * pagingAttributes.PageSize)
+        
+        var result = db.Annotations
+            .Where(a => a.UserId == userId)
+            .Skip(page * pagingAttributes.PageSize)
             .Take(pagingAttributes.PageSize)
+            .Select(a => new PostAnnotationsDto
+            {
+                AnnotationId = a.Id,
+                PostId = a.History != null ? a.History.PostId : null,
+                Body = a.Body,
+                Date = a.Date
+            })
             .ToList();
+
         return result;
     }
 
@@ -99,7 +100,7 @@ public class AnnotationRepository : IAnnotationRepository
         try
         {
             var itemToDelete = GetAnnotationByUserId(id, userId);
-            db.Annotations.Remove(itemToDelete);
+            db.Annotations.Remove(itemToDelete ?? throw new InvalidOperationException($"Annotation not found for deletion, with id {id}"));
             db.SaveChanges();
             return true;
         }
@@ -114,39 +115,22 @@ public class AnnotationRepository : IAnnotationRepository
         try
         {
             using var db = _dbContextFactory.CreateDbContext();
-            
-            var conn = db.Database.GetDbConnection();
-            db.Database.OpenConnection();
-            
-            using var cmd = conn.CreateCommand();
-            cmd.CommandText = @"
-            INSERT INTO annotations (userid, historyid, body, date)
-            VALUES (@userid, @postid, @body, CURRENT_TIMESTAMP)
-            RETURNING id;";
 
-            // Create and add parameters
-            var userIdParam = cmd.CreateParameter();
-            userIdParam.ParameterName = "userid";
-            userIdParam.Value = newAnnotation.UserId;
-            cmd.Parameters.Add(userIdParam);
+            var annotation = new Annotations
+            {
+                UserId = newAnnotation.UserId,
+                HistoryId = newAnnotation.PostId,
+                Body = newAnnotation.Body,
+                Date = DateTime.UtcNow
+            };
 
-            var postIdParam = cmd.CreateParameter();
-            postIdParam.ParameterName = "postid";
-            postIdParam.Value = newAnnotation.PostId;
-            cmd.Parameters.Add(postIdParam);
+            db.Annotations.Add(annotation);
+            db.SaveChanges();
 
-            var bodyParam = cmd.CreateParameter();
-            bodyParam.ParameterName = "body";
-            bodyParam.Value = newAnnotation.Body;
-            cmd.Parameters.Add(bodyParam);
-
-            // Execute and read the ID
-            var result = cmd.ExecuteScalar();
-            newId = result != null ? Convert.ToInt32(result) : -1;
-
-            return newId != -1;
+            newId = annotation.Id; // EF automatically populates this
+            return true;
         }
-        catch (Exception)
+        catch
         {
             newId = -1;
             return false;
@@ -159,7 +143,7 @@ public class AnnotationRepository : IAnnotationRepository
         try
         {
             var annotationToUpdate = db.Annotations.Find(annotationId);
-            annotationToUpdate.Body = annotationBody;
+            annotationToUpdate?.Body = annotationBody;
             db.SaveChanges();
             return true;
         }
