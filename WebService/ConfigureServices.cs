@@ -1,10 +1,10 @@
-﻿using DomainServices.Implementations;
+﻿using Application.Interfaces;
+using DomainServices.Implementations;
 using DomainServices.Interfaces;
 using Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Repositories.Implementation;
-using Repositories.Interfaces;
 
 namespace WebService;
 

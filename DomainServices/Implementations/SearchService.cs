@@ -1,7 +1,7 @@
-﻿using Domain.Enums;
+﻿using Application.Interfaces;
+using Domain.Enums;
 using Domain.Models;
 using DomainServices.Interfaces;
-using Repositories.Interfaces;
 
 namespace DomainServices.Implementations;
 

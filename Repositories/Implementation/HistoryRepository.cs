@@ -1,7 +1,7 @@
+using Application.Interfaces;
 using Infrastructure.Database;
 using Domain.Models;
 using Microsoft.EntityFrameworkCore;
-using Repositories.Interfaces;
 
 namespace Repositories.Implementation;
 

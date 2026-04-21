@@ -1,7 +1,7 @@
 using Domain.Enums;
 using Domain.Models;
 
-namespace Repositories.Interfaces;
+namespace Application.Interfaces;
 
 public interface ISearchRepository
 {

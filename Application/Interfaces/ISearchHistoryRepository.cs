@@ -1,6 +1,6 @@
 using Domain.Models;
 
-namespace Repositories.Interfaces;
+namespace Application.Interfaces;
 
 public interface ISearchHistoryRepository
 {
