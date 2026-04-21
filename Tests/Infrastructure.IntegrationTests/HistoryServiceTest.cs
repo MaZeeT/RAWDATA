@@ -63,7 +63,7 @@ namespace Tests.Infrastructure.IntegrationTests
             Assert.True(result);
 
             //clean up todo delete when mock is working
-            service.DeleteHistory(service.Get(TestUserId, 1760).Id);
+            service.DeleteHistory(service.Fetch(TestUserId, 1760).Id);
         }
 
         [Fact]
@@ -90,7 +90,7 @@ namespace Tests.Infrastructure.IntegrationTests
             Assert.False(service.DeleteBookmark(userid, postId * invalidModifier));
 
             //clean up todo delete when mock is working
-            service.DeleteHistory(service.Get(userid, postId).Id);
+            service.DeleteHistory(service.Fetch(userid, postId).Id);
         }
 
         [Fact]
@@ -117,7 +117,7 @@ namespace Tests.Infrastructure.IntegrationTests
             Assert.False(service.DeleteBookmark(userid * invalidModifier, postId));
 
             //clean up todo delete when mock is working
-            service.DeleteHistory(service.Get(userid, postId).Id);
+            service.DeleteHistory(service.Fetch(userid, postId).Id);
         }
 
         [Fact]
@@ -144,7 +144,7 @@ namespace Tests.Infrastructure.IntegrationTests
             Assert.False(service.DeleteBookmark(userid * invalidModifier, postId * invalidModifier));
 
             //clean up todo delete when mock is working
-            service.DeleteHistory(service.Get(userid, postId).Id);
+            service.DeleteHistory(service.Fetch(userid, postId).Id);
         }
 
         [Fact]
@@ -172,7 +172,7 @@ namespace Tests.Infrastructure.IntegrationTests
             Assert.True(resultDelete);
 
             //clean up todo delete when mock is working
-            service.DeleteHistory(service.Get(userid, postId).Id);
+            service.DeleteHistory(service.Fetch(userid, postId).Id);
         }
 
         [Fact]
@@ -248,7 +248,7 @@ namespace Tests.Infrastructure.IntegrationTests
             var historyPost = service.GetHistoryList(userid);
 
             //clean up todo delete when mock is working
-            service.DeleteHistory(service.Get(userid, postId3).Id);
+            service.DeleteHistory(service.Fetch(userid, postId3).Id);
             //end of clean up
 
             Assert.True(addResult1);
@@ -281,7 +281,7 @@ namespace Tests.Infrastructure.IntegrationTests
             var historyToAdd = new History {UserId = userId, PostId = postId, IsBookmark = isBookmark};
 
             var resultAdd = service.Add(historyToAdd);
-            var history = service.Get(userId, postId);
+            var history = service.Fetch(userId, postId);
 
             Assert.True(resultAdd);
             Assert.True(service.HistoryExist(history.Id));
@@ -314,7 +314,7 @@ namespace Tests.Infrastructure.IntegrationTests
             var service = _serviceProvider.GetRequiredService<IHistoryRepository>();
             const int id = -31;
 
-            Assert.Throws<ArgumentException>(() => service.Get(id));
+            Assert.Throws<ArgumentException>(() => service.Fetch(id));
         }
 
         [Fact]
@@ -324,7 +324,7 @@ namespace Tests.Infrastructure.IntegrationTests
             const int userId = -31;
             const int postId = -123;
 
-            Assert.Throws<ArgumentException>(() => service.Get(userId, postId));
+            Assert.Throws<ArgumentException>(() => service.Fetch(userId, postId));
         }
 
         [Fact]
@@ -372,9 +372,9 @@ namespace Tests.Infrastructure.IntegrationTests
 
 
             //clean up todo delete when mock is working
-            service.DeleteHistory(service.Get(userId, postId1).Id);
-            service.DeleteHistory(service.Get(userId, postId2).Id);
-            service.DeleteHistory(service.Get(userId, postId3).Id);
+            service.DeleteHistory(service.Fetch(userId, postId1).Id);
+            service.DeleteHistory(service.Fetch(userId, postId2).Id);
+            service.DeleteHistory(service.Fetch(userId, postId3).Id);
             //end of clean up            
 
             Assert.True(addResult1);
@@ -441,10 +441,10 @@ namespace Tests.Infrastructure.IntegrationTests
 
 
             //clean up todo delete when mock is working
-            service.DeleteHistory(service.Get(userId, postId1).Id);
-            service.DeleteHistory(service.Get(userId, postId2).Id);
-            service.DeleteHistory(service.Get(userId, postId3).Id);
-            service.DeleteHistory(service.Get(userId, postId4).Id);
+            service.DeleteHistory(service.Fetch(userId, postId1).Id);
+            service.DeleteHistory(service.Fetch(userId, postId2).Id);
+            service.DeleteHistory(service.Fetch(userId, postId3).Id);
+            service.DeleteHistory(service.Fetch(userId, postId4).Id);
             //end of clean up            
 
             Assert.True(addResult1);
@@ -468,7 +468,7 @@ namespace Tests.Infrastructure.IntegrationTests
             var history = new History {UserId = userId, PostId = postId, IsBookmark = isBookmark};
 
             var historyAdd = service.Add(history);
-            var historyGet = service.Get(userId, postId);
+            var historyGet = service.Fetch(userId, postId);
 
             //todo fix this
             Assert.True(historyAdd);

@@ -26,13 +26,13 @@ public class HistoryRepository : IHistoryRepository
         return result > 0;
     }
 
-    public History Get(int historyId)
+    public History Fetch(int historyId)
     {
         return _dbContext.History.Find(historyId)
                ?? throw new ArgumentException("HistoryId not found");
     }
 
-    public History Get(int userId, int postId)
+    public History Fetch(int userId, int postId)
     {
         var histories = _dbContext.History.Where(user => user.UserId == userId && user.PostId == postId).ToList();
         if (histories.Count > 0)

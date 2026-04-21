@@ -4,8 +4,8 @@ namespace Application.Interfaces.Repositories;
 public interface IHistoryRepository
 {
     bool Add(History history);
-    History Get(int historyId);
-    History Get(int userId, int postId);
+    History Fetch(int historyId);
+    History Fetch(int userId, int postId);
     List<History> GetHistoryList(int userId);
     List<History> GetHistoryList(int userId, PagingAttributes pagingAttributes);
     List<History> GetBookmarkList(int userId);
