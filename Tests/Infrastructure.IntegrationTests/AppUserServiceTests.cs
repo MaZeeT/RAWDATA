@@ -1,10 +1,11 @@
 using System;
 using Application.Interfaces;
+using Application.Interfaces.Repositories;
 using Domain.Entities;
-using Infrastructure.Database;
+using Infrastructure.DataAccess.Database;
+using Infrastructure.DataAccess.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Repositories.Implementation;
 using Xunit;
 
 namespace Tests.Infrastructure.IntegrationTests;

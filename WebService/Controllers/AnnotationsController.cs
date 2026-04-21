@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using Application.Interfaces.Services;
 using Domain.Entities;
-using DomainServices.Interfaces;
 
 namespace WebService.Controllers;
 

@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using Application.Interfaces.Services;
 using Domain.Entities;
 using Domain.Enums;
-using DomainServices.Interfaces;
 using WebService.DTOs;
 
 namespace WebService.Controllers;

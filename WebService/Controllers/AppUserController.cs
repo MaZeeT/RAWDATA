@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
-using DomainServices.Interfaces;
+using Application.Interfaces.Services;
 
 namespace WebService.Controllers;
 

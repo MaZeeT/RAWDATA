@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Application.Interfaces.Services;
 using Domain.Entities;
-using DomainServices.Interfaces;
 using WebService.DTOs;
 
 namespace WebService.Controllers;
