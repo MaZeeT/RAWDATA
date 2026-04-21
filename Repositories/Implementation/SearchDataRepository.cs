@@ -1,7 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using Application.Interfaces;
+using Domain.Entities;
 using Domain.Enums;
-using Domain.Models;
 using Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;

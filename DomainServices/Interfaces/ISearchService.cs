@@ -1,5 +1,5 @@
-﻿using Domain.Enums;
-using Domain.Models;
+﻿using Domain.Entities;
+using Domain.Enums;
 
 namespace DomainServices.Interfaces;
 

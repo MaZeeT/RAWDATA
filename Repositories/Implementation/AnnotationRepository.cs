@@ -1,6 +1,6 @@
 ﻿using Application.Interfaces;
+using Domain.Entities;
 using Infrastructure.Database;
-using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Repositories.Implementation;

@@ -1,6 +1,6 @@
 ﻿using Domain.Enums;
 
-namespace Domain.Models;
+namespace Domain.Entities;
 
 public class Searches
 {

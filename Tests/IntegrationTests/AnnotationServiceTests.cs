@@ -1,5 +1,5 @@
 ﻿using System;
-using Domain.Models;
+using Domain.Entities;
 using DomainServices.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;

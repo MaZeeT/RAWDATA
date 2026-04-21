@@ -1,6 +1,6 @@
 using System;
 using Application.Interfaces;
-using Domain.Models;
+using Domain.Entities;
 using Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

@@ -1,6 +1,6 @@
 ﻿using Application.Interfaces;
+using Domain.Entities;
 using Domain.Enums;
-using Domain.Models;
 using DomainServices.Interfaces;
 
 namespace DomainServices.Implementations;

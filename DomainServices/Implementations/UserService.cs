@@ -1,5 +1,5 @@
 ﻿using Application.Interfaces;
-using Domain.Models;
+using Domain.Entities;
 using DomainServices.Interfaces;
 
 namespace DomainServices.Implementations;

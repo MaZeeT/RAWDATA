@@ -1,5 +1,5 @@
 ﻿using System;
-using Domain.Models;
+using Domain.Entities;
 using Infrastructure.Database.Converters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
