@@ -58,7 +58,7 @@ public class AppUserRepository : IUserRepository
         }
 
         _dbContext.AppUser.Add(
-            new AppUser()
+            new AppUser
             {
                 Username = username,
                 Password = password,

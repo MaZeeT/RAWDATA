@@ -86,7 +86,7 @@ public class HistoryRepository : IHistoryRepository
             return false;
         }
 
-        History history = _dbContext.History.Find(historyId);
+        var history = _dbContext.History.Find(historyId);
         _dbContext.History.Remove(history);
 
         return _dbContext.SaveChanges() > 0;
@@ -110,7 +110,7 @@ public class HistoryRepository : IHistoryRepository
 
     public bool HistoryExist(int historyId)
     {
-        History result = _dbContext.History.Find(historyId);
+        var result = _dbContext.History.Find(historyId);
         return result != null;
     }
 

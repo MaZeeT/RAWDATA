@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Application.Interfaces;
 using Application.Interfaces.Repositories;
 using Domain.Entities;
 using Domain.Enums;
 using Infrastructure.DataAccess.Database;
-using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.DataAccess.Repositories;
 
@@ -38,7 +36,8 @@ public class SearchDataRepository : ISearchRepository
         Console.WriteLine($"{page} page trying to get.");
 
         // get subset of results according to pagesize etc
-        var resultList = SearchResults(db, userid, searchType, BuildSearchString(searchString, false), page, pagingAttributes); 
+        var resultList = SearchResults(db, userid, searchType, BuildSearchString(searchString, false), page,
+            pagingAttributes);
 
         // build and map results to posts
         var resultPosts = new List<Posts>();
@@ -71,11 +70,11 @@ public class SearchDataRepository : ISearchRepository
     public IList<WordRank> WordRank(int userid, string searchString, SearchType searchTyper, int? maxResults)
     {
         using var db = _dbContext;
-        
+
         var resultLimit = maxResults ?? 1000;
-        
+
         InsertSearchToLogTable(db, userid, searchTyper, searchString);
-        string[] words = Regex.Split(searchString, @"\s+");
+        var words = Regex.Split(searchString, @"\s+");
         switch (searchTyper)
         {
             case SearchType.WordsTfidf:
@@ -115,8 +114,8 @@ public class SearchDataRepository : ISearchRepository
 
     private static int MatchCount(DatabaseContext db, SearchType searchType, string searchString)
     {
-        string[] tokens = Regex.Split(searchString, @"\s+");
-        
+        var tokens = Regex.Split(searchString, @"\s+");
+
         switch (searchType)
         {
             case SearchType.Tfidf:
@@ -134,12 +133,13 @@ public class SearchDataRepository : ISearchRepository
         }
     }
 
-    private static List<Search> SearchResults(DatabaseContext db, int userid, SearchType searchType, string searchString, int page, PagingAttributes pagingAttributes)
+    private static List<Search> SearchResults(DatabaseContext db, int userid, SearchType searchType,
+        string searchString, int page, PagingAttributes pagingAttributes)
     {
         List<Search> resultList;
-        
-        string[] tokens = Regex.Split(searchString, @"\s+");
-        
+
+        var tokens = Regex.Split(searchString, @"\s+");
+
         switch (searchType)
         {
             case SearchType.Tfidf:
@@ -160,11 +160,12 @@ public class SearchDataRepository : ISearchRepository
                 resultList = SearchAlgorithms.BestMatch.List(db, tokens);
                 break;
         }
-        
+
         return resultList;
     }
 
-    private static void InsertSearchToLogTable(DatabaseContext db, int userid, SearchType searchtype, string searchString)
+    private static void InsertSearchToLogTable(DatabaseContext db, int userid, SearchType searchtype,
+        string searchString)
     {
         // Insert search to search log
         var searches = new Searches
@@ -178,7 +179,7 @@ public class SearchDataRepository : ISearchRepository
         db.Searches.Add(searches);
         db.SaveChanges();
     }
-    
+
     private IList<WordRank> WordRankTfidf(DatabaseContext db, string[] words, int limit)
     {
         // Build the UNION ALL equivalent
@@ -210,7 +211,7 @@ public class SearchDataRepository : ISearchRepository
 
         return result;
     }
-    
+
     private IList<WordRank> WordRankBest(DatabaseContext db, string[] words, int limit)
     {
         // Build UNION ALL for wi

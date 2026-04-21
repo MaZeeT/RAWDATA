@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Application.Interfaces;
 using Application.Interfaces.Repositories;
 using Domain.Entities;
 using Infrastructure.DataAccess.Database;
-using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.DataAccess.Repositories;
 
@@ -79,10 +77,6 @@ public class SharedRepository : ISharedRepository
         using var db = _dbContext;
         //get the question
         var q = _questionRepository.GetQuestion(questionId);
-        if (q == null)
-        {
-            return null;
-        }
         
         //find answers to the specified question
         var answers = db.Answers
