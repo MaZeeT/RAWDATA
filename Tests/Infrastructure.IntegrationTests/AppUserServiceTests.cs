@@ -13,7 +13,7 @@ namespace Tests.Infrastructure.IntegrationTests;
 public class AppUserRepositoryTests
 {
 
-    private readonly IDbContextFactory<DatabaseContext> _dbContextFactory;
+    private readonly DatabaseContext _dbContext;
     private readonly ServiceProvider _serviceProvider;
     private const int UserId = 12;
     private const string UserName = "in";
@@ -33,7 +33,7 @@ public class AppUserRepositoryTests
         });
 
         _serviceProvider = services.BuildServiceProvider();
-        _dbContextFactory =  _serviceProvider.GetRequiredService<IDbContextFactory<DatabaseContext>>();
+        _dbContext =  _serviceProvider.GetRequiredService<DatabaseContext>();
     }
         
     [Fact]
@@ -48,7 +48,7 @@ public class AppUserRepositoryTests
     [Fact]
     public void AppUserExistByIdTrue()
     {
-        IUserRepository service = new AppUserRepository(_dbContextFactory);
+        IUserRepository service = new AppUserRepository(_dbContext);
         //const int userId = 12; //Hardcoded user in DB //todo replace with a mock
 
         Assert.True(service.AppUserExist(UserId));
@@ -57,7 +57,7 @@ public class AppUserRepositoryTests
     [Fact]
     public void AppUserExistByNameFalse()
     {
-        IUserRepository service = new AppUserRepository(_dbContextFactory);
+        IUserRepository service = new AppUserRepository(_dbContext);
         const string nonUserName = "£@£@£@€$£$£{£$£@$€$£€€£$€"; //Hardcoded user in DB //todo replace with a mock
 
         Assert.False(service.AppUserExist(nonUserName));
@@ -66,7 +66,7 @@ public class AppUserRepositoryTests
     [Fact]
     public void AppUserExistByNameTrue()
     {
-        IUserRepository service = new AppUserRepository(_dbContextFactory);
+        IUserRepository service = new AppUserRepository(_dbContext);
         //const string userName = "in"; //Hardcoded user in DB //todo replace with a mock
 
         Assert.True(service.AppUserExist(UserName));
@@ -75,7 +75,7 @@ public class AppUserRepositoryTests
     [Fact]
     public void GetAppUserById()
     {
-        IUserRepository service = new AppUserRepository(_dbContextFactory);
+        IUserRepository service = new AppUserRepository(_dbContext);
 
         Assert.Equal(UserName, service.GetAppUserName(UserId));
     }
@@ -83,7 +83,7 @@ public class AppUserRepositoryTests
     [Fact]
     public void GetAppUserByName()
     {
-        IUserRepository service = new AppUserRepository(_dbContextFactory);
+        IUserRepository service = new AppUserRepository(_dbContext);
 
         Assert.Equal(UserId, service.GetAppUserId(UserName));
     }
@@ -91,7 +91,7 @@ public class AppUserRepositoryTests
     [Fact]
     public void CreateAppUser()
     {
-        IUserRepository service = new AppUserRepository(_dbContextFactory);
+        IUserRepository service = new AppUserRepository(_dbContext);
         const string newUserName = "Mr. Tester von testons1";
 
         bool creationBool = service.CreateAppUser(newUserName, Password, Salt);
@@ -107,7 +107,7 @@ public class AppUserRepositoryTests
     [Fact]
     public void CreateAppUserTwice()
     {
-        IUserRepository service = new AppUserRepository(_dbContextFactory);
+        IUserRepository service = new AppUserRepository(_dbContext);
         const string newUserName = "Mr. Tester von test";
 
         bool creationBoolOne = service.CreateAppUser(newUserName, Password, Salt);
@@ -125,7 +125,7 @@ public class AppUserRepositoryTests
     [Fact]
     public void CreateUserGetObject()
     {
-        IUserRepository service = new AppUserRepository(_dbContextFactory);
+        IUserRepository service = new AppUserRepository(_dbContext);
         const string newUserName = "Mr. Tester von test";
 
         AppUser user = service.CreateUser(newUserName, Password, Salt);
@@ -139,7 +139,7 @@ public class AppUserRepositoryTests
     [Fact]
     public void CreateUserGetObjectNull()
     {
-        IUserRepository service = new AppUserRepository(_dbContextFactory);
+        IUserRepository service = new AppUserRepository(_dbContext);
 
         Assert.Throws<ArgumentException>(() => service.CreateUser(UserName, Password, Salt));
     }
@@ -147,7 +147,7 @@ public class AppUserRepositoryTests
     [Fact]
     public void UpdateAppUserNameValidUser()
     {
-        IUserRepository service = new AppUserRepository(_dbContextFactory);
+        IUserRepository service = new AppUserRepository(_dbContext);
         const string userNameOne = "Ms. donald docker";
         const string userNameTwo = "Ms. donald duck";
 
@@ -172,7 +172,7 @@ public class AppUserRepositoryTests
     [Fact]
     public void UpdateAppUserNameInvalidUser()
     {
-        IUserRepository service = new AppUserRepository(_dbContextFactory);
+        IUserRepository service = new AppUserRepository(_dbContext);
         const string userNameOne = "Ms. ronaldo docker";
         const string userNameTwo = "Ms. ronaldo duck";
 
@@ -184,7 +184,7 @@ public class AppUserRepositoryTests
     [Fact]
     public void DeleteAppUserByNameTrue()
     {
-        IUserRepository service = new AppUserRepository(_dbContextFactory);
+        IUserRepository service = new AppUserRepository(_dbContext);
         const string newUserName = "dock";
 
         bool creationBool = service.CreateAppUser(newUserName, Password, Salt);
@@ -200,7 +200,7 @@ public class AppUserRepositoryTests
     [Fact]
     public void DeleteAppUserByNameFalse()
     {
-        IUserRepository service = new AppUserRepository(_dbContextFactory);
+        IUserRepository service = new AppUserRepository(_dbContext);
         const string newUserName = "docker";
         const string falseName = "not docker";
 
@@ -219,7 +219,7 @@ public class AppUserRepositoryTests
     [Fact]
     public void DeleteAppUserByIdTrue()
     {
-        IUserRepository service = new AppUserRepository(_dbContextFactory);
+        IUserRepository service = new AppUserRepository(_dbContext);
         const string newUserName = "donald";
 
         bool creationBool = service.CreateAppUser(newUserName, Password, Salt);
@@ -237,7 +237,7 @@ public class AppUserRepositoryTests
     [Fact]
     public void DeleteAppUserByIdFalse()
     {
-        IUserRepository service = new AppUserRepository(_dbContextFactory);
+        IUserRepository service = new AppUserRepository(_dbContext);
         const string newUserName = "niels";
         const int falseId = -2;
 

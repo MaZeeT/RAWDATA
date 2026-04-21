@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using Application.Interfaces;
 using Application.Interfaces.Repositories;
 using Domain.Entities;
 using Infrastructure.DataAccess.Database;
@@ -10,16 +9,16 @@ namespace Infrastructure.DataAccess.Repositories;
 
 public class AppUserRepository : IUserRepository
 {
-    private readonly DatabaseContext _database;
+    private readonly DatabaseContext _dbContext;
 
-    public AppUserRepository(IDbContextFactory<DatabaseContext> factory)
+    public AppUserRepository(DatabaseContext dbContext)
     {
-        _database = factory.CreateDbContext();
+        _dbContext = dbContext;
     }
 
     public string? GetAppUserName(int id)
     {
-        var result = _database.AppUser.Find(id);
+        var result = _dbContext.AppUser.Find(id);
         return result?.Username;
     }
 
@@ -36,13 +35,19 @@ public class AppUserRepository : IUserRepository
     
     public AppUser? GetAppUser(string username)
     {
-        var appUsers = _database.AppUser.Where(user => user.Username == username).ToList();
+        var appUsers = _dbContext.AppUser.Where(user => user.Username == username).ToList();
         if (appUsers.Count > 0)
         {
             return appUsers[0];
         }
 
         return null;
+    }
+
+    public AppUser Add(AppUser user)
+    {
+        _dbContext.AppUser.Add(user);
+        return user;
     }
 
     public bool CreateAppUser(string username, string password, string salt)
@@ -52,7 +57,7 @@ public class AppUserRepository : IUserRepository
             return false;
         }
 
-        _database.AppUser.Add(
+        _dbContext.AppUser.Add(
             new AppUser()
             {
                 Username = username,
@@ -60,7 +65,7 @@ public class AppUserRepository : IUserRepository
                 Salt = salt
             });
 
-        var result = _database.SaveChanges();
+        var result = _dbContext.SaveChanges();
         return result > 0;
     }
 
@@ -82,10 +87,10 @@ public class AppUserRepository : IUserRepository
         }
 
         var appUserId = GetAppUserId(oldName);
-        var appUser = _database.AppUser.Find(appUserId);
-        _database.AppUser.Update(appUser);
+        var appUser = _dbContext.AppUser.Find(appUserId);
+        _dbContext.AppUser.Update(appUser);
         appUser.Username = newName;
-        var result = _database.SaveChanges();
+        var result = _dbContext.SaveChanges();
         return result > 0;
     }
 
@@ -96,10 +101,10 @@ public class AppUserRepository : IUserRepository
             return false;
         }
 
-        var appUser = _database.AppUser.Find(id);
-        _database.AppUser.Remove(appUser);
+        var appUser = _dbContext.AppUser.Find(id);
+        _dbContext.AppUser.Remove(appUser);
 
-        var result = _database.SaveChanges();
+        var result = _dbContext.SaveChanges();
         return result > 0;
     }
 
@@ -110,12 +115,17 @@ public class AppUserRepository : IUserRepository
 
     public bool AppUserExist(int id)
     {
-        var result = _database.AppUser.Find(id);
+        var result = _dbContext.AppUser.Find(id);
         return result != null;
     }
 
     public bool AppUserExist(string username)
     {
-        return _database.AppUser.Any(user => user.Username == username);
+        return _dbContext.AppUser.Any(user => user.Username == username);
+    }
+
+    public bool AppUserExist(AppUser user)
+    {
+        return _dbContext.AppUser.Any(u => u.Username == user.Username);
     }
 }

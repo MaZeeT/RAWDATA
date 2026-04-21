@@ -13,14 +13,14 @@ namespace Infrastructure.DataAccess.Repositories;
 
 public class SearchDataRepository : ISearchRepository
 {
-    private readonly IDbContextFactory<DatabaseContext> _dbContextFactory;
+    private readonly DatabaseContext _dbContext;
     private readonly IQuestionRepository _questionRepository;
     private readonly ISharedRepository _sharedRepositoryService;
 
-    public SearchDataRepository(IDbContextFactory<DatabaseContext> factory, IQuestionRepository questionRepository,
+    public SearchDataRepository(DatabaseContext dbContext, IQuestionRepository questionRepository,
         ISharedRepository sharedRepositoryService)
     {
-        _dbContextFactory = factory;
+        _dbContext = dbContext;
         _questionRepository = questionRepository;
         _sharedRepositoryService = sharedRepositoryService;
     }
@@ -28,7 +28,7 @@ public class SearchDataRepository : ISearchRepository
     public IList<Posts> Search(int userid, string searchString, SearchType searchType,
         PagingAttributes pagingAttributes)
     {
-        using var db = _dbContextFactory.CreateDbContext();
+        using var db = _dbContext;
 
         // count all matches
         var matchCount = MatchCount(db, searchType, BuildSearchString(searchString, false));
@@ -70,7 +70,7 @@ public class SearchDataRepository : ISearchRepository
 
     public IList<WordRank> WordRank(int userid, string searchString, SearchType searchTyper, int? maxResults)
     {
-        using var db = _dbContextFactory.CreateDbContext();
+        using var db = _dbContext;
         
         var resultLimit = maxResults ?? 1000;
         

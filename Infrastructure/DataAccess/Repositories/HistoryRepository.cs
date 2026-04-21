@@ -11,30 +11,30 @@ namespace Infrastructure.DataAccess.Repositories;
 
 public class HistoryRepository : IHistoryRepository
 {
-    private readonly DatabaseContext _database;
+    private readonly DatabaseContext _dbContext;
 
-    public HistoryRepository(IDbContextFactory<DatabaseContext> factory)
+    public HistoryRepository(DatabaseContext dbContext)
     {
-        _database = factory.CreateDbContext();
+        _dbContext = dbContext;
     }
 
 
     public bool Add(History history)
     {
-        _database.History.Add(history);
-        var result = _database.SaveChanges();
+        _dbContext.History.Add(history);
+        var result = _dbContext.SaveChanges();
         return result > 0;
     }
 
     public History Get(int historyId)
     {
-        return _database.History.Find(historyId)
+        return _dbContext.History.Find(historyId)
                ?? throw new ArgumentException("HistoryId not found");
     }
 
     public History Get(int userId, int postId)
     {
-        var histories = _database.History.Where(user => user.UserId == userId && user.PostId == postId).ToList();
+        var histories = _dbContext.History.Where(user => user.UserId == userId && user.PostId == postId).ToList();
         if (histories.Count > 0)
         {
             return histories[0];
@@ -67,16 +67,16 @@ public class HistoryRepository : IHistoryRepository
 
     public bool DeleteUserHistory(int userId)
     {
-        var history = _database.History.Where(x =>
+        var history = _dbContext.History.Where(x =>
             x.UserId == userId &&
             x.IsBookmark == false);
 
         foreach (var entry in history)
         {
-            _database.History.Remove(entry);
+            _dbContext.History.Remove(entry);
         }
 
-        return _database.SaveChanges() > 0;
+        return _dbContext.SaveChanges() > 0;
     }
 
     public bool DeleteHistory(int historyId)
@@ -86,37 +86,37 @@ public class HistoryRepository : IHistoryRepository
             return false;
         }
 
-        History history = _database.History.Find(historyId);
-        _database.History.Remove(history);
+        History history = _dbContext.History.Find(historyId);
+        _dbContext.History.Remove(history);
 
-        return _database.SaveChanges() > 0;
+        return _dbContext.SaveChanges() > 0;
     }
 
     public bool DeleteBookmark(int userId, int postId)
     {
-        var histories = _database.History.Where(x =>
+        var histories = _dbContext.History.Where(x =>
             x.UserId == userId &&
             x.PostId == postId &&
             x.IsBookmark == true);
 
         foreach (var history in histories)
         {
-            _database.History.Update(history);
+            _dbContext.History.Update(history);
             history.IsBookmark = false;
         }
 
-        return _database.SaveChanges() > 0;
+        return _dbContext.SaveChanges() > 0;
     }
 
     public bool HistoryExist(int historyId)
     {
-        History result = _database.History.Find(historyId);
+        History result = _dbContext.History.Find(historyId);
         return result != null;
     }
 
     private bool HistoryExist(int userId, int postId)
     {
-        var result = _database.History.Where(history =>
+        var result = _dbContext.History.Where(history =>
                 history.UserId == userId &&
                 history.PostId == postId)
             .ToList();
@@ -129,7 +129,7 @@ public class HistoryRepository : IHistoryRepository
         // This enforces the page upper and lower limits 
         ISharedRepository.GetPagination(GetCount(userId, isBookmark), pageAtt);
 
-        return _database.History
+        return _dbContext.History
             .Where(x =>
                 x.UserId == userId &&
                 x.IsBookmark == isBookmark)
@@ -141,7 +141,7 @@ public class HistoryRepository : IHistoryRepository
 
     public int GetCount(int userId, bool isBookmark)
     {
-        return _database.History.Count(x =>
+        return _dbContext.History.Count(x =>
             x.UserId == userId &&
             x.IsBookmark == isBookmark);
     }

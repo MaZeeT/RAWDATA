@@ -10,23 +10,23 @@ namespace Infrastructure.DataAccess.Repositories;
 
 public class QuestionRepository : IQuestionRepository
 {
-    private readonly IDbContextFactory<DatabaseContext> _dbContextFactory;
+    private readonly DatabaseContext _dbContext;
 
-    public QuestionRepository(IDbContextFactory<DatabaseContext> dbContextFactory)
+    public QuestionRepository(DatabaseContext dbContext)
     {
-        _dbContextFactory = dbContextFactory;
+        _dbContext = dbContext;
     }
 
     public Questions GetQuestion(int questionId)
     {
-        using var db = _dbContextFactory.CreateDbContext();
+        using var db = _dbContext;
         return db.Questions.Find(questionId) ?? throw new KeyNotFoundException($"Question with id {questionId} not found");
     }
     
     public IList<Questions> GetQuestions(PagingAttributes pagingAttributes)
     {
         //// for browsing the full list of questions
-        using var db = _dbContextFactory.CreateDbContext();
+        using var db = _dbContext;
 
         //convert back from 1-based pages + check/fix page
         var page = ISharedRepository.GetPagination(NumberOfQuestions(), pagingAttributes);
@@ -40,7 +40,7 @@ public class QuestionRepository : IQuestionRepository
     
     public int NumberOfQuestions()
     {
-        using var db = _dbContextFactory.CreateDbContext();
+        using var db = _dbContext;
         return db.Questions
             .Count();
     }

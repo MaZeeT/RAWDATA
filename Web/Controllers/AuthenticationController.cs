@@ -52,8 +52,11 @@ public class AuthenticationController : ControllerBase
 
         var pwd = PasswordService.HashPassword(dto.Password, salt, size);
 
-        _userService.CreateUser(dto.Username, pwd, salt);
+        var result = _userService.CreateUser(dto.Username, pwd, salt);
 
+        if (!result.IsSuccess)
+            return BadRequest(result.Error);
+        
         return CreatedAtRoute(null, dto.Username);
     }
 
@@ -99,7 +102,7 @@ public class AuthenticationController : ControllerBase
             Subject = new ClaimsIdentity(new Claim[]
             {
                 new Claim(ClaimTypes.Name, user.Id.ToString()), //need to see what are claims and how they work
-                //as i understand it, we can use the claim to get the user/name/id from the other controllers
+                //as I understand it, we can use the claim to get the user/name/id from the other controllers
             }),
             //Expires = DateTime.Now.AddMinutes(3),
             Expires = DateTime.Now.AddDays(1), //when testing functions

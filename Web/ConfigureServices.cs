@@ -33,7 +33,7 @@ public static class ServiceConfigurator
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         
-        services.AddDbContextFactory<DatabaseContext>(options =>
+        services.AddDbContext<DatabaseContext>(options =>
         {
             options
                 .UseLoggerFactory(DatabaseContext.MyLoggerFactory)

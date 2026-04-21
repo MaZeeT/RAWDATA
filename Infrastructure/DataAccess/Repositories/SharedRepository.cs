@@ -11,18 +11,18 @@ namespace Infrastructure.DataAccess.Repositories;
 
 public class SharedRepository : ISharedRepository
 {
-    private readonly IDbContextFactory<DatabaseContext> _dbContextFactory;
+    private readonly DatabaseContext _dbContext;
     private readonly IQuestionRepository _questionRepository;
 
-    public SharedRepository(IDbContextFactory<DatabaseContext> factory, IQuestionRepository questionRepository)
+    public SharedRepository(DatabaseContext dbContext, IQuestionRepository questionRepository)
     {
-        _dbContextFactory = factory;
+        _dbContext = dbContext;
         _questionRepository = questionRepository;
     }
     
     public string GetPostType(int postId)
     {
-        using var db = _dbContextFactory.CreateDbContext();
+        using var db = _dbContext;
         var postTypeId = db.QAndA.Find(postId);
         var tablename = postTypeId?.PostTypeId switch
         {
@@ -37,7 +37,7 @@ public class SharedRepository : ISharedRepository
 
     private Answers GetAnswer(int answerId)
     {
-        using var db = _dbContextFactory.CreateDbContext();
+        using var db = _dbContext;
         return db.Answers.Find(answerId) ?? throw new KeyNotFoundException($"Answer with id {answerId} not found");
     }
 
@@ -76,7 +76,7 @@ public class SharedRepository : ISharedRepository
     public IList<Posts> GetThread(int questionId)
         //returns question and all child answers
     {
-        using var db = _dbContextFactory.CreateDbContext();
+        using var db = _dbContext;
         //get the question
         var q = _questionRepository.GetQuestion(questionId);
         if (q == null)

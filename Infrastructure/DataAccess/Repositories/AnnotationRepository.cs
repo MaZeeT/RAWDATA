@@ -11,22 +11,22 @@ namespace Infrastructure.DataAccess.Repositories;
 
 public class AnnotationRepository : IAnnotationRepository
 {
-    private readonly IDbContextFactory<DatabaseContext> _dbContextFactory;
+    private readonly DatabaseContext _dbContext;
 
-    public AnnotationRepository(IDbContextFactory<DatabaseContext> factory)
+    public AnnotationRepository(DatabaseContext dbContext)
     {
-        _dbContextFactory = factory;
+        _dbContext = dbContext;
     }
     
     public Annotations? GetAnnotation(int annotationId)
     {
-        using var db = _dbContextFactory.CreateDbContext();
+        using var db = _dbContext;
         return db.Annotations.Find(annotationId);
     }
     
     private Annotations? GetAnnotationByUserId(int annotationId, int userId)
     {
-        using var db = _dbContextFactory.CreateDbContext();
+        using var db = _dbContext;
         var result = db.Annotations
             .Where(a => a.UserId == userId)
             .FirstOrDefault(a => a.Id == annotationId);
@@ -36,7 +36,7 @@ public class AnnotationRepository : IAnnotationRepository
     public List<SimpleAnnotationDto> GetUserAnnotationsMadeOnAPost(int userId, int postId,
         PagingAttributes pagingAttributes)
     {
-        using var db = _dbContextFactory.CreateDbContext();
+      using var db = _dbContext;
         var page = ISharedRepository.GetPagination(UserAnnotOnPostListCount(userId, postId), pagingAttributes);
 
         var query =
@@ -53,7 +53,7 @@ public class AnnotationRepository : IAnnotationRepository
 
     private int UserAnnotOnPostListCount(int userId, int postId)
     {
-        using var db = _dbContextFactory.CreateDbContext();
+      using var db = _dbContext;
         var annotationsCount = from annot in db.Annotations
             join hist in db.History on annot.HistoryId equals hist.Id
             where annot.UserId == userId && hist.PostId == postId
@@ -66,7 +66,7 @@ public class AnnotationRepository : IAnnotationRepository
     public List<PostAnnotationsDto> GetAllAnnotationsOfUser(int userId, PagingAttributes pagingAttributes,
         out int count)
     {
-        using var db = _dbContextFactory.CreateDbContext();
+      using var db = _dbContext;
         count = GetAllAnnotationsOfUserCount(userId);
         var page = ISharedRepository.GetPagination(count, pagingAttributes);
         
@@ -88,7 +88,7 @@ public class AnnotationRepository : IAnnotationRepository
 
     private int GetAllAnnotationsOfUserCount(int userId)
     {
-        using var db = _dbContextFactory.CreateDbContext();
+      using var db = _dbContext;
         var listCount = (from annot in db.Annotations
             join hist in db.History on annot.HistoryId equals hist.Id
             where annot.UserId == userId
@@ -99,7 +99,7 @@ public class AnnotationRepository : IAnnotationRepository
     
     public bool DeleteAnnotation(int id, int userId)
     {
-        using var db = _dbContextFactory.CreateDbContext();
+      using var db = _dbContext;
         try
         {
             var itemToDelete = GetAnnotationByUserId(id, userId);
@@ -117,7 +117,7 @@ public class AnnotationRepository : IAnnotationRepository
     {
         try
         {
-            using var db = _dbContextFactory.CreateDbContext();
+          using var db = _dbContext;
 
             var annotation = new Annotations
             {
@@ -142,7 +142,7 @@ public class AnnotationRepository : IAnnotationRepository
 
     public bool UpdateAnnotation(int annotationId, string annotationBody)
     {
-        using var db = _dbContextFactory.CreateDbContext();
+      using var db = _dbContext;
         try
         {
             var annotationToUpdate = db.Annotations.Find(annotationId);

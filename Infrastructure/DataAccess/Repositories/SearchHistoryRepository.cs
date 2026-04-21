@@ -10,16 +10,16 @@ namespace Infrastructure.DataAccess.Repositories;
 
 public class SearchHistoryRepository : ISearchHistoryRepository
 {
-    private readonly IDbContextFactory<DatabaseContext> _dbContextFactory;
+    private readonly DatabaseContext _dbContext;
 
-    public SearchHistoryRepository(IDbContextFactory<DatabaseContext> factory)
+    public SearchHistoryRepository(DatabaseContext dbContext)
     {
-        _dbContextFactory = factory;
+        _dbContext = dbContext;
     }
 
     public (List<Searches>, int) GetSearchesList(int userId, PagingAttributes pagingAttributes)
     {
-        using var db = _dbContextFactory.CreateDbContext();
+        using var db = _dbContext;
 
         var count = db.Searches
             .Count(x => x.UserId == userId);
@@ -39,7 +39,7 @@ public class SearchHistoryRepository : ISearchHistoryRepository
 
     public bool DeleteUserSearchHistory(int userId)
     {
-        using var db = _dbContextFactory.CreateDbContext();
+        using var db = _dbContext;
         var rowsDeleted = db.Searches
             .Where(x => x.UserId == userId)
             .ExecuteDelete();

@@ -3,6 +3,7 @@ using Domain.Entities;
 namespace Application.Interfaces.Repositories;
 public interface IUserRepository
 {
+    AppUser Add(AppUser user);
     bool CreateAppUser(string username, string password, string salt);
     AppUser CreateUser(string name, string password, string salt);
     bool UpdateAppUserName(string oldName, string newName);
@@ -13,4 +14,5 @@ public interface IUserRepository
     int GetAppUserId(string username);
     bool AppUserExist(int id);
     bool AppUserExist(string username);
+    bool AppUserExist(AppUser user);
 }
