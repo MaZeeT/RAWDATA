@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Domain.Entities;
 
-namespace WebService.DTOs;
+namespace Web.DTOs;
 
 public class PostsThreadDto
 {

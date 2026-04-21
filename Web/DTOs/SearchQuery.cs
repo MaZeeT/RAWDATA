@@ -2,7 +2,7 @@
 using Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 
-namespace WebService.DTOs;
+namespace Web.DTOs;
 
 public class SearchQuery
 {

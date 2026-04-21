@@ -1,4 +1,4 @@
-﻿namespace WebService.DTOs;
+﻿namespace Web.DTOs;
 
 public class SignupUserDto
 {

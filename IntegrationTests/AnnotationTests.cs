@@ -4,7 +4,7 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc.Testing;
-using WebService.Controllers;
+using Web.Controllers;
 using Xunit;
 
 namespace IntegrationTests;

@@ -8,10 +8,10 @@ using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using WebService.DTOs;
-using WebService.Services;
+using Web.DTOs;
+using Web.Services;
 
-namespace WebService.Controllers;
+namespace Web.Controllers;
 
 [ApiController]
 [Route("api/auth")]

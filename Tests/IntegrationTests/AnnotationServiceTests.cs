@@ -3,7 +3,7 @@ using Application.Interfaces.Services;
 using Domain.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
-using WebService;
+using Web;
 
 namespace Tests.IntegrationTests;
 

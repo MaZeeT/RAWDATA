@@ -3,7 +3,7 @@ using System;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace WebService.Services;
+namespace Web.Services;
 
 public static class PasswordService
 {

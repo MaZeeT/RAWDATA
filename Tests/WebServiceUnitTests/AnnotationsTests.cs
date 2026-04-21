@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using Domain.Entities;
-using WebService.DTOs;
+using Web.DTOs;
 using Xunit;
 
 namespace Tests.WebServiceUnitTests;

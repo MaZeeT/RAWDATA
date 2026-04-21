@@ -6,9 +6,9 @@ using System.Linq;
 using Application.Interfaces.Services;
 using Domain.Entities;
 using Domain.Enums;
-using WebService.DTOs;
+using Web.DTOs;
 
-namespace WebService.Controllers;
+namespace Web.Controllers;
 
 [ApiController]
 [Route("api/search")]

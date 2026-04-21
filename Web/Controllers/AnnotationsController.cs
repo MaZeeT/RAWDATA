@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using Application.Interfaces.Services;
 using Domain.Entities;
 
-namespace WebService.Controllers;
+namespace Web.Controllers;
 
 [ApiController]
 [Route("api/annotations")]

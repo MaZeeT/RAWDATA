@@ -1,7 +1,7 @@
 ﻿using System;
 using Domain.Enums;
 
-namespace WebService.DTOs;
+namespace Web.DTOs;
 
 public class SearchHistoryListDto
 {

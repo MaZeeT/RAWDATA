@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using Application.Interfaces.Services;
 
-namespace WebService.Controllers;
+namespace Web.Controllers;
 
 [ApiController]
 [Route("api/appuser")]

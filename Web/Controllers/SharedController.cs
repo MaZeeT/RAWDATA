@@ -1,7 +1,7 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 
-namespace WebService.Controllers;
+namespace Web.Controllers;
 
 public abstract class SharedController : ControllerBase
 {

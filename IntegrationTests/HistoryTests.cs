@@ -3,7 +3,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc.Testing;
-using WebService.Controllers;
+using Web.Controllers;
 using Xunit;
 
 namespace IntegrationTests;

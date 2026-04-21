@@ -15,7 +15,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\WebService\WebService.csproj" />
+      <ProjectReference Include="..\Web\Web.csproj" />
     </ItemGroup>
 
 </Project>
