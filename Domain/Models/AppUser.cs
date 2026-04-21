@@ -1,14 +1,13 @@
-namespace Domain.Models
+namespace Domain.Models;
+
+public class AppUser
 {
-    public class AppUser
-    {
-        public int Id { get; }
+    public int Id { get; }
         
-        public string Username { set; get; }
+    public string Username { set; get; }
         
-        public string Password { get; set; }
+    public string Password { get; set; }
         
-        public string Salt { get; set; }
+    public string Salt { get; set; }
         
-    }
 }

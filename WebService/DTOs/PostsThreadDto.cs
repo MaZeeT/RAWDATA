@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Domain.AnnotationsDTOs;
+using Domain.Models;
 
 namespace WebService.DTOs;
 

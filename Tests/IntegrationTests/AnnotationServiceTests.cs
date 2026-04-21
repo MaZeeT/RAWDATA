@@ -1,5 +1,5 @@
 ﻿using System;
-using Domain.AnnotationsDTOs;
+using Domain.Models;
 using DomainServices.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;

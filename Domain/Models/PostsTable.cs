@@ -1,7 +1,6 @@
-﻿namespace Domain.Models
+﻿namespace Domain.Models;
+
+public class PostsTable
 {
-    public class PostsTable
-    {
-        public string ResolveId { get; set; }
-    }
+    public string ResolveId { get; set; }
 }

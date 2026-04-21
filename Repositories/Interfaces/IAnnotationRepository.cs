@@ -1,5 +1,4 @@
-using Domain.AnnotationsDTOs;
-using Domain.Services;
+using Domain.Models;
 
 namespace Repositories.Interfaces;
 

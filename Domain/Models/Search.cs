@@ -1,8 +1,7 @@
-﻿namespace Domain.Models
+﻿namespace Domain.Models;
+
+public class Search
 {
-    public class Search
-    {
-        public int PostId { get; set; }
-        public double Rank { get; set; }
-    }
+    public int PostId { get; set; }
+    public double Rank { get; set; }
 }

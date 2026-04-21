@@ -1,14 +1,12 @@
-﻿namespace Domain.Models
-{
-    public class Posts
-    {
-        public int Id { get; set; }
-        public double Rank { get; set; }
-        public string Title { get; set; }
-        public string Body { get; set; }
-        public int ParentId { get; set; }
-        public int TotalResults { get; set; }
-        
-}
+﻿namespace Domain.Models;
 
+public class Posts
+{
+    public int Id { get; set; }
+    public double Rank { get; set; }
+    public string Title { get; set; }
+    public string Body { get; set; }
+    public int ParentId { get; set; }
+    public int TotalResults { get; set; }
+        
 }

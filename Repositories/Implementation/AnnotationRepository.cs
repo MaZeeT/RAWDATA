@@ -1,6 +1,5 @@
 ﻿using Infrastructure.Database;
-using Domain.AnnotationsDTOs;
-using Domain.Services;
+using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Repositories.Interfaces;
 

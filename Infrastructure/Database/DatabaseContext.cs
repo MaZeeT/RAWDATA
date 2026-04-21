@@ -1,5 +1,4 @@
 ﻿using System;
-using Domain.AnnotationsDTOs;
 using Domain.Models;
 using Infrastructure.Database.Converters;
 using Microsoft.EntityFrameworkCore;
