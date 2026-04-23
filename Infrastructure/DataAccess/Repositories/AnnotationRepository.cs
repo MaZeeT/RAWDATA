@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Application.Interfaces.Repositories;
+using Domain.DTO;
 using Domain.Entities;
 using Infrastructure.DataAccess.Database;
 
@@ -21,18 +22,17 @@ public class AnnotationRepository : IAnnotationRepository
         return _dbContext.Annotations.Find(annotationId);
     }
 
-    private Annotations? GetAnnotationByUserId(int annotationId, int userId)
-    {
-        var result = _dbContext.Annotations
-            .Where(a => a.UserId == userId)
-            .FirstOrDefault(a => a.Id == annotationId);
-        return result;
-    }
-
     public List<SimpleAnnotationDto> GetUserAnnotationsMadeOnAPost(int userId, int postId,
         PagingAttributes pagingAttributes)
     {
-        var page = ISharedRepository.GetPagination(UserAnnotOnPostListCount(userId, postId), pagingAttributes);
+        var userAnnotationCount = from annot in _dbContext.Annotations
+            join hist in _dbContext.History on annot.HistoryId equals hist.Id
+            where annot.UserId == userId && hist.PostId == postId
+            group annot by annot.Id
+            into tot
+            select tot.Count();
+        
+        var page = ISharedRepository.GetPagination(userAnnotationCount.Count(), pagingAttributes);
 
         var query =
             from annotation in _dbContext.Annotations
@@ -45,22 +45,15 @@ public class AnnotationRepository : IAnnotationRepository
             .Take(pagingAttributes.PageSize)
             .ToList();
     }
-
-    private int UserAnnotOnPostListCount(int userId, int postId)
-    {
-        var annotationsCount = from annot in _dbContext.Annotations
-            join hist in _dbContext.History on annot.HistoryId equals hist.Id
-            where annot.UserId == userId && hist.PostId == postId
-            group annot by annot.Id
-            into tot
-            select tot.Count();
-        return annotationsCount.FirstOrDefault();
-    }
-
+    
     public List<PostAnnotationsDto> GetAllAnnotationsOfUser(int userId, PagingAttributes pagingAttributes,
         out int count)
     {
-        count = GetAllAnnotationsOfUserCount(userId);
+        count = (from annot in _dbContext.Annotations
+            join hist in _dbContext.History on annot.HistoryId equals hist.Id
+            where annot.UserId == userId
+            select annot).Count(); 
+            
         var page = ISharedRepository.GetPagination(count, pagingAttributes);
 
         var result = _dbContext.Annotations
@@ -78,22 +71,15 @@ public class AnnotationRepository : IAnnotationRepository
 
         return result;
     }
-
-    private int GetAllAnnotationsOfUserCount(int userId)
-    {
-        var listCount = (from annot in _dbContext.Annotations
-            join hist in _dbContext.History on annot.HistoryId equals hist.Id
-            where annot.UserId == userId
-            select annot).Count();
-
-        return listCount;
-    }
-
+    
     public bool DeleteAnnotation(int id, int userId)
     {
         try
         {
-            var itemToDelete = GetAnnotationByUserId(id, userId);
+            var itemToDelete = _dbContext.Annotations
+                .Where(a => a.UserId == userId)
+                .FirstOrDefault(a => a.Id == id); 
+            
             _dbContext.Annotations.Remove(itemToDelete ??
                                           throw new InvalidOperationException(
                                               $"Annotation not found for deletion, with id {id}"));
@@ -131,7 +117,7 @@ public class AnnotationRepository : IAnnotationRepository
             return false;
         }
     }
-
+    
     public bool UpdateAnnotation(int annotationId, string annotationBody)
     {
         try

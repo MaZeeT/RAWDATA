@@ -1,4 +1,6 @@
-﻿namespace Domain.Entities;
+﻿using Domain.Entities;
+
+namespace Domain.DTO;
 
 public class AnnotationsDto
 {

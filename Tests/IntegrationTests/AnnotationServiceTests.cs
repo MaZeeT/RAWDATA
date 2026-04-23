@@ -1,5 +1,6 @@
 ﻿using System;
 using Application.Interfaces.Services;
+using Domain.DTO;
 using Domain.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;

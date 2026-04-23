@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using Domain.DTO;
 using Domain.Entities;
 using Web.DTOs;
 using Xunit;

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Domain.DTO;
 using Domain.Entities;
 
 namespace Web.DTOs;

@@ -1,5 +1,6 @@
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
+using Domain.DTO;
 using Domain.Entities;
 
 namespace Application.Services;

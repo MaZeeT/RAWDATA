@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using Application.Interfaces.Services;
+using Domain.DTO;
 using Domain.Entities;
 
 namespace Web.Controllers;

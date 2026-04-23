@@ -1,4 +1,4 @@
-﻿namespace Domain.Entities;
+﻿namespace Domain.DTO;
 
 /// <summary>
 /// Deals with the information of annotations that exist on a post (specified by postid)
