@@ -1,4 +1,3 @@
-using System;
 using Application.Interfaces.Repositories;
 using Domain.Entities;
 using Infrastructure.DataAccess.Database;
@@ -7,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
-namespace Tests.Infrastructure.IntegrationTests
+namespace UnitTests.RepositoryTests
 {
     public class HistoryRepositoryTest
     {
