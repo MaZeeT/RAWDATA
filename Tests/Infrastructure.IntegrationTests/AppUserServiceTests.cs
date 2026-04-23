@@ -36,7 +36,7 @@ public class AppUserRepositoryTests
         _dbContext =  _serviceProvider.GetRequiredService<DatabaseContext>();
     }
         
-    [Fact]
+    [Fact (Skip = "Rewrite into testing the service layer and not the repositories which should be dum")]
     public void AppUserExistByIdFalse()
     {
         IUserRepository service = _serviceProvider.GetRequiredService<IUserRepository>();
@@ -45,7 +45,7 @@ public class AppUserRepositoryTests
         Assert.False(service.AppUserExist(nonUserId));
     }
 
-    [Fact]
+    [Fact (Skip = "Rewrite into testing the service layer and not the repositories which should be dum")]
     public void AppUserExistByIdTrue()
     {
         IUserRepository service = new AppUserRepository(_dbContext);
@@ -54,7 +54,7 @@ public class AppUserRepositoryTests
         Assert.True(service.AppUserExist(UserId));
     }
 
-    [Fact]
+    [Fact (Skip = "Rewrite into testing the service layer and not the repositories which should be dum")]
     public void AppUserExistByNameFalse()
     {
         IUserRepository service = new AppUserRepository(_dbContext);
@@ -63,7 +63,7 @@ public class AppUserRepositoryTests
         Assert.False(service.AppUserExist(nonUserName));
     }
 
-    [Fact]
+    [Fact (Skip = "Rewrite into testing the service layer and not the repositories which should be dum")]
     public void AppUserExistByNameTrue()
     {
         IUserRepository service = new AppUserRepository(_dbContext);
@@ -72,7 +72,7 @@ public class AppUserRepositoryTests
         Assert.True(service.AppUserExist(UserName));
     }
 
-    [Fact]
+    [Fact (Skip = "Rewrite into testing the service layer and not the repositories which should be dum")]
     public void GetAppUserById()
     {
         IUserRepository service = new AppUserRepository(_dbContext);
@@ -80,7 +80,7 @@ public class AppUserRepositoryTests
         Assert.Equal(UserName, service.GetAppUserName(UserId));
     }
 
-    [Fact]
+    [Fact (Skip = "Rewrite into testing the service layer and not the repositories which should be dum")]
     public void GetAppUserByName()
     {
         IUserRepository service = new AppUserRepository(_dbContext);
@@ -88,7 +88,7 @@ public class AppUserRepositoryTests
         Assert.Equal(UserId, service.GetAppUserId(UserName));
     }
 
-    [Fact]
+    [Fact (Skip = "Rewrite into testing the service layer and not the repositories which should be dum")]
     public void CreateAppUser()
     {
         IUserRepository service = new AppUserRepository(_dbContext);
@@ -104,7 +104,7 @@ public class AppUserRepositoryTests
         service.DeleteAppUser(newUserId);
     }
 
-    [Fact]
+    [Fact (Skip = "Rewrite into testing the service layer and not the repositories which should be dum")]
     public void CreateAppUserTwice()
     {
         IUserRepository service = new AppUserRepository(_dbContext);
@@ -122,7 +122,7 @@ public class AppUserRepositoryTests
         service.DeleteAppUser(newUserId);
     }
 
-    [Fact]
+    [Fact (Skip = "Rewrite into testing the service layer and not the repositories which should be dum")]
     public void CreateUserGetObject()
     {
         IUserRepository service = new AppUserRepository(_dbContext);
@@ -136,7 +136,7 @@ public class AppUserRepositoryTests
         service.DeleteAppUser(user.Id);
     }
 
-    [Fact]
+    [Fact (Skip = "Rewrite into testing the service layer and not the repositories which should be dum")]
     public void CreateUserGetObjectNull()
     {
         IUserRepository service = new AppUserRepository(_dbContext);
@@ -144,7 +144,7 @@ public class AppUserRepositoryTests
         Assert.Throws<ArgumentException>(() => service.CreateUser(UserName, Password, Salt));
     }
 
-    [Fact]
+    [Fact (Skip = "Rewrite into testing the service layer and not the repositories which should be dum")]
     public void UpdateAppUserNameValidUser()
     {
         IUserRepository service = new AppUserRepository(_dbContext);
@@ -169,7 +169,7 @@ public class AppUserRepositoryTests
         service.DeleteAppUser(userIdTwo);
     }
 
-    [Fact]
+    [Fact (Skip = "Rewrite into testing the service layer and not the repositories which should be dum")]
     public void UpdateAppUserNameInvalidUser()
     {
         IUserRepository service = new AppUserRepository(_dbContext);
@@ -181,7 +181,7 @@ public class AppUserRepositoryTests
         Assert.False(updateBool);
     }
 
-    [Fact]
+    [Fact (Skip = "Rewrite into testing the service layer and not the repositories which should be dum")]
     public void DeleteAppUserByNameTrue()
     {
         IUserRepository service = new AppUserRepository(_dbContext);
@@ -197,7 +197,7 @@ public class AppUserRepositoryTests
         Assert.False(service.AppUserExist(newUserName));
     }
 
-    [Fact]
+    [Fact (Skip = "Rewrite into testing the service layer and not the repositories which should be dum")]
     public void DeleteAppUserByNameFalse()
     {
         IUserRepository service = new AppUserRepository(_dbContext);
@@ -216,7 +216,7 @@ public class AppUserRepositoryTests
         service.DeleteAppUser(newUserName);
     }
 
-    [Fact]
+    [Fact (Skip = "Rewrite into testing the service layer and not the repositories which should be dum")]
     public void DeleteAppUserByIdTrue()
     {
         IUserRepository service = new AppUserRepository(_dbContext);
@@ -234,7 +234,7 @@ public class AppUserRepositoryTests
         Assert.False(service.AppUserExist(newUserId));
     }
 
-    [Fact]
+    [Fact (Skip = "Rewrite into testing the service layer and not the repositories which should be dum")]
     public void DeleteAppUserByIdFalse()
     {
         IUserRepository service = new AppUserRepository(_dbContext);

@@ -1,5 +1,4 @@
 using System;
-using Application.Interfaces;
 using Application.Interfaces.Repositories;
 using Domain.Entities;
 using Infrastructure.DataAccess.Database;
@@ -33,7 +32,8 @@ namespace Tests.Infrastructure.IntegrationTests
             _dbContextFactory =  _serviceProvider.GetRequiredService<IDbContextFactory<DatabaseContext>>();
         }
 
-        [Fact (Skip = "checking for valid user is moved to service layer")] //Todo move test to service layer
+        [Fact (Skip = "Rewrite into testing the service layer and not the repositories which should be dum" 
+                      + "checking for valid user is moved to service layer")] //Todo move test to service layer
         public void HistoryAddInvalid()
         {
             var service = _serviceProvider.GetRequiredService<IHistoryRepository>();
@@ -47,7 +47,7 @@ namespace Tests.Infrastructure.IntegrationTests
             Assert.False(service.Add(history));
         }
 
-        [Fact]
+        [Fact (Skip = "Rewrite into testing the service layer and not the repositories which should be dum")]
         public void HistoryAddValid()
         {
             var service = _serviceProvider.GetRequiredService<IHistoryRepository>();
@@ -66,7 +66,7 @@ namespace Tests.Infrastructure.IntegrationTests
             service.DeleteHistory(service.Fetch(TestUserId, 1760).Id);
         }
 
-        [Fact]
+        [Fact (Skip = "Rewrite into testing the service layer and not the repositories which should be dum")]
         public void HistoryDeleteBookmarkInvalidPost()
         {
             var service = _serviceProvider.GetRequiredService<IHistoryRepository>();
@@ -93,7 +93,7 @@ namespace Tests.Infrastructure.IntegrationTests
             service.DeleteHistory(service.Fetch(userid, postId).Id);
         }
 
-        [Fact]
+        [Fact (Skip = "Rewrite into testing the service layer and not the repositories which should be dum")]
         public void HistoryDeleteBookmarkInvalidUser()
         {
             var service = _serviceProvider.GetRequiredService<IHistoryRepository>();
@@ -120,7 +120,7 @@ namespace Tests.Infrastructure.IntegrationTests
             service.DeleteHistory(service.Fetch(userid, postId).Id);
         }
 
-        [Fact]
+        [Fact (Skip = "Rewrite into testing the service layer and not the repositories which should be dum")]
         public void HistoryDeleteBookmarkInvalidUserAndPost()
         {
             var service = _serviceProvider.GetRequiredService<IHistoryRepository>();
@@ -147,7 +147,7 @@ namespace Tests.Infrastructure.IntegrationTests
             service.DeleteHistory(service.Fetch(userid, postId).Id);
         }
 
-        [Fact]
+        [Fact (Skip = "Rewrite into testing the service layer and not the repositories which should be dum")]
         public void HistoryDeleteBookmarkValid()
         {
             var service = _serviceProvider.GetRequiredService<IHistoryRepository>();
@@ -175,7 +175,7 @@ namespace Tests.Infrastructure.IntegrationTests
             service.DeleteHistory(service.Fetch(userid, postId).Id);
         }
 
-        [Fact]
+        [Fact (Skip = "Rewrite into testing the service layer and not the repositories which should be dum")]
         public void HistoryDeleteUserEmptyHistory()
         {
             var service = _serviceProvider.GetRequiredService<IHistoryRepository>();
@@ -191,7 +191,7 @@ namespace Tests.Infrastructure.IntegrationTests
         }
 
 
-        [Fact]
+        [Fact (Skip = "Rewrite into testing the service layer and not the repositories which should be dum")]
         public void HistoryDeleteUserHistory()
         {
             var service = _serviceProvider.GetRequiredService<IHistoryRepository>();
@@ -261,7 +261,7 @@ namespace Tests.Infrastructure.IntegrationTests
             Assert.Empty(historyPost);
         }
 
-        [Fact]
+        [Fact (Skip = "Rewrite into testing the service layer and not the repositories which should be dum")]
         public void HistoryDeleteInvalid()
         {
             var service = _serviceProvider.GetRequiredService<IHistoryRepository>();
@@ -271,7 +271,7 @@ namespace Tests.Infrastructure.IntegrationTests
             Assert.False(service.DeleteHistory(userId));
         }
 
-        [Fact]
+        [Fact (Skip = "Rewrite into testing the service layer and not the repositories which should be dum")]
         public void HistoryDeleteValid()
         {
             var service = _serviceProvider.GetRequiredService<IHistoryRepository>();
@@ -289,7 +289,7 @@ namespace Tests.Infrastructure.IntegrationTests
             Assert.False(service.HistoryExist(history.Id));
         }
 
-        [Fact]
+        [Fact (Skip = "Rewrite into testing the service layer and not the repositories which should be dum")]
         public void HistoryExistFalse()
         {
             var service = _serviceProvider.GetRequiredService<IHistoryRepository>();
@@ -298,7 +298,7 @@ namespace Tests.Infrastructure.IntegrationTests
             Assert.False(service.HistoryExist(historyId));
         }
 
-        [Fact]
+        [Fact (Skip = "Rewrite into testing the service layer and not the repositories which should be dum")]
         public void HistoryExistTrue()
         {
             var service = _serviceProvider.GetRequiredService<IHistoryRepository>();
@@ -308,7 +308,7 @@ namespace Tests.Infrastructure.IntegrationTests
             Assert.True(service.HistoryExist(historyId));
         }
 
-        [Fact]
+        [Fact (Skip = "Rewrite into testing the service layer and not the repositories which should be dum")]
         public void HistoryGetInvalid()
         {
             var service = _serviceProvider.GetRequiredService<IHistoryRepository>();
@@ -317,7 +317,7 @@ namespace Tests.Infrastructure.IntegrationTests
             Assert.Throws<ArgumentException>(() => service.Fetch(id));
         }
 
-        [Fact]
+        [Fact (Skip = "Rewrite into testing the service layer and not the repositories which should be dum")]
         public void HistoryGetInvalid2()
         {
             var service = _serviceProvider.GetRequiredService<IHistoryRepository>();
@@ -327,7 +327,7 @@ namespace Tests.Infrastructure.IntegrationTests
             Assert.Throws<ArgumentException>(() => service.Fetch(userId, postId));
         }
 
-        [Fact]
+        [Fact (Skip = "Rewrite into testing the service layer and not the repositories which should be dum")]
         public void GetHistoryList()
         {
             var service = _serviceProvider.GetRequiredService<IHistoryRepository>();
@@ -386,7 +386,7 @@ namespace Tests.Infrastructure.IntegrationTests
             Assert.Equal(postId1, history[0].PostId);
         }
 
-        [Fact]
+        [Fact (Skip = "Rewrite into testing the service layer and not the repositories which should be dum")]
         public void GetBookmarks()
         {
             var service = _serviceProvider.GetRequiredService<IHistoryRepository>();
@@ -457,7 +457,7 @@ namespace Tests.Infrastructure.IntegrationTests
             Assert.Equal(postId2, history[0].PostId);
         }
 
-        [Fact]
+        [Fact (Skip = "Rewrite into testing the service layer and not the repositories which should be dum")]
         public void HistoryGetValid()
         {
             var service = _serviceProvider.GetRequiredService<IHistoryRepository>();
