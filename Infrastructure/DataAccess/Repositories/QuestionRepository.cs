@@ -19,19 +19,15 @@ public class QuestionRepository : IQuestionRepository
 
     public Questions GetQuestion(int questionId)
     {
-        using var db = _dbContext;
-        return db.Questions.Find(questionId) ?? throw new KeyNotFoundException($"Question with id {questionId} not found");
+        return _dbContext.Questions.Find(questionId) ?? throw new KeyNotFoundException($"Question with id {questionId} not found");
     }
     
     public IList<Questions> GetQuestions(PagingAttributes pagingAttributes)
     {
-        //// for browsing the full list of questions
-        using var db = _dbContext;
-
         //convert back from 1-based pages + check/fix page
         var page = ISharedRepository.GetPagination(NumberOfQuestions(), pagingAttributes);
 
-        return db.Questions
+        return _dbContext.Questions
             .OrderBy(u => u.Id)
             .Skip(page * pagingAttributes.PageSize)
             .Take(pagingAttributes.PageSize)
@@ -40,8 +36,7 @@ public class QuestionRepository : IQuestionRepository
     
     public int NumberOfQuestions()
     {
-        using var db = _dbContext;
-        return db.Questions
+        return _dbContext.Questions
             .Count();
     }
 }

@@ -26,17 +26,15 @@ public class SearchDataRepository : ISearchRepository
     public IList<Posts> Search(int userid, string searchString, SearchType searchType,
         PagingAttributes pagingAttributes)
     {
-        using var db = _dbContext;
-
         // count all matches
-        var matchCount = MatchCount(db, searchType, BuildSearchString(searchString, false));
+        var matchCount = MatchCount(_dbContext, searchType, BuildSearchString(searchString, false));
 
         var page = ISharedRepository.GetPagination(matchCount, pagingAttributes);
 
         Console.WriteLine($"{page} page trying to get.");
 
         // get subset of results according to pagesize etc
-        var resultList = SearchResults(db, userid, searchType, BuildSearchString(searchString, false), page,
+        var resultList = SearchResults(_dbContext, userid, searchType, BuildSearchString(searchString, false), page,
             pagingAttributes);
 
         // build and map results to posts
@@ -69,18 +67,17 @@ public class SearchDataRepository : ISearchRepository
 
     public IList<WordRank> WordRank(int userid, string searchString, SearchType searchTyper, int? maxResults)
     {
-        using var db = _dbContext;
 
         var resultLimit = maxResults ?? 1000;
 
-        InsertSearchToLogTable(db, userid, searchTyper, searchString);
+        InsertSearchToLogTable(_dbContext, userid, searchTyper, searchString);
         var words = Regex.Split(searchString, @"\s+");
         switch (searchTyper)
         {
             case SearchType.WordsTfidf:
-                return WordRankTfidf(db, words, resultLimit);
+                return WordRankTfidf(_dbContext, words, resultLimit);
             case SearchType.WordsBest:
-                return WordRankBest(db, words, resultLimit);
+                return WordRankBest(_dbContext, words, resultLimit);
             default:
                 throw new ArgumentException("Invalid search type");
         }

@@ -19,15 +19,13 @@ public class SearchHistoryRepository : ISearchHistoryRepository
 
     public (List<Searches>, int) GetSearchesList(int userId, PagingAttributes pagingAttributes)
     {
-        using var db = _dbContext;
-
-        var count = db.Searches
+        var count = _dbContext.Searches
             .Count(x => x.UserId == userId);
 
         //try to convert back from 1-based pages
         var page = ISharedRepository.GetPagination(count, pagingAttributes);
 
-        var list = db.Searches
+        var list = _dbContext.Searches
             .Where(x => x.UserId == userId)
             //.OrderByDescending(x => x.Date)
             .Skip(page * pagingAttributes.PageSize)
@@ -39,12 +37,11 @@ public class SearchHistoryRepository : ISearchHistoryRepository
 
     public bool DeleteUserSearchHistory(int userId)
     {
-        using var db = _dbContext;
-        var rowsDeleted = db.Searches
+        var rowsDeleted = _dbContext.Searches
             .Where(x => x.UserId == userId)
             .ExecuteDelete();
         
-        db.SaveChanges();
+        _dbContext.SaveChanges();
         
         return rowsDeleted > 0;
     }

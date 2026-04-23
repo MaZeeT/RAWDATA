@@ -18,14 +18,12 @@ public class AnnotationRepository : IAnnotationRepository
 
     public Annotations? GetAnnotation(int annotationId)
     {
-        using var db = _dbContext;
-        return db.Annotations.Find(annotationId);
+        return _dbContext.Annotations.Find(annotationId);
     }
 
     private Annotations? GetAnnotationByUserId(int annotationId, int userId)
     {
-        using var db = _dbContext;
-        var result = db.Annotations
+        var result = _dbContext.Annotations
             .Where(a => a.UserId == userId)
             .FirstOrDefault(a => a.Id == annotationId);
         return result;
@@ -34,12 +32,11 @@ public class AnnotationRepository : IAnnotationRepository
     public List<SimpleAnnotationDto> GetUserAnnotationsMadeOnAPost(int userId, int postId,
         PagingAttributes pagingAttributes)
     {
-        using var db = _dbContext;
         var page = ISharedRepository.GetPagination(UserAnnotOnPostListCount(userId, postId), pagingAttributes);
 
         var query =
-            from annotation in db.Annotations
-            join history in db.History on annotation.HistoryId equals history.Id
+            from annotation in _dbContext.Annotations
+            join history in _dbContext.History on annotation.HistoryId equals history.Id
             where annotation.HistoryId == postId && annotation.UserId == userId
             select new SimpleAnnotationDto();
 
@@ -51,9 +48,8 @@ public class AnnotationRepository : IAnnotationRepository
 
     private int UserAnnotOnPostListCount(int userId, int postId)
     {
-        using var db = _dbContext;
-        var annotationsCount = from annot in db.Annotations
-            join hist in db.History on annot.HistoryId equals hist.Id
+        var annotationsCount = from annot in _dbContext.Annotations
+            join hist in _dbContext.History on annot.HistoryId equals hist.Id
             where annot.UserId == userId && hist.PostId == postId
             group annot by annot.Id
             into tot
@@ -64,11 +60,10 @@ public class AnnotationRepository : IAnnotationRepository
     public List<PostAnnotationsDto> GetAllAnnotationsOfUser(int userId, PagingAttributes pagingAttributes,
         out int count)
     {
-        using var db = _dbContext;
         count = GetAllAnnotationsOfUserCount(userId);
         var page = ISharedRepository.GetPagination(count, pagingAttributes);
 
-        var result = db.Annotations
+        var result = _dbContext.Annotations
             .Where(a => a.UserId == userId)
             .Skip(page * pagingAttributes.PageSize)
             .Take(pagingAttributes.PageSize)
@@ -86,9 +81,8 @@ public class AnnotationRepository : IAnnotationRepository
 
     private int GetAllAnnotationsOfUserCount(int userId)
     {
-        using var db = _dbContext;
-        var listCount = (from annot in db.Annotations
-            join hist in db.History on annot.HistoryId equals hist.Id
+        var listCount = (from annot in _dbContext.Annotations
+            join hist in _dbContext.History on annot.HistoryId equals hist.Id
             where annot.UserId == userId
             select annot).Count();
 
@@ -97,14 +91,13 @@ public class AnnotationRepository : IAnnotationRepository
 
     public bool DeleteAnnotation(int id, int userId)
     {
-        using var db = _dbContext;
         try
         {
             var itemToDelete = GetAnnotationByUserId(id, userId);
-            db.Annotations.Remove(itemToDelete ??
-                                  throw new InvalidOperationException(
-                                      $"Annotation not found for deletion, with id {id}"));
-            db.SaveChanges();
+            _dbContext.Annotations.Remove(itemToDelete ??
+                                          throw new InvalidOperationException(
+                                              $"Annotation not found for deletion, with id {id}"));
+            _dbContext.SaveChanges();
             return true;
         }
         catch (Exception)
@@ -117,8 +110,7 @@ public class AnnotationRepository : IAnnotationRepository
     {
         try
         {
-            using var db = _dbContext;
-
+    
             var annotation = new Annotations
             {
                 UserId = newAnnotation.UserId,
@@ -127,8 +119,8 @@ public class AnnotationRepository : IAnnotationRepository
                 Date = DateTime.UtcNow
             };
 
-            db.Annotations.Add(annotation);
-            db.SaveChanges();
+            _dbContext.Annotations.Add(annotation);
+            _dbContext.SaveChanges();
 
             newId = annotation.Id; // EF automatically populates this
             return true;
@@ -142,12 +134,11 @@ public class AnnotationRepository : IAnnotationRepository
 
     public bool UpdateAnnotation(int annotationId, string annotationBody)
     {
-        using var db = _dbContext;
         try
         {
-            var annotationToUpdate = db.Annotations.Find(annotationId);
+            var annotationToUpdate = _dbContext.Annotations.Find(annotationId);
             annotationToUpdate?.Body = annotationBody;
-            db.SaveChanges();
+            _dbContext.SaveChanges();
             return true;
         }
         catch (Exception)

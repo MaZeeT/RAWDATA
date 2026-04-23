@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Application.Interfaces;
 using Application.Interfaces.Repositories;
 using Domain.Entities;
 using Infrastructure.DataAccess.Database;
-using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.DataAccess.Repositories;
 

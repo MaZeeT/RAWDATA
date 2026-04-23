@@ -3,7 +3,6 @@ using System.Linq;
 using Application.Interfaces.Repositories;
 using Domain.Entities;
 using Infrastructure.DataAccess.Database;
-using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.DataAccess.Repositories;
 

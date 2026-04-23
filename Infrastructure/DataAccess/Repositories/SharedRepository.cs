@@ -20,8 +20,7 @@ public class SharedRepository : ISharedRepository
     
     public string GetPostType(int postId)
     {
-        using var db = _dbContext;
-        var postTypeId = db.QAndA.Find(postId);
+        var postTypeId = _dbContext.QAndA.Find(postId);
         var tablename = postTypeId?.PostTypeId switch
         {
             1 => "questions",
@@ -35,8 +34,7 @@ public class SharedRepository : ISharedRepository
 
     private Answers GetAnswer(int answerId)
     {
-        using var db = _dbContext;
-        return db.Answers.Find(answerId) ?? throw new KeyNotFoundException($"Answer with id {answerId} not found");
+        return _dbContext.Answers.Find(answerId) ?? throw new KeyNotFoundException($"Answer with id {answerId} not found");
     }
 
     public SinglePost GetPost(int postId)
@@ -74,12 +72,11 @@ public class SharedRepository : ISharedRepository
     public IList<Posts> GetThread(int questionId)
         //returns question and all child answers
     {
-        using var db = _dbContext;
         //get the question
         var q = _questionRepository.GetQuestion(questionId);
         
         //find answers to the specified question
-        var answers = db.Answers
+        var answers = _dbContext.Answers
             .Where(e => e.ParentId == questionId)
             .ToList();
         //manual mapping
