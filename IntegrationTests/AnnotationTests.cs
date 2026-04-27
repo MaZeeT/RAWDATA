@@ -207,7 +207,7 @@ public class AnnotationTests : IClassFixture<WebApplicationFactory<AnnotationsCo
     public async Task Get_ReturnsNotFound_ForMissingAnnotation()
     {
         // Arrange
-        const string invalidId = "422";
+        const string invalidId = "4225";
         
         // Act
         var response = await _httpClient.GetAsync($"/api/annotations/{invalidId}", TestContext.Current.CancellationToken);
