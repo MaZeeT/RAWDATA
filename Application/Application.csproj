@@ -10,4 +10,11 @@
       <ProjectReference Include="..\Domain\Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.5" />
+      <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.5" />
+      <PackageReference Include="System.Configuration.ConfigurationManager" Version="9.0.0" />
+      <PackageReference Include="System.Security.Cryptography.Pkcs" Version="6.0.4" />
+    </ItemGroup>
+
 </Project>

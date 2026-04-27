@@ -1,15 +1,18 @@
 ﻿using System;
+using System.Configuration;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Text.RegularExpressions;
+using Application;
 using Application.Interfaces.Services;
+using Application.Services;
+using Application.Use_Cases.CreateUser;
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Web.DTOs;
-using Web.Services;
 
 namespace Web.Controllers;
 
@@ -29,35 +32,50 @@ public class AuthenticationController : ControllerBase
     [HttpPost("users")]
     public ActionResult CreateUser([FromBody] SignupUserDto dto)
     {
-        if (!IsValidUserCredential(dto))
+        AuthSettings authSettings;
+        try
         {
-            return BadRequest();
+            authSettings = ReadAuthSettings();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return BadRequest(e.Message);
         }
 
-        if (_userService.UserExists(dto.Username))
+        var createUserCommand = new CreateUserCommand
         {
-            return BadRequest("Username already exists");
-        }
-
-        int.TryParse(
-            _configuration.GetSection("Auth:PwdSize").Value,
-            out var size);
-
-        if (size == 0)
-        {
-            return BadRequest();
-        }
-
-        var salt = PasswordService.GenerateSalt(size);
-
-        var pwd = PasswordService.HashPassword(dto.Password, salt, size);
-
-        var result = _userService.CreateUser(dto.Username, pwd, salt);
+            Username = dto.Username,
+            Password = dto.Password
+        };
+        
+        var result = _userService.CreateUser(createUserCommand, authSettings);
 
         if (!result.IsSuccess)
             return BadRequest(result.Error);
         
-        return CreatedAtRoute(null, dto.Username);
+        return CreatedAtRoute(null, result.Value.Username);
+    }
+
+    private AuthSettings ReadAuthSettings()
+    {
+        if (!int.TryParse(
+                _configuration.GetSection("Auth:PwdSize").Value,
+                out var pwdSize))
+        {
+            throw new ConfigurationErrorsException("Could not parse Auth:PwdSize to an int");
+        }
+
+        if (pwdSize == 0)
+        {
+            throw new ConfigurationErrorsException("Auth:PWD size must be greater than zero");
+        }
+        
+        var authSettings = new AuthSettings
+        {
+            PasswordSize = pwdSize,
+        };
+        return authSettings;
     }
 
 
@@ -73,13 +91,13 @@ public class AuthenticationController : ControllerBase
         }
 
         var userToken = GenerateToken(user);
-        var result = new AuthenticatedUser
+        var result2 = new AuthenticatedUser
         {
             Username = user.Username,
             Token = userToken
         };
         
-        return Ok(result);
+        return Ok(result2);
     }
 
     private bool IsInvalidPassword(SignupUserDto dto, AppUser user)

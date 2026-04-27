@@ -1,9 +1,8 @@
-﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
-using System;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 
-namespace Web.Services;
+namespace Application.Services;
 
 public static class PasswordService
 {
