@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Web;
+using Web.DependencyRegistration;
 
 namespace UnitTests.Fixtures;
 

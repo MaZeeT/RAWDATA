@@ -6,7 +6,7 @@ using Infrastructure.DataAccess.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Web;
+namespace Web.DependencyRegistration;
 
 public static class ServiceConfigurator
 {

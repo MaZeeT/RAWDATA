@@ -1,4 +1,4 @@
-﻿namespace Application.Use_Cases.LoginUser;
+﻿namespace Application.UseCases.Users.LoginUser;
 
 public class LoginUserResult
 {

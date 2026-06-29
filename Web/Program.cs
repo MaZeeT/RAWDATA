@@ -5,11 +5,12 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-using Web;
+using Web.DependencyRegistration;
 
 var builder = WebApplication.CreateBuilder(args);
 
 ServiceConfigurator.ConfigureServices(builder.Services);
+UseCases.Register(builder.Services);
 
 var key = Encoding.UTF8.GetBytes(builder.Configuration.GetSection("Auth:Key").Value);
     builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
@@ -46,4 +47,7 @@ app.MapControllers();
 
 app.Run();
 
-public partial class Program { } // ensures that the custom WebApplicationFactory in the test project can access this class.
+namespace Web
+{
+    public partial class Program { }
+} // ensures that the custom WebApplicationFactory in the test project can access this class.

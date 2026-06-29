@@ -2,20 +2,18 @@
 using Application.Common;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
-using Application.Use_Cases.CreateUser;
-using Application.Use_Cases.LoginUser;
+using Application.UseCases.Users.CreateUser;
+using Application.UseCases.Users.LoginUser;
 using Domain.Entities;
 
 namespace Application.Services;
 
 public class UserService : IUserService
 {
-    private readonly IUnitOfWork _unitOfWork;
     private readonly IUserRepository _userRepository;
 
-    public UserService(IUnitOfWork unitOfWork, IUserRepository userRepository)
+    public UserService(IUserRepository userRepository)
     {
-        _unitOfWork = unitOfWork;
         _userRepository = userRepository;
     }
 
@@ -27,43 +25,6 @@ public class UserService : IUserService
     private AppUser? GetAppUser(string username)
     {
         return _userRepository.GetAppUser(username);
-    }
-
-    public Result<CreateUserResult> CreateUser(CreateUserCommand createUserCommand, AuthSettings authSettings)
-    {
-        if (!IsValidUserCredential(createUserCommand.Username, createUserCommand.Password))
-        {
-            return Result<CreateUserResult>.Failure("Credentials are not valid");
-        }
-
-        if (UserExists(createUserCommand.Username))
-        {
-            return Result<CreateUserResult>.Failure("Username already exists");
-        }
-
-        var salt = PasswordService.GenerateSalt(authSettings.PasswordSize);
-
-        var pwd = PasswordService.HashPassword(createUserCommand.Password, salt, authSettings.PasswordSize);
-
-        var user = new AppUser
-        {
-            Username = createUserCommand.Username,
-            Password = pwd,
-            Salt = salt
-        };
-
-        if (_userRepository.AppUserExist(user))
-        {
-            return Result<CreateUserResult>.Failure("User with the same name already exists");
-        }
-
-        var appUser = _userRepository.Add(user);
-
-        _unitOfWork.Commit();
-
-        var createUserResult = new CreateUserResult { Username = appUser.Username };
-
-        return Result<CreateUserResult>.Success(createUserResult);
     }
 
     public Result<LoginUserResult> LoginUser(LoginUserCommand loginUserCommand, AuthSettings authSettings)
@@ -94,16 +55,6 @@ public class UserService : IUserService
         var pwd = PasswordService.HashPassword(loginUserCommand.Password, user.Salt, authSettings.PasswordSize);
 
         return user.Password != pwd;
-    }
-
-    private bool UserExists(string username)
-    {
-        var user = new AppUser
-        {
-            Username = username
-        };
-
-        return _userRepository.AppUserExist(user);
     }
 
     private static bool IsValidUserCredential(string username, string password)

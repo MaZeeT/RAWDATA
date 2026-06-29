@@ -5,8 +5,8 @@ using System.Security.Claims;
 using System.Text;
 using Application;
 using Application.Interfaces.Services;
-using Application.Use_Cases.CreateUser;
-using Application.Use_Cases.LoginUser;
+using Application.UseCases.Users.CreateUser;
+using Application.UseCases.Users.LoginUser;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -20,11 +20,13 @@ public class AuthenticationController : ControllerBase
 {
     private readonly IUserService _userService;
     private readonly IConfiguration _configuration;
+    private readonly ICreateUser _createUser;
 
-    public AuthenticationController(IUserService userService, IConfiguration configuration)
+    public AuthenticationController(IUserService userService, IConfiguration configuration, ICreateUser createUser)
     {
         _userService = userService;
         _configuration = configuration;
+        _createUser = createUser;
     }
 
     [HttpPost("users")]
@@ -47,7 +49,7 @@ public class AuthenticationController : ControllerBase
             Password = dto.Password
         };
 
-        var result = _userService.CreateUser(createUserCommand, authSettings);
+        var result = _createUser.Execute(createUserCommand, authSettings);
 
         if (!result.IsSuccess)
             return BadRequest(result.Error);
