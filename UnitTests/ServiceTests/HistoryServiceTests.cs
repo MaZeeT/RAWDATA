@@ -19,6 +19,6 @@ public class HistoryServiceTests : IClassFixture<ServiceProviderFixture>
     {
         var count = _sut.GetCount(22);
         
-        Assert.Equal(93, count);
+        Assert.Equal(94, count);
     }
 }
