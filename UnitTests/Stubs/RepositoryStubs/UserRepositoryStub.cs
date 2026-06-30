@@ -6,6 +6,12 @@ namespace UnitTests.Stubs.RepositoryStubs;
 public class UserRepositoryStub : IUserRepository
 {
     private readonly IList<AppUser> _users = new List<AppUser>();
+
+    public void Seed(params AppUser[] users)
+    {
+        foreach (var u in users) _users.Add(u);
+    }
+
     public AppUser Add(AppUser user)
     {
         _users.Add(user);
