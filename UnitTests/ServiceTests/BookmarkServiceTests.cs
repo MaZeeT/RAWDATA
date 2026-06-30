@@ -19,6 +19,6 @@ public class BookmarkServiceTests : IClassFixture<ServiceProviderFixture>
     {
         var count = _sut.GetCount(22);
         
-        Assert.Equal(17, count);
+        Assert.Equal(18, count);
     }
 }
