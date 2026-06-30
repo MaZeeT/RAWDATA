@@ -4,7 +4,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Application;
-using Application.Interfaces.Services;
 using Application.UseCases.Users.CreateUser;
 using Application.UseCases.Users.LoginUser;
 using Microsoft.AspNetCore.Mvc;
@@ -18,15 +17,15 @@ namespace Web.Controllers;
 [Route("api/auth")]
 public class AuthenticationController : ControllerBase
 {
-    private readonly IUserService _userService;
     private readonly IConfiguration _configuration;
     private readonly ICreateUser _createUser;
+    private readonly ILoginUser _loginUser;
 
-    public AuthenticationController(IUserService userService, IConfiguration configuration, ICreateUser createUser)
+    public AuthenticationController(IConfiguration configuration, ICreateUser createUser, ILoginUser loginUser)
     {
-        _userService = userService;
         _configuration = configuration;
         _createUser = createUser;
+        _loginUser = loginUser;
     }
 
     [HttpPost("users")]
@@ -61,24 +60,14 @@ public class AuthenticationController : ControllerBase
     [HttpPost("tokens")]
     public ActionResult Login([FromBody] SignupUserDto dto)
     {
-        AuthSettings authSettings;
-        try
-        {
-            authSettings = ReadAuthSettings();
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            return BadRequest(e.Message);
-        }
-
+        
         var command = new LoginUserCommand
         {
             Username = dto.Username,
             Password = dto.Password
         };
 
-        var result = _userService.LoginUser(command, authSettings);
+        var result = _loginUser.Execute(command);
 
         if (!result.IsSuccess || result.Value is null)
             return BadRequest(result.Error);

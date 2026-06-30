@@ -2,9 +2,9 @@ namespace Domain.Entities;
 
 public class AppUser
 {
-    public int Id { get; }
+    public int Id { get; set; }
         
-    public string Username { set; get; }
+    public string Username { get; set; }
         
     public string Password { get; set; }
         

@@ -5,18 +5,18 @@ using UnitTests.Stubs;
 using UnitTests.Stubs.RepositoryStubs;
 using Xunit;
 
-namespace UnitTests.UseCases.CreateUser;
+namespace UnitTests.UseCases.Users;
 
 public class CreateUserTests
 {
     private readonly AuthSettings _authSettings = new() { PasswordSize = 256 };
     private readonly UnitOfWorkStub _unitOfWork = new();
     private readonly UserRepositoryStub _userRepository = new();
-    private readonly Application.UseCases.Users.CreateUser.CreateUser _sut;
+    private readonly CreateUser _sut;
 
     public CreateUserTests()
     {
-        _sut = new Application.UseCases.Users.CreateUser.CreateUser(_unitOfWork, _userRepository);
+        _sut = new CreateUser(_unitOfWork, _userRepository);
     }
 
     private static CreateUserCommand ValidCommand(string username = "TestUsername", string password = "TestPassword")

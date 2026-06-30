@@ -1,4 +1,5 @@
 ﻿using Application.UseCases.Users.CreateUser;
+using Application.UseCases.Users.LoginUser;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Web.DependencyRegistration;
@@ -13,6 +14,7 @@ public static class UseCases
     private static void RegisterUserUseCases(IServiceCollection services)
     {
         services.AddScoped<ICreateUser, CreateUser>();
+        services.AddScoped<ILoginUser, LoginUser>();
     }
     
 }
