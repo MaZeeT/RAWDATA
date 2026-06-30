@@ -1,6 +1,6 @@
 ﻿namespace Application.UseCases.Users.CreateUser;
 
-public class CreateUserResult
+public record CreateUserResult
 {
     public required string Username { get; init; }
 }
