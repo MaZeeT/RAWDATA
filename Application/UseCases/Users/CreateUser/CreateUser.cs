@@ -40,11 +40,6 @@ public class CreateUser : ICreateUser
             Salt = salt
         };
 
-        if (_userRepository.AppUserExist(user))
-        {
-            return Result<CreateUserResult>.Failure("User with the same name already exists");
-        }
-
         var appUser = _userRepository.Add(user);
 
         _unitOfWork.Commit();
@@ -89,7 +84,6 @@ public class CreateUser : ICreateUser
             return true;
         }
 
-        Console.WriteLine("Am entering successfully :D ");
         return false;
     }
 }
