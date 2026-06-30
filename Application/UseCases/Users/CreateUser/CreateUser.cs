@@ -3,6 +3,7 @@ using Application.Common;
 using Application.Interfaces.Repositories;
 using Application.Services;
 using Domain.Entities;
+using Microsoft.Extensions.Configuration;
 
 namespace Application.UseCases.Users.CreateUser;
 
@@ -10,13 +11,13 @@ public class CreateUser : ICreateUser
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IUserRepository _userRepository;
-    private readonly AuthSettings _authSettings;
+    private readonly int _passwordSize;
 
-    public CreateUser(IUnitOfWork unitOfWork, IUserRepository userRepository, AuthSettings authSettings)
+    public CreateUser(IUnitOfWork unitOfWork, IUserRepository userRepository, IConfiguration configuration)
     {
         _unitOfWork = unitOfWork;
         _userRepository = userRepository;
-        _authSettings = authSettings;
+        _passwordSize = configuration.GetValue<int>("Auth:PwdSize");
     }
 
     public Result<CreateUserResult> Execute(CreateUserCommand createUserCommand)
@@ -31,9 +32,9 @@ public class CreateUser : ICreateUser
             return Result<CreateUserResult>.Failure("Username already exists");
         }
 
-        var salt = PasswordService.GenerateSalt(_authSettings.PasswordSize);
+        var salt = PasswordService.GenerateSalt(_passwordSize);
 
-        var pwd = PasswordService.HashPassword(createUserCommand.Password, salt, _authSettings.PasswordSize);
+        var pwd = PasswordService.HashPassword(createUserCommand.Password, salt, _passwordSize);
 
         var user = new AppUser
         {

@@ -1,6 +1,6 @@
-﻿using Application;
-using Application.UseCases.Users.CreateUser;
+﻿using Application.UseCases.Users.CreateUser;
 using Domain.Entities;
+using Microsoft.Extensions.Configuration;
 using UnitTests.Stubs;
 using UnitTests.Stubs.RepositoryStubs;
 using Xunit;
@@ -11,12 +11,25 @@ public class CreateUserTests
 {
     private readonly UnitOfWorkStub _unitOfWork = new();
     private readonly UserRepositoryStub _userRepository = new();
-    private readonly AuthSettings _authSettings = new AuthSettings{ PasswordSize = 256 };
     private readonly CreateUser _sut;
 
     public CreateUserTests()
     {
-        _sut = new CreateUser(_unitOfWork, _userRepository, _authSettings);
+        var configuration = StubConfiguration();
+
+        _sut = new CreateUser(_unitOfWork, _userRepository, configuration);
+    }
+
+    private static IConfigurationRoot StubConfiguration()
+    {
+        var configCollection = new Dictionary<string, string?>
+        {
+            ["Auth:PwdSize"] = "256",
+        };
+        
+        return new ConfigurationBuilder()
+            .AddInMemoryCollection(configCollection)
+            .Build();
     }
 
     private static CreateUserCommand ValidCommand(string username = "TestUsername", string password = "TestPassword")

@@ -35,8 +35,6 @@ public static class ServiceConfigurator
         services.AddScoped<ISharedRepository, SharedRepository>();
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-        services.AddSingleton(new AuthSettings { PasswordSize = configuration.GetValue<int>("Auth:PwdSize") });
         
         services.AddDbContext<DatabaseContext>(options =>
         {
