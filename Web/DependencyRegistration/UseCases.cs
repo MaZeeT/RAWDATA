@@ -1,4 +1,5 @@
 ﻿using Application.UseCases.Users.CreateUser;
+using Application.UseCases.Users.GetUser;
 using Application.UseCases.Users.LoginUser;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,6 +15,7 @@ public static class UseCases
     private static void RegisterUserUseCases(IServiceCollection services)
     {
         services.AddScoped<ICreateUser, CreateUser>();
+        services.AddScoped<IGetUser, GetUser>();
         services.AddScoped<ILoginUser, LoginUser>();
     }
     

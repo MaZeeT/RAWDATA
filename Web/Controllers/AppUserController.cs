@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
-using Application.Interfaces.Services;
+using Application.UseCases.Users.GetUser;
 
 namespace Web.Controllers;
 
@@ -8,11 +8,11 @@ namespace Web.Controllers;
 [Route("api/appuser")]
 public class AppUserController : ControllerBase
 {
-    private readonly IUserService _userService;
+    private readonly IGetUser _getUser;
 
-    public AppUserController(IUserService userService)
+    public AppUserController(IGetUser getUser)
     {
-        _userService = userService;
+        _getUser = getUser;
     }
 
     // http://localhost:5001/api/appuser?id=2
@@ -22,8 +22,9 @@ public class AppUserController : ControllerBase
         //todo Need to query db to check if user exist instead of this hack
         try
         {
-            var appUser = _userService.GetUserName(id);
-            return Ok(appUser);
+            var command = new GetUserCommand { UserId = id };
+            var user = _getUser.Execute(command);
+            return Ok(user);
         }
         catch (Exception)
         {

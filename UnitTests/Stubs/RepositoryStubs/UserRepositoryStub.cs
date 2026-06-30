@@ -50,7 +50,7 @@ public class UserRepositoryStub : IUserRepository
 
     public string? GetAppUserName(int id)
     {
-        throw new NotImplementedException();
+        return _users.FirstOrDefault(x => x.Id == id)?.Username;
     }
 
     public int GetAppUserId(string username)
