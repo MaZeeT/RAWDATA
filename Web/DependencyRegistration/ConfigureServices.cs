@@ -21,7 +21,6 @@ public static class ServiceConfigurator
         services.AddScoped<IHistoryService, HistoryService>();
         services.AddScoped<IThreadService, ThreadService>();
         services.AddScoped<ISearchService, SearchService>();
-        services.AddScoped<IUserService, UserService>();
 
         services.AddScoped<IAnnotationRepository, AnnotationRepository>();
         services.AddScoped<IHistoryRepository, HistoryRepository>();
