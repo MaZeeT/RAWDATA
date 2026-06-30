@@ -22,8 +22,8 @@ public class AppUserController : ControllerBase
         //todo Need to query db to check if user exist instead of this hack
         try
         {
-            var command = new GetUserCommand { UserId = id };
-            var user = _getUser.Execute(command);
+            var query = new GetUserQuery { UserId = id };
+            var user = _getUser.Execute(query);
             return Ok(user);
         }
         catch (Exception)

@@ -9,14 +9,14 @@ namespace UnitTests.UseCases.Users;
 
 public class CreateUserTests
 {
-    private readonly AuthSettings _authSettings = new() { PasswordSize = 256 };
     private readonly UnitOfWorkStub _unitOfWork = new();
     private readonly UserRepositoryStub _userRepository = new();
+    private readonly AuthSettings _authSettings = new AuthSettings{ PasswordSize = 256 };
     private readonly CreateUser _sut;
 
     public CreateUserTests()
     {
-        _sut = new CreateUser(_unitOfWork, _userRepository);
+        _sut = new CreateUser(_unitOfWork, _userRepository, _authSettings);
     }
 
     private static CreateUserCommand ValidCommand(string username = "TestUsername", string password = "TestPassword")
@@ -28,7 +28,7 @@ public class CreateUserTests
     public void Execute_ValidCredentials_ReturnsSuccessWithUsername()
     {
         var command = ValidCommand();
-        var result = _sut.Execute(command, _authSettings);
+        var result = _sut.Execute(command);
 
         Assert.True(result.IsSuccess);
         Assert.Equal("TestUsername", result.Value?.Username);
@@ -38,7 +38,7 @@ public class CreateUserTests
     public void Execute_ValidCredentials_CommitsUnitOfWork()
     {
         var command = ValidCommand();
-        _sut.Execute(command, _authSettings);
+        _sut.Execute(command);
 
         Assert.True(_unitOfWork.HasBeenCalled);
         Assert.Equal((uint)1, _unitOfWork.CallCounter);
@@ -52,7 +52,7 @@ public class CreateUserTests
         _userRepository.Seed(new AppUser { Username = "TestUsername" });
 
         var command = ValidCommand();
-        var result = _sut.Execute(command, _authSettings);
+        var result = _sut.Execute(command);
 
         Assert.False(result.IsSuccess);
         Assert.Equal("Username already exists", result.Error);
@@ -64,7 +64,7 @@ public class CreateUserTests
         _userRepository.Seed(new AppUser { Username = "TestUsername" });
 
         var command = ValidCommand();
-        _sut.Execute(command, _authSettings);
+        _sut.Execute(command);
 
         Assert.False(_unitOfWork.HasBeenCalled);
     }
@@ -75,7 +75,7 @@ public class CreateUserTests
     public void Execute_UsernameTooShort_ReturnsCredentialsInvalidFailure()
     {
         var command = ValidCommand(username: "t");
-        var result = _sut.Execute(command, _authSettings);
+        var result = _sut.Execute(command);
 
         Assert.False(result.IsSuccess);
         Assert.Equal("Credentials are not valid", result.Error);
@@ -85,7 +85,7 @@ public class CreateUserTests
     public void Execute_NullUsername_ReturnsCredentialsInvalidFailure()
     {
         var command = ValidCommand(username: null);
-        var result = _sut.Execute(command, _authSettings);
+        var result = _sut.Execute(command);
 
         Assert.False(result.IsSuccess);
         Assert.Equal("Credentials are not valid", result.Error);
@@ -95,7 +95,7 @@ public class CreateUserTests
     public void Execute_UsernameContainsInvalidCharacters_ReturnsCredentialsInvalidFailure()
     {
         var command = ValidCommand(username: "TestUsername__");
-        var result = _sut.Execute(command, _authSettings);
+        var result = _sut.Execute(command);
 
         Assert.False(result.IsSuccess);
         Assert.Equal("Credentials are not valid", result.Error);
@@ -105,7 +105,7 @@ public class CreateUserTests
     public void Execute_InvalidCredentials_DoesNotCommitUnitOfWork()
     {
         var command = ValidCommand(username: "t");
-        _sut.Execute(command, _authSettings);
+        _sut.Execute(command);
 
         Assert.False(_unitOfWork.HasBeenCalled);
     }

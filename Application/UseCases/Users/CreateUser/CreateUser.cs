@@ -10,14 +10,16 @@ public class CreateUser : ICreateUser
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IUserRepository _userRepository;
+    private readonly AuthSettings _authSettings;
 
-    public CreateUser(IUnitOfWork unitOfWork, IUserRepository userRepository)
+    public CreateUser(IUnitOfWork unitOfWork, IUserRepository userRepository, AuthSettings authSettings)
     {
         _unitOfWork = unitOfWork;
         _userRepository = userRepository;
+        _authSettings = authSettings;
     }
 
-    public Result<CreateUserResult> Execute(CreateUserCommand createUserCommand, AuthSettings authSettings)
+    public Result<CreateUserResult> Execute(CreateUserCommand createUserCommand)
     {
         if (!IsValidUserCredential(createUserCommand.Username, createUserCommand.Password))
         {
@@ -29,9 +31,9 @@ public class CreateUser : ICreateUser
             return Result<CreateUserResult>.Failure("Username already exists");
         }
 
-        var salt = PasswordService.GenerateSalt(authSettings.PasswordSize);
+        var salt = PasswordService.GenerateSalt(_authSettings.PasswordSize);
 
-        var pwd = PasswordService.HashPassword(createUserCommand.Password, salt, authSettings.PasswordSize);
+        var pwd = PasswordService.HashPassword(createUserCommand.Password, salt, _authSettings.PasswordSize);
 
         var user = new AppUser
         {

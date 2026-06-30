@@ -1,18 +1,22 @@
-﻿using Application.Interfaces.Repositories;
+﻿using System;
+using Application;
+using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Services;
 using Infrastructure.DataAccess.Database;
 using Infrastructure.DataAccess.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Web.DependencyRegistration;
 
 public static class ServiceConfigurator
 {
-    public static void ConfigureServices(IServiceCollection services)
+    public static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     {
-        const string database = "host=localhost;port=5432;db=stackoverflow;uid=postgres;pwd=Password123";
+        var database = configuration.GetConnectionString("DefaultConnection")
+                       ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
         
         services.AddControllers();
 
@@ -31,6 +35,8 @@ public static class ServiceConfigurator
         services.AddScoped<ISharedRepository, SharedRepository>();
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+        services.AddSingleton(new AuthSettings { PasswordSize = configuration.GetValue<int>("Auth:PwdSize") });
         
         services.AddDbContext<DatabaseContext>(options =>
         {

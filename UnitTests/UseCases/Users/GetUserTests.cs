@@ -15,7 +15,7 @@ public class GetUserTests
         _sut = new GetUser(_userRepository);
     }
 
-    private static GetUserCommand ValidCommand(int userId = 1)
+    private static GetUserQuery ValidQuery(int userId = 1)
         => new() { UserId = userId };
 
     // ---- success path ----
@@ -25,7 +25,7 @@ public class GetUserTests
     {
         _userRepository.Seed(new AppUser { Id = 1, Username = "TestUsername" });
 
-        var result = _sut.Execute(ValidCommand());
+        var result = _sut.Execute(ValidQuery());
 
         Assert.True(result.IsSuccess);
     }
@@ -35,7 +35,7 @@ public class GetUserTests
     {
         _userRepository.Seed(new AppUser { Id = 1, Username = "TestUsername" });
 
-        var result = _sut.Execute(ValidCommand());
+        var result = _sut.Execute(ValidQuery());
 
         Assert.Equal("TestUsername", result.Value?.Username);
     }
@@ -45,7 +45,7 @@ public class GetUserTests
     [Fact]
     public void Execute_UsernameDoesNotExist_ReturnsFailure()
     {
-        var result = _sut.Execute(ValidCommand());
+        var result = _sut.Execute(ValidQuery());
 
         Assert.False(result.IsSuccess);
     }
@@ -53,7 +53,7 @@ public class GetUserTests
     [Fact]
     public void Execute_UsernameDoesNotExist_ReturnsUserNotFoundError()
     {
-        var result = _sut.Execute(ValidCommand());
+        var result = _sut.Execute(ValidQuery());
 
         Assert.Equal("User not found", result.Error);
     }

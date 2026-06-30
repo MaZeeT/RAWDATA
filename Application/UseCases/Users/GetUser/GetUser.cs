@@ -12,9 +12,9 @@ public class GetUser : IGetUser
         _userRepository = userRepository;
     }
 
-    public Result<GetUserResult> Execute(GetUserCommand getUserCommand)
+    public Result<GetUserResult> Execute(GetUserQuery getUserQuery)
     {
-        var username = _userRepository.GetAppUserName(getUserCommand.UserId);
+        var username = _userRepository.GetAppUserName(getUserQuery.UserId);
 
         if (username is null) return Result<GetUserResult>.Failure("User not found");
 

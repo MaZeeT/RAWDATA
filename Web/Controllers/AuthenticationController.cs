@@ -31,24 +31,13 @@ public class AuthenticationController : ControllerBase
     [HttpPost("users")]
     public ActionResult CreateUser([FromBody] SignupUserDto dto)
     {
-        AuthSettings authSettings;
-        try
-        {
-            authSettings = ReadAuthSettings();
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            return BadRequest(e.Message);
-        }
-
         var createUserCommand = new CreateUserCommand
         {
             Username = dto.Username,
             Password = dto.Password
         };
 
-        var result = _createUser.Execute(createUserCommand, authSettings);
+        var result = _createUser.Execute(createUserCommand);
 
         if (!result.IsSuccess)
             return BadRequest(result.Error);
@@ -79,27 +68,6 @@ public class AuthenticationController : ControllerBase
             Username = result.Value.UserName,
             Token = userToken
         });
-    }
-
-    private AuthSettings ReadAuthSettings()
-    {
-        if (!int.TryParse(
-                _configuration.GetSection("Auth:PwdSize").Value,
-                out var pwdSize))
-        {
-            throw new ConfigurationErrorsException("Could not parse Auth:PwdSize to an int");
-        }
-
-        if (pwdSize == 0)
-        {
-            throw new ConfigurationErrorsException("Auth:PWD size must be greater than zero");
-        }
-
-        var authSettings = new AuthSettings
-        {
-            PasswordSize = pwdSize,
-        };
-        return authSettings;
     }
 
     private string GenerateToken(LoginUserResult user)
