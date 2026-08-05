@@ -10,6 +10,7 @@ using Web.DependencyRegistration;
 var builder = WebApplication.CreateBuilder(args);
 
 ServiceConfigurator.ConfigureServices(builder.Services, builder.Configuration);
+LoggerProviders.RegisterSerilogLogger(builder.Services);
 UseCases.Register(builder.Services);
 
 var key = Encoding.UTF8.GetBytes(builder.Configuration.GetSection("Auth:Key").Value);

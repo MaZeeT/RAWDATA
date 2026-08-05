@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Application.Interfaces.Services;
 using Domain.DTO;
 using Domain.Entities;
+using Microsoft.Extensions.Logging;
 using Web.Extensions;
 
 namespace Web.Controllers;
@@ -16,11 +17,13 @@ public class AnnotationsController : ControllerBase
 {
     private readonly IAnnotationService _annotationService;
     private readonly IThreadService _threadService;
+    private readonly ILogger<AnnotationsController> _logger;
 
-    public AnnotationsController(IAnnotationService annotationService, IThreadService threadService)
+    public AnnotationsController(IAnnotationService annotationService, IThreadService threadService, ILogger<AnnotationsController> logger)
     {
         _annotationService = annotationService;
         _threadService = threadService;
+        _logger = logger;
     }
     
     [HttpGet("post/{postId:int}")]
