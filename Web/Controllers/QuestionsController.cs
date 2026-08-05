@@ -7,13 +7,14 @@ using Application.Interfaces.Services;
 using Domain.DTO;
 using Domain.Entities;
 using Web.DTOs;
+using Web.Extensions;
 
 namespace Web.Controllers;
 
 [ApiController]
 [Route("api/questions")]
 [Authorize]
-public class QuestionsController : SharedController
+public class QuestionsController : ControllerBase
 {
     private readonly IThreadService _threadService;
     private readonly IAnnotationService _annotationService;
@@ -45,7 +46,12 @@ public class QuestionsController : SharedController
     //get the whole thread of question+answers
     public ActionResult GetThread(int questionId, int? postId)
     {
-        var (userId, userIdOk) = GetAuthUserId();
+        var userIdResult = User.GetUserId();
+        
+        if (!userIdResult.IsSuccess)
+        {
+            return Unauthorized();
+        }
 
         var checkThatPost = _threadService.GetPostType(questionId);
         if (checkThatPost == "answers")
@@ -62,7 +68,7 @@ public class QuestionsController : SharedController
         }
 
         var t = _threadService.GetThread(questionId);
-        if (t == null || !userIdOk) // then we got a thread!
+        if (t == null || !userIdResult.IsSuccess) // then we got a thread!
         {
             return NotFound();
         }
@@ -70,7 +76,7 @@ public class QuestionsController : SharedController
         // call to add browse history here
         var browseHistory = new History
         {
-            UserId = userId
+            UserId = userIdResult.Value
         };
         
         if (postId != null)
@@ -100,7 +106,7 @@ public class QuestionsController : SharedController
                 Body = posts.Body
             };
             var pagingAttributes = new PagingAttributes();
-            var tempAnnotations = _annotationService.GetUserAnnotationsMadeOnAPost(userId, posts.Id, pagingAttributes);
+            var tempAnnotations = _annotationService.GetUserAnnotationsMadeOnAPost(userIdResult.Value, posts.Id, pagingAttributes);
             pt.Annotations = tempAnnotations;
             pt.CreateBookmarkLink = Url.Link(nameof(BookmarkController.AddBookmark), new { postId = posts.Id });
             var anno = new AnnotationsDto

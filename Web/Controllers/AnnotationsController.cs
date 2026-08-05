@@ -5,13 +5,14 @@ using System.Collections.Generic;
 using Application.Interfaces.Services;
 using Domain.DTO;
 using Domain.Entities;
+using Web.Extensions;
 
 namespace Web.Controllers;
 
 [ApiController]
 [Route("api/annotations")]
 [Authorize]
-public class AnnotationsController : SharedController
+public class AnnotationsController : ControllerBase
 {
     private readonly IAnnotationService _annotationService;
     private readonly IThreadService _threadService;
@@ -25,13 +26,14 @@ public class AnnotationsController : SharedController
     [HttpGet("post/{postId:int}")]
     public ActionResult GetAllUserAnnotationsMadeOnPostId(int postId, [FromQuery] PagingAttributes pagingAttributes) //needs-pagination
     {
-        var (userId, userIdOk) = GetAuthUserId();
-        if (!userIdOk)
+        var userIdResult = User.GetUserId();
+        
+        if (!userIdResult.IsSuccess)
         {
             return Unauthorized();
         }
 
-        var listOfAnnotations = _annotationService.GetUserAnnotationsMadeOnAPost(userId, postId, pagingAttributes);
+        var listOfAnnotations = _annotationService.GetUserAnnotationsMadeOnAPost(userIdResult.Value, postId, pagingAttributes);
         
         if (listOfAnnotations.Count == 0)
         {
@@ -44,13 +46,14 @@ public class AnnotationsController : SharedController
     [HttpGet("user", Name = nameof(GetAllAnnotationsOfUser))]
     public ActionResult GetAllAnnotationsOfUser([FromQuery] PagingAttributes pagingAttributes)
     {
-        var (userId, userIdOk) = GetAuthUserId();
-        if (!userIdOk)
+        var userIdResult = User.GetUserId();
+        
+        if (!userIdResult.IsSuccess)
         {
             return Unauthorized();
         }
 
-        var listOfAnnotations = _annotationService.GetAllAnnotationsOfUser(userId, pagingAttributes, out var count);
+        var listOfAnnotations = _annotationService.GetAllAnnotationsOfUser(userIdResult.Value, pagingAttributes, out var count);
         if (count == 0)
         {
             return NotFound();
@@ -92,15 +95,16 @@ public class AnnotationsController : SharedController
     [HttpPost(Name = nameof(AddAnnotation))]
     public ActionResult AddAnnotation([FromBody] AnnotationsDto annotationObj)
     {
-        var (userId, userIdOk) = GetAuthUserId();
-        if (!userIdOk)
+        var userIdResult = User.GetUserId();
+        
+        if (!userIdResult.IsSuccess)
         {
             return Unauthorized();
         }
 
         var newAnnotation = new AnnotationsDto
         {
-            UserId = userId,
+            UserId = userIdResult.Value,
             PostId = annotationObj.PostId,
             Body = annotationObj.Body
         };
@@ -129,13 +133,14 @@ public class AnnotationsController : SharedController
     [HttpDelete("{annotationId:int}")]
     public ActionResult DeleteAnnotation(int annotationId)
     {
-        var (userId, userIdOk) = GetAuthUserId();
-        if (!userIdOk)
+        var userIdResult = User.GetUserId();
+        
+        if (!userIdResult.IsSuccess)
         {
             return Unauthorized();
         }
 
-        if (_annotationService.DeleteAnnotation(annotationId, userId))
+        if (_annotationService.DeleteAnnotation(annotationId, userIdResult.Value))
         {
             return Ok();
         }

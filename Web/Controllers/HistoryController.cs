@@ -6,13 +6,14 @@ using System.Linq;
 using Application.Interfaces.Services;
 using Domain.Entities;
 using Web.DTOs;
+using Web.Extensions;
 
 namespace Web.Controllers;
 
 [ApiController]
 [Route("api/history")]
 [Authorize]
-public class HistoryController : SharedController
+public class HistoryController : ControllerBase
 {
     private readonly IHistoryService _historyService;
     private readonly IThreadService _threadService;
@@ -28,17 +29,23 @@ public class HistoryController : SharedController
     //example http://localhost:5001/api/history?Page=1&PageSize=5 
     public ActionResult GetHistory([FromQuery] PagingAttributes pagingAttributes)
     {
+        var userIdResult = User.GetUserId();
+        
+        if (!userIdResult.IsSuccess)
+        {
+            return Unauthorized();
+        }
+        
         if (pagingAttributes.Page < 1 || pagingAttributes.PageSize < 1) return NotFound();
-        var userId = GetAuthUserId().Item1;
 
-        var history = _historyService.GetHistoryList(userId, pagingAttributes);
+        var history = _historyService.GetHistoryList(userIdResult.Value, pagingAttributes);
 
         if (history == null)
         {
             return NotFound();
         }
 
-        var count = _historyService.GetCount(userId);
+        var count = _historyService.GetCount(userIdResult.Value);
 
         return Ok(CreateResult(history, count, pagingAttributes));
     }
@@ -47,8 +54,14 @@ public class HistoryController : SharedController
     //example http://localhost:5001/api/history/delete/all
     public ActionResult ClearHistory()
     {
-        var userId = GetAuthUserId().Item1;
-        var result = _historyService.DeleteUserHistory(userId);
+        var userIdResult = User.GetUserId();
+        
+        if (!userIdResult.IsSuccess)
+        {
+            return Unauthorized();
+        }
+        
+        var result = _historyService.DeleteUserHistory(userIdResult.Value);
         if (!result)
         {
             return NotFound();

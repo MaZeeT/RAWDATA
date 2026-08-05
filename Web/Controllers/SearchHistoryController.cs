@@ -7,13 +7,14 @@ using Application.Interfaces.Services;
 using Domain.Entities;
 using Domain.Enums;
 using Web.DTOs;
+using Web.Extensions;
 
 namespace Web.Controllers;
 
 [ApiController]
 [Route("api/history/searches")]
 [Authorize]
-public class SearchHistoryController : SharedController
+public class SearchHistoryController : ControllerBase
 {
     private readonly ISearchService _searchService;
 
@@ -26,13 +27,14 @@ public class SearchHistoryController : SharedController
     //example http://localhost:5001/api/history/searches 
     public ActionResult GetSearchHistory([FromQuery] PagingAttributes pagingAttributes)
     {
-        var (userId, userIdOk) = GetAuthUserId();
-        if (!userIdOk)
+        var userIdResult = User.GetUserId();
+        
+        if (!userIdResult.IsSuccess)
         {
             return Unauthorized();
         }
 
-        var (searchHistory, count) = _searchService.GetSearchesList(userId, pagingAttributes);
+        var (searchHistory, count) = _searchService.GetSearchesList(userIdResult.Value, pagingAttributes);
         if (searchHistory == null || count == 0)
         {
             searchHistory = new List<Searches>();
@@ -53,13 +55,14 @@ public class SearchHistoryController : SharedController
     //example http://localhost:5001/api/history/searches/delete/all
     public ActionResult ClearSearchHistory()
     {
-        var (userId, userIdOk) = GetAuthUserId();
-        if (!userIdOk)
+        var userIdResult = User.GetUserId();
+        
+        if (!userIdResult.IsSuccess)
         {
             return Unauthorized();
         }
 
-        var result = _searchService.DeleteUserSearchHistory(userId);
+        var result = _searchService.DeleteUserSearchHistory(userIdResult.Value);
         if (!result)
         {
             return NotFound();

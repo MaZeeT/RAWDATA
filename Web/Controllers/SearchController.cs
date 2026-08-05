@@ -7,6 +7,7 @@ using Application.Interfaces.Services;
 using Domain.Entities;
 using Domain.Enums;
 using Web.DTOs;
+using Web.Extensions;
 
 namespace Web.Controllers;
 
@@ -14,7 +15,7 @@ namespace Web.Controllers;
 [Route("api/search")]
 [Authorize]
 // when accessing with tokens, the header needs a key Authorization with a value of Bearer [space] and then the token (no quotes)
-public class SearchController : SharedController
+public class SearchController : ControllerBase
 {
     private readonly ISearchService _searchService;
 
@@ -28,11 +29,14 @@ public class SearchController : SharedController
     // http://localhost:5001/api/search/wordrank?s=code,app,program
     public ActionResult WordRank([FromQuery] SearchQuery searchQuery, [FromQuery] int? maxResults)
     {
-        var (userId, userIdOk) = GetAuthUserId();
+        var userIdResult = User.GetUserId();
+        
+        if (!userIdResult.IsSuccess)
+        {
+            return Unauthorized();
+        }
 
-        Console.WriteLine("Got user: " + userId);
-
-        if (searchQuery.SearchTerms == null || !userIdOk)
+        if (searchQuery.SearchTerms == null || !userIdResult.IsSuccess)
         {
             return BadRequest();
         }
@@ -48,12 +52,12 @@ public class SearchController : SharedController
                 return RedirectToAction("Search", new { s = searchQuery.SearchTerms, stype = searchQuery.SearchType });
             case SearchType.WordsTfidf or SearchType.WordsBest:
             {
-                var search = _searchService.WordRank(userId, searchQuery.SearchTerms, searchQuery.SearchType, maxResults);
+                var search = _searchService.WordRank(userIdResult.Value, searchQuery.SearchTerms, searchQuery.SearchType, maxResults);
                 return Ok(search);
             }
             default:
             {
-                var search = _searchService.WordRank(userId, searchQuery.SearchTerms, SearchType.WordsBest, maxResults);
+                var search = _searchService.WordRank(userIdResult.Value, searchQuery.SearchTerms, SearchType.WordsBest, maxResults);
                 return Ok(search);
             }
         }
@@ -66,11 +70,16 @@ public class SearchController : SharedController
     // http://localhost:5001/api/search?s=code,app,program
     public ActionResult Search([FromQuery] SearchQuery searchparams, [FromQuery] PagingAttributes pagingAttributes)
     {
-        var (userId, userIdOk) = GetAuthUserId();
+        var userIdResult = User.GetUserId();
+        
+        if (!userIdResult.IsSuccess)
+        {
+            return Unauthorized();
+        }
 
-        Console.WriteLine("Got user: " + userId);
+        Console.WriteLine("Got user: " + userIdResult.Value);
 
-        if (searchparams.SearchTerms == null || !userIdOk)
+        if (searchparams.SearchTerms == null || !userIdResult.IsSuccess)
         {
             return BadRequest();
         }
@@ -83,7 +92,7 @@ public class SearchController : SharedController
             case SearchType.Tfidf or SearchType.ExactMatch or SearchType.Simple or SearchType.BestMatch:
             {
                 //do search, fix page also if needed as a bonus
-                var search = _searchService.Search(userId, searchparams.SearchTerms, searchparams.SearchType, pagingAttributes);
+                var search = _searchService.Search(userIdResult.Value, searchparams.SearchTerms, searchparams.SearchType, pagingAttributes);
 
                 // try to fix searchsting for link generation if it seems useable but ugly
                 searchparams.SearchTerms = _searchService.BuildSearchString(searchparams.SearchTerms, true);

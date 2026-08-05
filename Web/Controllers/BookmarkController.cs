@@ -6,13 +6,14 @@ using System.Linq;
 using Application.Interfaces.Services;
 using Domain.Entities;
 using Web.DTOs;
+using Web.Extensions;
 
 namespace Web.Controllers;
 
 [ApiController]
 [Route("api/bookmark")]
 [Authorize]
-public class BookmarkController : SharedController
+public class BookmarkController : ControllerBase
 {
     private readonly IBookmarkService _bookmarkService;
     private readonly IThreadService _threadService;
@@ -28,16 +29,22 @@ public class BookmarkController : SharedController
     //example http://localhost:5001/api/bookmark?Page=1&PageSize=5
     public ActionResult GetBookmarkList([FromQuery] PagingAttributes pagingAttributes)
     {
+        var userIdResult = User.GetUserId();
+        
+        if (!userIdResult.IsSuccess)
+        {
+            return Unauthorized();
+        }
+        
         if (pagingAttributes.Page < 1 || pagingAttributes.PageSize < 1) return NotFound();
-        var userId = GetAuthUserId().Item1;
-        var bookmarks = _bookmarkService.GetBookmarkList(userId, pagingAttributes);
+        var bookmarks = _bookmarkService.GetBookmarkList(userIdResult.Value, pagingAttributes);
 
         if (bookmarks == null)
         {
             return NotFound();
         }
 
-        var count = _bookmarkService.GetCount(userId);
+        var count = _bookmarkService.GetCount(userIdResult.Value);
         return Ok(CreateResult(bookmarks, count, pagingAttributes));
     }
 
@@ -45,8 +52,14 @@ public class BookmarkController : SharedController
     //example http://localhost:5001/api/bookmark/add/1760
     public ActionResult AddBookmark(int postId)
     {
-        var userId = GetAuthUserId().Item1;
-        var result = _bookmarkService.Add(userId, postId);
+        var userIdResult = User.GetUserId();
+        
+        if (!userIdResult.IsSuccess)
+        {
+            return Unauthorized();
+        }
+        
+        var result = _bookmarkService.Add(userIdResult.Value, postId);
         if (!result)
         {
             return NotFound();
@@ -59,8 +72,14 @@ public class BookmarkController : SharedController
     //example http://localhost:5001/api/bookmark/delete/1760
     public ActionResult DeleteBookmark(int postId)
     {
-        var userId = GetAuthUserId().Item1;
-        var result = _bookmarkService.DeleteBookmark(userId, postId);
+        var userIdResult = User.GetUserId();
+        
+        if (!userIdResult.IsSuccess)
+        {
+            return Unauthorized();
+        }
+        
+        var result = _bookmarkService.DeleteBookmark(userIdResult.Value, postId);
         if (!result)
         {
             return NotFound();
@@ -73,15 +92,21 @@ public class BookmarkController : SharedController
     //example http://localhost:5001/api/bookmark/delete/all
     public ActionResult DeleteAllBookmarks()
     {
-        var userId = GetAuthUserId().Item1;
-        var bookmarks = _bookmarkService.GetBookmarkList(userId);
+        var userIdResult = User.GetUserId();
+        
+        if (!userIdResult.IsSuccess)
+        {
+            return Unauthorized();
+        }
+        
+        var bookmarks = _bookmarkService.GetBookmarkList(userIdResult.Value);
 
         foreach (var bookmark in bookmarks)
         {
             _bookmarkService.DeleteBookmark(bookmark.UserId, bookmark.PostId);
         }
 
-        var result = _bookmarkService.GetBookmarkList(userId).Count == 0;
+        var result = _bookmarkService.GetBookmarkList(userIdResult.Value).Count == 0;
         if (!result)
         {
             return NotFound();
